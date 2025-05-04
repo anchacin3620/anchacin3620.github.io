@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor de Cumpleaños - Profesores</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 5px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #resultado {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            min-height: 50px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background-color: #e2e3e5;
+            color: #383d41;
+            border: 1px solid #d6d8db;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            .section {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎂 Gestión de Cumpleaños - Profesores</h1>
+        
+        <!-- Sección para agregar profesores -->
+        <div class="section">
+            <h2>Agregar Nuevo Profesor</h2>
+            <div class="form-group">
+                <label for="nombre">Nombre completo:</label>
+                <input type="text" id="nombre" placeholder="Ej: Juan Pérez">
+            </div>
+            <div class="form-group">
+                <label for="fecha">Fecha de cumpleaños:</label>
+                <input type="text" id="fecha" placeholder="Formato DD/MM (Ej: 15/03)">
+            </div>
+            <button onclick="agregarProfesor()">Guardar Profesor</button>
+            <div id="mensajeAdd"></div>
+        </div>
+        
+        <!-- Sección para consultar -->
+        <div class="section">
+            <h2>Consultar Cumpleaños</h2>
+            <div class="form-group">
+                <label for="busqueda">Buscar profesor:</label>
+                <input type="text" id="busqueda" placeholder="Escribe parte del nombre">
+            </div>
+            <button onclick="buscarProfesor()">Buscar</button>
+            <div id="resultado"></div>
+        </div>
+        
+        <!-- Listado completo -->
+        <div class="section">
+            <h2>Listado Completo</h2>
+            <button onclick="mostrarTodos()">Mostrar Todos</button>
+            <button onclick="exportarDatos()" style="background-color: #27ae60;">Exportar Datos</button>
+            <button onclick="importarDatos()" style="background-color: #e67e22;">Importar Datos</button>
+            <div id="listado"></div>
+        </div>
+    </div>
+
+    <script>
+        // Al cargar la página, inicializamos el almacenamiento si no existe
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!localStorage.getItem('profesores')) {
+                localStorage.setItem('profesores', JSON.stringify([]));
+            }
+        });
+
+        // Función para agregar un nuevo profesor
+        function agregarProfesor() {
+            const nombre = document.getElementById('nombre').value.trim();
+            const fecha = document.getElementById('fecha').value.trim();
+            const mensaje = document.getElementById('mensajeAdd');
+            
+            // Validación
+            if (!nombre || !fecha) {
+                mostrarMensaje(mensaje, 'Por favor completa todos los campos', 'error');
+                return;
+            }
+            
+            // Validar formato de fecha (DD/MM)
+            if (!/^\d{1,2}\/\d{1,2}$/.test(fecha)) {
+                mostrarMensaje(mensaje, 'Formato de fecha incorrecto. Usa DD/MM (Ej: 15/03)', 'error');
+                return;
+            }
+            
+            // Obtener lista actual de profesores
+            const profesores = JSON.parse(localStorage.getItem('profesores'));
+            
+            // Verificar si el profesor ya existe
+            const existe = profesores.some(prof => prof.nombre.toLowerCase() === nombre.toLowerCase());
+            if (existe) {
+                mostrarMensaje(mensaje, 'Este profesor ya está registrado', 'error');
+                return;
+            }
+            
+            // Agregar nuevo profesor
+            profesores.push({
+                nombre: nombre,
+                fecha: fecha
+            });
+            
+            // Guardar en localStorage
+            localStorage.setItem('profesores', JSON.stringify(profesores));
+            
+            // Limpiar campos y mostrar mensaje de éxito
+            document.getElementById('nombre').value = '';
+            document.getElementById('fecha').value = '';
+            mostrarMensaje(mensaje, 'Profesor agregado correctamente', 'success');
+            
+            // Actualizar listado
+            mostrarTodos();
+        }
+
+        // Función para buscar profesores
+        function buscarProfesor() {
+            const busqueda = document.getElementById('busqueda').value.trim().toLowerCase();
+            const resultado = document.getElementById('resultado');
+            
+            if (!busqueda) {
+                mostrarMensaje(resultado, 'Por favor ingresa un nombre para buscar', 'error');
+                return;
+            }
+            
+            const profesores = JSON.parse(localStorage.getItem('profesores'));
+            const resultados = profesores.filter(prof => 
+                prof.nombre.toLowerCase().includes(busqueda)
+            );
+            
+            if (resultados.length === 0) {
+                mostrarMensaje(resultado, 'No se encontraron profesores con ese nombre', 'info');
+                return;
+            }
+            
+            // Mostrar resultados en una tabla
+            let html = '<table><tr><th>Nombre</th><th>Cumpleaños</th></tr>';
+            resultados.forEach(prof => {
+                html += `<tr><td>${prof.nombre}</td><td>${prof.fecha}</td></tr>`;
+            });
+            html += '</table>';
+            
+            resultado.innerHTML = html;
+            resultado.className = 'success';
+        }
+
+        // Función para mostrar todos los profesores
+        function mostrarTodos() {
+            const listado = document.getElementById('listado');
+            const profesores = JSON.parse(localStorage.getItem('profesores'));
+            
+            if (profesores.length === 0) {
+                mostrarMensaje(listado, 'No hay profesores registrados aún', 'info');
+                return;
+            }
+            
+            // Mostrar en una tabla ordenada alfabéticamente
+            let html = '<table><tr><th>Nombre</th><th>Cumpleaños</th><th>Acciones</th></tr>';
+            
+            profesores
+                .sort((a, b) => a.nombre.localeCompare(b.nombre))
+                .forEach((prof, index) => {
+                    html += `
+                        <tr>
+                            <td>${prof.nombre}</td>
+                            <td>${prof.fecha}</td>
+                            <td>
+                                <button onclick="eliminarProfesor(${index})" style="background-color: #e74c3c;">Eliminar</button>
+                            </td>
+                        </tr>`;
+                });
+            
+            html += '</table>';
+            listado.innerHTML = html;
+        }
+
+        // Función para eliminar un profesor
+        function eliminarProfesor(index) {
+            const profesores = JSON.parse(localStorage.getItem('profesores'));
+            profesores.splice(index, 1);
+            localStorage.setItem('profesores', JSON.stringify(profesores));
+            mostrarTodos();
+        }
+
+        // Función para exportar datos
+        function exportarDatos() {
+            const profesores = JSON.parse(localStorage.getItem('profesores'));
+            const dataStr = JSON.stringify(profesores, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportName = 'profesores_' + new Date().toISOString().slice(0,10) + '.json';
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportName);
+            linkElement.click();
+        }
+
+        // Función para importar datos
+        function importarDatos() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            
+            input.onchange = e => { 
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.readAsText(file,'UTF-8');
+                
+                reader.onload = readerEvent => {
+                    try {
+                        const content = readerEvent.target.result;
+                        const nuevosProfesores = JSON.parse(content);
+                        
+                        if (Array.isArray(nuevosProfesores) && nuevosProfesores.every(p => p.nombre && p.fecha)) {
+                            localStorage.setItem('profesores', content);
+                            mostrarTodos();
+                            mostrarMensaje(document.getElementById('listado'), 'Datos importados correctamente', 'success');
+                        } else {
+                            throw new Error('Formato de archivo inválido');
+                        }
+                    } catch (error) {
+                        mostrarMensaje(document.getElementById('listado'), 'Error al importar: ' + error.message, 'error');
+                    }
+                }
+            }
+            
+            input.click();
+        }
+
+        // Función auxiliar para mostrar mensajes
+        function mostrarMensaje(elemento, mensaje, tipo) {
+            elemento.innerHTML = mensaje;
+            elemento.className = tipo;
+        }
+    </script>
+</body>
+</html>
