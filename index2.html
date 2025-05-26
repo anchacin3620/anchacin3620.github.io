@@ -98,6 +98,25 @@
         tr:hover {
             background-color: #f5f5f5;
         }
+        .month-section {
+            margin-bottom: 30px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .month-header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 10px 15px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .current-month {
+            background-color: #3498db;
+            border: 2px solid #2980b9;
+        }
         @media (max-width: 600px) {
             .container {
                 padding: 15px;
@@ -138,10 +157,11 @@
             <div id="resultado"></div>
         </div>
         
-        <!-- Listado completo -->
+        <!-- Listado completo organizado por meses -->
         <div class="section">
-            <h2>Listado Completo</h2>
+            <h2>Listado por Meses</h2>
             <button onclick="mostrarTodos()">Mostrar Todos</button>
+            <button onclick="mostrarCumpleMesActual()" style="background-color: #9b59b6;">Mostrar Cumpleaños del Mes</button>
             <button onclick="exportarDatos()" style="background-color: #27ae60;">Exportar Datos</button>
             <button onclick="importarDatos()" style="background-color: #e67e22;">Importar Datos</button>
             <div id="listado"></div>
@@ -154,7 +174,14 @@
             if (!localStorage.getItem('profesores')) {
                 localStorage.setItem('profesores', JSON.stringify([]));
             }
+            mostrarTodos();
         });
+
+        // Nombres de los meses
+        const meses = [
+            "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+            "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+        ];
 
         // Función para agregar un nuevo profesor
         function agregarProfesor() {
@@ -233,7 +260,7 @@
             resultado.className = 'success';
         }
 
-        // Función para mostrar todos los profesores
+        // Función para mostrar todos los profesores organizados por meses
         function mostrarTodos() {
             const listado = document.getElementById('listado');
             const profesores = JSON.parse(localStorage.getItem('profesores'));
@@ -243,32 +270,120 @@
                 return;
             }
             
-            // Mostrar en una tabla ordenada alfabéticamente
-            let html = '<table><tr><th>Nombre</th><th>Cumpleaños</th><th>Acciones</th></tr>';
+            // Ordenar profesores por mes y día
+            profesores.sort((a, b) => {
+                const [diaA, mesA] = a.fecha.split('/').map(Number);
+                const [diaB, mesB] = b.fecha.split('/').map(Number);
+                
+                if (mesA !== mesB) return mesA - mesB;
+                return diaA - diaB;
+            });
             
-            profesores
-                .sort((a, b) => a.nombre.localeCompare(b.nombre))
-                .forEach((prof, index) => {
-                    html += `
-                        <tr>
-                            <td>${prof.nombre}</td>
-                            <td>${prof.fecha}</td>
-                            <td>
-                                <button onclick="eliminarProfesor(${index})" style="background-color: #e74c3c;">Eliminar</button>
-                            </td>
-                        </tr>`;
-                });
+            // Agrupar por mes
+            const profesoresPorMes = {};
+            profesores.forEach(prof => {
+                const mes = parseInt(prof.fecha.split('/')[1]) - 1; // 0-11
+                if (!profesoresPorMes[mes]) {
+                    profesoresPorMes[mes] = [];
+                }
+                profesoresPorMes[mes].push(prof);
+            });
             
-            html += '</table>';
+            // Generar HTML organizado por meses
+            let html = '';
+            
+            for (let mes = 0; mes < 12; mes++) {
+                if (profesoresPorMes[mes] && profesoresPorMes[mes].length > 0) {
+                    html += `<div class="month-section">
+                                <div class="month-header">
+                                    <span>${meses[mes]}</span>
+                                    <span>${profesoresPorMes[mes].length} cumpleaños</span>
+                                </div>
+                                <table>
+                                    <tr><th>Nombre</th><th>Día</th><th>Acciones</th></tr>`;
+                    
+                    profesoresPorMes[mes].forEach((prof, index) => {
+                        const [dia, mesNum] = prof.fecha.split('/');
+                        html += `
+                            <tr>
+                                <td>${prof.nombre}</td>
+                                <td>${dia}</td>
+                                <td>
+                                    <button onclick="eliminarProfesorPorNombre('${prof.nombre}')" style="background-color: #e74c3c;">Eliminar</button>
+                                </td>
+                            </tr>`;
+                    });
+                    
+                    html += `</table></div>`;
+                }
+            }
+            
             listado.innerHTML = html;
         }
 
-        // Función para eliminar un profesor
-        function eliminarProfesor(index) {
+        // Función para mostrar solo los cumpleaños del mes actual
+        function mostrarCumpleMesActual() {
+            const listado = document.getElementById('listado');
             const profesores = JSON.parse(localStorage.getItem('profesores'));
-            profesores.splice(index, 1);
-            localStorage.setItem('profesores', JSON.stringify(profesores));
-            mostrarTodos();
+            const hoy = new Date();
+            const mesActual = hoy.getMonth() + 1; // Los meses en JS son 0-11
+            
+            if (profesores.length === 0) {
+                mostrarMensaje(listado, 'No hay profesores registrados aún', 'info');
+                return;
+            }
+            
+            // Filtrar profesores del mes actual
+            const profesoresMesActual = profesores.filter(prof => {
+                const mes = parseInt(prof.fecha.split('/')[1]);
+                return mes === mesActual;
+            });
+            
+            if (profesoresMesActual.length === 0) {
+                mostrarMensaje(listado, `No hay cumpleaños registrados para ${meses[mesActual-1]}`, 'info');
+                return;
+            }
+            
+            // Ordenar por día
+            profesoresMesActual.sort((a, b) => {
+                const diaA = parseInt(a.fecha.split('/')[0]);
+                const diaB = parseInt(b.fecha.split('/')[0]);
+                return diaA - diaB;
+            });
+            
+            // Generar HTML
+            let html = `<div class="month-section current-month">
+                            <div class="month-header">
+                                <span>${meses[mesActual-1]} (Mes Actual)</span>
+                                <span>${profesoresMesActual.length} cumpleaños</span>
+                            </div>
+                            <table>
+                                <tr><th>Nombre</th><th>Día</th><th>Acciones</th></tr>`;
+            
+            profesoresMesActual.forEach(prof => {
+                const [dia] = prof.fecha.split('/');
+                html += `
+                    <tr>
+                        <td>${prof.nombre}</td>
+                        <td>${dia}</td>
+                        <td>
+                            <button onclick="eliminarProfesorPorNombre('${prof.nombre}')" style="background-color: #e74c3c;">Eliminar</button>
+                        </td>
+                    </tr>`;
+            });
+            
+            html += `</table></div>`;
+            listado.innerHTML = html;
+        }
+
+        // Función para eliminar un profesor por nombre
+        function eliminarProfesorPorNombre(nombre) {
+            if (confirm(`¿Estás seguro de que quieres eliminar a ${nombre}?`)) {
+                const profesores = JSON.parse(localStorage.getItem('profesores'));
+                const nuevosProfesores = profesores.filter(prof => prof.nombre !== nombre);
+                localStorage.setItem('profesores', JSON.stringify(nuevosProfesores));
+                mostrarTodos();
+            }
         }
 
         // Función para exportar datos
@@ -324,4 +439,4 @@
         }
     </script>
 </body>
-</html>
+    </html>
