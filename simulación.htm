@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulación Avanzada de Pelotas en Piscina</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        canvas {
+            background-color: #e0f7fa;
+            border: 2px solid #00796b;
+            margin-top: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .controls {
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #b2ebf2;
+            border-radius: 10px;
+            max-width: 800px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .control-group {
+            text-align: left;
+            padding: 10px;
+            background-color: rgba(255,255,255,0.7);
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #00796b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #00897b;
+        }
+        input[type="range"] {
+            width: 100%;
+        }
+        label {
+            display: block;
+            margin: 5px 0;
+            font-weight: bold;
+            color: #00695c;
+        }
+        .value-display {
+            font-size: 14px;
+            color: #333;
+        }
+        #stats {
+            margin-top: 15px;
+            font-weight: bold;
+            background-color: #e8f5e9;
+            padding: 10px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <h1>Simulación Avanzada de Pelotas en Piscina</h1>
+    
+    <div class="controls">
+        <div class="control-group">
+            <label for="ballCount">Número de pelotas: <span id="ballCountValue" class="value-display">20</span></label>
+            <input type="range" id="ballCount" min="1" max="100" value="20">
+            
+            <label for="ballSize">Tamaño pelotas: <span id="ballSizeValue" class="value-display">10</span></label>
+            <input type="range" id="ballSize" min="5" max="20" value="10">
+        </div>
+        
+        <div class="control-group">
+            <label for="gravity">Gravedad: <span id="gravityValue" class="value-display">0.2</span></label>
+            <input type="range" id="gravity" min="0" max="1" step="0.01" value="0.2">
+            
+            <label for="bounce">Rebote: <span id="bounceValue" class="value-display">0.7</span></label>
+            <input type="range" id="bounce" min="0" max="1" step="0.05" value="0.7">
+        </div>
+        
+        <div class="control-group">
+            <label for="drag">Arrastre aéreo: <span id="dragValue" class="value-display">0.01</span></label>
+            <input type="range" id="drag" min="0" max="0.1" step="0.001" value="0.01">
+            
+            <label for="friction">Fricción: <span id="frictionValue" class="value-display">0.9</span></label>
+            <input type="range" id="friction" min="0.5" max="1" step="0.01" value="0.9">
+        </div>
+        
+        <div class="control-group">
+            <button id="startBtn">Iniciar Simulación</button>
+            <button id="resetBtn">Reiniciar</button>
+            <button id="addBallBtn">Añadir Pelota</button>
+        </div>
+    </div>
+    
+    <canvas id="poolCanvas" width="800" height="500"></canvas>
+    
+    <div id="stats"></div>
+
+    <script>
+        // Configuración inicial
+        const canvas = document.getElementById('poolCanvas');
+        const ctx = canvas.getContext('2d');
+        const startBtn = document.getElementById('startBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const addBallBtn = document.getElementById('addBallBtn');
+        const ballCountInput = document.getElementById('ballCount');
+        const ballSizeInput = document.getElementById('ballSize');
+        const gravityInput = document.getElementById('gravity');
+        const bounceInput = document.getElementById('bounce');
+        const dragInput = document.getElementById('drag');
+        const frictionInput = document.getElementById('friction');
+        const statsDiv = document.getElementById('stats');
+        
+        // Elementos para mostrar valores
+        const ballCountValue = document.getElementById('ballCountValue');
+        const ballSizeValue = document.getElementById('ballSizeValue');
+        const gravityValue = document.getElementById('gravityValue');
+        const bounceValue = document.getElementById('bounceValue');
+        const dragValue = document.getElementById('dragValue');
+        const frictionValue = document.getElementById('frictionValue');
+        
+        // Actualizar displays de valores
+        function updateValueDisplays() {
+            ballCountValue.textContent = ballCountInput.value;
+            ballSizeValue.textContent = ballSizeInput.value;
+            gravityValue.textContent = gravityInput.value;
+            bounceValue.textContent = bounceInput.value;
+            dragValue.textContent = dragInput.value;
+            frictionValue.textContent = frictionInput.value;
+        }
+        
+        // Parámetros físicos iniciales
+        let physicsParams = {
+            gravity: 0.2,
+            bounceFactor: 0.7,
+            dragCoefficient: 0.01,
+            friction: 0.9,
+            ballRadius: 10
+        };
+        
+        const poolRadius = 200;
+        const poolCenter = { x: canvas.width / 2, y: canvas.height - 80 };
+        
+        let balls = [];
+        let animationId;
+        let simulationTime = 0;
+        let lastTimestamp = 0;
+        
+        // Clase Pelota
+        class Ball {
+            constructor(x, y) {
+                this.radius = physicsParams.ballRadius;
+                this.reset(x, y);
+                this.inPool = false;
+                this.mass = this.radius * 0.2; // Masa proporcional al tamaño
+            }
+            
+            reset(x = null, y = null) {
+                this.x = x !== null ? x : poolCenter.x + (Math.random() - 0.5) * poolRadius * 1.6;
+                this.y = y !== null ? y : 50 + Math.random() * 50;
+                this.vx = (Math.random() - 0.5) * 3;
+                this.vy = Math.random() * 1;
+                this.inPool = false;
+                this.color = `hsl(${Math.random() * 360}, 70%, 50%)`;
+            }
+            
+            applyPhysics() {
+                if (this.inPool) return;
+                
+                // Aplicar gravedad
+                this.vy += physicsParams.gravity;
+                
+                // Aplicar arrastre aerodinámico (proporcional al cuadrado de la velocidad)
+                const speed = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
+                const dragForce = physicsParams.dragCoefficient * speed * speed;
+                
+                if (speed > 0) {
+                    this.vx -= dragForce * this.vx / speed;
+                    this.vy -= dragForce * this.vy / speed;
+                }
+            }
+            
+            checkCollisionWithPool() {
+                // Verificar si está dentro de la piscina
+                const distToCenter = Math.sqrt(
+                    Math.pow(this.x - poolCenter.x, 2) + 
+                    Math.pow(this.y - poolCenter.y, 2)
+                );
+                
+                if (distToCenter <= poolRadius - this.radius) {
+                    if (!this.inPool) {
+                        this.inPool = true;
+                        // Ajustar posición para que no se hunda
+                        const angle = Math.atan2(this.y - poolCenter.y, this.x - poolCenter.x);
+                        this.x = poolCenter.x + (poolRadius - this.radius) * Math.cos(angle);
+                        this.y = poolCenter.y + (poolRadius - this.radius) * Math.sin(angle);
+                        this.vx = 0;
+                        this.vy = 0;
+                    }
+                    return true;
+                }
+                return false;
+            }
+            
+            checkCollisionWithWalls() {
+                let collided = false;
+                
+                // Detectar colisión con los bordes laterales
+                if (this.x - this.radius < 0) {
+                    this.x = this.radius;
+                    this.vx = -this.vx * physicsParams.bounceFactor;
+                    collided = true;
+                } else if (this.x + this.radius > canvas.width) {
+                    this.x = canvas.width - this.radius;
+                    this.vx = -this.vx * physicsParams.bounceFactor;
+                    collided = true;
+                }
+                
+                // Detectar colisión con el techo
+                if (this.y - this.radius < 0) {
+                    this.y = this.radius;
+                    this.vy = -this.vy * physicsParams.bounceFactor;
+                    collided = true;
+                }
+                
+                return collided;
+            }
+            
+            checkCollisionWithBalls(otherBalls) {
+                for (const other of otherBalls) {
+                    if (other === this || other.inPool) continue;
+                    
+                    const dx = other.x - this.x;
+                    const dy = other.y - this.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < this.radius + other.radius) {
+                        // Colisión detectada
+                        const angle = Math.atan2(dy, dx);
+                        const sin = Math.sin(angle);
+                        const cos = Math.cos(angle);
+                        
+                        // Rotar el sistema de coordenadas
+                        const vx1 = this.vx * cos + this.vy * sin;
+                        const vy1 = this.vy * cos - this.vx * sin;
+                        const vx2 = other.vx * cos + other.vy * sin;
+                        const vy2 = other.vy * cos - other.vx * sin;
+                        
+                        // Conservación del momento (elástico)
+                        const finalVx1 = ((this.mass - other.mass) * vx1 + 2 * other.mass * vx2) / (this.mass + other.mass);
+                        const finalVx2 = ((other.mass - this.mass) * vx2 + 2 * this.mass * vx1) / (this.mass + other.mass);
+                        
+                        // Rotar de vuelta
+                        this.vx = finalVx1 * cos - vy1 * sin;
+                        this.vy = vy1 * cos + finalVx1 * sin;
+                        other.vx = finalVx2 * cos - vy2 * sin;
+                        other.vy = vy2 * cos + finalVx2 * sin;
+                        
+                        // Separar las pelotas para evitar solapamiento
+                        const overlap = (this.radius + other.radius - distance) / 2;
+                        this.x -= overlap * Math.cos(angle + Math.PI);
+                        this.y -= overlap * Math.sin(angle + Math.PI);
+                        other.x += overlap * Math.cos(angle);
+                        other.y += overlap * Math.sin(angle);
+                        
+                        return true;
+                    }
+                }
+                return false;
+            }
+            
+            update(otherBalls) {
+                if (this.inPool) return;
+                
+                this.applyPhysics();
+                
+                // Guardar posición anterior
+                const prevX = this.x;
+                const prevY = this.y;
+                
+                // Actualizar posición
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                // Verificar colisiones
+                const hitWall = this.checkCollisionWithWalls();
+                const inPool = this.checkCollisionWithPool();
+                const hitBall = this.checkCollisionWithBalls(otherBalls);
+                
+                // Aplicar fricción si está en contacto con una superficie
+                if (hitWall || inPool || hitBall) {
+                    this.vx *= physicsParams.friction;
+                    this.vy *= physicsParams.friction;
+                }
+            }
+            
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                
+                // Añadir reflejo para mejor visualización
+                ctx.beginPath();
+                ctx.arc(this.x - this.radius/3, this.y - this.radius/3, this.radius/4, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+                ctx.fill();
+                
+                ctx.strokeStyle = '#333';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+                ctx.closePath();
+            }
+        }
+        
+        // Inicializar simulación
+        function initSimulation() {
+            const numBalls = parseInt(ballCountInput.value);
+            balls = [];
+            
+            for (let i = 0; i < numBalls; i++) {
+                balls.push(new Ball());
+            }
+            
+            simulationTime = 0;
+            updateStats();
+        }
+        
+        // Añadir una nueva pelota
+        function addBall() {
+            balls.push(new Ball());
+            updateStats();
+        }
+        
+        // Bucle de animación
+        function animate(timestamp) {
+            if (!lastTimestamp) lastTimestamp = timestamp;
+            const deltaTime = (timestamp - lastTimestamp) / 1000; // Convertir a segundos
+            lastTimestamp = timestamp;
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Dibujar piscina con efecto de agua
+            ctx.beginPath();
+            ctx.arc(poolCenter.x, poolCenter.y, poolRadius, 0, Math.PI * 2);
+            
+            // Gradiente para la piscina
+            const poolGradient = ctx.createRadialGradient(
+                poolCenter.x, poolCenter.y, poolRadius * 0.3,
+                poolCenter.x, poolCenter.y, poolRadius
+            );
+            poolGradient.addColorStop(0, '#4fc3f7');
+            poolGradient.addColorStop(1, '#0288d1');
+            ctx.fillStyle = poolGradient;
+            ctx.fill();
+            
+            ctx.strokeStyle = '#00796b';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+            ctx.closePath();
+            
+            // Dibujar ondulaciones en la piscina
+            ctx.beginPath();
+            for (let i = 0; i < 5; i++) {
+                const rippleRadius = poolRadius * 0.7 + Math.sin(simulationTime * 2 + i) * 5;
+                ctx.arc(poolCenter.x, poolCenter.y, rippleRadius, 0, Math.PI * 2);
+            }
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            
+            // Actualizar y dibujar pelotas
+            let ballsInPool = 0;
+            
+            // Actualizar física en dos pasos para mejor detección de colisiones
+            balls.forEach(ball => {
+                ball.update([]); // Primero sin colisiones entre pelotas
+            });
+            
+            balls.forEach(ball => {
+                ball.update(balls); // Luego con colisiones
+                ball.draw();
+                if (ball.inPool) ballsInPool++;
+            });
+            
+            simulationTime += deltaTime;
+            
+            // Actualizar estadísticas
+            updateStats(ballsInPool);
+            
+            // Continuar animación si no todas están en la piscina
+            if (ballsInPool < balls.length) {
+                animationId = requestAnimationFrame(animate);
+            } else {
+                lastTimestamp = 0; // Reset para la próxima simulación
+            }
+        }
+        
+        // Actualizar estadísticas
+        function updateStats(ballsInPool = 0) {
+            statsDiv.innerHTML = `
+                Tiempo: ${simulationTime.toFixed(2)}s | 
+                Pelotas en piscina: ${ballsInPool}/${balls.length} |
+                Velocidad media: ${calculateAverageSpeed().toFixed(2)}px/s
+            `;
+        }
+        
+        // Calcular velocidad media de las pelotas
+        function calculateAverageSpeed() {
+            if (balls.length === 0) return 0;
+            
+            let totalSpeed = 0;
+            let activeBalls = 0;
+            
+            balls.forEach(ball => {
+                if (!ball.inPool) {
+                    totalSpeed += Math.sqrt(ball.vx * ball.vx + ball.vy * ball.vy);
+                    activeBalls++;
+                }
+            });
+            
+            return activeBalls > 0 ? totalSpeed / activeBalls : 0;
+        }
+        
+        // Actualizar parámetros físicos
+        function updatePhysicsParams() {
+            physicsParams = {
+                gravity: parseFloat(gravityInput.value),
+                bounceFactor: parseFloat(bounceInput.value),
+                dragCoefficient: parseFloat(dragInput.value),
+                friction: parseFloat(frictionInput.value),
+                ballRadius: parseInt(ballSizeInput.value)
+            };
+            
+            // Actualizar radios de las pelotas existentes
+            balls.forEach(ball => {
+                ball.radius = physicsParams.ballRadius;
+                ball.mass = ball.radius * 0.2;
+            });
+        }
+        
+        // Event listeners
+        startBtn.addEventListener('click', function() {
+            if (animationId) cancelAnimationFrame(animationId);
+            updatePhysicsParams();
+            initSimulation();
+            lastTimestamp = 0;
+            animate(0);
+        });
+        
+        resetBtn.addEventListener('click', function() {
+            cancelAnimationFrame(animationId);
+            initSimulation();
+            lastTimestamp = 0;
+        });
+        
+        addBallBtn.addEventListener('click', function() {
+            addBall();
+            if (animationId) {
+                // Si la simulación está en curso, actualizar la animación
+                cancelAnimationFrame(animationId);
+                animate(lastTimestamp);
+            }
+        });
+        
+        // Actualizar displays cuando cambian los controles
+        ballCountInput.addEventListener('input', updateValueDisplays);
+        ballSizeInput.addEventListener('input', updateValueDisplays);
+        gravityInput.addEventListener('input', updateValueDisplays);
+        bounceInput.addEventListener('input', updateValueDisplays);
+        dragInput.addEventListener('input', updateValueDisplays);
+        frictionInput.addEventListener('input', updateValueDisplays);
+        
+        // Inicializar
+        updateValueDisplays();
+        initSimulation();
+    </script>
+</body>
+</html>
