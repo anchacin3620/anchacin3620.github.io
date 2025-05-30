@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulación de Pelotas en Piscina</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        canvas {
+            background-color: #e0f7fa;
+            border: 2px solid #00796b;
+            margin-top: 20px;
+        }
+        .controls {
+            margin: 20px;
+            padding: 15px;
+            background-color: #b2ebf2;
+            border-radius: 10px;
+            display: inline-block;
+        }
+        button {
+            padding: 8px 15px;
+            background-color: #00796b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #00897b;
+        }
+    </style>
+</head>
+<body>
+    <h1>Simulación de Pelotas en Piscina</h1>
+    
+    <div class="controls">
+        <label for="ballCount">Número de pelotas: </label>
+        <input type="number" id="ballCount" min="1" max="100" value="20">
+        
+        <button id="startBtn">Iniciar Simulación</button>
+        <button id="resetBtn">Reiniciar</button>
+    </div>
+    
+    <canvas id="poolCanvas" width="600" height="400"></canvas>
+    
+    <div id="stats" style="margin-top: 15px; font-weight: bold;"></div>
+
+    <script>
+        // Configuración inicial
+        const canvas = document.getElementById('poolCanvas');
+        const ctx = canvas.getContext('2d');
+        const startBtn = document.getElementById('startBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const ballCountInput = document.getElementById('ballCount');
+        const statsDiv = document.getElementById('stats');
+        
+        // Parámetros físicos
+        const gravity = 0.2;
+        const bounceFactor = 0.7;
+        const poolRadius = 150;
+        const poolCenter = { x: canvas.width / 2, y: canvas.height - 50 };
+        
+        let balls = [];
+        let animationId;
+        let simulationTime = 0;
+        
+        // Clase Pelota
+        class Ball {
+            constructor() {
+                this.radius = 10;
+                this.reset();
+                this.inPool = false;
+            }
+            
+            reset() {
+                this.x = poolCenter.x + (Math.random() - 0.5) * poolRadius * 1.6;
+                this.y = 50 + Math.random() * 50;
+                this.vx = (Math.random() - 0.5) * 2;
+                this.vy = Math.random() * 1;
+                this.inPool = false;
+                this.color = `hsl(${Math.random() * 360}, 70%, 50%)`;
+            }
+            
+            update() {
+                if (this.inPool) return;
+                
+                // Aplicar gravedad
+                this.vy += gravity;
+                
+                // Actualizar posición
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                // Detectar colisión con el suelo
+                if (this.y + this.radius >= poolCenter.y) {
+                    // Verificar si está dentro de la piscina
+                    const distToCenter = Math.sqrt(
+                        Math.pow(this.x - poolCenter.x, 2) + 
+                        Math.pow(this.y - poolCenter.y, 2)
+                    );
+                    
+                    if (distToCenter <= poolRadius) {
+                        this.inPool = true;
+                        this.y = poolCenter.y - this.radius;
+                        this.vx = 0;
+                        this.vy = 0;
+                    } else {
+                        // Rebote
+                        this.y = poolCenter.y - this.radius;
+                        this.vy = -this.vy * bounceFactor;
+                        this.vx *= 0.9; // Fricción
+                    }
+                }
+                
+                // Detectar colisión con los bordes laterales
+                if (this.x - this.radius < 0 || this.x + this.radius > canvas.width) {
+                    this.vx = -this.vx * bounceFactor;
+                    this.x = this.x < this.radius ? this.radius : canvas.width - this.radius;
+                }
+            }
+            
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.strokeStyle = '#333';
+                ctx.stroke();
+                ctx.closePath();
+            }
+        }
+        
+        // Inicializar simulación
+        function initSimulation() {
+            const numBalls = parseInt(ballCountInput.value);
+            balls = [];
+            
+            for (let i = 0; i < numBalls; i++) {
+                balls.push(new Ball());
+            }
+            
+            simulationTime = 0;
+            updateStats();
+        }
+        
+        // Bucle de animación
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Dibujar piscina
+            ctx.beginPath();
+            ctx.arc(poolCenter.x, poolCenter.y, poolRadius, 0, Math.PI * 2);
+            ctx.fillStyle = '#4fc3f7';
+            ctx.fill();
+            ctx.strokeStyle = '#00796b';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+            ctx.closePath();
+            
+            // Actualizar y dibujar pelotas
+            let ballsInPool = 0;
+            balls.forEach(ball => {
+                ball.update();
+                ball.draw();
+                if (ball.inPool) ballsInPool++;
+            });
+            
+            simulationTime += 16/1000; // ~60fps
+            
+            // Actualizar estadísticas
+            updateStats(ballsInPool);
+            
+            // Continuar animación si no todas están en la piscina
+            if (ballsInPool < balls.length) {
+                animationId = requestAnimationFrame(animate);
+            }
+        }
+        
+        // Actualizar estadísticas
+        function updateStats(ballsInPool = 0) {
+            statsDiv.innerHTML = `
+                Tiempo: ${simulationTime.toFixed(2)}s | 
+                Pelotas en piscina: ${ballsInPool}/${balls.length}
+            `;
+        }
+        
+        // Event listeners
+        startBtn.addEventListener('click', function() {
+            if (animationId) cancelAnimationFrame(animationId);
+            initSimulation();
+            animate();
+        });
+        
+        resetBtn.addEventListener('click', function() {
+            cancelAnimationFrame(animationId);
+            initSimulation();
+        });
+        
+        // Iniciar primera simulación
+        initSimulation();
+    </script>
+</body>
+</html>
