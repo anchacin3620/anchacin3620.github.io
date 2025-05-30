@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulación de Crecimiento de Película de Fe</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+        }
+        canvas {
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            margin: 20px auto;
+            display: block;
+        }
+        .controls {
+            margin: 20px auto;
+            padding: 15px;
+            background-color: #e9e9e9;
+            border-radius: 8px;
+            max-width: 600px;
+        }
+        button {
+            padding: 8px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .param-control {
+            margin: 10px 0;
+        }
+        label {
+            display: inline-block;
+            width: 200px;
+            text-align: right;
+            margin-right: 10px;
+        }
+        #stats {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Simulación de Crecimiento de Película de Hierro</h1>
+    
+    <div class="controls">
+        <div class="param-control">
+            <label for="gridSize">Tamaño de la rejilla (nx × ny):</label>
+            <input type="number" id="gridSize" min="10" max="200" value="100">
+        </div>
+        <div class="param-control">
+            <label for="timesteps">Límite de pasos de tiempo:</label>
+            <input type="number" id="timesteps" min="100" max="10000" value="1000">
+        </div>
+        <div class="param-control">
+            <label for="depositionRate">Tasa de deposición:</label>
+            <input type="range" id="depositionRate" min="0" max="1" step="0.01" value="0.1">
+            <span id="rateValue">0.1</span>
+        </div>
+        
+        <button id="startBtn">Iniciar Simulación</button>
+        <button id="stopBtn">Detener</button>
+        <button id="resetBtn">Reiniciar</button>
+    </div>
+    
+    <canvas id="simulationCanvas" width="500" height="500"></canvas>
+    
+    <div id="stats"></div>
+    <div id="status">Preparado para simular</div>
+
+    <script>
+        // Variables de simulación
+        let nx = 100, ny = 100;
+        let substrate = [];
+        let height = [];
+        let timestepLimit = 1000;
+        let depositionRate = 0.1;
+        let currentStep = 0;
+        let animationId = null;
+        let deposits = 0;
+        
+        // Elementos del DOM
+        const canvas = document.getElementById('simulationCanvas');
+        const ctx = canvas.getContext('2d');
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const gridSizeInput = document.getElementById('gridSize');
+        const timestepsInput = document.getElementById('timesteps');
+        const depositionRateInput = document.getElementById('depositionRate');
+        const rateValueSpan = document.getElementById('rateValue');
+        const statsDiv = document.getElementById('stats');
+        const statusDiv = document.getElementById('status');
+        
+        // Inicializar la rejilla
+        function initializeGrid() {
+            nx = parseInt(gridSizeInput.value);
+            ny = nx; // Mantener rejilla cuadrada para simplificar
+            
+            // Ajustar tamaño del canvas
+            canvas.width = Math.min(600, nx * 5);
+            canvas.height = Math.min(600, ny * 5);
+            
+            substrate = new Array(nx);
+            height = new Array(nx);
+            
+            for (let i = 0; i < nx; i++) {
+                substrate[i] = new Array(ny).fill(0);
+                height[i] = new Array(ny).fill(0);
+            }
+            
+            currentStep = 0;
+            deposits = 0;
+            updateStatus();
+        }
+        
+        // Actualizar visualización
+        function updateVisualization() {
+            const cellWidth = canvas.width / nx;
+            const cellHeight = canvas.height / ny;
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Encontrar la altura máxima para escalar los colores
+            let maxHeight = 1;
+            for (let i = 0; i < nx; i++) {
+                for (let j = 0; j < ny; j++) {
+                    if (height[i][j] > maxHeight) maxHeight = height[i][j];
+                }
+            }
+            
+            // Dibujar la rejilla
+            for (let i = 0; i < nx; i++) {
+                for (let j = 0; j < ny; j++) {
+                    if (substrate[i][j] === 1) {
+                        // Color basado en la altura (de gris a rojo metálico)
+                        const intensity = 255 - Math.min(255, height[i][j] * 255 / maxHeight);
+                        const red = 150 + Math.min(105, height[i][j] * 105 / maxHeight);
+                        ctx.fillStyle = `rgb(${red}, ${intensity}, ${intensity})`;
+                        ctx.fillRect(i * cellWidth, j * cellHeight, cellWidth, cellHeight);
+                    }
+                }
+            }
+        }
+        
+        // Paso de simulación
+        function simulationStep() {
+            if (currentStep >= timestepLimit) {
+                stopSimulation();
+                statusDiv.textContent = "Simulación completada";
+                return;
+            }
+            
+            currentStep++;
+            
+            // Simular deposición de átomos de Fe
+            if (currentStep > depositionRate * timestepLimit) {
+                const xPos = Math.floor(Math.random() * nx);
+                const yPos = Math.floor(Math.random() * ny);
+                
+                // Verificar si la posición es válida para deposición
+                if (xPos >= 1 && xPos < nx - 1 && yPos >= 1 && yPos < ny - 1) {
+                    // Simular deposición balística
+                    if (substrate[xPos][yPos] === 0) {
+                        substrate[xPos][yPos] = 1;
+                        height[xPos][yPos]++;
+                        deposits++;
+                    }
+                }
+            }
+            
+            updateVisualization();
+            updateStats();
+            
+            if (currentStep < timestepLimit) {
+                animationId = requestAnimationFrame(simulationStep);
+            }
+        }
+        
+        // Actualizar estadísticas
+        function updateStats() {
+            statsDiv.innerHTML = `
+                Pasos: ${currentStep}/${timestepLimit} |
+                Depósitos: ${deposits} |
+                Cobertura: ${(deposits / (nx * ny) * 100).toFixed(2)}%
+            `;
+        }
+        
+        // Actualizar estado
+        function updateStatus() {
+            statusDiv.textContent = `Rejilla: ${nx}×${ny} | Pasos: ${timestepLimit} | Tasa: ${depositionRate}`;
+        }
+        
+        // Iniciar simulación
+        function startSimulation() {
+            if (animationId) return; // Ya está corriendo
+            
+            timestepLimit = parseInt(timestepsInput.value);
+            depositionRate = parseFloat(depositionRateInput.value);
+            
+            statusDiv.textContent = "Simulando...";
+            currentStep = 0;
+            deposits = 0;
+            
+            animationId = requestAnimationFrame(simulationStep);
+        }
+        
+        // Detener simulación
+        function stopSimulation() {
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            }
+            statusDiv.textContent = "Simulación detenida";
+        }
+        
+        // Reiniciar simulación
+        function resetSimulation() {
+            stopSimulation();
+            initializeGrid();
+            updateVisualization();
+            updateStats();
+        }
+        
+        // Event listeners
+        startBtn.addEventListener('click', startSimulation);
+        stopBtn.addEventListener('click', stopSimulation);
+        resetBtn.addEventListener('click', resetSimulation);
+        
+        gridSizeInput.addEventListener('change', function() {
+            nx = parseInt(this.value);
+            ny = nx;
+            resetSimulation();
+        });
+        
+        timestepsInput.addEventListener('change', function() {
+            timestepLimit = parseInt(this.value);
+            updateStatus();
+        });
+        
+        depositionRateInput.addEventListener('input', function() {
+            depositionRate = parseFloat(this.value);
+            rateValueSpan.textContent = depositionRate.toFixed(2);
+            updateStatus();
+        });
+        
+        // Inicialización
+        initializeGrid();
+        updateVisualization();
+    </script>
+</body>
+  </html>
