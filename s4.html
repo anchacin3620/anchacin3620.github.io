@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Proyectiles Funcional</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .simulator {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .controls {
+            flex: 1;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .graph-container {
+            flex: 2;
+        }
+        canvas {
+            background-color: #e8f4f8;
+            border-radius: 8px;
+            width: 100%;
+            height: 400px;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+        input, button {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .results {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f8f5;
+            border-radius: 8px;
+        }
+        .graph-info {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #fffde7;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Simulador de Movimiento de Proyectiles</h1>
+        
+        <div class="simulator">
+            <div class="controls">
+                <label for="initialVelocity">Velocidad inicial (m/s):</label>
+                <input type="number" id="initialVelocity" value="15" min="1">
+                
+                <label for="launchAngle">Ángulo de lanzamiento (°):</label>
+                <input type="number" id="launchAngle" value="45" min="0" max="90">
+                
+                <label for="initialHeight">Altura inicial (m):</label>
+                <input type="number" id="initialHeight" value="0" min="0">
+                
+                <label for="gravity">Gravedad (m/s²):</label>
+                <input type="number" id="gravity" value="9.8" min="1" step="0.1">
+                
+                <button id="simulateBtn">Simular</button>
+                <button id="resetBtn">Reiniciar</button>
+                
+                <div class="results" id="results">
+                    <h3>Resultados:</h3>
+                    <p>Tiempo de vuelo: <span id="flightTime">0</span> s</p>
+                    <p>Alcance máximo: <span id="range">0</span> m</p>
+                    <p>Altura máxima: <span id="maxHeight">0</span> m</p>
+                </div>
+                
+                <div class="graph-info" id="graphInfo">
+                    Configura los parámetros y haz clic en Simular
+                </div>
+            </div>
+            
+            <div class="graph-container">
+                <canvas id="simulationCanvas"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuración del canvas
+        const canvas = document.getElementById('simulationCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = canvas.offsetWidth;
+        canvas.height = 400;
+        
+        // Variables de simulación
+        let animationId = null;
+        let projectile = {
+            x: 0,
+            y: 0,
+            vx: 0,
+            vy: 0,
+            path: [],
+            scaleX: 1,
+            scaleY: 1
+        };
+        
+        // Elementos del DOM
+        const initialVelocityInput = document.getElementById('initialVelocity');
+        const launchAngleInput = document.getElementById('launchAngle');
+        const initialHeightInput = document.getElementById('initialHeight');
+        const gravityInput = document.getElementById('gravity');
+        const simulateBtn = document.getElementById('simulateBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const flightTimeSpan = document.getElementById('flightTime');
+        const rangeSpan = document.getElementById('range');
+        const maxHeightSpan = document.getElementById('maxHeight');
+        const graphInfo = document.getElementById('graphInfo');
+        
+        // Dibujar estado inicial
+        function drawInitialState() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Dibujar ejes
+            ctx.beginPath();
+            ctx.moveTo(50, canvas.height - 50);
+            ctx.lineTo(canvas.width - 50, canvas.height - 50);
+            ctx.moveTo(50, canvas.height - 50);
+            ctx.lineTo(50, 50);
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            
+            // Etiquetas de ejes
+            ctx.font = '14px Arial';
+            ctx.fillStyle = '#333';
+            ctx.fillText('Distancia (m)', canvas.width / 2, canvas.height - 20);
+            ctx.save();
+            ctx.translate(30, canvas.height / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText('Altura (m)', 0, 0);
+            ctx.restore();
+            
+            // Dibujar suelo
+            ctx.beginPath();
+            ctx.moveTo(50, canvas.height - 50);
+            ctx.lineTo(canvas.width - 50, canvas.height - 50);
+            ctx.strokeStyle = '#7f8c8d';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+        
+        // Iniciar simulación
+        simulateBtn.addEventListener('click', () => {
+            // Detener animación existente
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+            }
+            
+            // Obtener valores de entrada
+            const v0 = parseFloat(initialVelocityInput.value);
+            const angle = parseFloat(launchAngleInput.value) * Math.PI / 180;
+            const h0 = parseFloat(initialHeightInput.value);
+            const g = parseFloat(gravityInput.value);
+            
+            // Calcular componentes de velocidad
+            projectile.vx = v0 * Math.cos(angle);
+            projectile.vy = v0 * Math.sin(angle);
+            
+            // Calcular resultados teóricos
+            const flightTime = (projectile.vy + Math.sqrt(projectile.vy*projectile.vy + 2*g*h0)) / g;
+            const range = projectile.vx * flightTime;
+            const maxHeight = h0 + (projectile.vy * projectile.vy) / (2 * g);
+            
+            // Mostrar resultados
+            flightTimeSpan.textContent = flightTime.toFixed(2);
+            rangeSpan.textContent = range.toFixed(2);
+            maxHeightSpan.textContent = maxHeight.toFixed(2);
+            
+            // Configurar escalas
+            projectile.scaleX = (canvas.width - 100) / range;
+            projectile.scaleY = (canvas.height - 100) / maxHeight;
+            
+            // Posición inicial
+            projectile.x = 50;
+            projectile.y = canvas.height - 50 - h0 * projectile.scaleY;
+            projectile.path = [{x: projectile.x, y: projectile.y}];
+            
+            // Actualizar información
+            graphInfo.innerHTML = `
+                Simulación en progreso:<br>
+                Velocidad: ${v0} m/s<br>
+                Ángulo: ${launchAngleInput.value}°<br>
+                Altura: ${h0} m
+            `;
+            
+            // Iniciar animación
+            let time = 0;
+            const animate = () => {
+                time += 0.02;
+                
+                // Calcular posición
+                const xPos = projectile.vx * time;
+                const yPos = h0 + projectile.vy * time - 0.5 * g * time * time;
+                
+                // Actualizar posición en canvas
+                projectile.x = 50 + xPos * projectile.scaleX;
+                projectile.y = canvas.height - 50 - yPos * projectile.scaleY;
+                projectile.path.push({x: projectile.x, y: projectile.y});
+                
+                // Dibujar
+                drawSimulation();
+                
+                // Continuar si no ha terminado
+                if (time < flightTime * 1.1) {
+                    animationId = requestAnimationFrame(animate);
+                } else {
+                    graphInfo.innerHTML += `<br>Simulación completada`;
+                }
+            };
+            
+            animate();
+        });
+        
+        // Dibujar simulación
+        function drawSimulation() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Dibujar ejes y suelo
+            drawInitialState();
+            
+            // Dibujar trayectoria
+            if (projectile.path.length > 1) {
+                ctx.beginPath();
+                ctx.moveTo(projectile.path[0].x, projectile.path[0].y);
+                for (let i = 1; i < projectile.path.length; i++) {
+                    ctx.lineTo(projectile.path[i].x, projectile.path[i].y);
+                }
+                ctx.strokeStyle = '#e74c3c';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+            }
+            
+            // Dibujar proyectil
+            ctx.beginPath();
+            ctx.arc(projectile.x, projectile.y, 6, 0, Math.PI * 2);
+            ctx.fillStyle = '#2c3e50';
+            ctx.fill();
+        }
+        
+        // Reiniciar simulación
+        resetBtn.addEventListener('click', () => {
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            }
+            flightTimeSpan.textContent = '0';
+            rangeSpan.textContent = '0';
+            maxHeightSpan.textContent = '0';
+            graphInfo.textContent = 'Configura los parámetros y haz clic en Simular';
+            drawInitialState();
+        });
+        
+        // Inicializar
+        drawInitialState();
+    </script>
+</body>
+              </html>
