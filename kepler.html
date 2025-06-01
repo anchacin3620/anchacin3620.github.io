@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leyes de Kepler - Simulación Interactiva</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f0f0f0;
+        }
+        h1, h2 {
+            color: #333;
+            text-align: center;
+        }
+        .law-section {
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .canvas-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        p {
+            max-width: 800px;
+            margin: 10px auto;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <h1>Leyes de Kepler: Movimiento Planetario</h1>
+
+    <div class="law-section">
+        <h2>Primera Ley: Ley de las Órbitas Elípticas</h2>
+        <p>Los planetas se mueven en órbitas elípticas con el Sol en uno de los focos. En esta simulación, se muestra un planeta moviéndose en una elipse, con el Sol ubicado en uno de los focos. La elipse tiene un semieje mayor 'a' y una excentricidad 'e'.</p>
+        <div class="canvas-container" id="canvas1"></div>
+    </div>
+
+    <div class="law-section">
+        <h2>Segunda Ley: Ley de las Áreas Iguales</h2>
+        <p>Una línea que conecta un planeta con el Sol barre áreas iguales en intervalos de tiempo iguales. En esta simulación, el planeta se mueve más rápido cerca del Sol (perihelio) y más lento lejos de él (afelio), barriendo áreas iguales en el mismo tiempo.</p>
+        <div class="canvas-container" id="canvas2"></div>
+    </div>
+
+    <div class="law-section">
+        <h2>Tercera Ley: Ley de las Armonías</h2>
+        <p>El cuadrado del período orbital de un planeta es proporcional al cubo de su semieje mayor. Esta simulación muestra dos planetas con diferentes semiejes mayores, donde el período orbital T² es proporcional a a³. Los períodos están escalados para la visualización.</p>
+        <div class="canvas-container" id="canvas3"></div>
+    </div>
+
+    <script>
+        // Primera Ley: Órbita Elíptica
+        function setupFirstLaw() {
+            let sketch = function(p) {
+                let a = 150; // Semieje mayor
+                let e = 0.6; // Excentricidad
+                let b = a * Math.sqrt(1 - e * e); // Semieje menor
+                let c = a * e; // Distancia al foco
+                let theta = 0;
+
+                p.setup = function() {
+                    p.createCanvas(400, 300);
+                    p.background(0);
+                };
+
+                p.draw = function() {
+                    p.background(0);
+                    p.translate(p.width / 2, p.height / 2);
+
+                    // Dibujar el Sol en el foco
+                    p.fill(255, 204, 0);
+                    p.ellipse(c, 0, 20, 20);
+
+                    // Dibujar la elipse
+                    p.noFill();
+                    p.stroke(255);
+                    p.ellipse(0, 0, 2 * a, 2 * b);
+
+                    // Posición del planeta
+                    let x = a * Math.cos(theta);
+                    let y = b * Math.sin(theta);
+                    p.fill(0, 255, 255);
+                    p.ellipse(x + c, y, 10, 10);
+
+                    // Línea del planeta al Sol
+                    p.stroke(255, 0, 0);
+                    p.line(c, 0, x + c, y);
+
+                    theta += 0.02;
+                };
+            };
+            new p5(sketch, 'canvas1');
+        }
+
+        // Segunda Ley: Áreas Iguales
+        function setupSecondLaw() {
+            let sketch = function(p) {
+                let a = 150;
+                let e = 0.6;
+                let b = a * Math.sqrt(1 - e * e);
+                let c = a * e;
+                let theta = 0;
+                let areas = [];
+                let lastArea = null;
+                let t = 0;
+                let areaInterval = 100;
+
+                p.setup = function() {
+                    p.createCanvas(400, 300);
+                    p.background(0);
+                };
+
+                p.draw = function() {
+                    p.background(0);
+                    p.translate(p.width / 2, p.height / 2);
+
+                    // Dibujar el Sol
+                    p.fill(255, 204, 0);
+                    p.ellipse(c, 0, 20, 20);
+
+                    // Dibujar la elipse
+                    p.noFill();
+                    p.stroke(255);
+                    p.ellipse(0, 0, 2 * a, 2 * b);
+
+                    // Posición del planeta
+                    let r = a * (1 - e * e) / (1 + e * Math.cos(theta));
+                    let x = r * Math.cos(theta);
+                    let y = r * Math.sin(theta);
+                    p.fill(0, 255, 255);
+                    p.ellipse(x + c, y, 10, 10);
+
+                    // Línea al Sol
+                    p.stroke(255, 0, 0);
+                    p.line(c, 0, x + c, y);
+
+                    // Calcular área barrida
+                    if (t % areaInterval === 0 && t > 0) {
+                        let lastX = a * (1 - e * e) / (1 + e * Math.cos(theta - 0.02)) * Math.cos(theta - 0.02);
+                        let lastY = a * (1 - e * e) / (1 + e * Math.cos(theta - 0.02)) * Math.sin(theta - 0.02);
+                        let area = 0.5 * Math.abs(c * y - (x + c) * lastY);
+                        areas.push(area);
+                        if (areas.length > 2) areas.shift();
+                        lastArea = area;
+                    }
+
+                    // Mostrar área
+                    if (lastArea) {
+                        p.fill(255);
+                        p.textSize(16);
+                        p.text(`Área barrida: ${lastArea.toFixed(2)}`, -180, 120);
+                    }
+
+                    // Velocidad angular ajustada
+                    let rCurrent = a * (1 - e * e) / (1 + e * Math.cos(theta));
+                    theta += 0.02 * (a / rCurrent) ** 2;
+                    t++;
+                };
+            };
+            new p5(sketch, 'canvas2');
+        }
+
+        // Tercera Ley: Períodos y Semiejes
+        function setupThirdLaw() {
+            let sketch = function(p) {
+                let a1 = 100; // Semieje mayor planeta 1
+                let a2 = 150; // Semieje mayor planeta 2
+                let b1 = a1 * 0.8;
+                let b2 = a2 * 0.8;
+                let theta1 = 0;
+                let theta2 = 0;
+                let T1 = Math.pow(a1, 1.5); // Período escalado
+                let T2 = Math.pow(a2, 1.5);
+
+                p.setup = function() {
+                    p.createCanvas(400, 300);
+                    p.background(0);
+                };
+
+                p.draw = function() {
+                    p.background(0);
+                    p.translate(p.width / 2, p.height / 2);
+
+                    // Dibujar el Sol
+                    p.fill(255, 204, 0);
+                    p.ellipse(0, 0, 20, 20);
+
+                    // Dibujar órbitas
+                    p.noFill();
+                    p.stroke(255);
+                    p.ellipse(0, 0, 2 * a1, 2 * b1);
+                    p.ellipse(0, 0, 2 * a2, 2 * b2);
+
+                    // Planeta 1
+                    let x1 = a1 * Math.cos(theta1);
+                    let y1 = b1 * Math.sin(theta1);
+                    p.fill(0, 255, 255);
+                    p.ellipse(x1, y1, 10, 10);
+
+                    // Planeta 2
+                    let x2 = a2 * Math.cos(theta2);
+                    let y2 = b2 * Math.sin(theta2);
+                    p.fill(255, 0, 255);
+                    p.ellipse(x2, y2, 10, 10);
+
+                    // Actualizar posiciones
+                    theta1 += 0.02 / T1;
+                    theta2 += 0.02 / T2;
+
+                    // Mostrar relación T²/a³
+                    p.fill(255);
+                    p.textSize(16);
+                    p.text(`T²/a³ constante para ambos planetas`, -180, 120);
+                };
+            };
+            new p5(sketch, 'canvas3');
+        }
+
+        // Iniciar simulaciones
+        setupFirstLaw();
+        setupSecondLaw();
+        setupThirdLaw();
+    </script>
+</body>
+</html>
