@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Derivación de E=mc²</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .derivation {
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .step {
+            margin: 15px 0;
+            padding: 10px;
+            border-left: 4px solid #3498db;
+            background-color: #f0f7fd;
+        }
+        .step-number {
+            font-weight: bold;
+            color: #3498db;
+            margin-right: 10px;
+        }
+        .explanation {
+            font-style: italic;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+        .controls {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #eaf7fd;
+            border-radius: 8px;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f8f5;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .final-equation {
+            font-size: 32px;
+            color: #e74c3c;
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #fffde7;
+            border-radius: 8px;
+            border: 2px solid #f39c12;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Derivación de la Ecuación E=mc²</h1>
+        <h2>Equivalencia Masa-Energía</h2>
+        
+        <div class="controls">
+            <label for="mass">Masa en reposo (m) en kg:</label>
+            <input type="number" id="mass" value="1" min="0" step="0.1">
+            
+            <label for="velocity">Velocidad (v) como fracción de c (0-0.999):</label>
+            <input type="number" id="velocity" value="0.5" min="0" max="0.999" step="0.001">
+            
+            <button id="calculateBtn">Calcular</button>
+        </div>
+        
+        <div class="result" id="result">
+            E = <span id="energyValue">0</span> J
+        </div>
+        
+        <div class="final-equation">
+            \[ E = \frac{mc^2}{\sqrt{1 - \frac{v^2}{c^2}}} \]
+            <div>Cuando \( v = 0 \):</div>
+            \[ E = mc^2 \]
+        </div>
+        
+        <div class="derivation">
+            <h2>Derivación Completa</h2>
+            
+            <div class="step">
+                <div><span class="step-number">1.</span> Masa relativista:</div>
+                \[ m' = \frac{m}{\sqrt{1 - \frac{v^2}{c^2}}} \]
+                <div class="explanation">La masa aumenta con la velocidad según la relatividad especial</div>
+            </div>
+            
+            <div class="step">
+                <div><span class="step-number">2.</span> Momento relativista:</div>
+                \[ P = m'v = \frac{mv}{\sqrt{1 - \frac{v^2}{c^2}}} \]
+                <div class="explanation">El momento lineal se define como masa por velocidad</div>
+            </div>
+            
+            <div class="step">
+                <div><span class="step-number">3.</span> Fuerza:</div>
+                \[ F = \frac{dP}{dt} = \frac{d}{dt} \left( \frac{mv}{\sqrt{1 - \frac{v^2}{c^2}}} \right) \]
+                <div class="explanation">Segunda ley de Newton en forma relativista</div>
+            </div>
+            
+            <div class="step">
+                <div><span class="step-number">4.</span> Trabajo infinitesimal:</div>
+                \[ dW = F \cdot d\mathbf{x} = v \cdot d\mathbf{P} \]
+                <div class="explanation">El trabajo es fuerza por desplazamiento</div>
+            </div>
+            
+            <div class="step">
+                <div><span class="step-number">5.</span> Diferencial del momento:</div>
+                \[ dP = m \left( \frac{dv}{\sqrt{1 - \frac{v^2}{c^2}}} + \frac{v(v/c^2) dv}{(1 - \frac{v^2}{c^2})^{3/2}}} \right) \]
+                <div class="explanation">Aplicando la regla del producto en la derivación</div>
+            </div>
+            
+            <div class="step">
+                <div><span class="step-number">6.</span> Trabajo total:</div>
+                \[ W = m \int \left( \frac{v \, dv}{\sqrt{1 - \frac{v^2}{c^2}}} + \frac{v^3 / c^2 \, dv}{(1 - \frac{v^2}{c^2})^{3/2}}} \right) \]
+                \[ = \int \frac{mc^2 v \, dv}{(1 - \frac{v^2}{c^2})^{3/2}}} \]
+                <div class="explanation">Integrando para encontrar el trabajo total</div>
+            </div>
+            
+            <div class="step">
+                <div><span class="step-number">7.</span> Cambio de variable:</div>
+                \[ u = 1 - \frac{v^2}{c^2} \]
+                <div class="explanation">Sustitución para simplificar la integral</div>
+            </div>
+            
+            <div class="step">
+                <div><span class="step-number">8.</span> Solución de la integral:</div>
+                \[ W = mc^2 \left( \frac{1}{\sqrt{1 - \frac{v^2}{c^2}}} - 1 \right) \]
+                <div class="explanation">Resultado de la integración</div>
+            </div>
+            
+            <div class="step">
+                <div><span class="step-number">9.</span> Energía total:</div>
+                \[ E = W + mc^2 = \frac{mc^2}{\sqrt{1 - \frac{v^2}{c^2}}} \]
+                <div class="explanation">Incluyendo la energía en reposo</div>
+            </div>
+            
+            <div class="step">
+                <div><span class="step-number">10.</span> Caso reposo (v=0):</div>
+                \[ E = mc^2 \]
+                <div class="explanation">La famosa ecuación de Einstein</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Constantes físicas
+        const c = 299792458; // Velocidad de la luz en m/s
+        
+        // Elementos del DOM
+        const massInput = document.getElementById('mass');
+        const velocityInput = document.getElementById('velocity');
+        const calculateBtn = document.getElementById('calculateBtn');
+        const energyValue = document.getElementById('energyValue');
+        
+        // Función para calcular la energía
+        function calculateEnergy() {
+            const m = parseFloat(massInput.value);
+            const v = parseFloat(velocityInput.value) * c;
+            
+            if (isNaN(m) || isNaN(v)) {
+                energyValue.textContent = "Entrada inválida";
+                return;
+            }
+            
+            // Calcular energía relativista
+            const gamma = 1 / Math.sqrt(1 - (v*v)/(c*c));
+            const E = m * c * c * gamma;
+            
+            // Mostrar resultado formateado
+            energyValue.textContent = E.toExponential(4);
+        }
+        
+        // Event listeners
+        calculateBtn.addEventListener('click', calculateEnergy);
+        
+        // Calcular al cargar la página
+        window.addEventListener('load', calculateEnergy);
+    </script>
+</body>
+  </html>
