@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leyes de Kepler</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+        }
+        .law {
+            background-color: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        canvas {
+            border: 1px solid black;
+            margin-top: 20px;
+        }
+        button {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Las Tres Leyes de Kepler</h1>
+
+        <div class="law">
+            <h2>Primera Ley de Kepler: Ley de las Órbitas Elípticas</h2>
+            <p>Los planetas se mueven alrededor del Sol en órbitas elípticas, con el Sol en uno de los focos de la elipse.</p>
+            <canvas id="firstLawCanvas" width="400" height="400"></canvas>
+            <button onclick="drawFirstLaw()">Mostrar Órbita Elíptica</button>
+        </div>
+
+        <div class="law">
+            <h2>Segunda Ley de Kepler: Ley de las Áreas</h2>
+            <p>Una línea que conecta un planeta con el Sol barre áreas iguales en tiempos iguales.</p>
+            <canvas id="secondLawCanvas" width="400" height="400"></canvas>
+            <button onclick="startSecondLawSimulation()">Iniciar Simulación de Áreas</button>
+        </div>
+
+        <div class="law">
+            <h2>Tercera Ley de Kepler: Ley de los Períodos</h2>
+            <p>El cuadrado del período orbital de un planeta es proporcional al cubo del semieje mayor de su órbita.</p>
+            <canvas id="thirdLawCanvas" width="400" height="400"></canvas>
+            <button onclick="drawThirdLaw()">Mostrar Períodos Orbitales</button>
+        </div>
+    </div>
+
+    <script>
+        // Simulación de la Primera Ley de Kepler
+        const firstLawCanvas = document.getElementById('firstLawCanvas');
+        const firstLawCtx = firstLawCanvas.getContext('2d');
+
+        function drawFirstLaw() {
+            firstLawCtx.clearRect(0, 0, firstLawCanvas.width, firstLawCanvas.height);
+
+            // Dibujar el Sol en un foco
+            firstLawCtx.beginPath();
+            firstLawCtx.arc(200, 200, 10, 0, Math.PI * 2);
+            firstLawCtx.fillStyle = 'yellow';
+            firstLawCtx.fill();
+            firstLawCtx.closePath();
+
+            // Dibujar la órbita elíptica
+            firstLawCtx.beginPath();
+            firstLawCtx.ellipse(200, 200, 150, 100, 0, 0, Math.PI * 2);
+            firstLawCtx.strokeStyle = 'black';
+            firstLawCtx.stroke();
+            firstLawCtx.closePath();
+        }
+
+        // Simulación de la Segunda Ley de Kepler
+        const secondLawCanvas = document.getElementById('secondLawCanvas');
+        const secondLawCtx = secondLawCanvas.getContext('2d');
+
+        let angle = 0;
+        let animationId;
+
+        function drawSecondLaw() {
+            secondLawCtx.clearRect(0, 0, secondLawCanvas.width, secondLawCanvas.height);
+
+            // Dibujar el Sol
+            secondLawCtx.beginPath();
+            secondLawCtx.arc(200, 200, 10, 0, Math.PI * 2);
+            secondLawCtx.fillStyle = 'yellow';
+            secondLawCtx.fill();
+            secondLawCtx.closePath();
+
+            // Dibujar el planeta en movimiento
+            const radiusX = 150;
+            const radiusY = 100;
+            const x = 200 + radiusX * Math.cos(angle);
+            const y = 200 + radiusY * Math.sin(angle);
+
+            secondLawCtx.beginPath();
+            secondLawCtx.arc(x, y, 5, 0, Math.PI * 2);
+            secondLawCtx.fillStyle = 'blue';
+            secondLawCtx.fill();
+            secondLawCtx.closePath();
+
+            // Dibujar la línea que conecta el planeta con el Sol
+            secondLawCtx.beginPath();
+            secondLawCtx.moveTo(200, 200);
+            secondLawCtx.lineTo(x, y);
+            secondLawCtx.strokeStyle = 'rgba(0, 0, 0, 0.3)';
+            secondLawCtx.stroke();
+            secondLawCtx.closePath();
+
+            angle += 0.05;
+            if (angle > Math.PI * 2) {
+                angle = 0;
+            }
+
+            animationId = requestAnimationFrame(drawSecondLaw);
+        }
+
+        function startSecondLawSimulation() {
+            cancelAnimationFrame(animationId);
+            drawSecondLaw();
+        }
+
+        // Simulación de la Tercera Ley de Kepler
+        const thirdLawCanvas = document.getElementById('thirdLawCanvas');
+        const thirdLawCtx = thirdLawCanvas.getContext('2d');
+
+        function drawThirdLaw() {
+            thirdLawCtx.clearRect(0, 0, thirdLawCanvas.width, thirdLawCanvas.height);
+
+            // Dibujar el Sol
+            thirdLawCtx.beginPath();
+            thirdLawCtx.arc(200, 200, 10, 0, Math.PI * 2);
+            thirdLawCtx.fillStyle = 'yellow';
+            thirdLawCtx.fill();
+            thirdLawCtx.closePath();
+
+            // Dibujar órbitas de diferentes planetas
+            const orbits = [
+                { radius: 50, color: 'red', speed: 0.02 },
+                { radius: 90, color: 'green', speed: 0.01 },
+                { radius: 130, color: 'purple', speed: 0.005 }
+            ];
+
+            orbits.forEach(orbit => {
+                thirdLawCtx.beginPath();
+                thirdLawCtx.arc(200, 200, orbit.radius, 0, Math.PI * 2);
+                thirdLawCtx.strokeStyle = orbit.color;
+                thirdLawCtx.stroke();
+                thirdLawCtx.closePath();
+            });
+        }
+    </script>
+</body>
+</html>
