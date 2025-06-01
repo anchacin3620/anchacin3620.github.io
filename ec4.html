@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador Completo de E=mc²</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .simulator {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .controls {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .graph-container {
+            flex: 2;
+            min-width: 400px;
+        }
+        canvas {
+            background-color: #e8f4f8;
+            border-radius: 8px;
+            width: 100%;
+            height: 400px;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .results {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f8f5;
+            border-radius: 8px;
+        }
+        .derivation {
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .step {
+            margin: 20px 0;
+            padding: 15px;
+            border-left: 4px solid #3498db;
+            background-color: #f0f7fd;
+        }
+        .step-number {
+            font-weight: bold;
+            color: #3498db;
+            margin-right: 10px;
+        }
+        .explanation {
+            font-style: italic;
+            color: #7f8c8d;
+            margin-top: 10px;
+        }
+        .final-equation {
+            font-size: 32px;
+            color: #e74c3c;
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #fffde7;
+            border-radius: 8px;
+            border: 2px solid #f39c12;
+        }
+        .error-correction {
+            background-color: #ffebee;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 4px solid #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Simulador Completo de la Ecuación E=mc²</h1>
+        <h2>Equivalencia Masa-Energía</h2>
+
+        <div class="simulator">
+            <div class="controls">
+                <label for="mass">Masa en reposo (m) en kg:</label>
+                <input type="number" id="mass" value="1" min="0" step="0.1">
+
+                <label for="velocity">Velocidad (v) como fracción de c (0-0.999):</label>
+                <input type="number" id="velocity" value="0.5" min="0" max="0.999" step="0.001">
+
+                <label for="gravity">Velocidad de la luz (c) en m/s:</label>
+                <input type="number" id="lightSpeed" value="299792458" readonly>
+
+                <button id="calculateBtn">Calcular Energía</button>
+                <button id="resetBtn">Reiniciar</button>
+
+                <div class="results" id="results">
+                    <h3>Resultados:</h3>
+                    <p>Energía relativista: <span id="energyValue">0</span> J</p>
+                    <p>Factor de Lorentz (γ): <span id="gammaValue">1</span></p>
+                    <p>Masa relativista: <span id="relMass">1</span> kg</p>
+                </div>
+            </div>
+
+            <div class="graph-container">
+                <canvas id="energyGraph"></canvas>
+            </div>
+        </div>
+
+        <div class="final-equation">
+            \[ E = \frac{mc^2}{\sqrt{1 - \frac{v^2}{c^2}}} \]
+            <div>Cuando \( v = 0 \):</div>
+            \[ E = mc^2 \]
+        </div>
+
+        <div class="derivation">
+            <h2>Derivación Matemática Completa</h2>
+
+            <div class="step">
+                <div><span class="step-number">1.</span> Masa relativista:</div>
+                \[ m' = \frac{m}{\sqrt{1 - \frac{v^2}{c^2}}} \]
+                <div class="explanation">La masa aumenta con la velocidad según la relatividad especial</div>
+            </div>
+
+            <div class="step">
+                <div><span class="step-number">2.</span> Momento relativista:</div>
+                \[ P = m'v = \frac{mv}{\sqrt{1 - \frac{v^2}{c^2}}} \]
+                <div class="explanation">El momento lineal se define como masa por velocidad</div>
+            </div>
+
+            <div class="step">
+                <div><span class="step-number">3.</span> Fuerza relativista:</div>
+                \[ F = \frac{dP}{dt} = \frac{d}{dt} \left( \frac{mv}{\sqrt{1 - \frac{v^2}{c^2}}} \right) \]
+                <div class="explanation">Segunda ley de Newton en forma relativista</div>
+            </div>
+
+            <div class="step">
+                <div><span class="step-number">4.</span> Trabajo infinitesimal:</div>
+                \[ dW = F \cdot dx = v \cdot dP \]
+                <div class="explanation">El trabajo es fuerza por desplazamiento</div>
+            </div>
+
+            <div class="step">
+                <div><span class="step-number">5.</span> Diferencial del momento (corregido):</div>
+                \[ dP = m \left( \frac{dv}{\sqrt{1 - \frac{v^2}{c^2}}} + \frac{v^2}{c^2} \cdot \frac{dv}{\left(1 - \frac{v^2}{c^2}\right)^{3/2}} \right) \]
+                <div class="explanation">Aplicando la regla del producto en la derivación</div>
+                <div class="error-correction">
+                    <strong>Corrección:</strong> Se han añadido las llaves faltantes y corregido la estructura de la ecuación.
+                </div>
+            </div>
+
+            <div class="step">
+                <div><span class="step-number">6.</span> Trabajo total (corregido):</div>
+                \[ W = m \int_0^v \left( \frac{v \, dv}{\sqrt{1 - \frac{v^2}{c^2}}} + \frac{v^3}{c^2} \cdot \frac{dv}{\left(1 - \frac{v^2}{c^2}\right)^{3/2}} \right) \]
+                \[ W = \int_0^v \frac{mc^2 v \, dv}{\left(1 - \frac{v^2}{c^2}\right)^{3/2}} \]
+                <div class="explanation">Integrando para encontrar el trabajo total</div>
+                <div class="error-correction">
+                    <strong>Corrección:</strong> Se han corregido las llaves mal cerradas y añadido los límites de integración.
+                </div>
+            </div>
+
+            <div class="step">
+                <div><span class="step-number">7.</span> Cambio de variable:</div>
+                \[ u = 1 - \frac{v^2}{c^2} \]
+                \[ du = -\frac{2v}{c^2} dv \]
+                <div class="explanation">Sustitución para simplificar la integral</div>
+            </div>
+
+            <div class="step">
+                <div><span class="step-number">8.</span> Solución de la integral:</div>
+                \[ W = mc^2 \left( \frac{1}{\sqrt{1 - \frac{v^2}{c^2}}} - 1 \right) \]
+                <div class="explanation">Resultado de la integración</div>
+            </div>
+
+            <div class="step">
+                <div><span class="step-number">9.</span> Energía total:</div>
+                \[ E = W + mc^2 = \frac{mc^2}{\sqrt{1 - \frac{v^2}{c^2}}} \]
+                <div class="explanation">Incluyendo la energía en reposo</div>
+            </div>
+
+            <div class="step">
+                <div><span class="step-number">10.</span> Caso reposo (v=0):</div>
+                \[ E = mc^2 \]
+                <div class="explanation">La famosa ecuación de Einstein</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Constantes
+        const c = 299792458; // Velocidad de la luz en m/s
+
+        // Configuración del canvas
+        const canvas = document.getElementById('energyGraph');
+        const ctx = canvas.getContext('2d');
+        canvas.width = canvas.offsetWidth;
+        canvas.height = 400;
+
+        // Elementos del DOM
+        const massInput = document.getElementById('mass');
+        const velocityInput = document.getElementById('velocity');
+        const calculateBtn = document.getElementById('calculateBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const energyValue = document.getElementById('energyValue');
+        const gammaValue = document.getElementById('gammaValue');
+        const relMass = document.getElementById('relMass');
+
+        // Función para calcular la energía relativista
+        function calculateEnergy() {
+            const m = parseFloat(massInput.value);
+            const v = parseFloat(velocityInput.value) * c;
+
+            if (isNaN(m) || isNaN(v)) {
+                alert("Por favor ingresa valores válidos");
+                return;
+            }
+
+            // Calcular factor de Lorentz
+            const gamma = 1 / Math.sqrt(1 - (v*v)/(c*c));
+
+            // Calcular energía y masa relativista
+            const E = m * c * c * gamma;
+            const mRel = m * gamma;
+
+            // Mostrar resultados
+            energyValue.textContent = E.toExponential(4);
+            gammaValue.textContent = gamma.toFixed(6);
+            relMass.textContent = mRel.toFixed(6);
+
+            // Dibujar gráfico
+            drawGraph(m, v);
+        }
+
+        // Función para dibujar el gráfico
+        function drawGraph(m, v) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Configurar ejes
+            const margin = 50;
+            const graphWidth = canvas.width - 2 * margin;
+            const graphHeight = canvas.height - 2 * margin;
+
+            // Dibujar ejes
+            ctx.beginPath();
+            ctx.moveTo(margin, margin);
+            ctx.lineTo(margin, canvas.height - margin);
+            ctx.lineTo(canvas.width - margin, canvas.height - margin);
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Etiquetas de ejes
+            ctx.font = '14px Arial';
+            ctx.fillStyle = '#333';
+            ctx.fillText('Velocidad (fracción de c)', canvas.width / 2, canvas.height - 10);
+            ctx.save();
+            ctx.translate(15, canvas.height / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText('Energía (J)', 0, 0);
+            ctx.restore();
+
+            // Dibujar curva de energía
+            ctx.beginPath();
+            ctx.moveTo(margin, canvas.height - margin);
+
+            const maxV = 0.999 * c;
+            const steps = 100;
+
+            for (let i = 0; i <= steps; i++) {
+                const currentV = (i / steps) * maxV;
+                const gamma = 1 / Math.sqrt(1 - (currentV*currentV)/(c*c));
+                const E = m * c * c * gamma;
+
+                // Escalar para el gráfico
+                const x = margin + (i / steps) * graphWidth;
+                const y = canvas.height - margin - (E / (m * c * c * 10)) * graphHeight;
+
+                if (i === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+
+                // Marcar el punto actual si está cerca del valor seleccionado
+                if (Math.abs(currentV - v) < (maxV / steps)) {
+                    ctx.beginPath();
+                    ctx.arc(x, y, 5, 0, Math.PI * 2);
+                    ctx.fillStyle = '#e74c3c';
+                    ctx.fill();
+                }
+            }
+
+            ctx.strokeStyle = '#3498db';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            // Dibujar línea E=mc²
+            ctx.beginPath();
+            ctx.moveTo(margin, canvas.height - margin - (1 * graphHeight / 10));
+            ctx.lineTo(canvas.width - margin, canvas.height - margin - (1 * graphHeight / 10));
+            ctx.strokeStyle = '#2ecc71';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([5, 3]);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Leyenda
+            ctx.font = '12px Arial';
+            ctx.fillStyle = '#3498db';
+            ctx.fillText('Energía relativista', margin + 10, margin + 20);
+            ctx.fillStyle = '#2ecc71';
+            ctx.fillText('E = mc² (reposo)', margin + 10, margin + 40);
+        }
+
+        // Event listeners
+        calculateBtn.addEventListener('click', calculateEnergy);
+        resetBtn.addEventListener('click', () => {
+            massInput.value = '1';
+            velocityInput.value = '0.5';
+            energyValue.textContent = '0';
+            gammaValue.textContent = '1';
+            relMass.textContent = '1';
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        });
+
+        // Inicializar
+        calculateEnergy();
+    </script>
+</body>
+</html>
