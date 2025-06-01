@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leyes de Newton</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+        }
+        .law {
+            background-color: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        canvas {
+            border: 1px solid black;
+            margin-top: 20px;
+        }
+        button {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Las Tres Leyes de Newton</h1>
+
+        <div class="law">
+            <h2>Primera Ley de Newton: Ley de Inercia</h2>
+            <p>Un objeto en reposo permanece en reposo y un objeto en movimiento permanece en movimiento a una velocidad constante a menos que actúe sobre él una fuerza externa.</p>
+            <canvas id="firstLawCanvas" width="600" height="200"></canvas>
+            <button onclick="startFirstLawSimulation()">Iniciar Simulación</button>
+        </div>
+
+        <div class="law">
+            <h2>Segunda Ley de Newton: Ley de Fuerza</h2>
+            <p>La fuerza neta aplicada sobre un objeto es directamente proporcional a la aceleración que adquiere en su dirección. La fórmula es F = m * a.</p>
+            <canvas id="secondLawCanvas" width="600" height="200"></canvas>
+            <button onclick="startSecondLawSimulation()">Iniciar Simulación</button>
+        </div>
+
+        <div class="law">
+            <h2>Tercera Ley de Newton: Ley de Acción-Reacción</h2>
+            <p>Por cada acción hay una reacción igual y opuesta.</p>
+            <canvas id="thirdLawCanvas" width="600" height="200"></canvas>
+            <button onclick="drawThirdLaw()">Mostrar Acción-Reacción</button>
+        </div>
+    </div>
+
+    <script>
+        // Simulación de la Primera Ley de Newton
+        const firstLawCanvas = document.getElementById('firstLawCanvas');
+        const firstLawCtx = firstLawCanvas.getContext('2d');
+
+        function drawFirstLaw() {
+            firstLawCtx.clearRect(0, 0, firstLawCanvas.width, firstLawCanvas.height);
+            firstLawCtx.beginPath();
+            firstLawCtx.arc(50, firstLawCanvas.height / 2, 10, 0, Math.PI * 2);
+            firstLawCtx.fillStyle = 'blue';
+            firstLawCtx.fill();
+            firstLawCtx.closePath();
+        }
+
+        function startFirstLawSimulation() {
+            drawFirstLaw();
+        }
+
+        // Simulación de la Segunda Ley de Newton
+        const secondLawCanvas = document.getElementById('secondLawCanvas');
+        const secondLawCtx = secondLawCanvas.getContext('2d');
+
+        let position = 0;
+        let velocity = 0;
+        let acceleration = 0.1;
+        let animationId;
+
+        function updateSecondLaw() {
+            velocity += acceleration;
+            position += velocity;
+
+            secondLawCtx.clearRect(0, 0, secondLawCanvas.width, secondLawCanvas.height);
+            secondLawCtx.beginPath();
+            secondLawCtx.arc(position, secondLawCanvas.height / 2, 10, 0, Math.PI * 2);
+            secondLawCtx.fillStyle = 'red';
+            secondLawCtx.fill();
+            secondLawCtx.closePath();
+
+            if (position < secondLawCanvas.width) {
+                animationId = requestAnimationFrame(updateSecondLaw);
+            } else {
+                cancelAnimationFrame(animationId);
+            }
+        }
+
+        function startSecondLawSimulation() {
+            position = 0;
+            velocity = 0;
+            cancelAnimationFrame(animationId);
+            updateSecondLaw();
+        }
+
+        // Simulación de la Tercera Ley de Newton
+        const thirdLawCanvas = document.getElementById('thirdLawCanvas');
+        const thirdLawCtx = thirdLawCanvas.getContext('2d');
+
+        function drawThirdLaw() {
+            thirdLawCtx.clearRect(0, 0, thirdLawCanvas.width, thirdLawCanvas.height);
+
+            // Dibujar dos objetos
+            thirdLawCtx.beginPath();
+            thirdLawCtx.arc(100, thirdLawCanvas.height / 2, 15, 0, Math.PI * 2);
+            thirdLawCtx.fillStyle = 'green';
+            thirdLawCtx.fill();
+            thirdLawCtx.closePath();
+
+            thirdLawCtx.beginPath();
+            thirdLawCtx.arc(200, thirdLawCanvas.height / 2, 15, 0, Math.PI * 2);
+            thirdLawCtx.fillStyle = 'purple';
+            thirdLawCtx.fill();
+            thirdLawCtx.closePath();
+
+            // Dibujar flechas para indicar acción y reacción
+            thirdLawCtx.beginPath();
+            thirdLawCtx.moveTo(125, thirdLawCanvas.height / 2);
+            thirdLawCtx.lineTo(175, thirdLawCanvas.height / 2);
+            thirdLawCtx.strokeStyle = 'black';
+            thirdLawCtx.lineWidth = 2;
+            thirdLawCtx.stroke();
+            thirdLawCtx.closePath();
+
+            thirdLawCtx.beginPath();
+            thirdLawCtx.moveTo(175, thirdLawCanvas.height / 2);
+            thirdLawCtx.lineTo(125, thirdLawCanvas.height / 2);
+            thirdLawCtx.stroke();
+            thirdLawCtx.closePath();
+        }
+    </script>
+</body>
+</html>
