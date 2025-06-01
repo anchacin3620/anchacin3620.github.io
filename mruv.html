@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Movimiento Rectilíneo Uniformemente Variado</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+        }
+        canvas {
+            border: 1px solid black;
+            margin-top: 20px;
+        }
+        .controls {
+            margin: 20px 0;
+        }
+        .explanation {
+            background-color: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Simulador de Movimiento Rectilíneo Uniformemente Variado</h1>
+
+        <div class="explanation">
+            <h2>Explicación del MRUV</h2>
+            <p>El Movimiento Rectilíneo Uniformemente Variado (MRUV) es un tipo de movimiento en el que un objeto se mueve en línea recta con una aceleración constante. Esto significa que la velocidad del objeto cambia de manera uniforme con el tiempo.</p>
+            <p>La fórmula básica del MRUV es: \( x = x_0 + v_0 \cdot t + \frac{1}{2} a \cdot t^2 \), donde:</p>
+            <ul>
+                <li>\( x \) es la posición final del objeto.</li>
+                <li>\( x_0 \) es la posición inicial del objeto.</li>
+                <li>\( v_0 \) es la velocidad inicial del objeto.</li>
+                <li>\( a \) es la aceleración constante del objeto.</li>
+                <li>\( t \) es el tiempo transcurrido.</li>
+            </ul>
+        </div>
+
+        <div class="controls">
+            <label for="initialPosition">Posición Inicial (m):</label>
+            <input type="number" id="initialPosition" value="0"><br><br>
+
+            <label for="initialVelocity">Velocidad Inicial (m/s):</label>
+            <input type="number" id="initialVelocity" value="0"><br><br>
+
+            <label for="acceleration">Aceleración (m/s²):</label>
+            <input type="number" id="acceleration" value="1"><br><br>
+
+            <button onclick="startSimulation()">Iniciar Simulación</button>
+            <button onclick="resetSimulation()">Reiniciar</button>
+        </div>
+
+        <canvas id="simulationCanvas" width="600" height="200"></canvas>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('simulationCanvas');
+        const ctx = canvas.getContext('2d');
+        let animationId;
+        let startTime;
+
+        function drawObject(position) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.beginPath();
+            ctx.arc(position, canvas.height / 2, 10, 0, Math.PI * 2);
+            ctx.fillStyle = 'blue';
+            ctx.fill();
+            ctx.closePath();
+        }
+
+        function startSimulation() {
+            const initialPosition = parseFloat(document.getElementById('initialPosition').value);
+            const initialVelocity = parseFloat(document.getElementById('initialVelocity').value);
+            const acceleration = parseFloat(document.getElementById('acceleration').value);
+
+            if (isNaN(initialPosition) || isNaN(initialVelocity) || isNaN(acceleration)) {
+                alert('Por favor, ingrese valores válidos para la posición inicial, la velocidad inicial y la aceleración.');
+                return;
+            }
+
+            cancelAnimationFrame(animationId);
+            startTime = Date.now();
+
+            function update() {
+                const currentTime = Date.now();
+                const elapsedTime = (currentTime - startTime) / 1000; // Convertir a segundos
+                const currentPosition = initialPosition + initialVelocity * elapsedTime + 0.5 * acceleration * Math.pow(elapsedTime, 2);
+
+                drawObject(currentPosition);
+                animationId = requestAnimationFrame(update);
+            }
+
+            update();
+        }
+
+        function resetSimulation() {
+            cancelAnimationFrame(animationId);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+    </script>
+</body>
+</html>
