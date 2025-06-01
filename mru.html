@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Movimiento Rectilíneo Uniforme</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+        }
+        canvas {
+            border: 1px solid black;
+            margin-top: 20px;
+        }
+        .controls {
+            margin: 20px 0;
+        }
+        .explanation {
+            background-color: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Simulador de Movimiento Rectilíneo Uniforme</h1>
+
+        <div class="explanation">
+            <h2>Explicación del MRU</h2>
+            <p>El Movimiento Rectilíneo Uniforme (MRU) es un tipo de movimiento en el que un objeto se mueve en línea recta a una velocidad constante. Esto significa que el objeto recorre distancias iguales en intervalos de tiempo iguales.</p>
+            <p>La fórmula básica del MRU es: \( x = x_0 + v \cdot t \), donde:</p>
+            <ul>
+                <li>\( x \) es la posición final del objeto.</li>
+                <li>\( x_0 \) es la posición inicial del objeto.</li>
+                <li>\( v \) es la velocidad constante del objeto.</li>
+                <li>\( t \) es el tiempo transcurrido.</li>
+            </ul>
+        </div>
+
+        <div class="controls">
+            <label for="initialPosition">Posición Inicial (m):</label>
+            <input type="number" id="initialPosition" value="0"><br><br>
+
+            <label for="velocity">Velocidad (m/s):</label>
+            <input type="number" id="velocity" value="1"><br><br>
+
+            <button onclick="startSimulation()">Iniciar Simulación</button>
+            <button onclick="resetSimulation()">Reiniciar</button>
+        </div>
+
+        <canvas id="simulationCanvas" width="600" height="200"></canvas>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('simulationCanvas');
+        const ctx = canvas.getContext('2d');
+        let animationId;
+        let startTime;
+
+        function drawObject(position) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.beginPath();
+            ctx.arc(position, canvas.height / 2, 10, 0, Math.PI * 2);
+            ctx.fillStyle = 'blue';
+            ctx.fill();
+            ctx.closePath();
+        }
+
+        function startSimulation() {
+            const initialPosition = parseFloat(document.getElementById('initialPosition').value);
+            const velocity = parseFloat(document.getElementById('velocity').value);
+
+            if (isNaN(initialPosition) || isNaN(velocity)) {
+                alert('Por favor, ingrese valores válidos para la posición inicial y la velocidad.');
+                return;
+            }
+
+            cancelAnimationFrame(animationId);
+            startTime = Date.now();
+
+            function update() {
+                const currentTime = Date.now();
+                const elapsedTime = (currentTime - startTime) / 1000; // Convertir a segundos
+                const currentPosition = initialPosition + velocity * elapsedTime;
+
+                drawObject(currentPosition);
+                animationId = requestAnimationFrame(update);
+            }
+
+            update();
+        }
+
+        function resetSimulation() {
+            cancelAnimationFrame(animationId);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+    </script>
+</body>
+</html>
