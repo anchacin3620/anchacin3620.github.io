@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teoría de Cuerdas Interactiva</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .text-section {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        canvas {
+            border: 2px solid #2c3e50;
+            border-radius: 8px;
+        }
+        .controls {
+            text-align: center;
+            margin: 10px 0;
+        }
+        button, input {
+            padding: 10px;
+            margin: 5px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Explorando la Teoría de Cuerdas</h1>
+    <div class="container">
+        <div class="text-section">
+            <h2>¿Qué es la Teoría de Cuerdas?</h2>
+            <p>La teoría de cuerdas propone que las partículas fundamentales, como electrones y quarks, no son puntos, sino diminutas "cuerdas" unidimensionales que vibran a diferentes frecuencias. Estas vibraciones determinan las propiedades de las partículas, como su masa y carga.</p>
+            <p>Para que la teoría funcione, requiere la existencia de dimensiones adicionales (generalmente 10 u 11), más allá de las cuatro espacio-temporales que percibimos (tres espaciales + tiempo). Estas dimensiones extra estarían "compactadas" en escalas muy pequeñas.</p>
+            <h2>Visualización Interactiva</h2>
+            <p>A continuación, puedes interactuar con una simulación que muestra cómo una cuerda unidimensional vibra en diferentes modos. Usa los controles para ajustar la frecuencia y la amplitud de la vibración, y observa cómo cambian los patrones.</p>
+        </div>
+        <div class="text-section">
+            <h2>Simulación de Vibraciones de Cuerdas</h2>
+            <div class="controls">
+                <label for="frequency">Frecuencia:</label>
+                <input type="range" id="frequency" min="1" max="10" value="3">
+                <label for="amplitude">Amplitud:</label>
+                <input type="range" id="amplitude" min="10" max="100" value="50">
+                <button onclick="toggleDimensions()">Alternar Dimensiones Extra</button>
+            </div>
+            <div id="canvas-container"></div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script>
+    <script>
+        let frequency = 3;
+        let amplitude = 50;
+        let showExtraDimensions = false;
+
+        function setup() {
+            let canvas = createCanvas(600, 400);
+            canvas.parent('canvas-container');
+        }
+
+        function draw() {
+            background(255);
+            stroke(44, 62, 80);
+            strokeWeight(2);
+            noFill();
+
+            // Dibujar cuerda vibrante en 2D
+            beginShape();
+            for (let x = 0; x < width; x++) {
+                let y = height / 2 + amplitude * sin((x * frequency * TWO_PI) / width);
+                vertex(x, y);
+            }
+            endShape();
+
+            // Mostrar dimensiones extra si está activado
+            if (showExtraDimensions) {
+                stroke(231, 76, 60);
+                strokeWeight(1);
+                for (let i = 0; i < 5; i++) {
+                    beginShape();
+                    for (let x = 0; x < width; x++) {
+                        let offset = i * 10 - 20;
+                        let y = height / 2 + (amplitude * 0.5) * sin((x * frequency * TWO_PI) / width + offset);
+                        vertex(x, y + offset);
+                    }
+                    endShape();
+                }
+            }
+
+            // Texto explicativo en el canvas
+            fill(0);
+            noStroke();
+            textSize(16);
+            textAlign(LEFT);
+            text("Modo de vibración: " + frequency, 10, 30);
+            text("Amplitud: " + amplitude, 10, 50);
+            if (showExtraDimensions) {
+                text("Visualizando proyección de dimensiones extra", 10, 70);
+            }
+        }
+
+        // Actualizar frecuencia y amplitud desde los controles
+        document.getElementById('frequency').addEventListener('input', function() {
+            frequency = parseInt(this.value);
+        });
+
+        document.getElementById('amplitude').addEventListener('input', function() {
+            amplitude = parseInt(this.value);
+        });
+
+        // Alternar visualización de dimensiones extra
+        function toggleDimensions() {
+            showExtraDimensions = !showExtraDimensions;
+        }
+    </script>
+</body>
+</html>
