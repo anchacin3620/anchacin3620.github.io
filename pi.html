@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulación Monte Carlo para Pi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+            background-color: #f4f4f4;
+        }
+        canvas {
+            border: 2px solid #333;
+            background-color: #fff;
+            margin-top: 20px;
+        }
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        input[type="number"] {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 80px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .results {
+            margin-top: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+        }
+        p {
+            text-align: center;
+            max-width: 600px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Simulación Monte Carlo para Pi</h1>
+    <p>
+        Esta simulación estima el valor de Pi. Se "lanzan" puntos aleatorios dentro de un cuadrado que contiene un círculo.
+        La proporción de puntos que caen dentro del círculo con respecto al total de puntos es directamente proporcional a la relación de las áreas
+        del círculo y el cuadrado.
+        Área del círculo = $\pi * r^2$ <br>
+        Área del cuadrado = $(2r)^2 = 4r^2$ <br>
+        Relación de áreas = $(\pi * r^2) / (4r^2) = \pi / 4$ <br>
+        Por lo tanto, $\pi = 4 * (\text{Puntos dentro del círculo} / \text{Total de puntos})$
+    </p>
+
+    <div class="controls">
+        <label for="numPoints">Número de puntos:</label>
+        <input type="number" id="numPoints" value="10000" min="100" step="100">
+        <button onclick="startSimulation()">Iniciar Simulación</button>
+    </div>
+
+    <canvas id="monteCarloCanvas" width="400" height="400"></canvas>
+
+    <div class="results">
+        <p>Pi Estimado: <span id="estimatedPi">0</span></p>
+        <p>Puntos dentro del círculo: <span id="inCirclePoints">0</span></p>
+        <p>Total de puntos: <span id="totalPoints">0</span></p>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('monteCarloCanvas');
+        const ctx = canvas.getContext('2d');
+        const canvasSize = canvas.width; // El lienzo es cuadrado
+        const radius = canvasSize / 2; // El radio del círculo es la mitad del tamaño del lienzo
+        const centerX = canvasSize / 2;
+        const centerY = canvasSize / 2;
+
+        let totalPoints = 0;
+        let inCirclePoints = 0;
+        let animationFrameId;
+
+        function drawInitialSetup() {
+            ctx.clearRect(0, 0, canvasSize, canvasSize); // Limpiar el lienzo
+
+            // Dibujar el cuadrado (todo el lienzo)
+            ctx.strokeStyle = '#333';
+            ctx.strokeRect(0, 0, canvasSize, canvasSize);
+
+            // Dibujar el círculo
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+            ctx.strokeStyle = 'blue';
+            ctx.stroke();
+            ctx.closePath();
+        }
+
+        function calculatePi() {
+            if (totalPoints === 0) return 0;
+            return 4 * (inCirclePoints / totalPoints);
+        }
+
+        function animateSimulation(targetPoints) {
+            if (totalPoints >= targetPoints) {
+                cancelAnimationFrame(animationFrameId);
+                return;
+            }
+
+            const pointsPerFrame = Math.min(100, targetPoints - totalPoints); // Añadir 100 puntos por frame o los restantes
+
+            for (let i = 0; i < pointsPerFrame; i++) {
+                const x = Math.random() * canvasSize; // Coordenada X aleatoria dentro del lienzo
+                const y = Math.random() * canvasSize; // Coordenada Y aleatoria dentro del lienzo
+
+                // Calcular la distancia desde el centro del círculo
+                const distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2));
+
+                totalPoints++;
+
+                if (distance <= radius) {
+                    inCirclePoints++;
+                    ctx.fillStyle = 'green'; // Punto dentro del círculo
+                } else {
+                    ctx.fillStyle = 'red'; // Punto fuera del círculo
+                }
+                ctx.beginPath();
+                ctx.arc(x, y, 1.5, 0, Math.PI * 2); // Dibujar el punto
+                ctx.fill();
+                ctx.closePath();
+            }
+
+            document.getElementById('estimatedPi').textContent = calculatePi().toFixed(6);
+            document.getElementById('inCirclePoints').textContent = inCirclePoints;
+            document.getElementById('totalPoints').textContent = totalPoints;
+
+            animationFrameId = requestAnimationFrame(() => animateSimulation(targetPoints));
+        }
+
+        function startSimulation() {
+            cancelAnimationFrame(animationFrameId); // Detener cualquier simulación anterior
+            totalPoints = 0;
+            inCirclePoints = 0;
+            drawInitialSetup(); // Redibujar el setup inicial
+
+            const numPoints = parseInt(document.getElementById('numPoints').value);
+            if (isNaN(numPoints) || numPoints <= 0) {
+                alert("Por favor, introduce un número válido de puntos.");
+                return;
+            }
+            animateSimulation(numPoints);
+        }
+
+        // Dibujar la configuración inicial al cargar la página
+        window.onload = drawInitialSetup;
+    </script>
+</body>
+</html>
