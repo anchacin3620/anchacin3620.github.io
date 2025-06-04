@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeoMineral Global C.A. - Minerales que transforman el mundo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #e67e22;
+            --accent: #3498db;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --text: #333;
+            --white: #fff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            color: var(--text);
+            line-height: 1.6;
+            background-color: var(--light);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            color: var(--white);
+            padding: 100px 0;
+            text-align: center;
+            position: relative;
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: var(--white);
+        }
+        
+        .tagline {
+            font-size: 1.5rem;
+            font-style: italic;
+            margin-bottom: 30px;
+            color: var(--secondary);
+        }
+        
+        .btn {
+            display: inline-block;
+            background: var(--secondary);
+            color: var(--white);
+            padding: 10px 30px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            background: #d35400;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Navigation */
+        nav {
+            background-color: var(--primary);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding: 20px 0;
+        }
+        
+        nav ul li {
+            margin: 0 15px;
+        }
+        
+        nav ul li a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            padding: 5px 10px;
+            border-radius: 3px;
+        }
+        
+        nav ul li a:hover {
+            color: var(--secondary);
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Sections */
+        section {
+            padding: 80px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            color: var(--primary);
+            font-size: 2.2rem;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--secondary);
+            margin: 15px auto;
+        }
+        
+        /* About */
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .about-text {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .about-image {
+            flex: 1;
+            min-width: 300px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .about-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .mission-vision {
+            display: flex;
+            gap: 30px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .mission, .vision {
+            flex: 1;
+            min-width: 300px;
+            background: var(--white);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .mission h3, .vision h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        /* Values */
+        .values {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .value-card {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 10px;
+            width: calc(25% - 20px);
+            min-width: 250px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .value-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .value-icon {
+            font-size: 2.5rem;
+            color: var(--secondary);
+            margin-bottom: 15px;
+        }
+        
+        .value-card h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        /* Products */
+        .products {
+            background-color: var(--white);
+        }
+        
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .product-card {
+            background: var(--light);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .product-image {
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .product-card:hover .product-image img {
+            transform: scale(1.1);
+        }
+        
+        .product-info {
+            padding: 20px;
+        }
+        
+        .product-info h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        /* Services */
+        .services {
+            background-color: #f9f9f9;
+        }
+        
+        .service-list {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .service-item {
+            background: var(--white);
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .service-icon {
+            font-size: 2rem;
+            color: var(--secondary);
+            min-width: 50px;
+        }
+        
+        /* Sustainability */
+        .sustainability-cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+        }
+        
+        .sustainability-card {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 10px;
+            width: calc(33.333% - 20px);
+            min-width: 300px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+        
+        .sustainability-card h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        /* Facilities */
+        .facilities {
+            background-color: #f9f9f9;
+        }
+        
+        .facility-cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+        }
+        
+        .facility-card {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 10px;
+            width: calc(50% - 15px);
+            min-width: 300px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .facility-card h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        /* Blog */
+        .blog-posts {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+        }
+        
+        .blog-card {
+            background: var(--white);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .blog-image {
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .blog-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .blog-content {
+            padding: 20px;
+        }
+        
+        .blog-content h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .read-more {
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 15px;
+        }
+        
+        /* Contact */
+        .contact {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+        
+        .contact .section-title {
+            color: var(--white);
+        }
+        
+        .contact .section-title::after {
+            background: var(--secondary);
+        }
+        
+        .contact-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+        }
+        
+        .contact-info {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .contact-info h3 {
+            color: var(--secondary);
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        
+        .contact-details {
+            margin-bottom: 30px;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .contact-icon {
+            margin-right: 15px;
+            color: var(--secondary);
+            font-size: 1.2rem;
+            min-width: 20px;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: var(--white);
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .social-link:hover {
+            background: var(--secondary);
+            transform: translateY(-3px);
+        }
+        
+        .contact-form {
+            flex: 1;
+            min-width: 300px;
+            background: var(--white);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--primary);
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: var(--white);
+            text-align: center;
+            padding: 30px 0;
+        }
+        
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: var(--white);
+        }
+        
+        .footer-tagline {
+            font-style: italic;
+            margin-bottom: 20px;
+            color: var(--secondary);
+        }
+        
+        .copyright {
+            margin-top: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+                padding: 10px 0;
+            }
+            
+            nav ul li {
+                margin: 5px 0;
+            }
+            
+            .value-card {
+                width: calc(50% - 10px);
+            }
+            
+            .sustainability-card, .facility-card {
+                width: 100%;
+            }
+            
+            .mission, .vision {
+                min-width: 100%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .value-card {
+                width: 100%;
+            }
+            
+            header {
+                padding: 80px 0;
+            }
+            
+            .logo {
+                font-size: 2rem;
+            }
+            
+            .tagline {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="logo">GeoMineral Global C.A.</div>
+            <div class="tagline">"Minerales que transforman el mundo"</div>
+            <p>Su socio confiable en la comercialización de productos mineros de alta calidad</p>
+            <a href="#contact" class="btn">Contáctenos</a>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <ul>
+                <li><a href="#about">Sobre Nosotros</a></li>
+                <li><a href="#products">Productos</a></li>
+                <li><a href="#services">Servicios</a></li>
+                <li><a href="#sustainability">Sostenibilidad</a></li>
+                <li><a href="#facilities">Instalaciones</a></li>
+                <li><a href="#blog">Blog</a></li>
+                <li><a href="#contact">Contacto</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- About Section -->
+    <section id="about">
+        <div class="container">
+            <h2 class="section-title">Sobre Nosotros</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>GeoMineral Global C.A. es una empresa innovadora en el sector minero, fundada con el propósito de ofrecer productos minerales de alta calidad mientras promovemos prácticas sostenibles. Nuestro equipo cuenta con años de experiencia en la industria minera, garantizando profesionalismo y excelencia.</p>
+                </div>
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1604998103924-89e012e5265a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Equipo de GeoMineral Global">
+                </div>
+            </div>
+            
+            <div class="mission-vision">
+                <div class="mission">
+                    <h3>Misión</h3>
+                    <p>Proveer productos mineros de alta calidad a empresas globales, promoviendo relaciones basadas en la confianza, la sostenibilidad y el beneficio mutuo.</p>
+                </div>
+                <div class="vision">
+                    <h3>Visión</h3>
+                    <p>Ser reconocidos como una empresa confiable y de referencia en la comercialización de productos mineros, destacándonos por nuestra calidad, innovación y compromiso con la sostenibilidad.</p>
+                </div>
+            </div>
+            
+            <h3 style="text-align: center; margin: 50px 0 30px; color: var(--primary);">Nuestros Valores</h3>
+            <div class="values">
+                <div class="value-card">
+                    <div class="value-icon"><i class="fas fa-award"></i></div>
+                    <h3>Compromiso con la calidad</h3>
+                    <p>Garantizamos productos minerales de la más alta pureza y calidad.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon"><i class="fas fa-leaf"></i></div>
+                    <h3>Respeto al medio ambiente</h3>
+                    <p>Promovemos prácticas sostenibles que minimicen el impacto ambiental.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon"><i class="fas fa-lightbulb"></i></div>
+                    <h3>Innovación</h3>
+                    <p>Implementamos tecnologías avanzadas para mejorar nuestros procesos.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon"><i class="fas fa-hands-helping"></i></div>
+                    <h3>Responsabilidad social</h3>
+                    <p>Colaboramos con las comunidades locales para impulsar su desarrollo.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products" class="products">
+        <div class="container">
+            <h2 class="section-title">Nuestros Productos</h2>
+            <div class="product-grid">
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1582139329536-e7284fece509?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Casiterita">
+                    </div>
+                    <div class="product-info">
+                        <h3>Casiterita</h3>
+                        <p>Mineral de estaño esencial para la industria electrónica.</p>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1611078489935-0cb964de46d6?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Coltán">
+                    </div>
+                    <div class="product-info">
+                        <h3>Coltán</h3>
+                        <p>Clave en la fabricación de dispositivos electrónicos avanzados.</p>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1516731415730-0c607149933a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Tungsteno">
+                    </div>
+                    <div class="product-info">
+                        <h3>Tungsteno</h3>
+                        <p>Metal de alta densidad, ideal para aplicaciones industriales.</p>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1581595219315-a187dd40c322?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Oro">
+                    </div>
+                    <div class="product-info">
+                        <h3>Oro</h3>
+                        <p>Oro de inversión y para joyería con los más altos estándares de pureza.</p>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Diamantes">
+                    </div>
+                    <div class="product-info">
+                        <h3>Diamantes</h3>
+                        <p>Industriales y para joyería de calidad superior.</p>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1605100804763-247f67b3557e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Topacio">
+                    </div>
+                    <div class="product-info">
+                        <h3>Topacio</h3>
+                        <p>Piedra preciosa en variados colores, ideal para la joyería.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services">
+        <div class="container">
+            <h2 class="section-title">Nuestros Servicios</h2>
+            <div class="service-list">
+                <div class="service-item">
+                    <div class="service-icon"><i class="fas fa-globe"></i></div>
+                    <div>
+                        <h3>Comercialización global</h3>
+                        <p>Comercialización de minerales y metales en mercados globales.</p>
+                    </div>
+                </div>
+                <div class="service-item">
+                    <div class="service-icon"><i class="fas fa-truck"></i></div>
+                    <div>
+                        <h3>Logística y distribución</h3>
+                        <p>Servicio eficiente y seguro de logística y distribución.</p>
+                    </div>
+                </div>
+                <div class="service-item">
+                    <div class="service-icon"><i class="fas fa-chart-line"></i></div>
+                    <div>
+                        <h3>Asesoría comercial</h3>
+                        <p>Asesoría en estrategias de comercialización y cumplimiento normativo.</p>
+                    </div>
+                </div>
+                <div class="service-item">
+                    <div class="service-icon"><i class="fas fa-expand"></i></div>
+                    <div>
+                        <h3>Desarrollo de mercados</h3>
+                        <p>Desarrollo de nuevos mercados para clientes internacionales.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sustainability Section -->
+    <section id="sustainability">
+        <div class="container">
+            <h2 class="section-title">Compromiso con la Sostenibilidad</h2>
+            <p style="text-align: center; max-width: 800px; margin: 0 auto 50px;">En GeoMineral Global C.A., entendemos la importancia de operar de manera responsable para garantizar un futuro sostenible.</p>
+            
+            <div class="sustainability-cards">
+                <div class="sustainability-card">
+                    <i class="fas fa-tree" style="font-size: 3rem; color: var(--secondary); margin-bottom: 20px;"></i>
+                    <h3>Responsabilidad Ambiental</h3>
+                    <p>Promovemos prácticas sostenibles que minimicen el impacto ambiental en todas nuestras operaciones.</p>
+                </div>
+                <div class="sustainability-card">
+                    <i class="fas fa-users" style="font-size: 3rem; color: var(--secondary); margin-bottom: 20px;"></i>
+                    <h3>Responsabilidad Social</h3>
+                    <p>Colaboramos con las comunidades locales para impulsar su desarrollo económico y social.</p>
+                </div>
+                <div class="sustainability-card">
+                    <i class="fas fa-cogs" style="font-size: 3rem; color: var(--secondary); margin-bottom: 20px;"></i>
+                    <h3>Innovación Tecnológica</h3>
+                    <p>Implementamos tecnologías avanzadas para mejorar procesos y reducir nuestro impacto ambiental.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Facilities Section -->
+    <section id="facilities" class="facilities">
+        <div class="container">
+            <h2 class="section-title">Nuestras Instalaciones</h2>
+            <div class="facility-cards">
+                <div class="facility-card">
+                    <h3>Oficinas Centrales</h3>
+                    <p>Ubicadas en Caracas, Venezuela, gestionamos todas nuestras operaciones con eficiencia y enfoque estratégico. Nuestro equipo altamente capacitado trabaja para garantizar la excelencia en cada etapa del proceso.</p>
+                </div>
+                <div class="facility-card">
+                    <h3>Centro de Acopio</h3>
+                    <p>Situado en el estado Bolívar, Venezuela, nuestro centro de acopio está diseñado para facilitar la logística y el manejo de nuestros productos, asegurando un servicio ágil y confiable para nuestros clientes.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Section -->
+    <section id="blog">
+        <div class="container">
+            <h2 class="section-title">Blog y Noticias</h2>
+            <p style="text-align: center; max-width: 800px; margin: 0 auto 50px;">Manténgase informado sobre las últimas tendencias en la industria minera y actualizaciones de GeoMineral Global C.A.</p>
+            
+            <div class="blog-posts">
+                <div class="blog-card">
+                    <div class="blog-image">
+                        <img src="https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Coltán">
+                    </div>
+                    <div class="blog-content">
+                        <h3>La importancia del Coltán en la tecnología moderna</h3>
+                        <p>Exploramos cómo este mineral estratégico es fundamental para la fabricación de dispositivos electrónicos avanzados.</p>
+                        <a href="#" class="read-more">Leer más →</a>
+                    </div>
+                </div>
+                <div class="blog-card">
+                    <div class="blog-image">
+                        <img src="https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Sostenibilidad">
+                    </div>
+                    <div class="blog-content">
+                        <h3>GeoMineral Global promueve prácticas sostenibles</h3>
+                        <p>Conozca nuestras iniciativas de sostenibilidad en el estado Bolívar y cómo benefician a las comunidades locales.</p>
+                        <a href="#" class="read-more">Leer más →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2 class="section-title">Contáctenos</h2>
+            <p style="text-align: center; margin-bottom: 50px; max-width: 800px; margin-left: auto; margin-right: auto;">¿Interesado en nuestros productos o servicios? ¡Hablemos! Estamos listos para responder sus preguntas y establecer relaciones comerciales mutuamente beneficiosas.</p>
+            
+            <div class="contact-container">
+                <div class="contact-info">
+                    <h3>Información de Contacto</h3>
+                    
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+                            <div>
+                                <strong>Oficinas Centrales:</strong><br>
+                                Bulevar Sabana Grande, Edificio Galerías Cristal, Piso 3, Caracas, Venezuela.
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+                            <div>
+                                <strong>Centro de Acopio:</strong><br>
+                                Calle Yaruro, Urbanización Guaicamoa, Sector Morichalito, Los Pijiguaos, Municipio Cedeño, Estado Bolívar, Venezuela.
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon"><i class="fas fa-phone"></i></div>
+                            <div>+58 212 1234567 | +584246744358</div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                            <div>info@geomineralglobal.com | geomineralglobalca@gmail.com</div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon"><i class="fas fa-globe"></i></div>
+                            <div>www.geomineralglobal.com</div>
+                        </div>
+                    </div>
+                    
+                    <h3 style="margin-top: 40px;">Síguenos</h3>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                
+                <div class="contact-form">
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="name">Nombre</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="subject">Asunto</label>
+                            <input type="text" id="subject" name="subject" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Mensaje</label>
+                            <textarea id="message" name="message" required></textarea>
+                        </div>
+                        <button type="submit" class="btn">Enviar Mensaje</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-logo">GeoMineral Global C.A.</div>
+            <div class="footer-tagline">"Minerales que transforman el mundo"</div>
+            <div class="copyright">© 2023 GeoMineral Global C.A. Todos los derechos reservados.</div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                targetElement.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        // Form submission handling
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Gracias por su mensaje. Nos pondremos en contacto con usted pronto.');
+            this.reset();
+        });
+
+        // Animation on scroll
+        const animateOnScroll = function() {
+            const elements = document.querySelectorAll('.value-card, .product-card, .sustainability-card, .facility-card, .blog-card');
+            
+            elements.forEach(element => {
+                const elementPosition = element.getBoundingClientRect().top;
+                const screenPosition = window.innerHeight / 1.2;
+                
+                if (elementPosition < screenPosition) {
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                }
+            });
+        };
+
+        // Set initial state for animated elements
+        window.addEventListener('load', function() {
+            const animatedElements = document.querySelectorAll('.value-card, .product-card, .sustainability-card, .facility-card, .blog-card');
+            animatedElements.forEach(element => {
+                element.style.opacity = '0';
+                element.style.transform = 'translateY(20px)';
+                element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            });
+            
+            // Trigger animation on scroll
+            window.addEventListener('scroll', animateOnScroll);
+            animateOnScroll(); // Run once on load in case elements are already visible
+        });
+    </script>
+</body>
+</html>
