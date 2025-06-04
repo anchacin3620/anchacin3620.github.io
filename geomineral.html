@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MINERAL GLOBAL C.A. - Minerales que transforman el mundo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1a3e72;  /* Azul principal */
+            --primary-light: #2a56a0;
+            --secondary: #e67e22;  /* Naranja acento */
+            --accent: #3498db;
+            --light: #f5f7fa;
+            --dark: #0d1b2a;
+            --text: #333;
+            --white: #fff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            color: var(--text);
+            line-height: 1.6;
+            background-color: var(--light);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            background: linear-gradient(rgba(26, 62, 114, 0.8), rgba(26, 62, 114, 0.9)), url('https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            color: var(--white);
+            padding: 100px 0;
+            text-align: center;
+            position: relative;
+        }
+        
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo-img {
+            width: 300px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        
+        .logo-main-text {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--white);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+        
+        .logo-tagline {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+        
+        .logo-subtext {
+            font-size: 1.2rem;
+            color: var(--white);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: var(--secondary);
+            color: var(--white);
+            padding: 12px 35px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 20px;
+        }
+        
+        .btn:hover {
+            background: #d35400;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Navigation */
+        nav {
+            background-color: var(--primary);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding: 15px 0;
+        }
+        
+        nav ul li {
+            margin: 0 15px;
+        }
+        
+        nav ul li a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 8px 15px;
+            border-radius: 3px;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        nav ul li a:hover {
+            color: var(--secondary);
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Sections */
+        section {
+            padding: 60px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+            color: var(--primary);
+            font-size: 2rem;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 70px;
+            height: 4px;
+            background: var(--secondary);
+            margin: 15px auto;
+        }
+        
+        /* About */
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .about-text {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .about-image {
+            flex: 1;
+            min-width: 300px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .about-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .mission-vision {
+            display: flex;
+            gap: 30px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .mission, .vision {
+            flex: 1;
+            min-width: 300px;
+            background: var(--white);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .mission h3, .vision h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        /* Values */
+        .values {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .value-card {
+            background: var(--white);
+            padding: 25px;
+            border-radius: 10px;
+            width: calc(25% - 20px);
+            min-width: 250px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .value-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .value-icon {
+            font-size: 2.2rem;
+            color: var(--secondary);
+            margin-bottom: 15px;
+        }
+        
+        .value-card h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        /* Products */
+        .products {
+            background-color: var(--white);
+        }
+        
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+        
+        .product-card {
+            background: var(--light);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .product-image {
+            height: 180px;
+            overflow: hidden;
+        }
+        
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .product-card:hover .product-image img {
+            transform: scale(1.1);
+        }
+        
+        .product-info {
+            padding: 18px;
+        }
+        
+        .product-info h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        /* Services */
+        .services {
+            background-color: #f9f9f9;
+        }
+        
+        .service-list {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .service-item {
+            background: var(--white);
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+        
+        .service-icon {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            min-width: 40px;
+            padding-top: 5px;
+        }
+        
+        .service-item-content h3 {
+            color: var(--primary);
+            margin-bottom: 8px;
+            font-size: 1.2rem;
+        }
+        
+        .service-item-content p {
+            font-size: 0.95rem;
+            color: var(--text);
+        }
+        
+        /* Sustainability */
+        .sustainability-cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            justify-content: center;
+        }
+        
+        .sustainability-card {
+            background: var(--white);
+            padding: 25px;
+            border-radius: 10px;
+            width: calc(33.333% - 17px);
+            min-width: 280px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+        
+        .sustainability-card h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        /* Facilities */
+        .facilities {
+            background-color: #f9f9f9;
+        }
+        
+        .facility-cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            justify-content: center;
+        }
+        
+        .facility-card {
+            background: var(--white);
+            padding: 25px;
+            border-radius: 10px;
+            width: calc(50% - 13px);
+            min-width: 280px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .facility-card h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        /* Blog */
+        .blog-posts {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+        }
+        
+        .blog-card {
+            background: var(--white);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .blog-image {
+            height: 180px;
+            overflow: hidden;
+        }
+        
+        .blog-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .blog-content {
+            padding: 18px;
+        }
+        
+        .blog-content h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .read-more {
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 12px;
+            font-size: 0.9rem;
+        }
+        
+        /* Contact */
+        .contact {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+        
+        .contact .section-title {
+            color: var(--white);
+        }
+        
+        .contact .section-title::after {
+            background: var(--secondary);
+        }
+        
+        .contact-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        
+        .contact-info {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .contact-info h3 {
+            color: var(--secondary);
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+        
+        .contact-details {
+            margin-bottom: 25px;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+        
+        .contact-icon {
+            margin-right: 12px;
+            color: var(--secondary);
+            font-size: 1.1rem;
+            min-width: 20px;
+            padding-top: 3px;
+        }
+        
+        .contact-item-content {
+            flex: 1;
+        }
+        
+        .contact-item-content strong {
+            display: block;
+            margin-bottom: 3px;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: var(--white);
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .social-link:hover {
+            background: var(--secondary);
+            transform: translateY(-3px);
+        }
+        
+        .contact-form {
+            flex: 1;
+            min-width: 300px;
+            background: var(--white);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 18px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--primary);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.95rem;
+        }
+        
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: var(--white);
+            text-align: center;
+            padding: 30px 0;
+        }
+        
+        .footer-logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .footer-logo-img {
+            width: 220px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+        
+        .footer-logo-text {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--white);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+        
+        .footer-tagline {
+            font-style: italic;
+            margin-bottom: 15px;
+            color: var(--secondary);
+            font-size: 1.2rem;
+        }
+        
+        .footer-subtext {
+            font-size: 1rem;
+            color: var(--white);
+            max-width: 600px;
+            margin: 0 auto 20px;
+        }
+        
+        .footer-nav {
+            margin-bottom: 25px;
+        }
+        
+        .footer-nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+        
+        .footer-nav ul li {
+            margin: 5px 15px;
+        }
+        
+        .footer-nav ul li a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+        
+        .footer-nav ul li a:hover {
+            color: var(--secondary);
+        }
+        
+        .copyright {
+            margin-top: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.85rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+                padding: 10px 0;
+            }
+            
+            nav ul li {
+                margin: 5px 0;
+            }
+            
+            .value-card {
+                width: calc(50% - 10px);
+            }
+            
+            .sustainability-card, .facility-card {
+                width: 100%;
+            }
+            
+            .mission, .vision {
+                min-width: 100%;
+            }
+            
+            .logo-img {
+                width: 250px;
+            }
+            
+            .logo-main-text {
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .footer-nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .value-card {
+                width: 100%;
+            }
+            
+            header {
+                padding: 80px 0;
+            }
+            
+            .logo-main-text {
+                font-size: 1.8rem;
+            }
+            
+            .logo-tagline {
+                font-size: 1.2rem;
+            }
+            
+            .btn {
+                padding: 10px 25px;
+                font-size: 0.9rem;
+            }
+            
+            .facility-card {
+                width: 100%;
+            }
+            
+            .contact-item {
+                flex-direction: column;
+            }
+            
+            .contact-icon {
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="logo-container">
+                <!-- Logo mejorado -->
+                <div class="logo-img" style="background-color: white; padding: 15px; border-radius: 5px; display: flex; justify-content: center; align-items: center;">
+                    <div style="text-align: center; color: var(--primary); font-family: Arial, sans-serif; font-weight: bold; font-size: 2.5rem; line-height: 1;">
+                        <div style="color: var(--primary);">MINERAL GLOBAL</div>
+                        <div style="font-size: 1.5rem; color: var(--primary);">C.A.</div>
+                    </div>
+                </div>
+                <div class="logo-tagline">Minerales que transforman el mundo</div>
+                <div class="logo-subtext">Su socio confiable en la comercialización de productos mineros de alta calidad</div>
+                <a href="#contact" class="btn">CONTÁCTENOS</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <ul>
+                <li><a href="#about">SOBRE NOSOTROS</a></li>
+                <li><a href="#products">PRODUCTOS</a></li>
+                <li><a href="#services">SERVICIOS</a></li>
+                <li><a href="#sustainability">SOSTENIBILIDAD</a></li>
+                <li><a href="#facilities">INSTALACIONES</a></li>
+                <li><a href="#blog">BLOG</a></li>
+                <li><a href="#contact">CONTACTO</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- About Section -->
+    <section id="about">
+        <div class="container">
+            <h2 class="section-title">SOBRE NOSOTROS</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>MINERAL GLOBAL C.A. es una empresa innovadora en el sector minero, fundada con el propósito de ofrecer productos minerales de alta calidad mientras promovemos prácticas sostenibles. Nuestro equipo cuenta con años de experiencia en la industria minera, garantizando profesionalismo y excelencia.</p>
+                </div>
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1604998103924-89e012e5265a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Equipo de MINERAL
