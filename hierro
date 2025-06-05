@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulación de Depósito de Átomos</title>
+    <style>
+        canvas {
+            border: 1px solid #000;
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Simulación de Depósito de Átomos de Hierro en Magnesio</h1>
+    <canvas id="simulacion" width="500" height="500"></canvas>
+    <button onclick="iniciarSimulacion()">Iniciar Simulación</button>
+
+    <script>
+        const canvas = document.getElementById('simulacion');
+        const ctx = canvas.getContext('2d');
+
+        function dibujarSustrato() {
+            ctx.fillStyle = '#d9d9d9'; // Color para el Magnesio
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function agregarHierro(x, y) {
+            ctx.fillStyle = '#b22222'; // Color para el Hierro
+            ctx.beginPath();
+            ctx.arc(x, y, 5, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        function iniciarSimulacion() {
+            dibujarSustrato();
+            for (let i = 0; i < 50; i++) {
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height;
+                agregarHierro(x, y);
+            }
+        }
+    </script>
+</body>
+</html>
