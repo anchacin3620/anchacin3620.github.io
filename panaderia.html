@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Asistencia - Panadería La Fortaleza</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #fff5e6; /* Fondo cálido, evocando pan */
+            color: #333;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #8b4513; /* Marrón cálido, como pan recién horneado */
+        }
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .auth-section, .form-section, .consult-section, .stats-section {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+            color: #8b4513;
+        }
+        input, button, select {
+            padding: 10px;
+            margin: 5px 0;
+            width: calc(100% - 22px);
+            border: 1px solid #d2b48c; /* Borde en tono beige */
+            border-radius: 4px;
+        }
+        button {
+            background-color: #8b4513;
+            color: white;
+            cursor: pointer;
+            width: auto;
+            display: inline-block;
+        }
+        button:hover {
+            background-color: #a0522d; /* Marrón más claro al pasar el ratón */
+        }
+        #attendanceTable {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        #attendanceTable th, #attendanceTable td {
+            border: 1px solid #d2b48c;
+            padding: 8px;
+            text-align: left;
+        }
+        #attendanceTable th {
+            background-color: #8b4513;
+            color: white;
+        }
+        .error {
+            color: #ff4500; /* Rojo suave para errores */
+            font-size: 14px;
+        }
+        .stats-section canvas {
+            max-width: 100%;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Registro de Asistencia - Panadería La Fortaleza</h1>
+    <div class="container">
+        <div class="auth-section" id="authSection">
+            <h2>Iniciar Sesión</h2>
+            <label for="username">Usuario:</label>
+            <input type="text" id="username" placeholder="Ej: admin">
+            <label for="password">Contraseña:</label>
+            <input type="password" id="password" placeholder="Contraseña">
+            <button onclick="login()">Iniciar Sesión</button>
+            <p id="authError" class="error"></p>
+        </div>
+        <div class="form-section hidden" id="formSection">
+            <h2>Registrar Asistencia</h2>
+            <label for="name">Nombre completo:</label>
+            <input type="text" id="name" placeholder="Ej: Juan Pérez">
+            <label for="cedula">Cédula o Código de Empleado:</label>
+            <input type="text" id="cedula" placeholder="Ej: V-12345678 o E-001">
+            <label for="role">Cargo:</label>
+            <select id="role">
+                <option value="Panadero">Panadero</option>
+                <option value="Cajero">Cajero</option>
+                <option value="Repartidor">Repartidor</option>
+                <option value="Limpieza">Limpieza</option>
+                <option value="Supervisor">Supervisor</option>
+            </select>
+            <label for="date">Fecha:</label>
+            <input type="date" id="date" value="">
+            <button onclick="registerEntry()">Registrar Entrada</button>
+            <button onclick="registerExit()">Registrar Salida</button>
+            <button onclick="downloadAttendance('txt')">Descargar TXT</button>
+            <button onclick="downloadAttendance('csv')">Descargar CSV</button>
+            <button onclick="downloadAttendance('pdf')">Descargar PDF</button>
+            <p id="errorMessage" class="error"></p>
+        </div>
+        <div class="consult-section hidden" id="consultSection">
+            <h2>Consultar Asistencia</h2>
+            <label for="searchCedula">Buscar por Cédula o Código:</label>
+            <input type="text" id="searchCedula" placeholder="Ej: V-12345678 o E-001">
+            <label for="searchDate">Filtrar por Fecha:</label>
+            <input type="date" id="searchDate" value="">
+            <button onclick="searchAttendance()">Buscar</button>
+            <table id="attendanceTable">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Cédula/Código</th>
+                        <th>Cargo</th>
+                        <th>Fecha</th>
+                        <th>Hora de Entrada</th>
+                        <th>Hora de Salida</th>
+                    </tr>
+                </thead>
+                <tbody id="attendanceBody"></tbody>
+            </table>
+        </div>
+        <div class="stats-section hidden" id="statsSection">
+            <h2>Estadísticas de Asistencia</h2>
+            <canvas id="attendanceChart"></canvas>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const { jsPDF } = window.jspdf;
+
+        // Simulación de base de datos de usuarios
+        const users = [
+            { username: "admin", password: "fortaleza2025" },
+            { username: "supervisor", password: "pan123" }
+        ];
+
+        // Array para almacenar los registros de asistencia
+        let attendanceRecords = JSON.parse(localStorage.getItem('attendanceRecords')) || [];
+        let isAuthenticated = false;
+
+        // Validar identificador (cédula o código de empleado, formato flexible)
+        function validateCedula(cedula) {
+            return cedula.trim() !== '' && /^[VEve]-\d+$|^[A-Za-z]-\d+$/.test(cedula);
+        }
+
+        // Obtener fecha y hora actual
+        function getCurrentDateTime() {
+            const now = new Date();
+            return now.toLocaleString('es-VE', { 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit' 
+            });
+        }
+
+        // Obtener fecha actual en formato YYYY-MM-DD
+        function getCurrentDate() {
+            const now = new Date();
+            return now.toISOString().split('T')[0];
+        }
+
+        // Autenticación
+        function login() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const authError = document.getElementById('authError');
+
+            const user = users.find(u => u.username === username && u.password === password);
+            if (user) {
+                isAuthenticated = true;
+                document.getElementById('authSection').classList.add('hidden');
+                document.getElementById('formSection').classList.remove('hidden');
+                document.getElementById('consultSection').classList.remove('hidden');
+                document.getElementById('statsSection').classList.remove('hidden');
+                authError.textContent = '';
+                updateTable(attendanceRecords);
+                updateChart();
+            } else {
+                authError.textContent = 'Usuario o contraseña incorrectos.';
+            }
+        }
+
+        // Registrar entrada
+        function registerEntry() {
+            if (!isAuthenticated) {
+                document.getElementById('errorMessage').textContent = 'Por favor, inicie sesión.';
+                return;
+            }
+
+            const name = document.getElementById('name').value.trim();
+            const cedula = document.getElementById('cedula').value.trim();
+            const role = document.getElementById('role').value;
+            const date = document.getElementById('date').value || getCurrentDate();
+            const errorMessage = document.getElementById('errorMessage');
+
+            if (!name || !cedula || !role || !date) {
+                errorMessage.textContent = 'Por favor, complete todos los campos.';
+                return;
+            }
+
+            if (!validateCedula(cedula)) {
+                errorMessage.textContent = 'Identificador inválido. Use formato V-xxxx o E-xxxx.';
+                return;
+            }
+
+            const existingRecord = attendanceRecords.find(
+                record => record.cedula === cedula && record.date === date && !record.exitTime
+            );
+
+            if (existingRecord) {
+                errorMessage.textContent = 'Ya existe una entrada sin registrar salida para este identificador en esta fecha.';
+                return;
+            }
+
+            const record = {
+                name,
+                cedula,
+                role,
+                date,
+                entryTime: getCurrentDateTime(),
+                exitTime: null
+            };
+            attendanceRecords.push(record);
+            localStorage.setItem('attendanceRecords', JSON.stringify(attendanceRecords));
+            errorMessage.textContent = 'Entrada registrada con éxito.';
+            document.getElementById('name').value = '';
+            document.getElementById('cedula').value = '';
+            document.getElementById('date').value = '';
+            updateTable(attendanceRecords);
+            updateChart();
+        }
+
+        // Registrar salida
+        function registerExit() {
+            if (!isAuthenticated) {
+                document.getElementById('errorMessage').textContent = 'Por favor, inicie sesión.';
+                return;
+            }
+
+            const cedula = document.getElementById('cedula').value.trim();
+            const date = document.getElementById('date').value || getCurrentDate();
+            const errorMessage = document.getElementById('errorMessage');
+
+            if (!cedula || !date) {
+                errorMessage.textContent = 'Por favor, ingrese el identificador y la fecha.';
+                return;
+            }
+
+            if (!validateCedula(cedula)) {
+                errorMessage.textContent = 'Identificador inválido. Use formato V-xxxx o E-xxxx.';
+                return;
+            }
+
+            const record = attendanceRecords.find(
+                record => record.cedula === cedula && record.date === date && !record.exitTime
+            );
+
+            if (!record) {
+                errorMessage.textContent = 'No se encontró una entrada sin registrar salida para este identificador en esta fecha.';
+                return;
+            }
+
+            record.exitTime = getCurrentDateTime();
+            localStorage.setItem('attendanceRecords', JSON.stringify(attendanceRecords));
+            errorMessage.textContent = 'Salida registrada con éxito.';
+            document.getElementById('name').value = '';
+            document.getElementById('cedula').value = '';
+            document.getElementById('date').value = '';
+            updateTable(attendanceRecords);
+            updateChart();
+        }
+
+        // Descargar registros
+        function downloadAttendance(format) {
+            if (!isAuthenticated) {
+                document.getElementById('errorMessage').textContent = 'Por favor, inicie sesión.';
+                return;
+            }
+
+            if (attendanceRecords.length === 0) {
+                document.getElementById('errorMessage').textContent = 'No hay registros para descargar.';
+                return;
+            }
+
+            const filename = `asistencia_panaderia_fortaleza_${new Date().toISOString().slice(0,10)}`;
+
+            if (format === 'txt') {
+                let textContent = 'Registro de Asistencia - Panadería La Fortaleza\n\n';
+                textContent += 'Nombre\tCédula/Código\tCargo\tFecha\tHora de Entrada\tHora de Salida\n';
+                textContent += '------------------------------------------------------------\n';
+                attendanceRecords.forEach(record => {
+                    textContent += `${record.name}\t${record.cedula}\t${record.role}\t${record.date}\t${record.entryTime}\t${record.exitTime || 'No registrada'}\n`;
+                });
+
+                const blob = new Blob([textContent], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${filename}.txt`;
+                a.click();
+                URL.revokeObjectURL(url);
+            } else if (format === 'csv') {
+                let csvContent = 'Nombre,Cédula/Código,Cargo,Fecha,Hora de Entrada,Hora de Salida\n';
+                attendanceRecords.forEach(record => {
+                    csvContent += `"${record.name}","${record.cedula}","${record.role}","${record.date}","${record.entryTime}","${record.exitTime || 'No registrada'}"\n`;
+                });
+
+                const blob = new Blob([csvContent], { type: 'text/csv' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${filename}.csv`;
+                a.click();
+                URL.revokeObjectURL(url);
+            } else if (format === 'pdf') {
+                const doc = new jsPDF();
+                doc.setFontSize(16);
+                doc.text('Registro de Asistencia - Panadería La Fortaleza', 20, 20);
+                doc.setFontSize(12);
+                let y = 30;
+                doc.text('Nombre\tCédula/Código\tCargo\tFecha\tEntrada\tSalida', 20, y);
+                y += 10;
+                doc.text('------------------------------------------------------------', 20, y);
+                y += 10;
+                attendanceRecords.forEach(record => {
+                    doc.text(`${record.name}\t${record.cedula}\t${record.role}\t${record.date}\t${record.entryTime}\t${record.exitTime || 'No registrada'}`, 20, y);
+                    y += 10;
+                });
+                doc.save(`${filename}.pdf`);
+            }
+
+            document.getElementById('errorMessage').textContent = `Archivo ${format.toUpperCase()} descargado con éxito.`;
+        }
+
+        // Actualizar tabla de registros
+        function updateTable(records) {
+            const tableBody = document.getElementById('attendanceBody');
+            tableBody.innerHTML = '';
+            records.forEach(record => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${record.name}</td>
+                    <td>${record.cedula}</td>
+                    <td>${record.role}</td>
+                    <td>${record.date}</td>
+                    <td>${record.entryTime}</td>
+                    <td>${record.exitTime || 'No registrada'}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Buscar registros por cédula/código y/o fecha
+        function searchAttendance() {
+            if (!isAuthenticated) {
+                document.getElementById('errorMessage').textContent = 'Por favor, inicie sesión.';
+                return;
+            }
+
+            const searchCedula = document.getElementById('searchCedula').value.trim();
+            const searchDate = document.getElementById('searchDate').value;
+            const errorMessage = document.getElementById('errorMessage');
+
+            if (searchCedula && !validateCedula(searchCedula)) {
+                errorMessage.textContent = 'Identificador inválido. Use formato V-xxxx o E-xxxx.';
+                return;
+            }
+
+            let filteredRecords = attendanceRecords;
+            if (searchCedula) {
+                filteredRecords = filteredRecords.filter(record => record.cedula === searchCedula);
+            }
+            if (searchDate) {
+                filteredRecords = filteredRecords.filter(record => record.date === searchDate);
+            }
+
+            if (filteredRecords.length === 0) {
+                errorMessage.textContent = 'No se encontraron registros para los criterios seleccionados.';
+            } else {
+                errorMessage.textContent = '';
+            }
+            updateTable(filteredRecords);
+        }
+
+        // Actualizar gráfico de estadísticas
+        let chartInstance = null;
+        function updateChart() {
+            const ctx = document.getElementById('attendanceChart').getContext('2d');
+            const dates = [...new Set(attendanceRecords.map(record => record.date))];
+            const attendanceCounts = dates.map(date => ({
+                date,
+                count: attendanceRecords.filter(record => record.date === date).length
+            }));
+
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: attendanceCounts.map(item => item.date),
+                    datasets: [{
+                        label: 'Asistencias por Fecha',
+                        data: attendanceCounts.map(item => item.count),
+                        backgroundColor: 'rgba(139, 69, 19, 0.6)', /* Marrón suave */
+                        borderColor: 'rgba(139, 69, 19, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Número de Asistencias' }
+                        },
+                        x: {
+                            title: { display: true, text: 'Fecha' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Inicializar fecha actual en el campo de registro
+        document.getElementById('date').value = getCurrentDate();
+    </script>
+</body>
+              </html>
