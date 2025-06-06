@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeoMineral Global C.A.</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        .header {
+            background: #f8f9fa; /* Changed to a soft off-white to make the logo stand out */
+            color: #333; /* Adjusted text color for contrast */
+            text-align: center;
+            padding: 40px 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .header img {
+            max-width: 200px;
+            transition: transform 0.3s ease;
+        }
+        .header img:hover {
+            transform: scale(1.05);
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            margin: 10px 0;
+        }
+        .header p {
+            font-size: 1.2rem;
+            font-weight: 300;
+        }
+        .content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+        .section h2 {
+            color: #003087;
+            font-size: 2rem;
+            margin-bottom: 15px;
+            border-left: 5px solid #ffca28;
+            padding-left: 10px;
+        }
+        .section h3 {
+            color: #0055c7;
+            font-size: 1.5rem;
+            margin: 20px 0 10px;
+        }
+        .section p, .section li {
+            font-size: 1rem;
+            color: #555;
+        }
+        .section ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .section ul li {
+            position: relative;
+            padding-left: 25px;
+            margin: 10px 0;
+        }
+        .section ul li:before {
+            content: "✔";
+            position: absolute;
+            left: 0;
+            color: #28a745;
+            font-size: 1.2rem;
+        }
+        .mining-img, .eco-img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-top: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .mining-img:hover, .eco-img:hover {
+            transform: scale(1.02);
+        }
+        .contact-info, .social-media {
+            margin-top: 20px;
+        }
+        .contact-info p, .social-media p {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        .contact-info p::before, .social-media p::before {
+            font-size: 1.2rem;
+            margin-right: 10px;
+            color: #ffca28;
+        }
+        .contact-info p:nth-child(1)::before { content: "📍"; }
+        .contact-info p:nth-child(2)::before { content: "📍"; }
+        .contact-info p:nth-child(3)::before { content: "📞"; }
+        .contact-info p:nth-child(4)::before { content: "📧"; }
+        .contact-info p:nth-child(5)::before { content: "🌐"; }
+        .social-media p:nth-child(1)::before { content: "📘"; }
+        .social-media p:nth-child(2)::before { content: "🐦"; }
+        .social-media p:nth-child(3)::before { content: "💼"; }
+        .social-media p:nth-child(4)::before { content: "📸"; }
+        a {
+            color: #0055c7;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        a:hover {
+            color: #ffca28;
+            text-decoration: underline;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #ffca28;
+            color: #003087;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            margin-top: 15px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #ffb300;
+            transform: scale(1.05);
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="https://anchacin3620.github.io/LogoGeoMineral.png" alt="GeoMineral Global Logo">
+        <p>"Minerales que transforman el mundo"</p>
+    </div>
+    <div class="content">
+        <div class="section">
+            <h2>Bienvenidos</h2>
+            <p>Bienvenidos a GeoMineral Global C.A., su socio confiable en la comercialización de productos mineros de alta calidad. Nos especializamos en ofrecer minerales y metales que cumplen con los más altos estándares internacionales, garantizando sostenibilidad, innovación y responsabilidad en cada etapa de nuestra operación.</p>
+            <a href="#more" class="btn">Conoce más</a>
+            <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="Mining Operation" class="mining-img">
+        </div>
+        <div class="section">
+            <h2>Sobre Nosotros</h2>
+            <h3>Nuestra Historia</h3>
+            <p>GeoMineral Global C.A. es una empresa innovadora en el sector minero, fundada con el propósito de ofrecer productos minerales de alta calidad mientras promovemos prácticas sostenibles. Nuestro equipo cuenta con años de experiencia en la industria minera, garantizando profesionalismo y excelencia.</p>
+            <h3>Misión</h3>
+            <p>Proveer productos mineros de alta calidad a empresas globales, promoviendo relaciones basadas en la confianza, la sostenibilidad y el beneficio mutuo.</p>
+            <h3>Visión</h3>
+            <p>Ser reconocidos como una empresa confiable y de referencia en la comercialización de productos mineros, destacándonos por nuestra calidad, innovación y compromiso con la sostenibilidad.</p>
+            <h3>Valores</h3>
+            <ul>
+                <li>Compromiso con la calidad y pureza.</li>
+                <li>Respeto al medio ambiente.</li>
+                <li>Innovación en cada proceso.</li>
+                <li>Responsabilidad social hacia nuestras comunidades.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Productos y Servicios</h2>
+            <h3>Nuestros Productos Destacados</h3>
+            <ul>
+                <li>Casiterita: Mineral de estaño esencial para la industria electrónica.</li>
+                <li>Coltán: Clave en la fabricación de dispositivos electrónicos avanzados.</li>
+                <li>Tungsteno: Metal de alta densidad, ideal para aplicaciones industriales.</li>
+                <li>Oro: Oro de inversión y para joyería con los más altos estándares de pureza.</li>
+                <li>Diamantes Industriales y para Joyería: De calidad superior para usos industriales y de lujo.</li>
+                <li>Topacio: Piedra preciosa en variados colores, ideal para la joyería.</li>
+            </ul>
+            <h3>Nuestros Servicios</h3>
+            <ul>
+                <li>Comercialización de minerales y metales en mercados globales.</li>
+                <li>Logística y distribución eficiente y segura.</li>
+                <li>Asesoría en estrategias de comercialización y cumplimiento normativo.</li>
+                <li>Desarrollo de nuevos mercados para clientes internacionales.</li>
+            </ul>
+            <img src="https://images.pexels.com/photos/459728/pexels-photo-459728.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Mining Equipment" class="mining-img">
+        </div>
+        <div class="section">
+            <h2>Compromiso con la Sostenibilidad</h2>
+            <ul>
+                <li>Responsabilidad Ambiental: Promovemos prácticas sostenibles que minimicen el impacto ambiental.</li>
+                <li>Responsabilidad Social: Colaboramos con las comunidades locales para impulsar su desarrollo económico y social.</li>
+                <li>Innovación: Implementamos tecnologías avanzadas para mejorar procesos y reducir nuestro impacto ambiental.</li>
+            </ul>
+            <img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="Ecological Balance" class="eco-img">
+        </div>
+        <div class="section">
+            <h2>Nuestras Instalaciones</h2>
+            <p><strong>Oficinas Centrales:</strong> Ubicadas en Caracas, Venezuela, gestionamos todas nuestras operaciones con eficiencia y enfoque estratégico.</p>
+            <p><strong>Centro de Acopio:</strong> Situado en el estado Bolívar, Venezuela, nuestro centro de acopio está diseñado para facilitar la logística y el manejo de nuestros productos, asegurando un servicio ágil y confiable.</p>
+        </div>
+        <div class="section">
+            <h2>Blog y Noticias</h2>
+            <p><a href="#blog">"La importancia del Coltán en la tecnología moderna"</a></p>
+            <p><a href="#blog">"GeoMineral Global promueve prácticas sostenibles en el estado Bolívar"</a></p>
+            <a href="#more" class="btn">Leer más</a>
+        </div>
+        <div class="section contact-info">
+            <h2>Contáctenos</h2>
+            <p>📍 <strong>Dirección:</strong> Bulevar Sabana Grande, Edificio Galerías Cristal, Piso 3, Caracas, Venezuela.</p>
+            <p>📍 <strong>Dirección Alternativa:</strong> Calle Yaruro, Urbanización Guaicamoa, Sector Morichalito, Los Pijiguaos, Municipio Cedeño, Estado Bolívar, Venezuela.</p>
+            <p>📞 <strong>Teléfono:</strong> +58 212 1234567 | +584246744358</p>
+            <p>📧 <strong>Email:</strong> info@geomineralglobal.com | geomineralglobalca@gmail.com</p>
+            <p>🌐 <strong>Sitio web:</strong> <a href="http://www.geomineralglobal.com">www.geomineralglobal.com</a></p>
+        </div>
+        <div class="section social-media">
+            <h2>Síguenos en Redes Sociales</h2>
+            <p>📘 <a href="https://facebook.com/GeoMineralGlobal">Facebook: /GeoMineralGlobal</a></p>
+            <p>🐦 <a href="https
