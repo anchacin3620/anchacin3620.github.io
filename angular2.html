@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulación del Momento Angular</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f0f0f0;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        #canvas {
+            border: 1px solid #000;
+            background-color: #fff;
+        }
+        .controls {
+            margin: 20px 0;
+            background-color: #e0e0e0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .controls label {
+            margin-right: 10px;
+        }
+        .info {
+            margin-top: 20px;
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Simulación del Momento Angular</h1>
+    <div class="info">
+        <h2>¿Qué es el Momento Angular?</h2>
+        <p>El <strong>momento angular</strong> (L) es una magnitud física que describe el estado de rotación de un objeto. Para una partícula en movimiento circular, se define como:</p>
+        <p><strong>L = m * v * r * sin(θ)</strong></p>
+        <p>Donde:</p>
+        <ul>
+            <li><strong>m</strong>: Masa de la partícula (kg)</li>
+            <li><strong>v</strong>: Velocidad tangencial (m/s)</li>
+            <li><strong>r</strong>: Radio de la trayectoria (m)</li>
+            <li><strong>θ</strong>: Ángulo entre el vector de posición y el vector de velocidad (en movimiento circular uniforme, θ = 90°, por lo que sin(θ) = 1).</li>
+        </ul>
+        <p>En esta simulación, puedes ajustar la masa, la velocidad y el radio para ver cómo afectan al momento angular de una partícula en movimiento circular.</p>
+    </div>
+
+    <div class="controls">
+        <label for="mass">Masa (kg):</label>
+        <input type="range" id="mass" min="0.1" max="5" step="0.1" value="1">
+        <span id="massValue">1</span>
+
+        <label for="velocity">Velocidad (m/s):</label>
+        <input type="range" id="velocity" min="1" max="10" step="0.1" value="5">
+        <span id="velocityValue">5</span>
+
+        <label for="radius">Radio (m):</label>
+        <input type="range" id="radius" min="50" max="200" step="1" value="100">
+        <span id="radiusValue">100</span>
+    </div>
+
+    <canvas id="canvas" width="600" height="400"></canvas>
+    <div class="info">
+        <h3>Resultados</h3>
+        <p>Momento Angular (L): <span id="angularMomentum">0</span> kg·m²/s</p>
+        <p>Vector de posición (r): <span id="positionVector">0, 0</span> m</p>
+        <p>Vector de velocidad (v): <span id="velocityVector">0, 0</span> m/s</p>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const massInput = document.getElementById('mass');
+        const velocityInput = document.getElementById('velocity');
+        const radiusInput = document.getElementById('radius');
+        const massValue = document.getElementById('massValue');
+        const velocityValue = document.getElementById('velocityValue');
+        const radiusValue = document.getElementById('radiusValue');
+        const angularMomentumDisplay = document.getElementById('angularMomentum');
+        const positionVectorDisplay = document.getElementById('positionVector');
+        const velocityVectorDisplay = document.getElementById('velocityVector');
+
+        let mass = parseFloat(massInput.value);
+        let velocity = parseFloat(velocityInput.value);
+        let radius = parseFloat(radiusInput.value);
+        let angle = 0;
+
+        // Actualizar valores de los controles
+        massInput.addEventListener('input', () => {
+            mass = parseFloat(massInput.value);
+            massValue.textContent = mass.toFixed(1);
+            updateAngularMomentum();
+        });
+
+        velocityInput.addEventListener('input', () => {
+            velocity = parseFloat(velocityInput.value);
+            velocityValue.textContent = velocity.toFixed(1);
+            updateAngularMomentum();
+        });
+
+        radiusInput.addEventListener('input', () => {
+            radius = parseFloat(radiusInput.value);
+            radiusValue.textContent = radius;
+            updateAngularMomentum();
+        });
+
+        // Calcular y mostrar el momento angular
+        function updateAngularMomentum() {
+            const L = mass * velocity * (radius / 100); // Escalar radio para simulación
+            angularMomentumDisplay.textContent = L.toFixed(2);
+        }
+
+        // Animación
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Centro del canvas
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+
+            // Dibujar la trayectoria circular
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+            ctx.strokeStyle = 'gray';
+            ctx.stroke();
+
+            // Posición de la partícula
+            const x = centerX + radius * Math.cos(angle);
+            const y = centerY + radius * Math.sin(angle);
+
+            // Dibujar la partícula
+            ctx.beginPath();
+            ctx.arc(x, y, 10, 0, 2 * Math.PI);
+            ctx.fillStyle = 'blue';
+            ctx.fill();
+
+            // Dibujar el vector de posición (r)
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(x, y);
+            ctx.strokeStyle = 'red';
+            ctx.stroke();
+            ctx.fillStyle = 'red';
+            ctx.fillText('r', x + 10, y);
+
+            // Dibujar el vector de velocidad (v)
+            const speedScale = 10; // Escala para visualizar el vector de velocidad
+            const vx = -velocity * Math.sin(angle) * speedScale;
+            const vy = velocity * Math.cos(angle) * speedScale;
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + vx, y + vy);
+            ctx.strokeStyle = 'green';
+            ctx.stroke();
+            ctx.fillStyle = 'green';
+            ctx.fillText('v', x + vx + 10, y + vy);
+
+            // Actualizar vectores en la interfaz
+            const posX = (radius / 100 * Math.cos(angle)).toFixed(2);
+            const posY = (radius / 100 * Math.sin(angle)).toFixed(2);
+            positionVectorDisplay.textContent = `${posX}, ${posY}`;
+
+            const velX = (-velocity * Math.sin(angle)).toFixed(2);
+            const velY = (velocity * Math.cos(angle)).toFixed(2);
+            velocityVectorDisplay.textContent = `${velX}, ${velY}`;
+
+            // Actualizar el momento angular
+            updateAngularMomentum();
+
+            // Incrementar el ángulo para la animación
+            angle += velocity * 0.01; // Ajustar velocidad de rotación
+            requestAnimationFrame(animate);
+        }
+
+        // Iniciar la animación
+        animate();
+    </script>
+</body>
+</html>
