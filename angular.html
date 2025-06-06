@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Momento Angular</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #simulator {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Momento Angular</h1>
+    <p>El momento angular es una medida de la cantidad de movimiento rotacional de un objeto alrededor de un eje. Se define como:</p>
+    <pre>
+<code>
+L = I * ω
+</code>
+    </pre>
+    <p>donde <code>L</code> es el momento angular, <code>I</code> es el momento de inercia y <code>ω</code> es la velocidad angular.</p>
+
+    <h2>Ejemplos en un Simulador</h2>
+    <div id="simulator">
+        <h3>Simulador de Momento Angular</h3>
+        <p>Selecciona un ejemplo:</p>
+        <select id="exampleSelector">
+            <option value="example1">Ejemplo 1: Patinador</option>
+            <option value="example2">Ejemplo 2: Tiovivo</option>
+        </select>
+        <button onclick="showExample()">Mostrar Ejemplo</button>
+        <div id="exampleOutput"></div>
+    </div>
+
+    <script>
+        function showExample() {
+            const selector = document.getElementById('exampleSelector');
+            const output = document.getElementById('exampleOutput');
+            const selectedExample = selector.value;
+
+            if (selectedExample === 'example1') {
+                output.innerHTML = `
+                    <h4>Ejemplo 1: Patinador</h4>
+                    <p>Un patinador que gira con los brazos extendidos tiene un momento de inercia <code>I₁</code> y una velocidad angular <code>ω₁</code>. Al acercar los brazos, el momento de inercia disminuye a <code>I₂</code>, lo que aumenta la velocidad angular a <code>ω₂</code> para conservar el momento angular:</p>
+                    <pre><code>
+L = I₁ * ω₁ = I₂ * ω₂
+                    </code></pre>
+                `;
+            } else if (selectedExample === 'example2') {
+                output.innerHTML = `
+                    <h4>Ejemplo 2: Tiovivo</h4>
+                    <p>Un tiovivo tiene un momento de inercia <code>I</code> y gira a una velocidad angular <code>ω</code>. Si se añade un niño al tiovivo, el momento de inercia total cambia a <code>I + ΔI</code>, y la nueva velocidad angular <code>ω'</code> se calcula para conservar el momento angular:</p>
+                    <pre><code>
+L = I * ω = (I + ΔI) * ω'
+                    </code></pre>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
