@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulación Avanzada de la Ecuación del Radar</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+        label {
+            display: block;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+        input[type="number"] {
+            width: 150px;
+            padding: 5px;
+            margin: 0 5px;
+        }
+        input[type="range"] {
+            width: 200px;
+            margin: 0 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin: 20px 0;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        canvas {
+            max-width: 600px;
+            margin: 20px auto;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Simulación Avanzada de la Ecuación del Radar</h2>
+        <label>
+            Potencia Transmitida (Pt, en W):
+            <input type="number" id="Pt" value="1000" min="0" step="any">
+            <input type="range" id="PtSlider" min="100" max="10000" value="1000" step="100">
+        </label>
+        <label>
+            Ganancia de Antena Transmisora (Gt, adimensional):
+            <input type="number" id="Gt" value="30" min="0" step="any">
+            <input type="range" id="GtSlider" min="1" max="100" value="30" step="1">
+        </label>
+        <label>
+            Ganancia de Antena Receptora (Gr, adimensional):
+            <input type="number" id="Gr" value="30" min="0" step="any">
+            <input type="range" id="GrSlider" min="1" max="100" value="30" step="1">
+        </label>
+        <label>
+            Sección Transversal del Radar (σ, en m²):
+            <input type="number" id="sigma" value="10" min="0" step="any">
+            <input type="range" id="sigmaSlider" min="1" max="50" value="10" step="1">
+        </label>
+        <label>
+            Longitud de Onda (λ, en m):
+            <input type="number" id="lambda" value="0.1" min="0" step="any">
+            <input type="range" id="lambdaSlider" min="0.01" max="1" value="0.1" step="0.01">
+        </label>
+        <label>
+            Distancia al Objetivo (R, en m):
+            <input type="number" id="R" value="10000" min="0" step="any">
+            <input type="range" id="RSlider" min="1000" max="50000" value="10000" step="1000">
+        </label>
+        <label>
+            Factor de Pérdida Atmosférica (L, adimensional, >1):
+            <input type="number" id="loss" value="1.2" min="1" step="any">
+            <input type="range" id="lossSlider" min="1" max="5" value="1.2" step="0.1">
+        </label>
+        <label>
+            Nivel de Ruido (escala, en W):
+            <input type="number" id="noiseScale" value="1e-12" min="0" step="any">
+            <input type="range" id="noiseScaleSlider" min="1e-13" max="1e-11" value="1e-12" step="1e-13">
+        </label>
+        <button onclick="calculateRadarPower()">Calcular y Simular</button>
+        <div id="result"></div>
+        <canvas id="radarChart" width="600" height="300"></canvas>
+    </div>
+
+    <script>
+        // Sincronizar inputs y sliders
+        const inputs = {
+            Pt: document.getElementById('Pt'),
+            PtSlider: document.getElementById('PtSlider'),
+            Gt: document.getElementById('Gt'),
+            GtSlider: document.getElementById('GtSlider'),
+            Gr: document.getElementById('Gr'),
+            GrSlider: document.getElementById('GrSlider'),
+            sigma: document.getElementById('sigma'),
+            sigmaSlider: document.getElementById('sigmaSlider'),
+            lambda: document.getElementById('lambda'),
+            lambdaSlider: document.getElementById('lambdaSlider'),
+            R: document.getElementById('R'),
+            RSlider: document.getElementById('RSlider'),
+            loss: document.getElementById('loss'),
+            lossSlider: document.getElementById('lossSlider'),
+            noiseScale: document.getElementById('noiseScale'),
+            noiseScaleSlider: document.getElementById('noiseScaleSlider')
+        };
+
+        // Sincronización bidireccional
+        for (let key in inputs) {
+            if (key.includes('Slider')) {
+                inputs[key].addEventListener('input', () => {
+                    const baseKey = key.replace('Slider', '');
+                    inputs[baseKey].value = inputs[key].value;
+                    calculateRadarPower();
+                });
+            } else {
+                inputs[key].addEventListener('input', () => {
+                    const sliderKey = key + 'Slider';
+                    inputs[sliderKey].value = inputs[key].value;
+                    calculateRadarPower();
+                });
+            }
+        }
+
+        // Configuración inicial del gráfico con Chart.js
+        const ctx = document.getElementById('radarChart').getContext('2d');
+        const radarChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Potencia Recibida (Pr, W) sin Ruido',
+                    data: [],
+                    borderColor: 'blue',
+                    fill: false,
+                    tension: 0.1
+                }, {
+                    label: 'Potencia Recibida (Pr, W) con Ruido',
+                    data: [],
+                    borderColor: 'red',
+                    fill: false,
+                    tension: 0.1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        type: 'logarithmic',
+                        title: { display: true, text: 'Potencia Recibida (W)' }
+                    },
+                    x: {
+                        title: { display: true, text: 'Distancia (m)' }
+                    }
+                },
+                plugins: {
+                    title: { display: true, text: 'Potencia Recibida vs Distancia' }
+                }
+            }
+        });
+
+        function calculateRadarPower() {
+            // Obtener los valores de los inputs
+            const Pt = parseFloat(inputs.Pt.value);
+            const Gt = parseFloat(inputs.Gt.value);
+            const Gr = parseFloat(inputs.Gr.value);
+            const sigma = parseFloat(inputs.sigma.value);
+            const lambda = parseFloat(inputs.lambda.value);
+            const R = parseFloat(inputs.R.value);
+            const loss = parseFloat(inputs.loss.value);
+            const noiseScale = parseFloat(inputs.noiseScale.value);
+
+            // Validación de entradas
+            if (isNaN(Pt) || isNaN(Gt) || isNaN(Gr) || isNaN(sigma) || isNaN(lambda) || isNaN(R) || isNaN(loss) || isNaN(noiseScale)) {
+                document.getElementById('result').innerHTML = "Por favor, ingrese valores numéricos válidos.";
+                return;
+            }
+            if (Pt <= 0 || Gt <= 0 || Gr <= 0 || sigma <= 0 || lambda <= 0 || R <= 0 || loss < 1 || noiseScale < 0) {
+                document.getElementById('result').innerHTML = "Los valores deben ser mayores que 0 (pérdida > 1).";
+                return;
+            }
+
+            // Ecuación del radar: Pr = (Pt * Gt * σ * Gr * λ^2) / ((4π)^3 * R^4 * L)
+            const pi = Math.PI;
+            const Pr = (Pt * Gt * sigma * Gr * Math.pow(lambda, 2)) / (Math.pow(4 * pi, 3) * Math.pow(R, 4) * loss);
+
+            // Simular ruido (inspirado en Monte Carlo)
+            const noise = noiseScale * (Math.random() - 0.5) * 2; // Ruido aleatorio centrado en 0
+            const PrWithNoise = Pr + noise;
+
+            // Mostrar resultados
+            document.getElementById('result').innerHTML = 
+                `Potencia Recibida (sin ruido): ${Pr.toExponential(4)} W<br>` +
+                `Potencia Recibida (con ruido): ${PrWithNoise.toExponential(4)} W`;
+
+            // Generar datos para la gráfica
+            const distances = [];
+            const powers = [];
+            const powersWithNoise = [];
+            const maxR = R * 2;
+            for (let i = 0; i <= 100; i++) {
+                const r = (i / 100) * maxR;
+                if (r === 0) continue; // Evitar división por cero
+                const pr = (Pt * Gt * sigma * Gr * Math.pow(lambda, 2)) / (Math.pow(4 * pi, 3) * Math.pow(r, 4) * loss);
+                const noiseVal = noiseScale * (Math.random() - 0.5) * 2;
+                distances.push(r.toFixed(0));
+                powers.push(pr);
+                powersWithNoise.push(pr + noiseVal);
+            }
+
+            // Actualizar la gráfica
+            radarChart.data.labels = distances;
+            radarChart.data.datasets[0].data = powers;
+            radarChart.data.datasets[1].data = powersWithNoise;
+            radarChart.update();
+        }
+
+        // Calcular inicialmente
+        calculateRadarPower();
+    </script>
+</body>
+</html>
