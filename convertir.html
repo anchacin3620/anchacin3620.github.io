@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor de Unidades en Física</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        .section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .converter {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        input, select, button {
+            padding: 8px;
+            margin: 5px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #result {
+            font-weight: bold;
+            color: #333;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Conversor de Unidades en Física</h1>
+
+    <!-- Sección: Importancia de las Conversiones -->
+    <div class="section">
+        <h2>Importancia de las Conversiones en Física</h2>
+        <p>Las conversiones de unidades son fundamentales en física porque permiten expresar magnitudes físicas en términos consistentes, facilitando cálculos, comparaciones y comunicación científica. La física requiere precisión, y usar un sistema de unidades estandarizado (como el Sistema Internacional, SI) asegura que los resultados sean universales y reproducibles. Por ejemplo, convertir kilómetros a metros o grados Celsius a Kelvin permite trabajar con ecuaciones físicas sin errores. En astronomía, unidades como años luz o parsecs son esenciales para manejar distancias cósmicas.</p>
+    </div>
+
+    <!-- Sección: Sistema MKS y CGS -->
+    <div class="section">
+        <h2>Sistemas MKS y CGS</h2>
+        <p><strong>Sistema MKS:</strong> Es el Sistema Internacional de Unidades (SI), basado en <strong>Metro</strong> (longitud), <strong>Kilogramo</strong> (masa) y <strong>Segundo</strong> (tiempo). Es el estándar global debido a su simplicidad y universalidad, usado en ciencia, ingeniería y educación.</p>
+        <p><strong>Sistema CGS:</strong> Usa <strong>Centímetro</strong> (longitud), <strong>Gramo</strong> (masa) y <strong>Segundo</strong> (tiempo). Es menos común hoy, pero sigue siendo útil en ciertos campos como la física teórica y la astronomía por su conveniencia en cálculos con magnitudes pequeñas.</p>
+        <p><strong>Diferencias:</strong> El MKS usa unidades más grandes (metros vs. centímetros, kilogramos vs. gramos), lo que lo hace más práctico para aplicaciones macroscópicas. El CGS es útil para fenómenos a menor escala, como en electromagnetismo.</p>
+    </div>
+
+    <!-- Sección: Metro y Segundo como Unidades Patrón -->
+    <div class="section">
+        <h2>¿Por qué el Metro y el Segundo como Unidades Patrón?</h2>
+        <p><strong>Metro:</strong> El metro se definió originalmente como la diezmillonésima parte de la distancia del ecuador al polo norte, pero hoy se basa en la velocidad de la luz (la distancia que recorre la luz en 1/299,792,458 segundos). Es universal, reproducible y preciso, ideal para mediciones científicas.</p>
+        <p><strong>Segundo:</strong> El segundo se define como 9,192,631,770 períodos de la radiación emitida por el átomo de cesio-133. Su estabilidad y precisión lo hacen ideal para medir el tiempo en experimentos físicos, desde mecánica hasta relatividad.</p>
+        <p>Ambas unidades son fundamentales en el SI porque son universales, basadas en constantes físicas, y permiten mediciones consistentes en cualquier laboratorio del mundo.</p>
+    </div>
+
+    <!-- Sección: Conversor de Unidades -->
+    <div class="section">
+        <h2>Conversor de Unidades</h2>
+        <div class="converter">
+            <h3>Seleccione una categoría</h3>
+            <select id="category" onchange="updateUnits()">
+                <option value="length">Longitud</option>
+                <option value="mass">Masa</option>
+                <option value="volume">Volumen</option>
+                <option value="temperature">Temperatura</option>
+                <option value="time">Tiempo</option>
+            </select>
+
+            <div>
+                <input type="number" id="valueInput" placeholder="Valor">
+                <select id="fromUnit"></select>
+                <span>a</span>
+                <select id="toUnit"></select>
+                <button onclick="convertUnits()">Convertir</button>
+            </div>
+            <p id="result">Resultado: </p>
+        </div>
+    </div>
+
+    <script>
+        // Definición de unidades y factores de conversión
+        const units = {
+            length: {
+                'm': 1,
+                'km': 1000,
+                'cm': 0.01,
+                'mm': 0.001,
+                'au': 149597870700, // Unidad Astronómica
+                'ly': 9460730472580800, // Año luz
+                'pc': 30856775814913673 // Parsec
+            },
+            mass: {
+                'kg': 1,
+                'g': 0.001,
+                'mg': 0.000001,
+                't': 1000 // Tonelada métrica
+            },
+            volume: {
+                'm3': 1,
+                'l': 0.001,
+                'cm3': 0.000001,
+                'ml': 0.000001
+            },
+            temperature: {
+                'c': (value, to) => {
+                    if (to === 'c') return value;
+                    if (to === 'f') return (value * 9/5) + 32;
+                    if (to === 'k') return value + 273.15;
+                },
+                'f': (value, to) => {
+                    if (to === 'f') return value;
+                    if (to === 'c') return (value - 32) * 5/9;
+                    if (to === 'k') return (value - 32) * 5/9 + 273.15;
+                },
+                'k': (value, to) => {
+                    if (to === 'k') return value;
+                    if (to === 'c') return value - 273.15;
+                    if (to === 'f') return (value - 273.15) * 9/5 + 32;
+                }
+            },
+            time: {
+                's': 1,
+                'min': 60,
+                'h': 3600,
+                'd': 86400
+            }
+        };
+
+        const unitNames = {
+            length: { 'm': 'Metros', 'km': 'Kilómetros', 'cm': 'Centímetros', 'mm': 'Milímetros', 'au': 'Unidades Astronómicas', 'ly': 'Años Luz', 'pc': 'Parsecs' },
+            mass: { 'kg': 'Kilogramos', 'g': 'Gramos', 'mg': 'Miligramos', 't': 'Toneladas' },
+            volume: { 'm3': 'Metros Cúbicos', 'l': 'Litros', 'cm3': 'Centímetros Cúbicos', 'ml': 'Mililitros' },
+            temperature: { 'c': 'Celsius', 'f': 'Fahrenheit', 'k': 'Kelvin' },
+            time: { 's': 'Segundos', 'min': 'Minutos', 'h': 'Horas', 'd': 'Días' }
+        };
+
+        // Actualizar las opciones de las unidades según la categoría seleccionada
+        function updateUnits() {
+            const category = document.getElementById('category').value;
+            const fromUnit = document.getElementById('fromUnit');
+            const toUnit = document.getElementById('toUnit');
+
+            fromUnit.innerHTML = '';
+            toUnit.innerHTML = '';
+
+            for (let unit in unitNames[category]) {
+                const option1 = document.createElement('option');
+                option1.value = unit;
+                option1.text = unitNames[category][unit];
+                fromUnit.appendChild(option1);
+
+                const option2 = document.createElement('option');
+                option2.value = unit;
+                option2.text = unitNames[category][unit];
+                toUnit.appendChild(option2);
+            }
+        }
+
+        // Inicializar las unidades al cargar la página
+        updateUnits();
+
+        // Función para convertir unidades
+        function convertUnits() {
+            const category = document.getElementById('category').value;
+            const value = parseFloat(document.getElementById('valueInput').value);
+            const fromUnit = document.getElementById('fromUnit').value;
+            const toUnit = document.getElementById('toUnit').value;
+            let result;
+
+            if (isNaN(value)) {
+                document.getElementById('result').innerText = 'Resultado: Ingrese un valor válido';
+                return;
+            }
+
+            if (category === 'temperature') {
+                result = units[category][fromUnit](value, toUnit);
+            } else {
+                const valueInBase = value * units[category][fromUnit];
+                result = valueInBase / units[category][toUnit];
+            }
+
+            document.getElementById('result').innerText = `Resultado: ${value} ${unitNames[category][fromUnit]} = ${result.toFixed(6)} ${unitNames[category][toUnit]}`;
+        }
+    </script>
+</body>
+</html>
