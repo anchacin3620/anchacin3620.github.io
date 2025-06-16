@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introducción a la Física</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        .section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .converter, .notation {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        input, select, button {
+            padding: 8px;
+            margin: 5px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #result, #notationResult {
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Introducción a la Física</h1>
+
+    <!-- Sección: ¿Qué es la Física? -->
+    <div class="section">
+        <h2>¿Qué es la Física?</h2>
+        <p>La física es la ciencia que estudia los fenómenos naturales, las propiedades de la materia, la energía, el espacio y el tiempo, buscando explicar las leyes que rigen el universo. Se basa en observaciones, experimentos y modelos matemáticos.</p>
+    </div>
+
+    <!-- Sección: Ramas de la Física -->
+    <div class="section">
+        <h2>Ramas de la Física</h2>
+        <ul>
+            <li><strong>Mecánica:</strong> Estudia el movimiento y las fuerzas.</li>
+            <li><strong>Termodinámica:</strong> Analiza el calor y la transferencia de energía.</li>
+            <li><strong>Electromagnetismo:</strong> Examina la electricidad, el magnetismo y las ondas.</li>
+            <li><strong>Óptica:</strong> Investiga la luz y sus interacciones.</li>
+            <li><strong>Física Cuántica:</strong> Explora fenómenos a escala atómica y subatómica.</li>
+            <li><strong>Física de Partículas:</strong> Estudia las partículas fundamentales.</li>
+            <li><strong>Astrofísica:</strong> Aplica la física al estudio de los astros.</li>
+        </ul>
+    </div>
+
+    <!-- Sección: Relación con otras ciencias -->
+    <div class="section">
+        <h2>Relación con otras Ciencias</h2>
+        <p>La física está íntimamente relacionada con otras disciplinas:</p>
+        <ul>
+            <li><strong>Química:</strong> Comparte principios en termodinámica y estructura atómica.</li>
+            <li><strong>Biología:</strong> Aplica conceptos de mecánica y óptica en biofísica.</li>
+            <li><strong>Astronomía:</strong> Utiliza física para entender el cosmos.</li>
+            <li><strong>Ingeniería:</strong> Usa principios físicos para diseñar tecnología.</li>
+            <li><strong>Matemáticas:</strong> Es la herramienta fundamental para modelar fenómenos físicos.</li>
+        </ul>
+    </div>
+
+    <!-- Sección: Unidades y Conversión -->
+    <div class="section">
+        <h2>Unidades y Conversión</h2>
+        <p>La física utiliza el Sistema Internacional (SI) para medir magnitudes. Ejemplos:</p>
+        <ul>
+            <li><strong>Longitud:</strong> Metro (m)</li>
+            <li><strong>Masa:</strong> Kilogramo (kg)</li>
+            <li><strong>Tiempo:</strong> Segundo (s)</li>
+            <li><strong>Temperatura:</strong> Kelvin (K)</li>
+        </ul>
+        <div class="converter">
+            <h3>Conversor de Unidades (Longitud)</h3>
+            <input type="number" id="valueInput" placeholder="Valor">
+            <select id="fromUnit">
+                <option value="m">Metros (m)</option>
+                <option value="km">Kilómetros (km)</option>
+                <option value="cm">Centímetros (cm)</option>
+                <option value="mm">Milímetros (mm)</option>
+            </select>
+            <span>a</span>
+            <select id="toUnit">
+                <option value="m">Metros (m)</option>
+                <option value="km">Kilómetros (km)</option>
+                <option value="cm">Centímetros (cm)</option>
+                <option value="mm">Milímetros (mm)</option>
+            </select>
+            <button onclick="convertUnits()">Convertir</button>
+            <p id="result">Resultado: </p>
+        </div>
+    </div>
+
+    <!-- Sección: Notación Científica -->
+    <div class="section">
+        <h2>Notación Científica</h2>
+        <p>La notación científica expresa números grandes o pequeños como un producto de un número entre 1 y 10 y una potencia de 10. Ejemplo: 300,000 = 3 × 10⁵.</p>
+        <div class="notation">
+            <h3>Convertir a Notación Científica</h3>
+            <input type="number" id="numberInput" placeholder="Ingrese un número">
+            <button onclick="toScientificNotation()">Convertir</button>
+            <p id="notationResult">Resultado: </p>
+        </div>
+    </div>
+
+    <!-- Sección: Inicialización de un Curso de Física Elemental -->
+    <div class="section">
+        <h2>Inicialización de un Curso de Física Elemental</h2>
+        <p>Un curso de física elemental introduce conceptos básicos y habilidades prácticas:</p>
+        <ul>
+            <li><strong>Objetivos:</strong> Comprender magnitudes físicas, leyes fundamentales y su aplicación.</li>
+            <li><strong>Temas clave:</strong> Cinemática, dinámica, trabajo, energía, fluidos, calor, ondas.</li>
+            <li><strong>Herramientas:</strong> Experimentos simples, simulaciones, y cálculos matemáticos.</li>
+            <li><strong>Método científico:</strong> Observar, formular hipótesis, experimentar, analizar y concluir.</li>
+        </ul>
+        <p>La física elemental fomenta el pensamiento crítico y la resolución de problemas, preparando a los estudiantes para estudios más avanzados.</p>
+    </div>
+
+    <script>
+        // Conversión de unidades
+        function convertUnits() {
+            const value = parseFloat(document.getElementById('valueInput').value);
+            const fromUnit = document.getElementById('fromUnit').value;
+            const toUnit = document.getElementById('toUnit').value;
+            let result;
+
+            // Conversiones a metros como base
+            const conversionsToMeters = {
+                'm': 1,
+                'km': 1000,
+                'cm': 0.01,
+                'mm': 0.001
+            };
+
+            // Validar entrada
+            if (isNaN(value)) {
+                document.getElementById('result').innerText = 'Resultado: Ingrese un valor válido';
+                return;
+            }
+
+            // Convertir a metros primero
+            const valueInMeters = value * conversionsToMeters[fromUnit];
+            // Convertir de metros a la unidad deseada
+            result = valueInMeters / conversionsToMeters[toUnit];
+
+            document.getElementById('result').innerText = `Resultado: ${value} ${fromUnit} = ${result.toFixed(4)} ${toUnit}`;
+        }
+
+        // Convertir a notación científica
+        function toScientificNotation() {
+            const number = parseFloat(document.getElementById('numberInput').value);
+            if (isNaN(number)) {
+                document.getElementById('notationResult').innerText = 'Resultado: Ingrese un número válido';
+                return;
+            }
+
+            const absNumber = Math.abs(number);
+            let exponent = 0;
+            let coefficient = absNumber;
+
+            if (absNumber !== 0) {
+                while (coefficient >= 10) {
+                    coefficient /= 10;
+                    exponent++;
+                }
+                while (coefficient < 1 && coefficient !== 0) {
+                    coefficient *= 10;
+                    exponent--;
+                }
+            }
+
+            const sign = number < 0 ? '-' : '';
+            const result = `${sign}${coefficient.toFixed(4)} × 10^${exponent}`;
+            document.getElementById('notationResult').innerText = `Resultado: ${result}`;
+        }
+    </script>
+</body>
+          </html>
