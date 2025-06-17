@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introducción a Vectores en Física</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        .section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .calculator {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        input, select, button {
+            padding: 8px;
+            margin: 5px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #result {
+            font-weight: bold;
+            color: #333;
+            margin-top: 10px;
+        }
+        canvas {
+            border: 1px solid #ccc;
+            margin: 10px 0;
+        }
+        .example {
+            background: #e8f4f8;
+            padding: 10px;
+            border-left: 4px solid #28a745;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Introducción a Vectores en Física</h1>
+
+    <!-- Sección: Conceptos de Vectores y Escalares -->
+    <div class="section">
+        <h2>¿Qué son los Vectores y Escalares?</h2>
+        <p><strong>Escalar:</strong> Una cantidad que solo tiene magnitud (un número). Ejemplos: masa (5 kg), temperatura (20 °C), tiempo (10 s).</p>
+        <p><strong>Vector:</strong> Una cantidad con magnitud y dirección. Se representa con componentes en un sistema de coordenadas (ejemplo: (3, 4) en 2D) o con una flecha en gráficos. Ejemplos: velocidad (10 m/s al norte), fuerza (20 N a 30°).</p>
+        <p>Los vectores son esenciales en física para describir fenómenos como movimiento, fuerzas y campos, ya que la dirección es tan importante como la magnitud.</p>
+    </div>
+
+    <!-- Sección: Operaciones con Vectores -->
+    <div class="section">
+        <h2>Operaciones con Vectores</h2>
+        <ul>
+            <li><strong>Suma/Resta:</strong> Se suman o restan las componentes correspondientes. Ejemplo: Si A = (2, 3) y B = (1, -1), entonces A + B = (2+1, 3-1) = (3, 2).</li>
+            <li><strong>Producto Escalar:</strong> Resulta en un escalar. A · B = |A||B|cos(θ) o A · B = AₓBₓ + AᵧBᵧ (en 2D). Mide la proyección de un vector sobre otro.</li>
+            <li><strong>Producto Vectorial (3D):</strong> Resulta en un vector perpendicular a los dos vectores originales. A × B = (AᵧBₓ - AₓBᵧ, AₓBₓ - AₓBₓ, AₓBᵧ - AᵧBₓ). Útil para calcular momentos o áreas.</li>
+        </ul>
+    </div>
+
+    <!-- Sección: Vectores en 2D y 3D -->
+    <div class="section">
+        <h2>Vectores en 2D y 3D</h2>
+        <p><strong>2D:</strong> Un vector en 2D tiene dos componentes (x, y). Ejemplo: (4, 5) representa un vector con magnitud √(4² + 5²) = √41 y dirección θ = atan(5/4).</p>
+        <p><strong>3D:</strong> Un vector en 3D tiene tres componentes (x, y, z). Ejemplo: (1, 2, 3). La magnitud es √(x² + y² + z²), y la dirección requiere ángulos en tres dimensiones.</p>
+        <p>En física, los vectores 2D se usan en mecánica plana (movimiento en un plano), mientras que los vectores 3D son comunes en dinámica espacial o electromagnetismo.</p>
+    </div>
+
+    <!-- Sección: Ejemplos con Geometría Analítica -->
+    <div class="section">
+        <h2>Ejemplos con Geometría Analítica</h2>
+        <div class="example">
+            <h3>Ejemplo 1: Suma de Vectores</h3>
+            <p>Dados A = (3, 2) y B = (-1, 4), calcular A + B.</p>
+            <p>Solución: A + B = (3 + (-1), 2 + 4) = (2, 6).</p>
+        </div>
+        <div class="example">
+            <h3>Ejemplo 2: Producto Escalar</h3>
+            <p>Dados A = (2, 3) y B = (1, -1), calcular A · B.</p>
+            <p>Solución: A · B = (2)(1) + (3)(-1) = 2 - 3 = -1.</p>
+        </div>
+        <div class="example">
+            <h3>Ejemplo 3: Producto Vectorial (3D)</h3>
+            <p>Dados A = (1, 0, 2) y B = (0, 1, -1), calcular A × B.</p>
+            <p>Solución: A × B = ((0)(-1) - (2)(1), (2)(0) - (1)(-1), (1)(1) - (0)(0)) = (-2, 1, 1).</p>
+        </div>
+        <div class="example">
+            <h3>Ejemplo 4: Distancia entre Puntos</h3>
+            <p>Calcular la distancia entre P(1, 2) y Q(4, 6) usando vectores.</p>
+            <p>Solución: Vector PQ = (4-1, 6-2) = (3, 4). Magnitud = √(3² + 4²) = √25 = 5.</p>
+        </div>
+    </div>
+
+    <!-- Sección: Calculadora de Vectores -->
+    <div class="section">
+        <h2>Calculadora de Vectores</h2>
+        <div class="calculator">
+            <h3>Operaciones con Vectores</h3>
+            <p>Vector A: <input type="number" id="ax" placeholder="Ax"> <input type="number" id="ay" placeholder="Ay"> <input type="number" id="az" placeholder="Az (3D)"></p>
+            <p>Vector B: <input type="number" id="bx" placeholder="Bx"> <input type="number" id="by" placeholder="By"> <input type="number" id="bz" placeholder="Bz (3D)"></p>
+            <select id="operation">
+                <option value="sum">Suma (A + B)</option>
+                <option value="subtract">Resta (A - B)</option>
+                <option value="dot">Producto Escalar (A · B)</option>
+                <option value="cross">Producto Vectorial (A × B, solo 3D)</option>
+                <option value="magnitude">Magnitud de A</option>
+            </select>
+            <button onclick="calculateVector()">Calcular</button>
+            <p id="result">Resultado: </p>
+        </div>
+    </div>
+
+    <!-- Sección: Visualización de Vectores -->
+    <div class="section">
+        <h2>Visualización Interactiva de Vectores (2D)</h2>
+        <p>Modifica las componentes de los vectores A y B para visualizarlos. Usa la calculadora para ver los resultados gráficos de la suma o resta.</p>
+        <div id="vectorCanvas"></div>
+    </div>
+
+    <script>
+        // Calculadora de Vectores
+        function calculateVector() {
+            const ax = parseFloat(document.getElementById('ax').value) || 0;
+            const ay = parseFloat(document.getElementById('ay').value) || 0;
+            const az = parseFloat(document.getElementById('az').value) || 0;
+            const bx = parseFloat(document.getElementById('bx').value) || 0;
+            const by = parseFloat(document.getElementById('by').value) || 0;
+            const bz = parseFloat(document.getElementById('bz').value) || 0;
+            const operation = document.getElementById('operation').value;
+            let result;
+
+            if (operation === 'sum') {
+                result = `(${ax + bx}, ${ay + by}, ${az + bz})`;
+            } else if (operation === 'subtract') {
+                result = `(${ax - bx}, ${ay - by}, ${az - bz})`;
+            } else if (operation === 'dot') {
+                result = ax * bx + ay * by + az * bz;
+            } else if (operation === 'cross') {
+                result = `(${(ay * bz - az * by).toFixed(2)}, ${(az * bx - ax * bz).toFixed(2)}, ${(ax * by - ay * bx).toFixed(2)})`;
+            } else if (operation === 'magnitude') {
+                result = Math.sqrt(ax * ax + ay * ay + az * az).toFixed(2);
+            }
+
+            document.getElementById('result').innerText = `Resultado: ${result}`;
+        }
+
+        // Visualización con p5.js
+        function setup() {
+            let canvas = createCanvas(400, 400);
+            canvas.parent('vectorCanvas');
+        }
+
+        function draw() {
+            background(255);
+            translate(200, 200); // Centro del canvas
+            scale(1, -1); // Invertir eje Y para que sea positivo hacia arriba
+
+            // Ejes
+            stroke(0);
+            line(-200, 0, 200, 0); // Eje X
+            line(0, -200, 0, 200); // Eje Y
+            textSize(12);
+            textAlign(CENTER);
+            scale(1, -1); // Revertir para texto
+            text('X', 190, -10);
+            text('Y', 10, -190);
+            scale(1, -1);
+
+            // Obtener componentes de los vectores
+            const ax = parseFloat(document.getElementById('ax').value) || 0;
+            const ay = parseFloat(document.getElementById('ay').value) || 0;
+            const bx = parseFloat(document.getElementById('bx').value) || 0;
+            const by = parseFloat(document.getElementById('by').value) || 0;
+            const operation = document.getElementById('operation').value;
+
+            // Escalar para visualización
+            const scaleFactor = 30;
+
+            // Dibujar vector A (azul)
+            stroke(0, 0, 255);
+            fill(0, 0, 255);
+            drawVector(ax * scaleFactor, ay * scaleFactor, 'A');
+
+            // Dibujar vector B (rojo)
+            stroke(255, 0, 0);
+            fill(255, 0, 0);
+            drawVector(bx * scaleFactor, by * scaleFactor, 'B');
+
+            // Dibujar resultado de suma o resta (verde)
+            if (operation === 'sum' || operation === 'subtract') {
+                stroke(0, 128, 0);
+                fill(0, 128, 0);
+                const rx = operation === 'sum' ? (ax + bx) : (ax - bx);
+                const ry = operation === 'sum' ? (ay + by) : (ay - by);
+                drawVector(rx * scaleFactor, ry * scaleFactor, 'Resultado');
+            }
+        }
+
+        function drawVector(x, y, label) {
+            line(0, 0, x, y);
+            let angle = atan2(y, x);
+            let arrowSize = 10;
+            line(x, y, x - arrowSize * cos(angle + PI / 6), y - arrowSize * sin(angle + PI / 6));
+            line(x, y, x - arrowSize * cos(angle - PI / 6), y - arrowSize * sin(angle - PI / 6));
+            scale(1, -1);
+            text(label, x / 2, -y / 2 - 10);
+            scale(1, -1);
+        }
+    </script>
+</body>
+  </html>
