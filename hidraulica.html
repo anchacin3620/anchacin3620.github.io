@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introducción a la Hidráulica</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        .section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .calculator {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        input, select, button {
+            padding: 8px;
+            margin: 5px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #result {
+            font-weight: bold;
+            color: #333;
+            margin-top: 10px;
+        }
+        canvas {
+            border: 1px solid #ccc;
+            margin: 10px 0;
+        }
+        .example {
+            background: #e8f4f8;
+            padding: 10px;
+            border-left: 4px solid #28a745;
+            margin: 10px 0;
+        }
+        .equation {
+            font-style: italic;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Introducción a la Hidráulica</h1>
+
+    <!-- Sección: Conceptos Básicos -->
+    <div class="section">
+        <h2>Conceptos Básicos de Hidráulica</h2>
+        <p>La <strong>hidráulica</strong> es la rama de la física que estudia el comportamiento de los fluidos en reposo (hidrostática) y en movimiento (hidrodinámica). Se basa en principios como la incompresibilidad de los líquidos, la transmisión de presión y la conservación de energía.</p>
+        <ul>
+            <li><strong>Fluido:</strong> Sustancia que puede fluir (líquidos o gases). En hidráulica, se centra en líquidos incompresibles (como agua o aceite).</li>
+            <li><strong>Presión:</strong> Fuerza por unidad de área (P = F/A). Se mide en pascales (Pa).</li>
+            <li><strong>Caudal:</strong> Volumen de fluido que pasa por una sección por unidad de tiempo (Q = A·v).</li>
+            <li><strong>Densidad:</strong> Masa por unidad de volumen (ρ = m/V). Ejemplo: agua ≈ 1000 kg/m³.</li>
+        </ul>
+    </div>
+
+    <!-- Sección: Ecuaciones Principales -->
+    <div class="section">
+        <h2>Ecuaciones Principales de Hidráulica</h2>
+        <div class="equation">
+            <h3>1. Presión Hidrostática</h3>
+            <p>P = ρ·g·h</p>
+            <p>Donde: P = presión (Pa), ρ = densidad (kg/m³), g = aceleración gravitacional (9.81 m/s²), h = profundidad (m).</p>
+        </div>
+        <div class="equation">
+            <h3>2. Principio de Pascal</h3>
+            <p>F₂ = F₁·(A₂/A₁)</p>
+            <p>Donde: F = fuerza (N), A = área (m²). La presión se transmite uniformemente en un fluido confinado.</p>
+        </div>
+        <div class="equation">
+            <h3>3. Ecuación de Continuidad</h3>
+            <p>A₁·v₁ = A₂·v₂</p>
+            <p>Donde: A = área de la sección (m²), v = velocidad del fluido (m/s). El caudal (Q = A·v) es constante.</p>
+        </div>
+        <div class="equation">
+            <h3>4. Ecuación de Bernoulli</h3>
+            <p>P₁ + ρ·g·h₁ + ½·ρ·v₁² = P₂ + ρ·g·h₂ + ½·ρ·v₂²</p>
+            <p>Donde: P = presión, h = altura, v = velocidad. Representa la conservación de energía en un fluido.</p>
+        </div>
+    </div>
+
+    <!-- Sección: Calculadora Interactiva -->
+    <div class="section">
+        <h2>Calculadora Hidráulica Interactiva</h2>
+        <div class="calculator">
+            <h3>Seleccione una ecuación</h3>
+            <select id="equation" onchange="updateInputs()">
+                <option value="pressure">Presión Hidrostática (P = ρ·g·h)</option>
+                <option value="pascal">Principio de Pascal (F₂ = F₁·A₂/A₁)</option>
+                <option value="continuity">Ecuación de Continuidad (A₁·v₁ = A₂·v₂)</option>
+                <option value="bernoulli">Ecuación de Bernoulli</option>
+            </select>
+
+            <div id="inputs"></div>
+            <button onclick="calculate()">Calcular</button>
+            <p id="result">Resultado: </p>
+        </div>
+    </div>
+
+    <!-- Sección: Ejemplos Resueltos -->
+    <div class="section">
+        <h2>Ejemplos Resueltos</h2>
+        <div class="example">
+            <h3>Ejemplo 1: Presión Hidrostática</h3>
+            <p>Calcular la presión a 10 m de profundidad en agua (ρ = 1000 kg/m³, g = 9.81 m/s²).</p>
+            <p>Solución: P = ρ·g·h = 1000·9.81·10 = 98,100 Pa.</p>
+        </div>
+        <div class="example">
+            <h3>Ejemplo 2: Principio de Pascal</h3>
+            <p>Una prensa hidráulica aplica una fuerza de 100 N en un pistón de área 0.01 m². ¿Qué fuerza se genera en un pistón de área 0.1 m²?</p>
+            <p>Solución: F₂ = F₁·(A₂/A₁) = 100·(0.1/0.01) = 1000 N.</p>
+        </div>
+        <div class="example">
+            <h3>Ejemplo 3: Ecuación de Continuidad</h3>
+            <p>Un tubo tiene una sección de 0.02 m² con velocidad de 2 m/s. ¿Cuál es la velocidad en una sección de 0.01 m²?</p>
+            <p>Solución: A₁·v₁ = A₂·v₂ → v₂ = (A₁·v₁)/A₂ = (0.02·2)/0.01 = 4 m/s.</p>
+        </div>
+    </div>
+
+    <!-- Sección: Visualización -->
+    <div class="section">
+        <h2>Visualización Interactiva</h2>
+        <p>Simulación de flujo en un tubo con cambio de sección (Ecuación de Continuidad). Ajusta las velocidades con la calculadora.</p>
+        <div id="flowCanvas"></div>
+    </div>
+
+    <script>
+        // Actualizar inputs según la ecuación seleccionada
+        function updateInputs() {
+            const equation = document.getElementById('equation').value;
+            const inputsDiv = document.getElementById('inputs');
+            let html = '';
+
+            if (equation === 'pressure') {
+                html = `
+                    <p>Densidad (ρ, kg/m³): <input type="number" id="density" value="1000"></p>
+                    <p>Profundidad (h, m): <input type="number" id="height" value="10"></p>
+                `;
+            } else if (equation === 'pascal') {
+                html = `
+                    <p>Fuerza inicial (F₁, N): <input type="number" id="f1" value="100"></p>
+                    <p>Área inicial (A₁, m²): <input type="number" id="a1" value="0.01"></p>
+                    <p>Área final (A₂, m²): <input type="number" id="a2" value="0.1"></p>
+                `;
+            } else if (equation === 'continuity') {
+                html = `
+                    <p>Área inicial (A₁, m²): <input type="number" id="a1" value="0.02"></p>
+                    <p>Velocidad inicial (v₁, m/s): <input type="number" id="v1" value="2"></p>
+                    <p>Área final (A₂, m²): <input type="number" id="a2" value="0.01"></p>
+                `;
+            } else if (equation === 'bernoulli') {
+                html = `
+                    <p>Presión inicial (P₁, Pa): <input type="number" id="p1" value="101325"></p>
+                    <p>Altura inicial (h₁, m): <input type="number" id="h1" value="0"></p>
+                    <p>Velocidad inicial (v₁, m/s): <input type="number" id="v1" value="0"></p>
+                    <p>Densidad (ρ, kg/m³): <input type="number" id="density" value="1000"></p>
+                    <p>Presión final (P₂, Pa): <input type="number" id="p2" value="101325"></p>
+                    <p>Altura final (h₂, m): <input type="number" id="h2" value="0"></p>
+                `;
+            }
+
+            inputsDiv.innerHTML = html;
+        }
+
+        // Inicializar inputs
+        updateInputs();
+
+        // Calcular resultados
+        function calculate() {
+            const equation = document.getElementById('equation').value;
+            const g = 9.81; // Aceleración gravitacional
+            let result;
+
+            if (equation === 'pressure') {
+                const density = parseFloat(document.getElementById('density').value);
+                const height = parseFloat(document.getElementById('height').value);
+                if (isNaN(density) || isNaN(height)) {
+                    result = 'Ingrese valores válidos';
+                } else {
+                    result = density * g * height;
+                    result = `${result.toFixed(2)} Pa`;
+                }
+            } else if (equation === 'pascal') {
+                const f1 = parseFloat(document.getElementById('f1').value);
+                const a1 = parseFloat(document.getElementById('a1').value);
+                const a2 = parseFloat(document.getElementById('a2').value);
+                if (isNaN(f1) || isNaN(a1) || isNaN(a2) || a1 === 0) {
+                    result = 'Ingrese valores válidos';
+                } else {
+                    result = f1 * (a2 / a1);
+                    result = `${result.toFixed(2)} N`;
+                }
+            } else if (equation === 'continuity') {
+                const a1 = parseFloat(document.getElementById('a1').value);
+                const v1 = parseFloat(document.getElementById('v1').value);
+                const a2 = parseFloat(document.getElementById('a2').value);
+                if (isNaN(a1) || isNaN(v1) || isNaN(a2) || a2 === 0) {
+                    result = 'Ingrese valores válidos';
+                } else {
+                    result = (a1 * v1) / a2;
+                    result = `${result.toFixed(2)} m/s`;
+                }
+            } else if (equation === 'bernoulli') {
+                const p1 = parseFloat(document.getElementById('p1').value);
+                const h1 = parseFloat(document.getElementById('h1').value);
+                const v1 = parseFloat(document.getElementById('v1').value);
+                const density = parseFloat(document.getElementById('density').value);
+                const p2 = parseFloat(document.getElementById('p2').value);
+                const h2 = parseFloat(document.getElementById('h2').value);
+                if (isNaN(p1) || isNaN(h1) || isNaN(v1) || isNaN(density) || isNaN(p2) || isNaN(h2)) {
+                    result = 'Ingrese valores válidos';
+                } else {
+                    const v2 = Math.sqrt(2 * ((p1 - p2) / density + g * (h1 - h2) + (v1 * v1) / 2));
+                    result = isNaN(v2) ? 'No hay solución real' : `${v2.toFixed(2)} m/s`;
+                }
+            }
+
+            document.getElementById('result').innerText = `Resultado: ${result}`;
+        }
+
+        // Visualización con p5.js
+        let particles = [];
+
+        function setup() {
+            let canvas = createCanvas(600, 200);
+            canvas.parent('flowCanvas');
+            for (let i = 0; i < 50; i++) {
+                particles.push({ x: random(0, 200), y: random(50, 150) });
+            }
+        }
+
+        function draw() {
+            background(255);
+            // Dibujar tubo
+            fill(200);
+            rect(0, 50, 300, 100); // Sección ancha
+            rect(300, 75, 300, 50); // Sección estrecha
+            fill(0, 150, 255);
+            rect(0, 50, 300, 100);
+            rect(300, 75, 300, 50);
+
+            // Obtener velocidad para continuidad
+            let v1 = parseFloat(document.getElementById('v1')?.value) || 1;
+            let a1 = parseFloat(document.getElementById('a1')?.value) || 0.02;
+            let a2 = parseFloat(document.getElementById('a2')?.value) || 0.01;
+            let v2 = (a1 * v1) / a2 || 2;
+
+            // Mover partículas
+            for (let p of particles) {
+                if (p.x < 300) {
+                    p.x += v1 * 0.5;
+                } else {
+                    p.x += v2 * 0.5;
+                }
+                if (p.x > 600) p.x = 0;
+                if (p.x > 300 && (p.y < 75 || p.y > 125)) {
+                    p.y = random(75, 125);
+                }
+                fill(255);
+                ellipse(p.x, p.y, 5, 5);
+            }
+
+            // Etiquetas
+            fill(0);
+            textSize(12);
+            text(`v₁ = ${v1.toFixed(2)} m/s`, 150, 40);
+            text(`v₂ = ${v2.toFixed(2)} m/s`, 450, 65);
+        }
+    </script>
+</body>
+  </html>
