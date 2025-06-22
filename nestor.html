@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lengua Española: Gramática y Ortografía</title>
+    <style>
+        /* Estilos CSS */
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background: linear-gradient(135deg, #eceff1, #b0bec5);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            background: #fff;
+            max-width: 900px;
+            margin: 20px;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        h1 {
+            font-size: 2.3em;
+            color: #1a237e;
+            text-align: center;
+            margin-bottom: 12px;
+            border-bottom: 3px solid #3f51b5;
+            padding-bottom: 10px;
+        }
+
+        .author, .date {
+            text-align: center;
+            font-size: 1.1em;
+            color: #616161;
+            margin: 5px 0;
+            font-style: italic;
+        }
+
+        p {
+            font-size: 1.15em;
+            line-height: 1.7;
+            text-align: justify;
+            margin: 15px 0;
+        }
+
+        blockquote {
+            background: #f5f5f5;
+            border-left: 5px solid #3f51b5;
+            padding: 15px 25px;
+            font-style: italic;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        /* Animación de entrada */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Estilos responsivos */
+        @media (max-width: 700px) {
+            .container {
+                padding: 20px;
+                margin: 15px;
+            }
+
+            h1 {
+                font-size: 1.9em;
+            }
+
+            p {
+                font-size: 1em;
+            }
+        }
+
+        /* Botón para modo oscuro */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #3f51b5;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .theme-toggle:hover {
+            background: #303f9f;
+        }
+
+        /* Modo oscuro */
+        .dark-mode {
+            background: linear-gradient(135deg, #263238, #455a64);
+        }
+
+        .dark-mode .container {
+            background: #37474f;
+            color: #eceff1;
+        }
+
+        .dark-mode h1 {
+            color: #e8eaf6;
+            border-bottom-color: #5c6bc0;
+        }
+
+        .dark-mode .author, .dark-mode .date {
+            color: #b0bec5;
+        }
+
+        .dark-mode blockquote {
+            background: #455a64;
+            border-left-color: #5c6bc0;
+        }
+    </style>
+    <!-- Importar fuente Open Sans desde Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Botón para alternar modo oscuro -->
+    <button class="theme-toggle" onclick="toggleTheme()">Modo Oscuro</button>
+
+    <!-- Contenedor principal -->
+    <div class="container">
+        <h1>Lengua Española: La Gramática, la Ortografía, el Pato y la Guacharaca…</h1>
+        <div class="author">Por Néstor Luis Garrido</div>
+        <div class="date">Junio 21, 2025</div>
+        <p>«¡Vuelve el perro arrepentido, con sus miradas tan tiernas…!», dirán ustedes, mis contumaces lectores, cuando insisto en el estado de la enseñanza del español en los sistemas educativos de esta nuestra Hispanosfera, tan empeñados como están en enseñar la ignorancia y en graduar <em>suma cum fraude</em> a tanta gente como se pueda, siempre y cuando el mercadeo mantenga el prestigio de las distintas casas de estudio…</p>
+        <p>Esto viene a propósito de la noticia que los medios españoles señalaron hace poco de que las pruebas de acceso a la universidad (PAU) ya no restarán puntos por faltas de ortografía en materias que no sean directamente relacionadas con la asignatura de lengua. Es decir, la exigencia de que no haya errores en la ortografía clásica, o sea, de la palabra, ni en la morfosintaxis (más relacionada con la ortografía de la oración) ha de quedar restringida a ciertas áreas del conocimiento, como si la producción intelectual y la científica no estuvieran directamente relacionada con la capacidad de expresarse, estructurar y transmitir, de manera precisa y clara, descubrimientos y aportes, en cuya divulgación la corrección sintáctica y ortográfica tienen un papel principal.</p>
+        <p>Paradójicamente, esto sucede en plena exaltación de la lingüística como ciencia auxiliar de la antropología, la politología, la psicología, la informática, la sociología y la educación, por no hablar de la filosofía, pues ahora todo gira alrededor de las fulanas narrativas, que responden a la dura cuestión de qué es la realidad, la cual no es otra cosa sino su reconstrucción, a partir de palabras, que le dan sentido, la explican y, quizá, hasta la crean. Dicho claro y sin remilgos, dominar el idioma es dominar la realidad, algo que los periodistas sabemos de sobra.</p>
+        <blockquote>Lo del PAU pone a España en una especie de relegamiento del papel de la lengua en el saber de la gente, lo que contrasta obviamente con las grandes exigencias que estudiantes anglohablantes o de la francofonía enfrentan ante las intrincadas realidades de la ortografía del inglés y del francés, cuyo dominio es esencial a la hora de entrar a la universidad.</blockquote>
+        <p>La ventana rota de la universidad...</p>
+        <p>Hablo de España por aprovecharme del momento periodístico, pero pude haber comenzado esta crónica con la experiencia de un profesor en cuya universidad dio clases durante veinte años y de la que salió arrastrando la cobija y ensuciando el apellido, como dice el mariachi, hace exactamente una década, cuando las autoridades del decanato de Humanidades y Educación prácticamente le exigieron que aprobara a un grupo de clientes, perdón, de alumnos –a los que se les había demostrado un plagio masivo y en el cual dos personas habían asumido la culpa– con el argumento falaz <em>ad hominem</em> de que era el «ayatolá de la ortografía», que tenía la osadía de hasta penarles los errores sintácticos a los estudiantes, por lo que estos se vieron en la necesidad de irse por la vía fácil del copipega, todo ello a pesar de que la materia que dictaba se especializaba en la elaboración de manuales de estilo y normas éticas para las publicaciones periódicas.</p>
+        <p>Pues bien, así como en la teoría de la ventana rota, en criminología, se postula que cualquier alteración en el paisaje urbano es un estímulo a desobedecer la ley, así, en educación, cualquier «perdón» de cualquier falta –así sea escribir <em>hoccijeno</em> por oxígeno, como he llegado a leer– puede ser interpretado como un permiso para cometer un pecado académico mayor como el plagio. El relajo en las normas más sencillas se convierte en un todo vale.</p>
+        <p>Pero, el deterioro de la excelencia en esa universidad cuyo nombre se me escapa comenzó tiempo antes cuando su rector, que ya no está entre nosotros, decidió no solo dejar de quitar puntos por horrores ortográficos, sino que, por puro populismo y quizás por influencia de un cierto mercantilismo universitario que se ha apoderado de todo el mundo académico, decidió eliminar la prueba de admisión…</p>
+        <p>Las primeras en acusar el golpe fueron las docentes de Morfosintaxis, en los primeros semestres, muchas de las cuales abandonaron esa universidad convencidas de que no había nada que hacer, toda vez que las autoridades, muy a pesar de los lemas llamando a la excelencia y a unos supuestos escalafones internacionales que situaban a la institución entre las mejores del mundo hispánico, presionaban para que pasara gente que confundía «va a haber» con «va a ver»… O sea, ni la gramática, la ortografía, el pato, la guacharaca, ni ninguna otra especie en extinción iban a privar a esos muchachos del derecho a pasar…</p>
+        <p>La confusión con respecto a esto es de tal magnitud, que una alumna de Redacción del susodicho amigo mío, a la que había que aplicarle el RR (reglamento de repitientes), por haber suspendido una materia tres veces, envió una carta al Consejo Universitario diciendo que él era un pelón obtuso, incapaz de entender que ella sufría de un «trastorno del aprendizaje» que afectaba su capacidades expresivas y que, por lo tanto, era injusto de toda injusticia que él vulnerara su derecho a graduarse en Comunicación Social con sus compañeros de toda la vida. ¡Por las barbas del abuelito de Heidi…!</p>
+        <p>De Bat Yam a Ñame del Palo...</p>
+        <p>Puede ser que sea una exageración, pero en un tiempo en que las computadoras corrigen faltas y la generación de textos por medio de la inteligencia artificial han hecho creer a la gente que aprender a escribir correctamente es una veleidad, una antigualla, una vaina de viejos, el profesional de la palabra –llámese periodista, escritor, traductor o corrector– ha de redefinir su labor enmendando los errores que cometa la aplicación…</p>
+        <p>La inteligencia artificial vino para quedarse y hay que lidiar con ella; pero, para los periodistas representa todo un reto ético, porque producir un texto y usarlo como si fuera de uno, es una versión sofisticada del plagio; por el otro lado, un periodista no es un productor de contenidos indiscriminados, sino un generador de narrativas basadas en datos contrastados, balanceados y comprobados, significativos para una audiencia que los necesita para la toma de decisiones sobre la base de informaciones verdaderas.</p>
+        <blockquote>Decir que uno no deba usar la inteligencia artificial es una necedad. Solo que debe utilizarse como una herramienta más, con el mismo criterio con que uno recurre a Wikipedia: una fuente de pistas para saber por dónde empezar una investigación cuando no se tiene ni idea del tema que involucra el trabajo.</blockquote>
+        <p>El batimóvil del Papa...</p>
+        <p>Todos cometemos herrores (sic), ya que estos son inherentes a la condición humana y, tal como lo he dicho, ni las máquinas son inmunes a ellos. Pero, basta que alguien ajeno los cometa, más si lo hace en público, para que salgan influenciadores con poca luces y menos moral, pero eso sí, con aires de María Moliner, o incluso esos que obvian los signos de apertura de interrogación y de exclamación, y aparezcan cual inquisidores del Tribunal de la Haiga o fiscales del «yo sí estudeo» para levantar el dedo, siempre desde una supuesta superioridad intelectual, a señalar y hasta a expurgar –banear, dicen ahora– o cancelar en las redes a las víctimas de una luenga enruedada (<em>lapsus linguae</em>) o un error de dedo (<em>lapsus calami</em>) para hacer bromas o memes, y así ganar muchas visualizaciones y muchos megusta en las redes sociales.</p>
+        <p>El periodismo siempre se basó en el respeto hacia el otro, entendiendo las limitaciones o las confusiones que alguien pueda tener, sobre todo a la hora de reportar en vivo, como le sucedió a una locutora que recientemente confundió el Papamóvil de la Santa Sede con el Batimóvil de Ciudad Gótica…</p>
+        <p>Sin la RAE… ¡Nunca!</p>
+        <p>Una de las fortalezas que tiene el español es que a la autoridad de la RAE y de las correspondientes academias nacionales de la lengua nadie la pone en cuestionamiento, todo ello a pesar de la polémica suscitada cuando decidió eliminar la tilde al adverbio <em>solo</em> (se lo volvieron a poner, pero sólo a gusto del consumidor). Uno siempre tiene que revisar para actualizarse con las innovaciones que esta institución nos trae, como por ejemplo, en su nuevo <em>Diccionario Panhispánico de Dudas</em>, una herramienta esencial para escritores, o la incorporación, en su última edición de la <em>Nueva Gramática de la Lengua Española (NGLE)</em>, de los usos sintácticos de Guinea Ecuatorial, único país africano que tiene el castellano como lengua oficial, y del judeoespañol o ladino, cosa que me llama la atención, pues esta variedad del castellano no tiene reglas ortográficas universales y una sintaxis arcaizante (<em>Kualo dishites, pashariko mio?</em>, en vez de <em>¿Qué me dijiste, pajarito mío?</em>), con lo que hay que bajar la gata de la batea y leerse el tratado para ver cómo lo abordan.</p>
+        <p>Para cerrar, anuncio que el Colegio Nacional de Periodistas, de Venezuela, por decisión de su Junta Directiva Nacional, de la que formo parte, acordó adherirse a la Red Panhispánica de Lenguaje Claro y Accesible, que impulsa la Real Academia Española con la Corte Suprema de Justicia de la República de Chile, con el fin de fomentar el uso de un idioma sencillo «como fundamento de los valores democráticos y de ciudadanía» para que las leyes y toda comunicación dirigida al ser humano comedor de arepas se escriban de manera transparente, para asegurarse así su comprensión por todos. Como diría un profesor insigne, de esos de los que todos aún lloramos su ausencia, a quien conocí en mi querida y añorada Universidad Católica Andrés Bello, el padre Basilio Tejedor C.M.F: «Con la RAE; contra la RAE; pero, eso sí, JAMÁS NI NUNCA sin la RAE».</p>
+    </div>
+
+    <!-- JavaScript para alternar modo oscuro -->
+    <script>
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const button = document.querySelector('.theme-toggle');
+            button.textContent = document.body.classList.contains('dark-mode') ? 'Modo Claro' : 'Modo Oscuro';
+        }
+    </script>
+</body>
+                                          </html>
