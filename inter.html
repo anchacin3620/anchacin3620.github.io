@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interferometría: Principios y Aplicaciones</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        header {
+            background: linear-gradient(90deg, #2c3e50, #3498db);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+        }
+        h1 { font-size: 2.5rem; margin: 0; }
+        h2 { color: #2c3e50; margin-top: 2rem; }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        canvas {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            display: block;
+            margin: 20px auto;
+            max-width: 100%;
+        }
+        .controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover { background-color: #2980b9; }
+        input[type="range"] {
+            width: 200px;
+            margin: 10px;
+        }
+        .equation {
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            text-align: center;
+            margin: 10px 0;
+        }
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background: #2c3e50;
+            color: white;
+            margin-top: 2rem;
+        }
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            .section { padding: 15px; }
+            canvas { width: 100%; height: auto; }
+            input[type="range"] { width: 150px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Interferometría: Principios y Aplicaciones</h1>
+    </header>
+
+    <div class="container">
+        <!-- Sección 1: ¿Qué es la Interferometría? -->
+        <div class="section">
+            <h2>¿Qué es la Interferometría?</h2>
+            <p>La interferometría es una técnica que utiliza la superposición de ondas (como ondas electromagnéticas o acústicas) para obtener información sobre las propiedades de las ondas o los objetos que las reflejan. Se basa en el principio de interferencia, donde dos o más ondas se combinan para producir patrones de interferencia constructiva (máximos) y destructiva (mínimos).</p>
+            <p>La ecuación fundamental de la interferencia para dos ondas sinusoidales es:</p>
+            <div class="equation">
+                I = I₁ + I₂ + 2√(I₁I₂)cos(Δφ)
+            </div>
+            <p>Donde <i>I</i> es la intensidad resultante, <i>I₁</i> e <i>I₂</i> son las intensidades de las ondas individuales, y <i>Δφ</i> es la diferencia de fase, dada por:</p>
+            <div class="equation">
+                Δφ = (2π/λ)Δd
+            </div>
+            <p>Siendo <i>λ</i> la longitud de onda y <i>Δd</i> la diferencia de camino óptico.</p>
+        </div>
+
+        <!-- Sección 2: Aplicaciones en Radares -->
+        <div class="section">
+            <h2>Aplicaciones en Radares</h2>
+            <p>En radares, la interferometría se usa en sistemas como el <b>Radar de Apertura Sintética Interferométrica (InSAR)</b>. Dos antenas separadas capturan señales reflejadas desde el mismo punto, y la diferencia de fase entre las señales permite medir alturas topográficas o detectar desplazamientos de la superficie terrestre (por ejemplo, en terremotos o volcanes) con precisión milimétrica.</p>
+            <p>La diferencia de camino en InSAR está relacionada con la altura <i>h</i> del terreno:</p>
+            <div class="equation">
+                Δφ = (4π/λ)h sin(θ)/B
+            </div>
+            <p>Donde <i>B</i> es la separación entre antenas (línea base), <i>θ</i> es el ángulo de incidencia, y <i>h</i> es la altura.</p>
+        </div>
+
+        <!-- Sección 3: Aplicaciones en Radiotelescopios -->
+        <div class="section">
+            <h2>Aplicaciones en Radiotelescopios</h2>
+            <p>En radioastronomía, la interferometría combina señales de múltiples radiotelescopios para simular un telescopio con un diámetro igual a la distancia máxima entre ellos (línea base). Esto mejora la resolución angular, dada por:</p>
+            <div class="equation">
+                θ ≈ λ/B
+            </div>
+            <p>Donde <i>θ</i> es la resolución angular (en radianes), <i>λ</i> es la longitud de onda, y <i>B</i> es la línea base. Ejemplos como el <b>Very Large Array (VLA)</b> o el <b>Event Horizon Telescope (EHT)</b> usan esta técnica para obtener imágenes detalladas de objetos celestes, como agujeros negros.</p>
+        </div>
+
+        <!-- Sección 4: Simulador de Interferencia -->
+        <div class="section">
+            <h2>Simulador Interactivo de Interferencia</h2>
+            <p>Ajusta la longitud de onda y la separación entre fuentes para observar los patrones de interferencia de dos ondas. Los colores claros indican interferencia constructiva, y los oscuros, interferencia destructiva.</p>
+            <div class="controls">
+                <label>Longitud de onda (λ): <span id="lambdaValue">0.05</span> m</label><br>
+                <input type="range" id="lambda" min="0.01" max="0.1" step="0.01" value="0.05" oninput="updateSimulator()">
+                <br>
+                <label>Separación entre fuentes (d): <span id="dValue">0.1</span> m</label><br>
+                <input type="range" id="d" min="0.05" max="0.5" step="0.01" value="0.1" oninput="updateSimulator()">
+                <br>
+                <button onclick="toggleAnimation()">Iniciar/Detener Animación</button>
+            </div>
+            <canvas id="interferenceCanvas" width="600" height="400"></canvas>
+        </div>
+    </div>
+
+    <footer>
+        <p>Elaborado por el <b>Profesor Ángel Chacín Ávila</b>, Licenciado en Física, UNES Núcleo Zulia</p>
+    </footer>
+
+    <script>
+        const canvas = document.getElementById('interferenceCanvas');
+        const ctx = canvas.getContext('2d');
+        let lambda = 0.05; // Longitud de onda en metros
+        let d = 0.1; // Separación entre fuentes en metros
+        let animating = false;
+        let time = 0;
+
+        function updateSimulator() {
+            lambda = parseFloat(document.getElementById('lambda').value);
+            d = parseFloat(document.getElementById('d').value);
+            document.getElementById('lambdaValue').textContent = lambda.toFixed(2);
+            document.getElementById('dValue').textContent = d.toFixed(2);
+            drawInterference();
+        }
+
+        function toggleAnimation() {
+            animating = !animating;
+            if (animating) {
+                requestAnimationFrame(animate);
+            }
+        }
+
+        function drawInterference() {
+            const width = canvas.width;
+            const height = canvas.height;
+            const imageData = ctx.createImageData(width, height);
+            const scale = 50; // Escala para visualización (metros a píxeles)
+
+            // Fuentes ubicadas en y = height/2, separadas por d
+            const x1 = width / 2 - (d * scale) / 2;
+            const x2 = width / 2 + (d * scale) / 2;
+            const y1 = y2 = height / 2;
+
+            for (let x = 0; x < width; x++) {
+                for (let y = 0; y < height; y++) {
+                    // Calcular distancias desde cada fuente
+                    const r1 = Math.sqrt((x - x1) ** 2 + (y - y1) ** 2) / scale;
+                    const r2 = Math.sqrt((x - x2) ** 2 + (y - y2) ** 2) / scale;
+
+                    // Calcular diferencia de fase
+                    const deltaR = r2 - r1;
+                    const phase = (2 * Math.PI * deltaR) / lambda + (animating ? 2 * Math.PI * time : 0);
+                    const amplitude = Math.cos(phase);
+
+                    // Mapear amplitud a color (grayscale)
+                    const intensity = ((amplitude + 1) / 2) * 255; // De [-1,1] a [0,255]
+                    const index = (x + y * width) * 4;
+                    imageData.data[index] = intensity; // R
+                    imageData.data[index + 1] = intensity; // G
+                    imageData.data[index + 2] = intensity; // B
+                    imageData.data[index + 3] = 255; // A
+                }
+            }
+
+            ctx.putImageData(imageData, 0, 0);
+
+            // Dibujar fuentes
+            ctx.fillStyle = 'red';
+            ctx.beginPath();
+            ctx.arc(x1, y1, 5, 0, Math.PI * 2);
+            ctx.arc(x2, y2, 5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = 'black';
+            ctx.fillText('Fuente 1', x1 - 20, y1 - 10);
+            ctx.fillText('Fuente 2', x2 - 20, y2 - 10);
+        }
+
+        function animate() {
+            if (animating) {
+                time += 0.02;
+                drawInterference();
+                requestAnimationFrame(animate);
+            }
+        }
+
+        // Inicializar simulador
+        updateSimulator();
+    </script>
+</body>
+          </html>
