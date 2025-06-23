@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vector Operations Visualizer</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        canvas { border: 1px solid black; margin: 10px; }
+        .controls { margin: 20px; }
+        .section { margin: 20px; padding: 10px; border: 1px solid #ccc; }
+        button { margin: 5px; padding: 8px 16px; }
+        input { width: 60px; margin: 5px; }
+        h2 { color: #333; }
+    </style>
+</head>
+<body>
+    <h1>Vector Operations Visualizer</h1>
+    <div class="controls">
+        <h2>Vector Input</h2>
+        <div>
+            <label>Vector A: </label>
+            <input type="number" id="ax" value="3" step="0.1">i +
+            <input type="number" id="ay" value="2" step="0.1">j +
+            <input type="number" id="az" value="1" step="0.1">k
+        </div>
+        <div>
+            <label>Vector B: </label>
+            <input type="number" id="bx" value="1" step="0.1">i +
+            <input type="number" id="by" value="4" step="0.1">j +
+            <input type="number" id="bz" value="2" step="0.1">k
+        </div>
+        <button onclick="updateCanvas()">Update Vectors</button>
+    </div>
+
+    <div class="section">
+        <h2>Addition and Subtraction</h2>
+        <canvas id="addSubCanvas" width="400" height="400"></canvas>
+        <button onclick="showOperation('add')">Show Addition</button>
+        <button onclick="showOperation('subtract')">Show Subtraction</button>
+    </div>
+
+    <div class="section">
+        <h2>Multiplication (Dot and Cross Product)</h2>
+        <canvas id="multCanvas" width="400" height="400"></canvas>
+        <button onclick="showOperation('dot')">Show Dot Product</button>
+        <button onclick="showOperation('cross')">Show Cross Product</button>
+    </div>
+
+    <div class="section">
+        <h2>Why No Vector Division?</h2>
+        <canvas id="divCanvas" width="400" height="400"></canvas>
+        <p id="divExplanation"></p>
+    </div>
+
+    <script>
+        const addSubCanvas = document.getElementById('addSubCanvas');
+        const multCanvas = document.getElementById('multCanvas');
+        const divCanvas = document.getElementById('divCanvas');
+        const addSubCtx = addSubCanvas.getContext('2d');
+        const multCtx = multCanvas.getContext('2d');
+        const divCtx = divCanvas.getContext('2d');
+
+        let operation = 'add';
+
+        function getVectors() {
+            return {
+                a: {
+                    x: parseFloat(document.getElementById('ax').value) || 0,
+                    y: parseFloat(document.getElementById('ay').value) || 0,
+                    z: parseFloat(document.getElementById('az').value) || 0
+                },
+                b: {
+                    x: parseFloat(document.getElementById('bx').value) || 0,
+                    y: parseFloat(document.getElementById('by').value) || 0,
+                    z: parseFloat(document.getElementById('bz').value) || 0
+                }
+            };
+        }
+
+        function drawVector(ctx, vector, color, startX = 200, startY = 200, scale = 50, label = '') {
+            ctx.beginPath();
+            ctx.moveTo(startX, startY);
+            const endX = startX + vector.x * scale;
+            const endY = startY - vector.y * scale; // Invert y for canvas
+            ctx.lineTo(endX, endY);
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Draw arrowhead
+            const angle = Math.atan2(endY - startY, endX - startX);
+            ctx.beginPath();
+            ctx.moveTo(endX, endY);
+            ctx.lineTo(endX - 10 * Math.cos(angle - Math.PI / 6), endY - 10 * Math.sin(angle - Math.PI / 6));
+            ctx.moveTo(endX, endY);
+            ctx.lineTo(endX - 10 * Math.cos(angle + Math.PI / 6), endY - 10 * Math.sin(angle + Math.PI / 6));
+            ctx.stroke();
+
+            // Label
+            if (label) {
+                ctx.fillStyle = color;
+                ctx.fillText(label, endX + 5, endY - 5);
+            }
+        }
+
+        function clearCanvas(ctx) {
+            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+            ctx.beginPath();
+            ctx.moveTo(0, 200);
+            ctx.lineTo(400, 200);
+            ctx.moveTo(200, 0);
+            ctx.lineTo(200, 400);
+            ctx.strokeStyle = '#ccc';
+            ctx.stroke();
+        }
+
+        function showOperation(op) {
+            operation = op;
+            updateCanvas();
+        }
+
+        function updateCanvas() {
+            const vectors = getVectors();
+            const a = vectors.a;
+            const b = vectors.b;
+
+            // Addition/Subtraction Canvas
+            clearCanvas(addSubCtx);
+            drawVector(addSubCtx, a, 'blue', 200, 200, 50, 'A');
+            drawVector(addSubCtx, b, 'red', 200, 200, 50, 'B');
+            if (operation === 'add') {
+                const result = { x: a.x + b.x, y: a.y + b.y, z: a.z + b.z };
+                drawVector(addSubCtx, result, 'green', 200, 200, 50, 'A+B');
+                drawVector(addSubCtx, b, 'red', 200 + a.x * 50, 200 - a.y * 50, 50); // Show parallelogram
+            } else if (operation === 'subtract') {
+                const result = { x: a.x - b.x, y: a.y - b.y, z: a.z - b.z };
+                drawVector(addSubCtx, result, 'green', 200, 200, 50, 'A-B');
+                drawVector(addSubCtx, { x: -b.x, y: -b.y, z: -b.z }, 'purple', 200, 200, 50, '-B');
+            }
+
+            // Multiplication Canvas
+            clearCanvas(multCtx);
+            drawVector(multCtx, a, 'blue', 200, 200, 50, 'A');
+            drawVector(multCtx, b, 'red', 200, 200, 50, 'B');
+            if (operation === 'dot') {
+                const dotProduct = a.x * b.x + a.y * b.y + a.z * b.z;
+                multCtx.fillStyle = 'black';
+                multCtx.fillText(`Dot Product: ${dotProduct}`, 20, 20);
+            } else if (operation === 'cross') {
+                const cross = {
+                    x: a.y * b.z - a.z * b.y,
+                    y: a.z * b.x - a.x * b.z,
+                    z: a.x * b.y - a.y * b.x
+                };
+                drawVector(multCtx, cross, 'green', 200, 200, 50, 'AxB');
+            }
+
+            // Division Explanation Canvas
+            clearCanvas(divCtx);
+            drawVector(divCtx, a, 'blue', 200, 200, 50, 'A');
+            drawVector(divCtx, b, 'red', 200, 200, 50, 'B');
+            divCtx.fillStyle = 'black';
+            divCtx.fillText('No unique vector C satisfies A = B × C', 20, 20);
+            document.getElementById('divExplanation').innerHTML = `
+                <p><b>Why is vector division undefined?</b></p>
+                <p>Division in scalars (e.g., a/b = c) finds a unique c such that a = b × c. For vectors, there is no unique vector C that satisfies A = B × C for a given A and B.</p>
+                <p><b>Example:</b> If A = (3,2,1) and B = (1,4,2), we want C such that A = B × C (cross product) or A = B · C (dot product). The dot product gives a scalar, not a vector, so it doesn't yield a vector C. The cross product A = B × C has multiple solutions for C (any vector in the plane perpendicular to A with appropriate magnitude), making it non-unique.</p>
+                <p>Thus, vector division is not defined because there is no consistent, unique inverse operation.</p>
+            `;
+        }
+
+        // Initial render
+        updateCanvas();
+    </script>
+</body>
+</html>
