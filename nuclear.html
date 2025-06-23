@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enriquecimiento de Uranio y Física Nuclear</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        header {
+            background: linear-gradient(90deg, #2c3e50, #3498db);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+        }
+        h1 { font-size: 2.5rem; margin: 0; }
+        h2 { color: #2c3e50; margin-top: 2rem; }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        canvas {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            display: block;
+            margin: 20px auto;
+            max-width: 100%;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover { background-color: #2980b9; }
+        .controls { text-align: center; margin: 20px 0; }
+        p { margin: 10px 0; }
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background: #2c3e50;
+            color: white;
+            margin-top: 2rem;
+        }
+        .interactive {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-items: center;
+        }
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            .section { padding: 15px; }
+            canvas { width: 100%; height: auto; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Enriquecimiento de Uranio y Física Nuclear</h1>
+    </header>
+
+    <div class="container">
+        <!-- Sección 1: Isótopos de Uranio -->
+        <div class="section">
+            <h2>Isótopos de Uranio: U-235 y U-238</h2>
+            <p>El uranio natural contiene ~0.72% de U-235 (fisible) y ~99.28% de U-238 (no fisible directamente). El U-235 puede sostener una reacción en cadena nuclear al ser bombardeado con neutrones, liberando 202.5 MeV por fisión. El U-238, al capturar neutrones, puede transformarse en plutonio-239 (Pu-239), otro material fisible. La separación de isótopos aprovecha la pequeña diferencia de masa (~1 u) entre ellos.</p>
+            <div class="interactive">
+                <canvas id="isotopeCanvas" width="400" height="200"></canvas>
+                <div>
+                    <p><b>Visualización:</b> Los círculos representan núcleos de U-235 (azul) y U-238 (gris). Haz clic para simular captura de neutrones.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección 2: Enriquecimiento de Uranio -->
+        <div class="section">
+            <h2>Enriquecimiento de Uranio</h2>
+            <p>El enriquecimiento aumenta la proporción de U-235 de 0.7% a 3-5% para reactores (LEU) o >90% para armas (HEU). El proceso más común usa centrífugas con hexafluoruro de uranio (UF6) gaseoso, separando U-235 por su menor masa. Otros métodos incluyen difusión gaseosa y separación láser.</p>
+            <div class="controls">
+                <button onclick="simulateCentrifugation()">Simular Centrífuga</button>
+            </div>
+            <canvas id="enriCanvas" width="400" height="400"></canvas>
+            <p id="enriResult"></p>
+        </div>
+
+        <!-- Sección 3: Formación de Plutonio -->
+        <div class="section">
+            <h2>Formación de Plutonio</h2>
+            <p>El U-238 captura neutrones en reactores, formando U-239, que decae a Np-239 y luego a Pu-239 (vida media: 24,110 años). El Pu-239 es fisible y se usa en armas nucleares. Se controla el tiempo de exposición para minimizar Pu-240, que emite neutrones espontáneamente.</p>
+            <canvas id="puCanvas" width="400" height="200"></canvas>
+        </div>
+
+        <!-- Sección 4: Bomba Atómica Tipo Implosión -->
+        <div class="section">
+            <h2>Bomba Atómica Tipo Implosión</h2>
+            <p>Una bomba de implosión usa Pu-239 (~10 kg de masa crítica) o U-235 (~47 kg). Explosivos comprimen el núcleo fisible, aumentando su densidad para alcanzar la masa supercrítica. La presencia de Pu-240 requiere implosión en lugar de diseño de cañón debido a la fisión espontánea.</p>
+            <div class="controls">
+                <button onclick="simulateImplosion()">Simular Implosión</button>
+            </div>
+            <canvas id="implosionCanvas" width="400" height="400"></canvas>
+        </div>
+
+        <!-- Sección 5: Masa Crítica -->
+        <div class="section">
+            <h2>Masa Crítica</h2>
+            <p>La masa crítica es la cantidad mínima de material fisible (U-235 o Pu-239) necesaria para sostener una reacción en cadena. Depende de la densidad, forma y reflectores de neutrones. Para U-235, es ~47 kg (esfera); para Pu-239, ~10 kg. Reflectores reducen esta masa hasta 1/4.</p>
+            <canvas id="criticalMassCanvas" width="400" height="200"></canvas>
+        </div>
+
+        <!-- Sección 6: Física de Fisión y Fusión -->
+        <div class="section">
+            <h2>Fisión y Fusión Nuclear</h2>
+            <p><b>Fisión:</b> Un núcleo pesado (U-235, Pu-239) se divide al capturar un neutrón, liberando ~200 MeV, 2-3 neutrones y fragmentos radiactivos. La reacción en cadena se sostiene si al menos un neutrón provoca otra fisión.</p>
+            <p><b>Fusión:</b> Núcleos ligeros (H-2, H-3) se combinan, liberando energía (17.6 MeV por reacción D-T). Requiere altas temperaturas (~100M K). Usada en bombas de hidrógeno.</p>
+            <div class="controls">
+                <button onclick="simulateFission()">Simular Fisión</button>
+                <button onclick="simulateFusion()">Simular Fusión</button>
+            </div>
+            <canvas id="fissionFusionCanvas" width="400" height="400"></canvas>
+        </div>
+    </div>
+
+    <footer>
+        <p>Elaborado por el <b>Profesor Ángel Chacín Ávila</b>, Licenciado en Física, UNES Núcleo Zulia</p>
+    </footer>
+
+    <script>
+        // Canvas Contexts
+        const isotopeCanvas = document.getElementById('isotopeCanvas');
+        const enriCanvas = document.getElementById('enriCanvas');
+        const puCanvas = document.getElementById('puCanvas');
+        const implosionCanvas = document.getElementById('implosionCanvas');
+        const criticalMassCanvas = document.getElementById('criticalMassCanvas');
+        const fissionFusionCanvas = document.getElementById('fissionFusionCanvas');
+        const isotopeCtx = isotopeCanvas.getContext('2d');
+        const enriCtx = enriCanvas.getContext('2d');
+        const puCtx = puCanvas.getContext('2d');
+        const implosionCtx = implosionCanvas.getContext('2d');
+        const criticalMassCtx = criticalMassCanvas.getContext('2d');
+        const fissionFusionCtx = fissionFusionCanvas.getContext('2d');
+
+        // Isotope Visualization
+        function drawIsotopes() {
+            isotopeCtx.clearRect(0, 0, isotopeCanvas.width, isotopeCanvas.height);
+            isotopeCtx.fillStyle = 'blue';
+            for (let i = 0; i < 7; i++) {
+                isotopeCtx.beginPath();
+                isotopeCtx.arc(50 + i * 50, 100, 15, 0, Math.PI * 2);
+                isotopeCtx.fill();
+                isotopeCtx.fillStyle = 'white';
+                isotopeCtx.fillText('U-235', 40 + i * 50, 105);
+            }
+            isotopeCtx.fillStyle = 'gray';
+            for (let i = 0; i < 93; i++) {
+                isotopeCtx.beginPath();
+                isotopeCtx.arc(50 + (i % 10) * 35, 50 + Math.floor(i / 10) * 20, 10, 0, Math.PI * 2);
+                isotopeCtx.fill();
+            }
+            isotopeCtx.fillStyle = 'black';
+            isotopeCtx.fillText('U-238 (~99.28%)', 10, 30);
+            isotopeCtx.fillText('U-235 (~0.72%)', 10, 130);
+        }
+        isotopeCanvas.addEventListener('click', () => {
+            isotopeCtx.fillStyle = 'red';
+            isotopeCtx.beginPath();
+            isotopeCtx.arc(100, 100, 15, 0, Math.PI * 2);
+            isotopeCtx.fill();
+            isotopeCtx.fillStyle = 'white';
+            isotopeCtx.fillText('Fisión', 90, 105);
+        });
+        drawIsotopes();
+
+        // Enrichment Simulation
+        let enrichmentLevel = 0.7;
+        function simulateCentrifugation() {
+            enrichmentLevel = Math.min(enrichmentLevel + 0.5, 90);
+            drawEnrichment();
+        }
+        function drawEnrichment() {
+            enriCtx.clearRect(0, 0, enriCanvas.width, enriCanvas.height);
+            enriCtx.beginPath();
+            enriCtx.arc(200, 200, 100, 0, Math.PI * 2);
+            enriCtx.strokeStyle = 'black';
+            enriCtx.stroke();
+            enriCtx.fillStyle = `hsl(${enrichmentLevel * 1.33}, 70%, 50%)`;
+            enriCtx.fillRect(150, 250 - enrichmentLevel * 2, 100, enrichmentLevel * 2);
+            enriCtx.fillStyle = 'black';
+            enriCtx.fillText(`Enriquecimiento: ${enrichmentLevel.toFixed(1)}% U-235`, 100, 300);
+            document.getElementById('enriResult').textContent = enrichmentLevel >= 90 ? 'Uranio altamente enriquecido (HEU) para armas.' : 'Uranio poco enriquecido (LEU) para reactores.';
+        }
+        drawEnrichment();
+
+        // Plutonium Formation
+        function drawPlutonium() {
+            puCtx.clearRect(0, 0, puCanvas.width, puCanvas.height);
+            puCtx.fillStyle = 'gray';
+            puCtx.beginPath();
+            puCtx.arc(100, 100, 20, 0, Math.PI * 2);
+            puCtx.fill();
+            puCtx.fillStyle = 'black';
+            puCtx.fillText('U-238 + n → U-239 → Np-239 → Pu-239', 150, 100);
+        }
+        drawPlutonium();
+
+        // Implosion Simulation
+        let implosionRadius = 50;
+        function simulateImplosion() {
+            implosionRadius = Math.max(implosionRadius - 5, 20);
+            drawImplosion();
+        }
+        function drawImplosion() {
+            implosionCtx.clearRect(0, 0, implosionCanvas.width, implosionCanvas.height);
+            implosionCtx.beginPath();
+            implosionCtx.arc(200, 200, implosionRadius, 0, Math.PI * 2);
+            implosionCtx.fillStyle = 'green';
+            implosionCtx.fill();
+            implosionCtx.fillStyle = 'black';
+            implosionCtx.fillText('Pu-239 comprimido', 180, 210);
+            implosionCtx.strokeStyle = 'red';
+            implosionCtx.strokeRect(150, 150, 100, 100);
+            implosionCtx.fillText('Explosivos', 180, 140);
+        }
+        drawImplosion();
+
+        // Critical Mass Visualization
+        function drawCriticalMass() {
+            criticalMassCtx.clearRect(0, 0, criticalMassCanvas.width, criticalMassCanvas.height);
+            criticalMassCtx.fillStyle = 'gold';
+            criticalMassCtx.beginPath();
+            criticalMassCtx.arc(100, 100, 30, 0, Math.PI * 2);
+            criticalMassCtx.fill();
+            criticalMassCtx.fillStyle = 'black';
+            criticalMassCtx.fillText('U-235: ~47 kg', 80, 90);
+            criticalMassCtx.fillStyle = 'green';
+            criticalMassCtx.beginPath();
+            criticalMassCtx.arc(200, 100, 20, 0, Math.PI * 2);
+            criticalMassCtx.fill();
+            criticalMassCtx.fillStyle = 'black';
+            criticalMassCtx.fillText('Pu-239: ~10 kg', 180, 90);
+        }
+        drawCriticalMass();
+
+        // Fission and Fusion Simulation
+        let simulationMode = 'fission';
+        function simulateFission() {
+            simulationMode = 'fission';
+            drawFissionFusion();
+        }
+        function simulateFusion() {
+            simulationMode = 'fusion';
+            drawFissionFusion();
+        }
+        function drawFissionFusion() {
+            fissionFusionCtx.clearRect(0, 0, fissionFusionCanvas.width, fissionFusionCanvas.height);
+            if (simulationMode === 'fission') {
+                fissionFusionCtx.fillStyle = 'blue';
+                fissionFusionCtx.beginPath();
+                fissionFusionCtx.arc(200, 200, 30, 0, Math.PI * 2);
+                fissionFusionCtx.fill();
+                fissionFusionCtx.fillStyle = 'red';
+                fissionFusionCtx.beginPath();
+                fissionFusionCtx.arc(150, 200, 15, 0, Math.PI * 2);
+                fissionFusionCtx.arc(250, 200, 15, 0, Math.PI * 2);
+                fissionFusionCtx.fill();
+                fissionFusionCtx.fillStyle = 'black';
+                fissionFusionCtx.fillText('Fisión: U-235 → 2 fragmentos + 2-3 neutrones', 100, 300);
+            } else {
+                fissionFusionCtx.fillStyle = 'red';
+                fissionFusionCtx.beginPath();
+                fissionFusionCtx.arc(150, 200, 15, 0, Math.PI * 2);
+                fissionFusionCtx.arc(200, 200, 15, 0, Math.PI * 2);
+                fissionFusionCtx.fill();
+                fissionFusionCtx.fillStyle = 'blue';
+                fissionFusionCtx.beginPath();
+                fissionFusionCtx.arc(175, 200, 20, 0, Math.PI * 2);
+                fissionFusionCtx.fill();
+                fissionFusionCtx.fillStyle = 'black';
+                fissionFusionCtx.fillText('Fusión: H-2 + H-3 → He-4 + neutrón', 100, 300);
+            }
+        }
+        drawFissionFusion();
+    </script>
+</body>
+</html>
