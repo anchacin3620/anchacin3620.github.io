@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drones de la Fuerza Armada Venezolana - Visualización 2D y 3D</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 0; 
+            padding: 20px; 
+            background-color: #f0f0f0; 
+            display: flex; 
+            flex-direction: column; 
+            min-height: 100vh; 
+        }
+        #container { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 20px; 
+            flex: 1; 
+        }
+        #droneSelector { 
+            width: 100%; 
+            padding: 10px; 
+            font-size: 16px; 
+        }
+        #info { 
+            width: 300px; 
+            padding: 10px; 
+            background: white; 
+            border-radius: 5px; 
+        }
+        #canvas2D, #canvas3D { 
+            border: 1px solid #000; 
+        }
+        #canvas3D { 
+            width: 600px; 
+            height: 400px; 
+        }
+        h2 { 
+            margin: 0 0 10px; 
+        }
+        p { 
+            margin: 5px 0; 
+        }
+        footer { 
+            text-align: center; 
+            padding: 10px; 
+            background-color: #333; 
+            color: white; 
+            width: 100%; 
+            margin-top: 20px; 
+        }
+    </style>
+</head>
+<body>
+    <h1>Drones de la Fuerza Armada Venezolana</h1>
+    <select id="droneSelector" onchange="updateDrone()">
+        <option value="mohajer2">Mohajer-2 (Arpía)</option>
+        <option value="mohajer6">Mohajer-6</option>
+        <option value="shahed">Shahed-131/136 (Zamora V-1)</option>
+        <option value="ansu200">ANSU-200</option>
+    </select>
+    <div id="container">
+        <div id="info">
+            <h2 id="droneName">Seleccione un dron</h2>
+            <p><strong>Tipo:</strong> <span id="type">N/A</span></p>
+            <p><strong>Longitud:</strong> <span id="length">N/A</span></p>
+            <p><strong>Envergadura:</strong> <span id="wingspan">N/A</span></p>
+            <p><strong>Peso:</strong> <span id="weight">N/A</span></p>
+            <p><strong>Alcance:</strong> <span id="range">N/A</span></p>
+            <p><strong>Velocidad:</strong> <span id="speed">N/A</span></p>
+            <p><strong>Capacidad:</strong> <span id="capacity">N/A</span></p>
+        </div>
+        <canvas id="canvas2D" width="300" height="300"></canvas>
+        <canvas id="canvas3D" width="600" height="400"></canvas>
+    </div>
+    <footer>
+        Elaborado por el Profesor Ángel Chacín Ávila, Licenciado en Física, UNES Núcleo Zulia, página web con fines académicos, educativos
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Datos de los drones
+        const drones = {
+            mohajer2: {
+                name: "Mohajer-2 (Arpía)",
+                type: "Vigilancia y Ataque",
+                length: "3.6 m",
+                wingspan: "3.8 m",
+                weight: "85 kg",
+                range: "150 km",
+                speed: "200 km/h",
+                capacity: "Antitanque y antipersonal",
+                color: 0x808080 // Gris
+            },
+            mohajer6: {
+                name: "Mohajer-6",
+                type: "ISR y Ataque",
+                length: "5.6 m",
+                wingspan: "10 m",
+                weight: "600 kg",
+                range: "2000 km",
+                speed: "200 km/h",
+                capacity: "Carga útil de 100 kg",
+                color: 0x006400 // Verde oscuro
+            },
+            shahed: {
+                name: "Shahed-131/136 (Zamora V-1)",
+                type: "Ataque Kamikaze",
+                length: "3.5 m",
+                wingspan: "2.5 m",
+                weight: "200 kg",
+                range: "900-2000 km",
+                speed: "180 km/h",
+                capacity: "Explosivos de 50 kg",
+                color: 0xFF0000 // Rojo
+            },
+            ansu200: {
+                name: "ANSU-200",
+                type: "Multifunción (ISR, Ataque, Antidrones)",
+                length: "4.5 m",
+                wingspan: "6.0 m",
+                weight: "300 kg",
+                range: "500 km",
+                speed: "220 km/h",
+                capacity: "Sensores y armas ligeras",
+                color: 0x0000FF // Azul
+            }
+        };
+
+        // Configuración de Three.js para el modelo 3D
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, 600 / 400, 0.1, 1000);
+        const canvas3D = document.getElementById('canvas3D');
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas3D });
+        renderer.setSize(600, 400);
+        camera.position.z = 5;
+
+        const light = new THREE.AmbientLight(0x404040);
+        scene.add(light);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+        directionalLight.position.set(0, 1, 1);
+        scene.add(directionalLight);
+
+        let currentMesh = null;
+
+        // Configuración del canvas 2D
+        const canvas2D = document.getElementById('canvas2D');
+        const ctx = canvas2D.getContext('2d');
+
+        // Función para actualizar el dron
+        function updateDrone() {
+            const droneId = document.getElementById('droneSelector').value;
+            const drone = drones[droneId];
+
+            // Actualizar información
+            document.getElementById('droneName').textContent = drone.name;
+            document.getElementById('type').textContent = drone.type;
+            document.getElementById('length').textContent = drone.length;
+            document.getElementById('wingspan').textContent = drone.wingspan;
+            document.getElementById('weight').textContent = drone.weight;
+            document.getElementById('range').textContent = drone.range;
+            document.getElementById('speed').textContent = drone.speed;
+            document.getElementById('capacity').textContent = drone.capacity;
+
+            // Limpiar el modelo 3D anterior
+            if (currentMesh) scene.remove(currentMesh);
+
+            // Crear modelo 3D simplificado
+            const geometry = droneId === 'shahed' ? 
+                new THREE.CylinderGeometry(0.3, 0.3, 1.5, 32) : 
+                new THREE.BoxGeometry(1.5, 0.3, 0.5);
+            const material = new THREE.MeshPhongMaterial({ color: drone.color });
+            currentMesh = new THREE.Mesh(geometry, material);
+            scene.add(currentMesh);
+
+            // Animación 3D
+            function animate() {
+                requestAnimationFrame(animate);
+                if (currentMesh) {
+                    currentMesh.rotation.y += 0.01;
+                    renderer.render(scene, camera);
+                }
+            }
+            animate();
+
+            // Dibujar representación 2D
+            ctx.clearRect(0, 0, canvas2D.width, canvas2D.height);
+            ctx.fillStyle = `#${drone.color.toString(16).padStart(6, '0')}`;
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 2;
+
+            if (droneId === 'shahed') {
+                ctx.beginPath();
+                ctx.moveTo(150, 50);
+                ctx.lineTo(100, 250);
+                ctx.lineTo(200, 250);
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+            } else {
+                ctx.fillRect(100, 100, 100, 50); // Cuerpo
+                ctx.beginPath();
+                ctx.moveTo(50, 125);
+                ctx.lineTo(100, 125);
+                ctx.moveTo(200, 125);
+                ctx.lineTo(250, 125);
+                ctx.stroke(); // Alas
+            }
+        }
+
+        // Inicializar con el primer dron
+        updateDrone();
+
+        // Verificar si WebGL está soportado
+        if (!renderer) {
+            console.error('WebGL no está soportado en este navegador.');
+            alert('Error: WebGL no está soportado. Por favor, usa un navegador compatible como Chrome o Firefox.');
+        }
+    </script>
+</body>
+      </html>
