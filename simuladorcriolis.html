@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulación del Efecto Coriolis</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        canvas {
+            border: 2px solid #333;
+            background-color: #fff;
+        }
+        .controls {
+            margin-top: 20px;
+            text-align: center;
+        }
+        button, input {
+            margin: 5px;
+            padding: 8px;
+            font-size: 16px;
+        }
+        p {
+            max-width: 600px;
+            text-align: justify;
+        }
+        footer {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #333;
+            text-align: center;
+            width: 100%;
+            padding: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Simulación del Efecto Coriolis</h1>
+    <canvas id="coriolisCanvas" width="600" height="600"></canvas>
+    <div class="controls">
+        <button onclick="startSimulation()">Iniciar Simulación</button>
+        <button onclick="resetSimulation()">Reiniciar</button>
+        <label>Velocidad Angular (rad/s): <input type="number" id="omega" value="0.05" step="0.01" min="0" max="0.2"></label>
+        <label>Velocidad Radial (px/s): <input type="number" id="vRadial" value="100" step="10" min="10" max="500"></label>
+    </div>
+    <p>
+        Esta simulación muestra el <strong>efecto Coriolis</strong>, que describe la desviación aparente de un objeto en movimiento en un sistema de referencia rotante. La plataforma gris representa un disco giratorio (como la Tierra simplificada). Una partícula se lanza desde el centro hacia el borde con una velocidad radial constante. Debido a la rotación del disco, la trayectoria de la partícula se curva, ilustrando el efecto Coriolis. Ajusta la velocidad angular (ω) y la velocidad radial para observar cómo cambian las trayectorias.
+    </p>
+    <footer>
+        Elaborado por el profesor Ángel Chacín Ávila, Licenciado en Física, UNES Núcleo Zulia
+    </footer>
+
+    <script>
+        const canvas = document.getElementById('coriolisCanvas');
+        const ctx = canvas.getContext('2d');
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const radius = 250;
+
+        let omega = parseFloat(document.getElementById('omega').value); // Velocidad angular (rad/s)
+        let vRadial = parseFloat(document.getElementById('vRadial').value); // Velocidad radial (px/s)
+        let particles = [];
+        let animationFrameId;
+
+        class Particle {
+            constructor() {
+                this.r = 0; // Distancia desde el centro
+                this.theta = 0; // Ángulo inicial
+                this.x = centerX;
+                this.y = centerY;
+                this.path = []; // Almacena la trayectoria
+            }
+
+            update(dt) {
+                // Actualizar posición en el marco de referencia rotante
+                this.r += vRadial * dt;
+                this.theta += omega * dt;
+
+                // Convertir a coordenadas cartesianas
+                this.x = centerX + this.r * Math.cos(this.theta);
+                this.y = centerY - this.r * Math.sin(this.theta);
+
+                // Guardar posición en la trayectoria
+                this.path.push({ x: this.x, y: this.y });
+
+                // Limitar la longitud de la trayectoria para evitar sobrecarga
+                if (this.path.length > 200) {
+                    this.path.shift();
+                }
+            }
+
+            draw() {
+                // Dibujar la partícula
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, 5, 0, 2 * Math.PI);
+                ctx.fillStyle = 'red';
+                ctx.fill();
+
+                // Dibujar la trayectoria
+                ctx.beginPath();
+                ctx.moveTo(this.path[0].x, this.path[0].y);
+                for (let i = 1; i < this.path.length; i++) {
+                    ctx.lineTo(this.path[i].x, this.path[i].y);
+                }
+                ctx.strokeStyle = 'blue';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            }
+        }
+
+        function drawPlatform() {
+            // Dibujar el disco rotatorio
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+            ctx.fillStyle = 'gray';
+            ctx.fill();
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            // Dibujar líneas de referencia en el disco
+            ctx.beginPath();
+            ctx.moveTo(centerX - radius, centerY);
+            ctx.lineTo(centerX + radius, centerY);
+            ctx.moveTo(centerX, centerY - radius);
+            ctx.lineTo(centerX, centerY + radius);
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+        }
+
+        function update() {
+            // Actualizar parámetros desde los controles
+            omega = parseFloat(document.getElementById('omega').value);
+            vRadial = parseFloat(document.getElementById('vRadial').value);
+
+            // Limpiar el lienzo
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Dibujar plataforma
+            drawPlatform();
+
+            // Actualizar y dibujar partículas
+            const dt = 0.016; // Tiempo aproximado por cuadro (60 FPS)
+            particles.forEach(particle => {
+                particle.update(dt);
+                particle.draw();
+            });
+
+            // Eliminar partículas que salen del disco
+            particles = particles.filter(p => p.r < radius);
+
+            // Continuar animación
+            animationFrameId = requestAnimationFrame(update);
+        }
+
+        function startSimulation() {
+            // Iniciar animación si no está en curso
+            if (!animationFrameId) {
+                particles.push(new Particle());
+                update();
+            }
+        }
+
+        function resetSimulation() {
+            // Detener animación y limpiar partículas
+            cancelAnimationFrame(animationFrameId);
+            animationFrameId = null;
+            particles = [];
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawPlatform();
+        }
+
+        // Dibujar plataforma inicial
+        drawPlatform();
+    </script>
+</body>
+</html>
