@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Efecto Coriolis: Explicación y Simulador</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        header {
+            background: linear-gradient(90deg, #2c3e50, #3498db);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+        }
+        h1 { font-size: 2.5rem; margin: 0; }
+        h2 { color: #2c3e50; margin-top: 2rem; }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        canvas {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            display: block;
+            margin: 20px auto;
+            max-width: 100%;
+        }
+        .controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover { background-color: #2980b9; }
+        input[type="range"] {
+            width: 200px;
+            margin: 10px;
+        }
+        .equation {
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            text-align: center;
+            margin: 10px 0;
+        }
+        .variable {
+            font-style: italic;
+        }
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background: #2c3e50;
+            color: white;
+            margin-top: 2rem;
+        }
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            .section { padding: 15px; }
+            canvas { width: 100%; height: auto; }
+            input[type="range"] { width: 150px; }
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Efecto Coriolis: Explicación y Simulador</h1>
+    </header>
+
+    <div class="container">
+        <!-- Sección 1: ¿Qué es el Efecto Coriolis? -->
+        <div class="section">
+            <h2>¿Qué es el Efecto Coriolis?</h2>
+            <p>El efecto Coriolis es una fuerza aparente que afecta a los objetos en movimiento dentro de un sistema de referencia en rotación, como la Tierra. Debido a la rotación terrestre, los objetos se desvían de su trayectoria recta: hacia la derecha en el hemisferio norte y hacia la izquierda en el hemisferio sur.</p>
+            <p>La ecuación que describe la fuerza de Coriolis es:</p>
+            <div class="equation">
+                <span class="variable">F_c</span> = -2 * <span class="variable">m</span> * (<span class="variable">ω</span> × <span class="variable">v</span>)
+            </div>
+            <p>Donde:</p>
+            <ul>
+                <li><span class="variable">m</span>: masa del objeto.</li>
+                <li><span class="variable">ω
