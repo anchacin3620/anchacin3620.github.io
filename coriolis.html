@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Efecto Coriolis: Explicación y Simulador</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        header {
+            background: linear-gradient(90deg, #2c3e50, #3498db);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+        }
+        h1 { font-size: 2.5rem; margin: 0; }
+        h2 { color: #2c3e50; margin-top: 2rem; }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        canvas {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            display: block;
+            margin: 20px auto;
+            max-width: 100%;
+        }
+        .controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover { background-color: #2980b9; }
+        input[type="range"] {
+            width: 200px;
+            margin: 10px;
+        }
+        .equation {
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            text-align: center;
+            margin: 10px 0;
+        }
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background: #2c3e50;
+            color: white;
+            margin-top: 2rem;
+        }
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            .section { padding: 15px; }
+            canvas { width: 100%; height: auto; }
+            input[type="range"] { width: 150px; }
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Efecto Coriolis: Explicación y Simulador</h1>
+    </header>
+
+    <div class="container">
+        <!-- Sección 1: ¿Qué es el Efecto Coriolis? -->
+        <div class="section">
+            <h2>¿Qué es el Efecto Coriolis?</h2>
+            <p>El efecto Coriolis es una fuerza aparente que afecta a los objetos en movimiento dentro de un sistema de referencia en rotación, como la Tierra. Debido a la rotación terrestre, los objetos se desvían de su trayectoria recta: hacia la derecha en el hemisferio norte y hacia la izquierda en el hemisferio sur.</p>
+            <p>La ecuación que describe la fuerza de Coriolis es:</p>
+            <div class="equation">
+                \(\vec{F}_c = -2m (\vec{\omega} \times \vec{v})\)
+            </div>
+            <p>Donde:
+                <ul>
+                    <li>\(m\): masa del objeto.</li>
+                    <li>\(\vec{\omega}\): velocidad angular de la Tierra (aproximadamente \(7.2921 \times 10^{-5}\) rad/s).</li>
+                    <li>\(\vec{v}\): velocidad del objeto en el sistema rotante.</li>
+                </ul>
+            </p>
+            <p>En el plano horizontal, las componentes de la fuerza son:</p>
+            <div class="equation">
+                \(F_{c,x} = 2m \omega v_y \sin(\phi)\)<br>
+                \(F_{c,y} = -2m \omega v_x \sin(\phi)\)
+            </div>
+            <p>Donde \(\phi\) es la latitud del lugar.</p>
+        </div>
+
+        <!-- Sección 2: Importancia en Balística -->
+        <div class="section">
+            <h2>Importancia en Balística</h2>
+            <p>En balística, como en artillería o lanzamiento de misiles y cohetes, el efecto Coriolis es crucial para proyectiles de largo alcance. La rotación de la Tierra desvía la trayectoria del proyectil, afectando su precisión. Por ejemplo, un proyectil disparado hacia el este en el hemisferio norte se desviará hacia el sur, mientras que en el hemisferio sur se desviará hacia el norte.</p>
+            <p>La desviación horizontal \(D\) puede aproximarse con:</p>
+            <div class="equation">
+                \(D \approx \frac{\omega \sin(\phi) t^2 v_0 \cos(\theta)}{2}\)
+            </div>
+            <p>Donde:
+                <ul>
+                    <li>\(t\): tiempo de vuelo.</li>
+                    <li>\(v_0\): velocidad inicial.</li>
+                    <li>\(\theta\): ángulo de lanzamiento.</li>
+                </ul>
+            </p>
+        </div>
+
+        <!-- Sección 3: Agua en Sanitarios -->
+        <div class="section">
+            <h2>Agua en Sanitarios: Mito y Realidad</h2>
+            <p>Es un mito que el efecto Coriolis haga que el agua en sanitarios gire en sentido contrario entre los hemisferios norte y sur. Aunque teóricamente el efecto Coriolis podría influir (hacia la derecha en el norte y hacia la izquierda en el sur), su magnitud en escalas pequeñas como un sanitario es insignificante comparada con otros factores, como la forma del recipiente o la dirección inicial del agua.</p>
+            <p>El efecto Coriolis se vuelve relevante en escalas grandes, como huracanes (sentido antihorario en el norte y horario en el sur) o corrientes oceánicas, pero no en sanitarios.</p>
+        </div>
+
+        <!-- Sección 4: Simulador 3D -->
+        <div class="section">
+            <h2>Simulador 3D del Efecto Coriolis</h2>
+            <p>Este simulador muestra la rotación de la Tierra y la trayectoria de un objeto lanzado desde la superficie. Ajusta la latitud y la velocidad para observar cómo el efecto Coriolis desvía la trayectoria.</p>
+            <div class="controls">
+                <label>Latitud (°): <span id="latitudeValue">45</span></label><br>
+                <input type="range" id="latitude" min="-90" max="90" step="1" value="45" oninput="updateLatitude(this.value)">
+                <br>
+                <label>Velocidad (m/s): <span id="speedValue">100</span></label><br>
+                <input type="range" id="speed" min="10" max="500" step="10" value="100" oninput="updateSpeed(this.value)">
+                <br>
+                <button onclick="launchObject()">Lanzar Objeto</button>
+            </div>
+            <div id="sceneContainer" style="width: 100%; height: 400px;"></div>
+        </div>
+
+        <!-- Sección 5: Gráficos 2D -->
+        <div class="section">
+            <h2>Gráfico 2D: Desviación por Efecto Coriolis</h2>
+            <p>Este gráfico muestra cómo varía la desviación horizontal de un proyectil según la latitud y la velocidad seleccionada en el simulador.</p>
+            <canvas id="deviationCanvas" width="600" height="400"></canvas>
+        </div>
+    </div>
+
+    <footer>
+        <p>Elaborado por el <b>Profesor Ángel Chacín Ávila</b>, Licenciado en Física, UNES Núcleo Zulia - 24 de junio de 2025</p>
+    </footer>
+
+    <script>
+        // Configuración de Three.js para el simulador 3D
+        const sceneContainer = document.getElementById('sceneContainer');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, sceneContainer.clientWidth / 400, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(sceneContainer.clientWidth, 400);
+        sceneContainer.appendChild(renderer.domElement);
+
+        // Tierra
+        const geometry = new THREE.SphereGeometry(5, 32, 32);
+        const material = new THREE.MeshBasicMaterial({ color: 0x0000ff });
+        const earth = new THREE.Mesh(geometry, material);
+        scene.add(earth);
+
+        // Objeto lanzado
+        const objectGeometry = new THREE.SphereGeometry(0.2, 16, 16);
+        const objectMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+        const object = new THREE.Mesh(objectGeometry, objectMaterial);
+        scene.add(object);
+
+        camera.position.z = 10;
+
+        let latitude = 45;
+        let speed = 100;
+        let time = 0;
+        let animating = false;
+
+        function updateLatitude(value) {
+            latitude = parseFloat(value);
+            document.getElementById('latitudeValue').textContent = latitude;
+            drawDeviation(); // Actualiza el gráfico 2D
+        }
+
+        function updateSpeed(value) {
+            speed = parseFloat(value);
+            document.getElementById('speedValue').textContent = speed;
+            drawDeviation(); // Actualiza el gráfico 2D
+        }
+
+        function launchObject() {
+            time = 0;
+            animating = true;
+            object.position.set(0, 0, 0); // Reinicia la posición
+            animate();
+        }
+
+        function animate() {
+            if (animating) {
+                requestAnimationFrame(animate);
+                time += 0.01;
+                const phi = latitude * Math.PI / 180;
+                const omega = 7.2921e-5; // Velocidad angular de la Tierra (rad/s)
+                const v = speed * 0.01; // Escala de velocidad para visualización
+                const x = v * time * Math.cos(phi);
+                const y = v * time * Math.sin(phi);
+                const coriolisX = -2 * omega * y * Math.sin(phi);
+                const coriolisY = 2 * omega * x * Math.sin(phi);
+                object.position.set(x + coriolisX, y + coriolisY, 0);
+                if (time > 5) animating = false; // Detiene la animación después de 5 segundos
+                renderer.render(scene, camera);
+            }
+        }
+
+        // Gráfico 2D con Canvas
+        const canvas = document.getElementById('deviationCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function drawDeviation() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.beginPath();
+            ctx.moveTo(0, 200);
+            ctx.lineTo(600, 200);
+            ctx.strokeStyle = '#ccc';
+            ctx.stroke();
+
+            ctx.beginPath();
+            for (let lat = -90; lat <= 90; lat += 1) {
+                const phi = lat * Math.PI / 180;
+                const deviation = 2 * speed * Math.sin(phi) * 0.1; // Escala para visualización
+                const x = (lat + 90) * (600 / 180);
+                const y = 200 - deviation * 50; // Escala arbitraria
+                if (lat === -90) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.strokeStyle = '#3498db';
+            ctx.stroke();
+
+            ctx.fillStyle = 'black';
+            ctx.fillText('Desviación horizontal (m)', 10, 20);
+            ctx.fillText('Latitud (°)', 300, 380);
+        }
+
+        drawDeviation(); // Dibuja el gráfico inicial
+    </script>
+</body>
+  </html>
