@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulación de Movimiento de Dron - HTML5</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 0; 
+            padding: 20px; 
+            background-color: #f0f0f0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+        }
+        canvas { 
+            border: 1px solid #000; 
+        }
+    </style>
+</head>
+<body>
+    <h1>Simulación de Movimiento de Dron</h1>
+    <canvas id="simulationCanvas" width="600" height="400"></canvas>
+
+    <script>
+        const canvas = document.getElementById('simulationCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Propiedades del dron
+        let x = 50; // Posición inicial en x
+        let y = 200; // Posición inicial en y
+        const speed = 2; // Velocidad del dron
+        const dronWidth = 40;
+        const dronHeight = 20;
+
+        // Función de animación
+        function animate() {
+            // Limpiar el canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Dibujar el dron (rectángulo simple)
+            ctx.fillStyle = '#006400'; // Color verde
+            ctx.fillRect(x, y, dronWidth, dronHeight);
+
+            // Actualizar posición
+            x += speed;
+
+            // Reiniciar si sale del canvas
+            if (x > canvas.width) x = -dronWidth;
+
+            // Solicitar el próximo cuadro
+            requestAnimationFrame(animate);
+        }
+
+        // Iniciar la simulación
+        animate();
+    </script>
+</body>
+</html>
