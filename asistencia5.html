@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Asistencia - UNES Núcleo Zulia</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f7fa; /* Fondo claro y moderno */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+        h1 {
+            color: #1e90ff; /* Azul vibrante */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        .form-container, .report-container {
+            background: #ffffff; /* Blanco puro */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            width: 450px;
+            transition: transform 0.2s;
+        }
+        .form-container:hover, .report-container:hover {
+            transform: translateY(-5px);
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            color: #2c3e50; /* Azul oscuro */
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #e74c3c; /* Rojo vibrante */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #c0392b; /* Rojo más oscuro al hover */
+        }
+        .section-btn {
+            background-color: #3498db; /* Azul brillante */
+        }
+        .section-btn:hover {
+            background-color: #2980b9; /* Azul más oscuro al hover */
+        }
+        #attendanceList, #report {
+            margin-top: 20px;
+        }
+        .filter-section {
+            margin-bottom: 10px;
+        }
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #2c3e50; /* Azul oscuro */
+            color: #ecf0f1; /* Blanco grisáceo */
+            width: 100%;
+            margin-top: auto;
+            border-top: 2px solid #3498db;
+        }
+        .error {
+            color: #e74c3c;
+            font-size: 0.9em;
+            display: none;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        ul li {
+            background: #f9f9f9;
+            padding: 10px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Registro de Asistencia - UNES Núcleo Zulia</h1>
+    <div class="form-container">
+        <form id="attendanceForm">
+            <label for="section">Ambiente:</label>
+            <input type="text" id="section" name="section" placeholder="Ej: Ambiente 1 I-2025" required>
+            <label for="firstName">Nombres:</label>
+            <input type="text" id="firstName" name="firstName" required>
+            <label for="lastName">Apellidos:</label>
+            <input type="text" id="lastName" name="lastName" required>
+            <label for="idNumber">Cédula de Identidad:</label>
+            <input type="text" id="idNumber" name="idNumber" placeholder="V-12345678" required>
+            <span id="idError" class="error">La cédula debe seguir el formato V- seguido de 8 dígitos.</span>
+            <button type="submit">Registrar Asistencia</button>
+            <button type="button" class="section-btn" onclick="addSection()">Agregar Ambiente</button>
+            <button type="button" class="section-btn" onclick="removeSection()">Borrar Último Ambiente</button>
+            <button type="button" onclick="clearAllRecords()">Eliminar Todos los Registros</button>
+        </form>
+    </div>
+    <div class="report-container">
+        <div class="filter-section">
+            <label for="filterSection">Filtrar por Ambiente:</label>
+            <select id="filterSection" onchange="filterAttendance()">
+                <option value="">Todos</option>
+            </select>
+        </div>
+        <button onclick="generateIndividualReport()">Generar Reporte Individual</button>
+        <select id="individualFormat" onchange="generateIndividualReport()">
+            <option value="txt">TXT</option>
+            <option value="csv">CSV</option>
+            <option value="pdf">PDF</option>
+        </select>
+        <button onclick="generateCollectiveReport()">Generar Reporte Colectivo</button>
+        <select id="collectiveFormat" onchange="generateCollectiveReport()">
+            <option value="txt">TXT</option>
+            <option value="csv">CSV</option>
+            <option value="pdf">PDF</option>
+        </select>
+        <div id="attendanceList"></div>
+        <div id="report"></div>
+    </div>
+    <footer>
+        Elaborado por el Profesor Ángel Chacín Ávila, Licenciado en Física, UNES Núcleo Zulia
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        const { jsPDF } = window.jspdf;
+
+        // Almacenar datos en memoria y localStorage
+        let attendanceData = JSON.parse(localStorage.getItem('attendanceData')) || [];
+        let sections = new Set(JSON.parse(localStorage.getItem('sections')) || []);
+        const STORAGE_LIMIT = 5 * 1024 * 1024; // Límite aproximado de 5MB
+
+        // Validar cédula (formato V- seguido de 8 dígitos)
+        function validateIdNumber(idNumber) {
+            const idRegex = /^V-\d{8}$/;
+            return idRegex.test(idNumber);
+        }
+
+        // Agregar ambiente
+        function addSection() {
+            const sectionInput = document.getElementById('section');
+            const newSection = sectionInput.value.trim();
+            if (newSection && !sections.has(newSection)) {
+                sections.add(newSection);
+                localStorage.setItem('sections', JSON.stringify([...sections]));
+                updateSectionDropdown();
+                sectionInput.value = ''; // Limpiar input
+                alert(`Ambiente "${newSection}" agregado exitosamente.`);
+            } else if (sections.has(newSection)) {
+                alert('Este ambiente ya existe.');
+            }
+        }
+
+        // Borrar último ambiente
+        function removeSection() {
+            if (sections.size > 0) {
+                const lastSection = [...sections].pop();
+                sections.delete(lastSection);
+                localStorage.setItem('sections', JSON.stringify([...sections]));
+                updateSectionDropdown();
+                alert(`Ambiente "${lastSection}" borrado exitosamente.`);
+            } else {
+                alert('No hay ambientes para borrar.');
+            }
+        }
+
+        // Actualizar dropdown de ambientes
+        function updateSectionDropdown() {
+            const select = document.getElementById('filterSection');
+            const currentValue = select.value;
+            select.innerHTML = '<option value="">Todos</option>';
+            sections.forEach(section => {
+                const option = document.createElement('option');
+                option.value = section;
+                option.textContent = section;
+                select.appendChild(option);
+            });
+            select.value = currentValue || '';
+        }
+
+        // Registrar asistencia
+        document.getElementById('attendanceForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const section = document.getElementById('section').value.trim();
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const idNumber = document.getElementById('idNumber').value.trim();
+            const idError = document.getElementById('idError');
+
+            if (!validateIdNumber(idNumber)) {
+                idError.style.display = 'block';
+                return;
+            }
+            idError.style.display = 'none';
+
+            if (!section || !sections.has(section)) {
+                alert('Por favor, ingrese un ambiente válido o agréguelo primero.');
+                return;
+            }
+
+            const date = new Date().toLocaleString('es-VE', { timeZone: 'America/Caracas' });
+            const attendanceRecord = { section, firstName, lastName, idNumber, date };
+
+            attendanceData.push(attendanceRecord);
+
+            // Verificar límite de localStorage
+            const storageUsed = new Blob([localStorage.getItem('attendanceData')]).size;
+            if (storageUsed > STORAGE_LIMIT * 0.8) {
+                alert('Advertencia: El almacenamiento local está casi lleno. Considera exportar y limpiar los datos.');
+            }
+
+            localStorage.setItem('attendanceData', JSON.stringify(attendanceData));
+            updateAttendanceList();
+            this.reset();
+        });
+
+        // Actualizar lista de asistencia con filtro
+        function updateAttendanceList(filter = '') {
+            const list = document.getElementById('attendanceList');
+            list.innerHTML = '<h3>Lista de Asistencias:</h3><ul>';
+            const filteredData = filter ? attendanceData.filter(record => record.section === filter) : attendanceData;
+            filteredData.forEach(record => {
+                list.innerHTML += `<li>${record.section} - ${record.firstName} ${record.lastName} (C.I.: ${record.idNumber}) - ${record.date} <button class="section-btn" onclick="deleteRecord('${record.idNumber}', '${record.date}')">Eliminar</button></li>`;
+            });
+            list.innerHTML += '</ul>';
+        }
+
+        // Filtrar asistencia por ambiente
+        function filterAttendance() {
+            const filter = document.getElementById('filterSection').value;
+            updateAttendanceList(filter);
+        }
+
+        // Eliminar un registro específico
+        function deleteRecord(idNumber, date) {
+            attendanceData = attendanceData.filter(record => !(record.idNumber === idNumber && record.date === date));
+            localStorage.setItem('attendanceData', JSON.stringify(attendanceData));
+            updateAttendanceList(document.getElementById('filterSection').value);
+        }
+
+        // Eliminar todos los registros
+        function clearAllRecords() {
+            if (confirm('¿Estás seguro de eliminar todos los registros?')) {
+                attendanceData = [];
+                sections.clear();
+                localStorage.removeItem('attendanceData');
+                localStorage.removeItem('sections');
+                updateSectionDropdown();
+                updateAttendanceList();
+            }
+        }
+
+        // Generar reporte individual
+        function generateIndividualReport() {
+            const idNumber = prompt('Ingrese la cédula de identidad para el reporte individual:');
+            const studentRecords = attendanceData.filter(record => record.idNumber === idNumber);
+            const format = document.getElementById('individualFormat').value;
+
+            if (studentRecords.length > 0) {
+                let reportContent = `Reporte Individual de Asistencia - UNES Núcleo Zulia\n\nCédula: ${idNumber}\n`;
+                studentRecords.forEach(record => {
+                    reportContent += `Fecha: ${record.date} - Ambiente: ${record.section}\n`;
+                });
+
+                downloadReport(reportContent, `reporte_individual_${idNumber}`, format);
+                document.getElementById('report').innerHTML = `<h3>Reporte Generado:</h3><pre>${reportContent}</pre>`;
+            } else {
+                alert('No se encontraron registros para esa cédula.');
+            }
+        }
+
+        // Generar reporte colectivo
+        function generateCollectiveReport() {
+            if (attendanceData.length > 0) {
+                const format = document.getElementById('collectiveFormat').value;
+                let reportContent = `Reporte Colectivo de Asistencia - UNES Núcleo Zulia\n\nFecha de Generación: ${new Date().toLocaleString('es-VE', { timeZone: 'America/Caracas' })}\n\n`;
+                attendanceData.forEach(record => {
+                    reportContent += `Ambiente: ${record.section} - ${record.firstName} ${record.lastName} (C.I.: ${record.idNumber}) - ${record.date}\n`;
+                });
+
+                downloadReport(reportContent, 'reporte_colectivo', format);
+                document.getElementById('report').innerHTML = `<h3>Reporte Generado:</h3><pre>${reportContent}</pre>`;
+            } else {
+                alert('No hay registros de asistencia para generar el reporte.');
+            }
+        }
+
+        // Descargar archivo en el formato seleccionado
+        function downloadReport(content, fileName, format) {
+            let blob;
+            let fileExtension;
+            let mimeType;
+
+            switch (format) {
+                case 'csv':
+                    const csv = Papa.unparse({
+                        fields: ['Ambiente', 'Nombres', 'Apellidos', 'Cédula', 'Fecha'],
+                        data: attendanceData.map(record => [
+                            record.section,
+                            record.firstName,
+                            record.lastName,
+                            record.idNumber,
+                            record.date
+                        ])
+                    });
+                    blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                    fileExtension = '.csv';
+                    mimeType = 'text/csv';
+                    break;
+
+                case 'pdf':
+                    const doc = new jsPDF();
+                    doc.setFontSize(12);
+                    const lines = doc.splitTextToSize(content, 180);
+                    doc.text(lines, 10, 10);
+                    blob = doc.output('blob');
+                    fileExtension = '.pdf';
+                    mimeType = 'application/pdf';
+                    break;
+
+                case 'txt':
+                default:
+                    blob = new Blob([content], { type: 'text/plain' });
+                    fileExtension = '.txt';
+                    mimeType = 'text/plain';
+                    break;
+            }
+
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = fileName + fileExtension;
+            link.click();
+        }
+
+        // Cargar lista inicial y actualizar dropdown
+        updateSectionDropdown();
+        updateAttendanceList();
+    </script>
+</body>
+  </html>
