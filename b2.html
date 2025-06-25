@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulación de Vuelo del B-2 Spirit</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #87CEEB; /* Cielo azul */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        #canvas {
+            width: 800px;
+            height: 600px;
+            border: 1px solid #000;
+        }
+        h1 {
+            color: #333;
+        }
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #333;
+            color: white;
+            width: 100%;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Simulación de Vuelo del B-2 Spirit</h1>
+    <canvas id="canvas"></canvas>
+    <footer>
+        Elaborado por el Profesor Ángel Chacín Ávila, Licenciado en Física, UNES Núcleo Zulia
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Escena, cámara y renderer
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, 800 / 600, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas') });
+        renderer.setSize(800, 600);
+
+        // Luz
+        const ambientLight = new THREE.AmbientLight(0x404040);
+        scene.add(ambientLight);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+        directionalLight.position.set(0, 1, 0);
+        scene.add(directionalLight);
+
+        // Modelo básico del B-2 Spirit (ala voladora simplificada)
+        const geometry = new THREE.PlaneGeometry(10, 3, 1, 1); // Base en forma de ala
+        const material = new THREE.MeshPhongMaterial({ color: 0x2F2F2F, side: THREE.DoubleSide }); // Color gris oscuro
+        const b2Spirit = new THREE.Mesh(geometry, material);
+        b2Spirit.rotation.x = Math.PI / 2; // Girar para que parezca una ala voladora
+        scene.add(b2Spirit);
+
+        // Posición inicial de la cámara
+        camera.position.set(0, 5, 20);
+        camera.lookAt(0, 0, 0);
+
+        // Variables de simulación
+        let time = 0;
+        const speed = 0.05; // Velocidad de vuelo
+        const altitude = 5; // Altitud constante
+
+        // Animación de vuelo
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Movimiento hacia adelante
+            time += speed;
+            b2Spirit.position.x = Math.sin(time) * 15; // Trayectoria sinusoidal para simular vuelo
+            b2Spirit.position.z = time * 5; // Avance constante
+            b2Spirit.position.y = altitude + Math.sin(time * 0.5) * 1; // Oscilación leve de altitud
+
+            // Rotación para simular inclinación
+            b2Spirit.rotation.z = Math.sin(time * 0.5) * 0.1;
+
+            // Actualizar cámara para seguir al B-2
+            camera.position.x = b2Spirit.position.x;
+            camera.position.z = b2Spirit.position.z + 20;
+            camera.lookAt(b2Spirit.position);
+
+            renderer.render(scene, camera);
+        }
+
+        // Iniciar animación
+        animate();
+
+        // Verificar soporte de WebGL
+        if (!renderer) {
+            console.error('WebGL no está soportado en este navegador.');
+            alert('Error: WebGL no está soportado. Por favor, usa un navegador compatible como Chrome o Firefox.');
+        }
+    </script>
+</body>
+</html>
