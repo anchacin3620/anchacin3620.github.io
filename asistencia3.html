@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Asistencia - UNES Núcleo Zulia</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        h1 {
+            color: #333;
+        }
+        .form-container, .report-container {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            width: 400px;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #attendanceList, #report {
+            margin-top: 20px;
+        }
+        .filter-section {
+            margin-bottom: 10px;
+        }
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #333;
+            color: white;
+            width: 100%;
+            margin-top: auto;
+        }
+        .error {
+            color: red;
+            font-size: 0.9em;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Registro de Asistencia - UNES Núcleo Zulia</h1>
+    <div class="form-container">
+        <form id="attendanceForm">
+            <label for="section">Sección:</label>
+            <select id="section" name="section" required>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+            </select>
+            <label for="firstName">Nombres:</label>
+            <input type="text" id="firstName" name="firstName" required>
+            <label for="lastName">Apellidos:</label>
+            <input type="text" id="lastName" name="lastName" required>
+            <label for="idNumber">Cédula de Identidad:</label>
+            <input type="text" id="idNumber" name="idNumber" placeholder="V-12345678" required>
+            <span id="idError" class="error">La cédula debe seguir el formato V- seguido de 8 dígitos.</span>
+            <button type="submit">Registrar Asistencia</button>
+            <button type="button" onclick="clearAllRecords()">Eliminar Todos los Registros</button>
+        </form>
+    </div>
+    <div class="report-container">
+        <div class="filter-section">
+            <label for="filterSection">Filtrar por Sección:</label>
+            <select id="filterSection" onchange="filterAttendance()">
+                <option value="">Todas</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+            </select>
+        </div>
+        <button onclick="generateIndividualReport()">Generar Reporte Individual</button>
+        <select id="individualFormat" onchange="generateIndividualReport()">
+            <option value="txt">TXT</option>
+            <option value="csv">CSV</option>
+            <option value="pdf">PDF</option>
+        </select>
+        <button onclick="generateCollectiveReport()">Generar Reporte Colectivo</button>
+        <select id="collectiveFormat" onchange="generateCollectiveReport()">
+            <option value="txt">TXT</option>
+            <option value="csv">CSV</option>
+            <option value="pdf">PDF</option>
+        </select>
+        <div id="attendanceList"></div>
+        <div id="report"></div>
+    </div>
+    <footer>
+        Elaborado por el Profesor Ángel Chacín Ávila, Licenciado en Física, UNES Núcleo Zulia
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        const { jsPDF } = window.jspdf;
+
+        // Almacenar datos en memoria y localStorage
+        let attendanceData = JSON.parse(localStorage.getItem('attendanceData')) || [];
+        const STORAGE_LIMIT = 5 * 1024 * 1024; // Límite aproximado de 5MB en localStorage
+
+        // Validar cédula (formato V- seguido de 8 dígitos)
+        function validateIdNumber(idNumber) {
+            const idRegex = /^V-\d{8}$/;
+            return idRegex.test(idNumber);
+        }
+
+        // Registrar asistencia
+        document.getElementById('attendanceForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const section = document.getElementById('section').value;
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const idNumber = document.getElementById('idNumber').value.trim();
+            const idError = document.getElementById('idError');
+
+            if (!validateIdNumber(idNumber)) {
+                idError.style.display = 'block';
+                return;
+            }
+            idError.style.display = 'none';
+
+            const date = new Date().toLocaleString('es-VE', { timeZone: 'America/Caracas' });
+            const attendanceRecord = { section, firstName, lastName, idNumber, date };
+
+            attendanceData.push(attendanceRecord);
+
+            // Verificar límite de localStorage
+            const storageUsed = new Blob([localStorage.getItem('attendanceData')]).size;
+            if (storageUsed > STORAGE_LIMIT * 0.8) { // Advertencia al 80% del límite
+                alert('Advertencia: El almacenamiento local está casi lleno. Considera exportar y limpiar los datos.');
+            }
+
+            localStorage.setItem('attendanceData', JSON.stringify(attendanceData));
+            updateAttendanceList();
+            this.reset();
+        });
+
+        // Actualizar lista de asistencia con filtro
+        function updateAttendanceList(filter = '') {
+            const list = document.getElementById('attendanceList');
+            list.innerHTML = '<h3>Lista de Asistencias:</h3><ul>';
+            const filteredData = filter ? attendanceData.filter(record => record.section === filter) : attendanceData;
+            filteredData.forEach(record => {
+                list.innerHTML += `<li>${record.section} - ${record.firstName} ${record.lastName} (C.I.: ${record.idNumber}) - ${record.date} <button onclick="deleteRecord('${record.idNumber}', '${record.date}')">Eliminar</button></li>`;
+            });
+            list.innerHTML += '</ul>';
+        }
+
+        // Filtrar asistencia por sección
+        function filterAttendance() {
+            const filter = document.getElementById('filterSection').value;
+            updateAttendanceList(filter);
+        }
+
+        // Eliminar un registro específico
+        function deleteRecord(idNumber, date) {
+            attendanceData = attendanceData.filter(record => !(record.idNumber === idNumber && record.date === date));
+            localStorage.setItem('attendanceData', JSON.stringify(attendanceData));
+            updateAttendanceList(document.getElementById('filterSection').value);
+        }
+
+        // Eliminar todos los registros
+        function clearAllRecords() {
+            if (confirm('¿Estás seguro de eliminar todos los registros?')) {
+                attendanceData = [];
+                localStorage.removeItem('attendanceData');
+                updateAttendanceList();
+            }
+        }
+
+        // Generar reporte individual
+        function generateIndividualReport() {
+            const idNumber = prompt('Ingrese la cédula de identidad para el reporte individual:');
+            const studentRecords = attendanceData.filter(record => record.idNumber === idNumber);
+            const format = document.getElementById('individualFormat').value;
+
+            if (studentRecords.length > 0) {
+                let reportContent = `Reporte Individual de Asistencia - UNES Núcleo Zulia\n\nCédula: ${idNumber}\n`;
+                studentRecords.forEach(record => {
+                    reportContent += `Fecha: ${record.date} - Sección: ${record.section}\n`;
+                });
+
+                downloadReport(reportContent, `reporte_individual_${idNumber}`, format);
+                document.getElementById('report').innerHTML = `<h3>Reporte Generado:</h3><pre>${reportContent}</pre>`;
+            } else {
+                alert('No se encontraron registros para esa cédula.');
+            }
+        }
+
+        // Generar reporte colectivo
+        function generateCollectiveReport() {
+            if (attendanceData.length > 0) {
+                const format = document.getElementById('collectiveFormat').value;
+                let reportContent = `Reporte Colectivo de Asistencia - UNES Núcleo Zulia\n\nFecha de Generación: ${new Date().toLocaleString('es-VE', { timeZone: 'America/Caracas' })}\n\n`;
+                attendanceData.forEach(record => {
+                    reportContent += `Sección: ${record.section} - ${record.firstName} ${record.lastName} (C.I.: ${record.idNumber}) - ${record.date}\n`;
+                });
+
+                downloadReport(reportContent, 'reporte_colectivo', format);
+                document.getElementById('report').innerHTML = `<h3>Reporte Generado:</h3><pre>${reportContent}</pre>`;
+            } else {
+                alert('No hay registros de asistencia para generar el reporte.');
+            }
+        }
+
+        // Descargar archivo en el formato seleccionado
+        function downloadReport(content, fileName, format) {
+            let blob;
+            let fileExtension;
+            let mimeType;
+
+            switch (format) {
+                case 'csv':
+                    const csv = Papa.unparse({
+                        fields: ['Sección', 'Nombres', 'Apellidos', 'Cédula', 'Fecha'],
+                        data: attendanceData.map(record => [
+                            record.section,
+                            record.firstName,
+                            record.lastName,
+                            record.idNumber,
+                            record.date
+                        ])
+                    });
+                    blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                    fileExtension = '.csv';
+                    mimeType = 'text/csv';
+                    break;
+
+                case 'pdf':
+                    const doc = new jsPDF();
+                    doc.setFontSize(12);
+                    const lines = doc.splitTextToSize(content, 180);
+                    doc.text(lines, 10, 10);
+                    blob = doc.output('blob');
+                    fileExtension = '.pdf';
+                    mimeType = 'application/pdf';
+                    break;
+
+                case 'txt':
+                default:
+                    blob = new Blob([content], { type: 'text/plain' });
+                    fileExtension = '.txt';
+                    mimeType = 'text/plain';
+                    break;
+            }
+
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = fileName + fileExtension;
+            link.click();
+        }
+
+        // Cargar lista inicial
+        updateAttendanceList();
+    </script>
+</body>
+  </html>
