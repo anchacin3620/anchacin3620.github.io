@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulación 3D de Lanzamiento de Misil</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Configuración básica de la escena, cámara y renderer
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Crear una esfera para representar la Tierra
+        const geometry = new THREE.SphereGeometry(5, 32, 32);
+        const material = new THREE.MeshBasicMaterial({ color: 0x1E90FF, wireframe: true });
+        const earth = new THREE.Mesh(geometry, material);
+        scene.add(earth);
+
+        // Posicionar la cámara
+        camera.position.z = 15;
+
+        // Crear un misil simple
+        const missileGeometry = new THREE.ConeGeometry(0.2, 1, 32);
+        const missileMaterial = new THREE.MeshBasicMaterial({ color: 0xFF0000 });
+        const missile = new THREE.Mesh(missileGeometry, missileMaterial);
+        missile.position.set(0, -6, 0);
+        missile.rotation.x = Math.PI / 2;
+        scene.add(missile);
+
+        // Función para animar el misil
+        function animateMissile() {
+            // Aquí puedes agregar la lógica para mover el misil, incluyendo física como Coriolis, etc.
+            missile.position.y += 0.05;
+
+            // Reiniciar la posición del misil si se sale de la pantalla
+            if (missile.position.y > 10) {
+                missile.position.set(0, -6, 0);
+            }
+        }
+
+        // Función de animación
+        function animate() {
+            requestAnimationFrame(animate);
+            animateMissile();
+            renderer.render(scene, camera);
+        }
+
+        animate();
+    </script>
+</body>
+</html>
