@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explicación de Escala Logarítmica</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+            line-height: 1.6;
+        }
+        h1, h2 {
+            color: #2c3e50;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .explanation {
+            max-width: 800px;
+            margin-bottom: 30px;
+        }
+        .chart-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        canvas {
+            max-width: 400px;
+            width: 100%;
+        }
+        .slider-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+        label {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        input[type="range"] {
+            width: 200px;
+        }
+        @media (max-width: 600px) {
+            .chart-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            canvas {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>¿Qué es una Escala Logarítmica?</h1>
+        <div class="explanation">
+            <p>Una <strong>escala logarítmica</strong> es una forma de representar datos en un gráfico donde los valores se escalan según su <strong>logaritmo</strong> (generalmente en base 10), en lugar de su valor absoluto. Esto permite visualizar datos que varían en órdenes de magnitud (por ejemplo, de 0.001 a 1,000,000) de manera clara y compacta.</p>
+            <h2>Características principales:</h2>
+            <ul>
+                <li><strong>Compresión de rangos amplios</strong>: Los valores pequeños están más espaciados, mientras que los valores grandes se agrupan, facilitando la visualización de datos extremos.</li>
+                <li><strong>Base logarítmica</strong>: La distancia entre 1 y 10 es igual a la de 10 a 100 o 100 a 1,000 en una escala logarítmica.</li>
+                <li><strong>Sin cero</strong>: No puede representar el valor 0 o valores negativos, ya que el logaritmo de cero es indefinido.</li>
+                <li><strong>Usos</strong>: Común en astronomía (diagrama H-R), sismología, finanzas, y más, para manejar datos con grandes variaciones.</li>
+            </ul>
+            <h2>Ejemplo en el Diagrama H-R:</h2>
+            <p>En el diagrama H-R, la luminosidad de las estrellas (eje Y) se representa en escala logarítmica porque varía desde 10⁻⁴ (enanas blancas) hasta 10⁶ (supergigantes) veces la luminosidad del Sol. Esto permite mostrar todas las estrellas en un solo gráfico sin que las más luminosas dominen o las menos luminosas sean invisibles.</p>
+            <p>Abajo, compara las escalas lineal y logarítmica con un ejemplo de luminosidades estelares. Usa el deslizador para ajustar el rango máximo de luminosidad y observa cómo la escala logarítmica maneja mejor los valores grandes.</p>
+        </div>
+
+        <div class="slider-container">
+            <label for="maxLum">Rango máximo de luminosidad (L☉):</label>
+            <input type="range" id="maxLum" min="100" max="1000000" value="10000" step="100">
+            <span id="maxLumValue">10000</span>
+        </div>
+
+        <div class="chart-container">
+            <div>
+                <h2>Escala Lineal</h2>
+                <canvas id="linearChart"></canvas>
+            </div>
+            <div>
+                <h2>Escala Logarítmica</h2>
+                <canvas id="logChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Datos de ejemplo (luminosidades estelares en L☉)
+        const starData = [
+            { name: "Enana Blanca", lum: 0.01 },
+            { name: "Sol", lum: 1 },
+            { name: "Sirio A", lum: 25 },
+            { name: "Vega", lum: 40 },
+            { name: "Aldebarán", lum: 400 },
+            { name: "Betelgeuse", lum: 10000 }
+        ];
+
+        // Configuración inicial
+        const maxLumSlider = document.getElementById('maxLum');
+        const maxLumValue = document.getElementById('maxLumValue');
+        let maxLum = parseInt(maxLumSlider.value);
+
+        // Función para actualizar los gráficos
+        function updateCharts(maxLum) {
+            // Actualizar valor mostrado
+            maxLumValue.textContent = maxLum.toLocaleString();
+
+            // Gráfico lineal
+            const linearCtx = document.getElementById('linearChart').getContext('2d');
+            new Chart(linearCtx, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: 'Estrellas (Escala Lineal)',
+                        data: starData.map(star => ({
+                            x: Math.random() * 100, // Posición X aleatoria para visualización
+                            y: star.lum,
+                            name: star.name
+                        })),
+                        backgroundColor: '#FF6347',
+                        pointRadius: 6,
+                        pointHoverRadius: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            display: false, // Ocultar eje X para simplificar
+                            min: 0,
+                            max: 100
+                        },
+                        y: {
+                            type: 'linear',
+                            title: {
+                                display: true,
+                                text: 'Luminosidad (L☉, Lineal)'
+                            },
+                            min: 0,
+                            max: maxLum
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const star = context.raw;
+                                    return `${star.name}: ${star.y} L☉`;
+                                }
+                            }
+                        },
+                        legend: { display: false }
+                    }
+                }
+            });
+
+            // Gráfico logarítmico
+            const logCtx = document.getElementById('logChart').getContext('2d');
+            new Chart(logCtx, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: 'Estrellas (Escala Logarítmica)',
+                        data: starData.map(star => ({
+                            x: Math.random() * 100, // Posición X aleatoria para visualización
+                            y: star.lum,
+                            name: star.name
+                        })),
+                        backgroundColor: '#4169E1',
+                        pointRadius: 6,
+                        pointHoverRadius: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            display: false // Ocultar eje X para simplificar
+                        },
+                        y: {
+                            type: 'logarithmic',
+                            title: {
+                                display: true,
+                                text: 'Luminosidad (L☉, Logarítmica)'
+                            },
+                            min: 0.001,
+                            max: maxLum,
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const star = context.raw;
+                                    return `${star.name}: ${star.y} L☉`;
+                                }
+                            }
+                        },
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+
+        // Actualizar gráficos al mover el deslizador
+        maxLumSlider.addEventListener('input', () => {
+            maxLum = parseInt(maxLumSlider.value);
+            // Limpiar los lienzos anteriores
+            document.getElementById('linearChart').remove();
+            document.getElementById('logChart').remove();
+            const chartContainer = document.querySelector('.chart-container');
+            chartContainer.innerHTML = `
+                <div><h2>Escala Lineal</h2><canvas id="linearChart"></canvas></div>
+                <div><h2>Escala Logarítmica</h2><canvas id="logChart"></canvas></div>
+            `;
+            updateCharts(maxLum);
+        });
+
+        // Inicializar gráficos
+        updateCharts(maxLum);
+    </script>
+</body>
+</html>
