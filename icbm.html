@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<title>Simulación de Misil Balístico Intercontinental</title>
+<style>
+  body { margin: 0; overflow: hidden; background: #000; }
+  canvas { display: block; margin: 0 auto; background: linear-gradient(to top, #222, #555); }
+</style>
+</head>
+<body>
+<canvas id="canvas" width="800" height="400"></canvas>
+<script>
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+
+  // Parámetros del misil
+  let x = 50; // posición horizontal inicial
+  let y = canvas.height - 30; // posición vertical inicial (suelo)
+  let vx = 4; // velocidad horizontal constante
+  let vy = -15; // velocidad vertical inicial (hacia arriba)
+  const gravity = 0.5; // gravedad que afecta la trayectoria
+
+  function drawMissile(x, y) {
+    ctx.fillStyle = 'red';
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x - 10, y + 5);
+    ctx.lineTo(x - 10, y - 5);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Dibujar "suelo"
+    ctx.fillStyle = '#333';
+    ctx.fillRect(0, canvas.height - 20, canvas.width, 20);
+
+    // Dibujar misil
+    drawMissile(x, y);
+
+    // Actualizar posición
+    x += vx;
+    vy += gravity; // la gravedad reduce la velocidad vertical (caída)
+    y += vy;
+
+    // Simular impacto cuando toca el suelo
+    if (y >= canvas.height - 30) {
+      y = canvas.height - 30;
+      vx = 0;
+      vy = 0;
+      // Dibujar explosión simple
+      ctx.fillStyle = 'orange';
+      ctx.beginPath();
+      ctx.arc(x, y, 20, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = 'yellow';
+      ctx.beginPath();
+      ctx.arc(x, y, 10, 0, Math.PI * 2);
+      ctx.fill();
+      return; // detener animación
+    }
+
+    requestAnimationFrame(draw);
+  }
+
+  draw();
+</script>
+</body>
+</html>
