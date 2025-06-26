@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagrama H-R Interactivo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f4f4f9;
+        }
+        canvas {
+            max-width: 800px;
+            width: 100%;
+        }
+        h1 {
+            color: #333;
+        }
+        p {
+            max-width: 600px;
+            text-align: center;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <h1>Diagrama H-R Interactivo</h1>
+    <p>Pasa el cursor sobre los puntos para ver detalles de las estrellas. El eje X representa la temperatura (K, de mayor a menor), y el eje Y la luminosidad (relativa al Sol, escala logarítmica).</p>
+    <canvas id="hrDiagram"></canvas>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Datos de ejemplo para estrellas en el diagrama H-R
+        const starData = [
+            // Secuencia principal
+            { name: "Sol", temp: 5500, lum: 1, type: "Secuencia Principal", color: "#FFD700" },
+            { name: "Sirio A", temp: 9900, lum: 25, type: "Secuencia Principal", color: "#ADD8E6" },
+            { name: "Vega", temp: 9600, lum: 40, type: "Secuencia Principal", color: "#ADD8E6" },
+            { name: "Procyon A", temp: 6500, lum: 7, type: "Secuencia Principal", color: "#F5F5F5" },
+            { name: "Barnard", temp: 3100, lum: 0.0004, type: "Secuencia Principal", color: "#FF4500" },
+            // Gigantes y supergigantes
+            { name: "Betelgeuse", temp: 3500, lum: 10000, type: "Supergigante Roja", color: "#FF0000" },
+            { name: "Aldebarán", temp: 3900, lum: 400, type: "Gigante Roja", color: "#FF6347" },
+            { name: "Rigel", temp: 11000, lum: 100000, type: "Supergigante Azul", color: "#4169E1" },
+            // Enanas blancas
+            { name: "Sirio B", temp: 25000, lum: 0.01, type: "Enana Blanca", color: "#FFFFFF" },
+            { name: "Enana Blanca Típica", temp: 15000, lum: 0.001, type: "Enana Blanca", color: "#FFFFFF" }
+        ];
+
+        // Configuración del gráfico
+        const ctx = document.getElementById('hrDiagram').getContext('2d');
+        const hrDiagram = new Chart(ctx, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Estrellas',
+                    data: starData.map(star => ({
+                        x: star.temp,
+                        y: star.lum,
+                        name: star.name,
+                        type: star.type
+                    })),
+                    backgroundColor: starData.map(star => star.color),
+                    pointRadius: 6,
+                    pointHoverRadius: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom',
+                        reverse: true, // Temperatura de mayor a menor
+                        title: {
+                            display: true,
+                            text: 'Temperatura (K)'
+                        },
+                        min: 2000,
+                        max: 30000,
+                        ticks: {
+                            callback: function(value) {
+                                return value.toLocaleString();
+                            }
+                        }
+                    },
+                    y: {
+                        type: 'logarithmic',
+                        title: {
+                            display: true,
+                            text: 'Luminosidad (L☉)'
+                        },
+                        min: 0.0001,
+                        max: 1000000,
+                        ticks: {
+                            callback: function(value) {
+                                return value.toLocaleString();
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const star = context.raw;
+                                return `${star.name} (${star.type})\nTemp: ${star.x} K\nLum: ${star.y} L☉`;
+                            }
+                        }
+                    },
+                    legend: {
+                        display: false // Ocultar leyenda, ya que usamos colores por tipo
+                    }
+                },
+                onClick: (event, elements) => {
+                    if (elements.length > 0) {
+                        const index = elements[0].index;
+                        const star = starData[index];
+                        alert(`Estrella: ${star.name}\nTipo: ${star.type}\nTemperatura: ${star.temp} K\nLuminosidad: ${star.lum} L☉`);
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
