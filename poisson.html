@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Comparación: Distribución de Poisson vs Gauss</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .explicacion { margin-bottom: 20px; }
+    canvas { max-width: 100%; }
+    table { border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #aaa; padding: 6px 10px; }
+    th { background: #eee; }
+  </style>
+</head>
+<body>
+  <h2>Distribución de Poisson vs Distribución de Gauss (Normal)</h2>
+  <div class="explicacion">
+    <strong>Distribución de Poisson:</strong> Es discreta y modela el número de eventos en un intervalo fijo. Su parámetro es λ (media y varianza).<br>
+    <strong>Distribución de Gauss (Normal):</strong> Es continua, simétrica y en forma de campana. Se define por la media (μ) y la desviación estándar (σ).<br>
+    Cuando λ es grande (&gt;9), la Poisson se aproxima a la Gaussiana[4].
+  </div>
+
+  <canvas id="chart" width="400" height="250"></canvas>
+
+  <table>
+    <tr>
+      <th>Característica</th>
+      <th>Poisson</th>
+      <th>Gauss (Normal)</th>
+    </tr>
+    <tr>
+      <td>Tipo</td>
+      <td>Discreta</td>
+      <td>Continua</td>
+    </tr>
+    <tr>
+      <td>Parámetros</td>
+      <td>λ (media y varianza)</td>
+      <td>μ (media), σ (desviación estándar)</td>
+    </tr>
+    <tr>
+      <td>Forma</td>
+      <td>Asimétrica, barras</td>
+      <td>Simétrica, campana</td>
+    </tr>
+    <tr>
+      <td>Uso típico</td>
+      <td>Conteo de eventos</td>
+      <td>Fenómenos naturales continuos</td>
+    </tr>
+  </table>
+
+  <script>
+    // Función de masa de Poisson
+    function poissonPMF(k, lambda) {
+      return Math.pow(lambda, k) * Math.exp(-lambda) / factorial(k);
+    }
+    function factorial(n) {
+      return n <= 1 ? 1 : n * factorial(n - 1);
+    }
+
+    // Función de densidad normal
+    function normalPDF(x, mu, sigma) {
+      return (1 / (sigma * Math.sqrt(2 * Math.PI))) *
+        Math.exp(-0.5 * Math.pow((x - mu) / sigma, 2));
+    }
+
+    // Datos para Poisson (λ = 7)
+    const lambda = 7;
+    const poissonX = Array.from({length: 20}, (_, i) => i);
+    const poissonY = poissonX.map(k => poissonPMF(k, lambda));
+
+    // Datos para Normal (μ = λ, σ = sqrt(λ))
+    const mu = lambda;
+    const sigma = Math.sqrt(lambda);
+    const normalX = [];
+    const normalY = [];
+    for (let x = 0; x <= 19; x += 0.1) {
+      normalX.push(x);
+      normalY.push(normalPDF(x, mu, sigma));
+    }
+
+    // Gráfica
+    new Chart(document.getElementById('chart'), {
+      type: 'bar',
+      data: {
+        labels: poissonX,
+        datasets: [
+          {
+            type: 'bar',
+            label: 'Poisson (λ=7)',
+            data: poissonY,
+            backgroundColor: 'rgba(66, 135, 245, 0.5)',
+            borderColor: 'rgba(66, 135, 245, 1)',
+            borderWidth: 1
+          },
+          {
+            type: 'line',
+            label: 'Gauss (μ=7, σ=√7)',
+            data: normalY,
+            fill: false,
+            borderColor: 'rgba(245, 66, 66, 1)',
+            backgroundColor: 'rgba(245, 66, 66, 0.3)',
+            pointRadius: 0,
+            tension: 0.2,
+            yAxisID: 'y'
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: true }
+        },
+        scales: {
+          x: { title: { display: true, text: 'Número de eventos / valor' } },
+          y: { title: { display: true, text: 'Probabilidad' } }
+        }
+      }
+    });
+  </script>
+</body>
+  </html>
+  
