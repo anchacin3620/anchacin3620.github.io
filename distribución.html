@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Distribuciones de Poisson y Gauss</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .chart-container {
+            height: 300px;
+            margin: 20px 0;
+        }
+        .comparison {
+            grid-column: span 2;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .monte-carlo {
+            grid-column: span 2;
+        }
+        .controls {
+            background: #eef5ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .param-control {
+            margin: 10px 0;
+        }
+        label {
+            display: inline-block;
+            width: 150px;
+        }
+        input[type="range"] {
+            width: 300px;
+        }
+        .value-display {
+            display: inline-block;
+            width: 40px;
+            text-align: right;
+        }
+        button {
+            background: #1a2a6c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #b21f1f;
+        }
+        .simulation {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .simulation-results {
+            background: #e6f7ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        .formula {
+            font-family: 'Cambria', 'Times New Roman', serif;
+            font-size: 1.2rem;
+            text-align: center;
+            margin: 15px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-left: 4px solid #1a2a6c;
+        }
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            .comparison, .monte-carlo {
+                grid-column: span 1;
+            }
+            .simulation {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Distribuciones de Poisson y Gauss</h1>
+        <div class="subtitle">Comparación, equivalencias y relación con el método de Monte Carlo</div>
+    </header>
+    
+    <div class="container">
+        <div class="card">
+            <h2>Distribución de Poisson</h2>
+            <p>Modela la probabilidad de que ocurra un número de eventos en un intervalo fijo de tiempo o espacio, cuando estos eventos ocurren con una tasa constante conocida (λ) e independientemente del tiempo desde el último evento.</p>
+            
+            <div class="formula">
+                P(k; λ) = (λ<sup>k</sup> e<sup>-λ</sup>) / k!
+            </div>
+            
+            <p><strong>Aplicaciones:</strong> Número de llamadas telefónicas por hora, llegadas de clientes, fallos de máquinas, número de mutaciones en ADN.</p>
+            
+            <div class="controls">
+                <div class="param-control">
+                    <label for="lambda">Parámetro λ:</label>
+                    <input type="range" id="lambda" min="1" max="30" value="10" step="0.5">
+                    <span class="value-display" id="lambda-value">10</span>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="poissonChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>Distribución Gaussiana (Normal)</h2>
+            <p>Describe datos que se agrupan alrededor de una media (μ). La forma de campana es simétrica y está determinada por su media y desviación estándar (σ).</p>
+            
+            <div class="formula">
+                f(x; μ, σ) = (1 / (σ√(2π))) e<sup>-(x-μ)²/(2σ²)</sup>
+            </div>
+            
+            <p><strong>Aplicaciones:</strong> Altura de personas, errores de medición, puntuaciones de CI, rendimiento financiero.</p>
+            
+            <div class="controls">
+                <div class="param-control">
+                    <label for="mu">Media (μ):</label>
+                    <input type="range" id="mu" min="0" max="30" value="10" step="0.5">
+                    <span class="value-display" id="mu-value">10</span>
+                </div>
+                <div class="param-control">
+                    <label for="sigma">Desviación (σ):</label>
+                    <input type="range" id="sigma" min="0.5" max="10" value="3" step="0.1">
+                    <span class="value-display" id="sigma-value">3</span>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="gaussChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="card comparison">
+            <h2>Comparación y Equivalencias</h2>
+            <div>
+                <h3>Similitudes</h3>
+                <ul>
+                    <li>Ambas son distribuciones de probabilidad continuas</li>
+                    <li>Describen fenómenos aleatorios</li>
+                    <li>Para λ grande (λ > 15), Poisson se aproxima a una Normal con μ=λ, σ²=λ</li>
+                    <li>Ambas son unimodales (tienen un solo pico)</li>
+                </ul>
+            </div>
+            <div>
+                <h3>Diferencias</h3>
+                <ul>
+                    <li>Poisson es discreta, Gauss es continua</li>
+                    <li>Poisson modela conteos (≥0), Gauss cualquier valor real</li>
+                    <li>Poisson tiene un solo parámetro (λ), Gauss tiene dos (μ, σ)</li>
+                    <li>Poisson es asimétrica (especialmente con λ pequeño)</li>
+                </ul>
+            </div>
+            
+            <div class="chart-container" style="grid-column: span 2; height: 250px;">
+                <canvas id="comparisonChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="card monte-carlo">
+            <h2>Relación con el Método de Monte Carlo</h2>
+            <p>El método de Monte Carlo utiliza muestreo aleatorio repetido para obtener resultados numéricos. Las distribuciones de Poisson y Gauss son fundamentales en este método:</p>
+            
+            <div class="simulation">
+                <div>
+                    <h3>Simulación de Poisson</h3>
+                    <p>Generamos eventos aleatorios con tasa λ usando números aleatorios:</p>
+                    <div class="controls">
+                        <div class="param-control">
+                            <label for="mc-lambda">λ:</label>
+                            <input type="range" id="mc-lambda" min="1" max="20" value="5" step="0.5">
+                            <span class="value-display" id="mc-lambda-value">5</span>
+                        </div>
+                        <button id="run-poisson">Simular Poisson</button>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3>Simulación Gaussiana</h3>
+                    <p>Generamos valores usando el método de Box-Muller:</p>
+                    <div class="controls">
+                        <div class="param-control">
+                            <label for="mc-mu">μ:</label>
+                            <input type="range" id="mc-mu" min="0" max="20" value="10" step="0.5">
+                            <span class="value-display" id="mc-mu-value">10</span>
+                        </div>
+                        <div class="param-control">
+                            <label for="mc-sigma">σ:</label>
+                            <input type="range" id="mc-sigma" min="0.5" max="5" value="2" step="0.1">
+                            <span class="value-display" id="mc-sigma-value">2</span>
+                        </div>
+                        <button id="run-gauss">Simular Gauss</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="simulation-results">
+                <h3>Resultados de la Simulación</h3>
+                <div class="chart-container">
+                    <canvas id="monteCarloChart"></canvas>
+                </div>
+            </div>
+            
+            <p><strong>Aplicaciones de Monte Carlo:</strong></p>
+            <ul>
+                <li>Finanzas: Valoración de opciones, gestión de riesgos</li>
+                <li>Física: Simulación de partículas, transporte de radiación</li>
+                <li>Ingeniería: Análisis de confiabilidad de sistemas</li>
+                <li>IA: Algoritmos de optimización y aprendizaje</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Elementos del DOM
+        const lambdaInput = document.getElementById('lambda');
+        const lambdaValue = document.getElementById('lambda-value');
+        const muInput = document.getElementById('mu');
+        const muValue = document.getElementById('mu-value');
+        const sigmaInput = document.getElementById('sigma');
+        const sigmaValue = document.getElementById('sigma-value');
+        
+        const mcLambdaInput = document.getElementById('mc-lambda');
+        const mcLambdaValue = document.getElementById('mc-lambda-value');
+        const mcMuInput = document.getElementById('mc-mu');
+        const mcMuValue = document.getElementById('mc-mu-value');
+        const mcSigmaInput = document.getElementById('mc-sigma');
+        const mcSigmaValue = document.getElementById('mc-sigma-value');
+        
+        // Actualizar valores mostrados
+        lambdaInput.addEventListener('input', () => {
+            lambdaValue.textContent = lambdaInput.value;
+            updatePoissonChart();
+            updateComparisonChart();
+        });
+        
+        muInput.addEventListener('input', () => {
+            muValue.textContent = muInput.value;
+            updateGaussChart();
+            updateComparisonChart();
+        });
+        
+        sigmaInput.addEventListener('input', () => {
+            sigmaValue.textContent = sigmaInput.value;
+            updateGaussChart();
+            updateComparisonChart();
+        });
+        
+        mcLambdaInput.addEventListener('input', () => {
+            mcLambdaValue.textContent = mcLambdaInput.value;
+        });
+        
+        mcMuInput.addEventListener('input', () => {
+            mcMuValue.textContent = mcMuInput.value;
+        });
+        
+        mcSigmaInput.addEventListener('input', () => {
+            mcSigmaValue.textContent = mcSigmaInput.value;
+        });
+        
+        // Funciones de distribución
+        function poissonPMF(k, lambda) {
+            return (Math.exp(-lambda) * Math.pow(lambda, k)) / factorial(k);
+        }
+        
+        function gaussianPDF(x, mu, sigma) {
+            const variance = sigma * sigma;
+            return (1 / (Math.sqrt(2 * Math.PI * variance))) * 
+                   Math.exp(-Math.pow(x - mu, 2) / (2 * variance));
+        }
+        
+        function factorial(n) {
+            if (n === 0) return 1;
+            let result = 1;
+            for (let i = 2; i <= n; i++) result *= i;
+            return result;
+        }
+        
+        // Gráficos
+        let poissonChart, gaussChart, comparisonChart, monteCarloChart;
+        
+        function initPoissonChart() {
+            const ctx = document.getElementById('poissonChart').getContext('2d');
+            poissonChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Distribución de Poisson',
+                        data: [],
+                        backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Probabilidad'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'k (número de eventos)'
+                            }
+                        }
+                    }
+                }
+            });
+            updatePoissonChart();
+        }
+        
+        function updatePoissonChart() {
+            const lambda = parseFloat(lambdaInput.value);
+            const labels = [];
+            const data = [];
+            
+            // Calcular hasta 3 desviaciones estándar
+            const maxK = Math.min(50, Math.floor(lambda + 4 * Math.sqrt(lambda)));
+            
+            for (let k = 0; k <= maxK; k++) {
+                labels.push(k);
+                data.push(poissonPMF(k, lambda));
+            }
+            
+            poissonChart.data.labels = labels;
+            poissonChart.data.datasets[0].data = data;
+            poissonChart.data.datasets[0].label = `Poisson (λ=${lambda})`;
+            poissonChart.update();
+        }
+        
+        function initGaussChart() {
+            const ctx = document.getElementById('gaussChart').getContext('2d');
+            gaussChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Distribución Gaussiana',
+                        data: [],
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Densidad de probabilidad'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'x'
+                            }
+                        }
+                    }
+                }
+            });
+            updateGaussChart();
+        }
+        
+        function updateGaussChart() {
+            const mu = parseFloat(muInput.value);
+            const sigma = parseFloat(sigmaInput.value);
+            const labels = [];
+            const data = [];
+            
+            const minX = Math.max(0, mu - 4 * sigma);
+            const maxX = mu + 4 * sigma;
+            const step = (maxX - minX) / 100;
+            
+            for (let x = minX; x <= maxX; x += step) {
+                labels.push(x.toFixed(1));
+                data.push(gaussianPDF(x, mu, sigma));
+            }
+            
+            gaussChart.data.labels = labels;
+            gaussChart.data.datasets[0].data = data;
+            gaussChart.data.datasets[0].label = `Gauss (μ=${mu}, σ=${sigma})`;
+            gaussChart.update();
+        }
+        
+        function initComparisonChart() {
+            const ctx = document.getElementById('comparisonChart').getContext('2d');
+            comparisonChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: 'Poisson',
+                            data: [],
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderWidth: 2,
+                            pointRadius: 0,
+                            fill: false
+                        },
+                        {
+                            label: 'Gauss',
+                            data: [],
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            borderWidth: 2,
+                            pointRadius: 0,
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Probabilidad / Densidad'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Valor'
+                            }
+                        }
+                    }
+                }
+            });
+            updateComparisonChart();
+        }
+        
+        function updateComparisonChart() {
+            const lambda = parseFloat(lambdaInput.value);
+            const mu = parseFloat(muInput.value);
+            const sigma = parseFloat(sigmaInput.value);
+            
+            const minX = Math.max(0, Math.min(lambda - 4 * Math.sqrt(lambda), mu - 4 * sigma));
+            const maxX = Math.max(lambda + 4 * Math.sqrt(lambda), mu + 4 * sigma);
+            const step = (maxX - minX) / 100;
+            
+            const labels = [];
+            const poissonData = [];
+            const gaussData = [];
+            
+            for (let x = minX; x <= maxX; x += step) {
+                labels.push(x.toFixed(1));
+                
+                // Para Poisson, solo calculamos en valores enteros
+                if (Math.abs(x - Math.round(x)) < 0.01) {
+                    poissonData.push(poissonPMF(Math.round(x), lambda));
+                } else {
+                    poissonData.push(null); // No dibujar entre valores enteros
+                }
+                
+                gaussData.push(gaussianPDF(x, mu, sigma));
+            }
+            
+            comparisonChart.data.labels = labels;
+            comparisonChart.data.datasets[0].data = poisso
