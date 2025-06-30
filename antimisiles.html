@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Antimisiles con Drones</title>
+    <style>
+        canvas {
+            border: 2px solid black;
+            background-color: #f0f0f0;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+        #score {
+            font-size: 24px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Sistema Antimisiles con Drones</h1>
+    <div id="score">Puntuación: <span id="scoreValue">0</span> | Misiles destruidos: <span id="destroyedValue">0</span></div>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        let score = 0;
+        let missilesDestroyed = 0;
+        const scoreElement = document.getElementById('scoreValue');
+        const destroyedElement = document.getElementById('destroyedValue');
+
+        // Clase para los misiles
+        class Missile {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = 0;
+                this.radius = 10;
+                this.speed = 2 + Math.random() * 2;
+                this.angle = Math.atan2(canvas.height - this.y, canvas.width / 2 - this.x);
+            }
+
+            update() {
+                this.y += this.speed;
+                this.x += Math.sin(this.angle) * this.speed;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = 'red';
+                ctx.fill();
+                ctx.closePath();
+            }
+        }
+
+        // Clase para los drones
+        class Drone {
+            constructor() {
+                this.x = canvas.width / 2;
+                this.y = canvas.height - 50;
+                this.size = 15;
+                this.speed = 4;
+                this.target = null;
+            }
+
+            update(missiles) {
+                if (!this.target || this.target.y > canvas.height) {
+                    this.target = this.findClosestMissile(missiles);
+                }
+                if (this.target) {
+                    const angle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
+                    this.x += Math.cos(angle) * this.speed;
+                    this.y += Math.sin(angle) * this.speed;
+                }
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.moveTo(this.x, this.y - this.size);
+                ctx.lineTo(this.x - this.size, this.y + this.size);
+                ctx.lineTo(this.x + this.size, this.y + this.size);
+                ctx.closePath();
+                ctx.fillStyle = 'blue';
+                ctx.fill();
+            }
+
+            findClosestMissile(missiles) {
+                let closest = null;
+                let closestDist = Infinity;
+                for (let missile of missiles) {
+                    const dist = Math.hypot(missile.x - this.x, missile.y - this.y);
+                    if (dist < closestDist) {
+                        closestDist = dist;
+                        closest = missile;
+                    }
+                }
+                return closest;
+            }
+        }
+
+        // Clase para el objetivo
+        class Target {
+            constructor() {
+                this.x = canvas.width / 2;
+                this.y = canvas.height - 20;
+                this.size = 30;
+            }
+
+            draw() {
+                ctx.fillStyle = 'green';
+                ctx.fillRect(this.x - this.size / 2, this.y - this.size / 2, this.size, this.size);
+            }
+        }
+
+        // Inicialización
+        const missiles = [];
+        const drones = [];
+        const target = new Target();
+        let lastMissileTime = 0;
+        let lastDroneTime = 0;
+
+        function spawnMissile() {
+            missiles.push(new Missile());
+        }
+
+        function spawnDrone() {
+            if (drones.length < 3) {
+                drones.push(new Drone());
+            }
+        }
+
+        function detectCollision(a, b, distanceThreshold) {
+            return Math.hypot(a.x - b.x, a.y - b.y) < distanceThreshold;
+        }
+
+        function gameLoop(timestamp) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Generar misiles cada 2 segundos
+            if (timestamp - lastMissileTime > 2000) {
+                spawnMissile();
+                lastMissileTime = timestamp;
+            }
+
+            // Generar drones cada 5 segundos
+            if (timestamp - lastDroneTime > 5000) {
+                spawnDrone();
+                lastDroneTime = timestamp;
+            }
+
+            // Actualizar y dibujar misiles
+            for (let i = missiles.length - 1; i >= 0; i--) {
+                const missile = missiles[i];
+                missile.update();
+                missile.draw();
+
+                // Verificar colisión con el objetivo
+                if (detectCollision(missile, target, missile.radius + target.size / 2)) {
+                    alert('¡Juego terminado! El objetivo fue alcanzado.');
+                    return;
+                }
+
+                // Eliminar misiles que salen del lienzo
+                if (missile.y > canvas.height) {
+                    missiles.splice(i, 1);
+                }
+            }
+
+            // Actualizar y dibujar drones
+            for (let i = drones.length - 1; i >= 0; i--) {
+                const drone = drones[i];
+                drone.update(missiles);
+                drone.draw();
+
+                // Verificar colisiones con misiles
+                for (let j = missiles.length - 1; j >= 0; j--) {
+                    const missile = missiles[j];
+                    if (detectCollision(drone, missile, drone.size + missile.radius)) {
+                        missiles.splice(j, 1);
+                        drones.splice(i, 1);
+                        score += 10;
+                        missilesDestroyed += 1;
+                        scoreElement.textContent = score;
+                        destroyedElement.textContent = missilesDestroyed;
+                        break;
+                    }
+                }
+            }
+
+            // Dibujar objetivo
+            target.draw();
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Iniciar el juego
+        requestAnimationFrame(gameLoop);
+    </script>
+</body>
+  </html>
