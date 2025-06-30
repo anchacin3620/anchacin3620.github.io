@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Railgun con Monte Carlo</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #1a252f;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--primary), var(--dark));
+            color: var(--light);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: var(--light);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--secondary);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 900px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .panel {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .panel h2 {
+            color: var(--secondary);
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.8rem;
+        }
+        
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .control-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: var(--secondary);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        .value-display {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+        }
+        
+        button {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            grid-column: span 2;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .results {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .result-card {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .result-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin: 10px 0;
+        }
+        
+        .result-label {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .chart-container {
+            height: 300px;
+            margin-top: 20px;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            display: block;
+        }
+        
+        .data-table th {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            text-align: left;
+        }
+        
+        .data-table td {
+            padding: 8px 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .data-table tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+        
+        .highlight {
+            color: var(--accent);
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Simulador de Railgun con Método de Monte Carlo</h1>
+            <p class="subtitle">Esta simulación utiliza el método de Monte Carlo para analizar el comportamiento de un cañón de riel electromagnético variando parámetros como corriente, longitud del riel y masa del proyectil.</p>
+        </header>
+        
+        <div class="content">
+            <div class="panel">
+                <h2>Parámetros de Simulación</h2>
+                <div class="controls">
+                    <div class="control-group">
+                        <label for="samples">Número de Muestras: <span id="samples-value">10000</span></label>
+                        <input type="range" id="samples" min="100" max="50000" value="10000" step="100">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="current-min">Corriente Mínima (MA): <span id="current-min-value">4.0</span></label>
+                        <input type="range" id="current-min" min="1" max="10" value="4.0" step="0.1">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="current-max">Corriente Máxima (MA): <span id="current-max-value">6.0</span></label>
+                        <input type="range" id="current-max" min="1" max="10" value="6.0" step="0.1">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="length-min">Longitud Mínima (m): <span id="length-min-value">3.0</span></label>
+                        <input type="range" id="length-min" min="1" max="10" value="3.0" step="0.1">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="length-max">Longitud Máxima (m): <span id="length-max-value">5.0</span></label>
+                        <input type="range" id="length-max" min="1" max="10" value="5.0" step="0.1">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="mass-min">Masa Mínima (kg): <span id="mass-min-value">5.0</span></label>
+                        <input type="range" id="mass-min" min="1" max="20" value="5.0" step="0.1">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="mass-max">Masa Máxima (kg): <span id="mass-max-value">15.0</span></label>
+                        <input type="range" id="mass-max" min="1" max="20" value="15.0" step="0.1">
+                    </div>
+                    
+                    <button id="run-simulation">Ejecutar Simulación</button>
+                </div>
+                
+                <div class="results">
+                    <div class="result-card">
+                        <div class="result-label">Velocidad Media</div>
+                        <div class="result-value" id="mean-velocity">0.0 km/s</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-label">Velocidad Máxima</div>
+                        <div class="result-value" id="max-velocity">0.0 km/s</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-label">Velocidad Mínima</div>
+                        <div class="result-value" id="min-velocity">0.0 km/s</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-label">Desviación Estándar</div>
+                        <div class="result-value" id="std-dev">0.0 km/s</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <h2>Resultados de la Simulación</h2>
+                <div class="chart-container">
+                    <canvas id="velocity-chart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="scatter-chart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <div class="panel" style="margin-top: 20px;">
+            <h2>Datos de Muestras</h2>
+            <div style="max-height: 300px; overflow-y: auto;">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Muestra</th>
+                            <th>Corriente (MA)</th>
+                            <th>Longitud (m)</th>
+                            <th>Masa (kg)</th>
+                            <th>Velocidad (km/s)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sample-data">
+                        <!-- Datos de muestra se insertarán aquí -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Simulación basada en principios de electromagnetismo: <span class="highlight">F = B·I·L</span> y <span class="highlight">E<sub>k</sub> = ½mv²</span></p>
+            <p>Los cañones de riel utilizan energía cinética pura para propulsar proyectiles a velocidades hipersónicas</p>
+        </div>
+    </div>
+    
+    <script>
+        // Referencias a elementos del DOM
+        const samplesInput = document.getElementById('samples');
+        const samplesValue = document.getElementById('samples-value');
+        const currentMinInput = document.getElementById('current-min');
+        const currentMinValue = document.getElementById('current-min-value');
+        const currentMaxInput = document.getElementById('current-max');
+        const currentMaxValue = document.getElementById('current-max-value');
+        const lengthMinInput = document.getElementById('length-min');
+        const lengthMinValue = document.getElementById('length-min-value');
+        const lengthMaxInput = document.getElementById('length-max');
+        const lengthMaxValue = document.getElementById('length-max-value');
+        const massMinInput = document.getElementById('mass-min');
+        const massMinValue = document.getElementById('mass-min-value');
+        const massMaxInput = document.getElementById('mass-max');
+        const massMaxValue = document.getElementById('mass-max-value');
+        const runButton = document.getElementById('run-simulation');
+        
+        // Elementos de resultados
+        const meanVelocity = document.getElementById('mean-velocity');
+        const maxVelocity = document.getElementById('max-velocity');
+        const minVelocity = document.getElementById('min-velocity');
+        const stdDev = document.getElementById('std-dev');
+        const sampleData = document.getElementById('sample-data');
+        
+        // Variables para gráficos
+        let velocityChart = null;
+        let scatterChart = null;
+        
+        // Actualizar valores mostrados al mover los sliders
+        samplesInput.addEventListener('input', () => {
+            samplesValue.textContent = samplesInput.value;
+        });
+        
+        currentMinInput.addEventListener('input', () => {
+            currentMinValue.textContent = currentMinInput.value;
+        });
+        
+        currentMaxInput.addEventListener('input', () => {
+            currentMaxValue.textContent = currentMaxInput.value;
+        });
+        
+        lengthMinInput.addEventListener('input', () => {
+            lengthMinValue.textContent = lengthMinInput.value;
+        });
+        
+        lengthMaxInput.addEventListener('input', () => {
+            lengthMaxValue.textContent = lengthMaxInput.value;
+        });
+        
+        massMinInput.addEventListener('input', () => {
+            massMinValue.textContent = massMinInput.value;
+        });
+        
+        massMaxInput.addEventListener('input', () => {
+            massMaxValue.textContent = massMaxInput.value;
+        });
+        
+        // Función para simular el railgun
+        function simulateRailgun() {
+            const PI = Math.PI;
+            const mu0 = 4 * PI * 1e-7; // Permeabilidad magnética (T·m/A)
+            const d = 0.1;              // Distancia entre rieles (m)
+            const k = 0.7;               // Factor geométrico
+            
+            const n = parseInt(samplesInput.value);
+            const I_min = parseFloat(currentMinInput.value);
+            const I_max = parseFloat(currentMaxInput.value);
+            const L_min = parseFloat(lengthMinInput.value);
+            const L_max = parseFloat(lengthMaxInput.value);
+            const m_min = parseFloat(massMinInput.value);
+            const m_max = parseFloat(massMaxInput.value);
+            
+            let velocities = [];
+            let sum = 0;
+            let sumSquares = 0;
+            let maxV = 0;
+            let minV = Number.MAX_VALUE;
+            const sampleResults = [];
+            
+            // Limpiar tabla de muestras
+            sampleData.innerHTML = '';
+            
+            // Ejecutar simulación Monte Carlo
+            for (let i = 0; i < n; i++) {
+                // Generar parámetros aleatorios
+                const I_peak = I_min + Math.random() * (I_max - I_min);
+                const L_rail = L_min + Math.random() * (L_max - L_min);
+                const m_proj = m_min + Math.random() * (m_max - m_min);
+                
+                // Cálculos físicos
+                const B_avg = k * (mu0 * I_peak * 1e6) / (2 * d); // Campo magnético (T)
+                const F_avg = B_avg * I_peak * 1e6 * L_rail;      // Fuerza (N)
+                const Ek = F_avg * L_rail;                        // Energía cinética (J)
+                const v = Math.sqrt(2 * Ek / m_proj) / 1000;      // Velocidad (km/s)
+                
+                // Actualizar estadísticas
+                velocities.push(v);
+                sum += v;
+                sumSquares += v * v;
+                
+                if (v > maxV) maxV = v;
+                if (v < minV) minV = v;
+                
+                // Guardar muestra para tabla (solo las primeras 20)
+                if (i < 20) {
+                    sampleResults.push({
+                        sample: i + 1,
+                        current: I_peak.toFixed(2),
+                        length: L_rail.toFixed(2),
+                        mass: m_proj.toFixed(2),
+                        velocity: v.toFixed(2)
+                    });
+                }
+            }
+            
+            // Calcular estadísticas finales
+            const mean = sum / n;
+            const variance = (sumSquares / n) - (mean * mean);
+            const std = Math.sqrt(variance);
+            
+            // Actualizar UI con resultados
+            meanVelocity.textContent = mean.toFixed(2) + ' km/s';
+            maxVelocity.textContent = maxV.toFixed(2) + ' km/s';
+            minVelocity.textContent = minV.toFixed(2) + ' km/s';
+            stdDev.textContent = std.toFixed(2) + ' km/s';
+            
+            // Actualizar tabla de muestras
+            sampleResults.forEach(sample => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${sample.sample}</td>
+                    <td>${sample.current}</td>
+                    <td>${sample.length}</td>
+                    <td>${sample.mass}</td>
+                    <td>${sample.velocity}</td>
+                `;
+                sampleData.appendChild(row);
+            });
+            
+            // Crear/actualizar gráficos
+            createVelocityChart(velocities);
+            createScatterChart(velocities);
+        }
+        
+        // Crear gráfico de distribución de velocidades
+        function createVelocityChart(velocities) {
+            const ctx = document.getElementById('velocity-chart').getContext('2d');
+            
+            // Configurar bins para el histograma
+            const min = Math.min(...velocities);
+            const max = Math.max(...velocities);
+            const binCount = 20;
+            const binSize = (max - min) / binCount;
+            
+            // Crear bins
+            const bins = new Array(binCount).fill(0);
+            velocities.forEach(v => {
+                const binIndex = Math.min(Math.floor((v - min) / binSize), binCount - 1);
+                bins[binIndex]++;
+            });
+            
+            // Crear etiquetas para los bins
+            const labels = [];
+            for (let i = 0; i < binCount; i++) {
+                const binStart = min + i * binSize;
+                const binEnd = binStart + binSize;
+                labels.push(`${binStart.toFixed(1)} - ${binEnd.toFixed(1)}`);
+            }
+            
+            // Destruir gráfico anterior si existe
+            if (velocityChart) {
+                velocityChart.destroy();
+            }
+            
+            // Crear nuevo gráfico
+            velocityChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Frecuencia de Velocidad',
+                        data: bins,
+                        backgroundColor: 'rgba(52, 152, 219, 0.7)',
+                        borderColor: 'rgba(52, 152, 219, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#ecf0f1'
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Distribución de Velocidades',
+                            color: '#ecf0f1',
+                            font: {
+                                size: 16
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Frecuencia',
+                                color: '#ecf0f1'
+                            },
+                            ticks: {
+                                color: '#ecf0f1'
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+              
