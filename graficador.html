@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Graficador de Funciones Mejorado</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        canvas {
+            border: 1px solid black;
+            margin-top: 20px;
+        }
+        input, select, button {
+            margin: 10px;
+            padding: 8px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .func-input {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        .func-input input {
+            width: 200px;
+        }
+        .func-input span {
+            margin-left: 10px;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .control-group {
+            margin: 10px;
+        }
+        footer {
+            margin-top: auto;
+            padding: 10px;
+            text-align: center;
+            font-size: 14px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Graficador de Funciones</h2>
+        <div class="func-input">
+            <input type="text" id="funcion1" placeholder="Función 1 (ej: 2*x + 1)" size="30">
+            <span style="color: blue;">(Azul)</span>
+        </div>
+        <div class="func-input">
+            <input type="text" id="funcion2" placeholder="Función 2 (ej: x^2)" size="30">
+            <span style="color: red;">(Rojo)</span>
+        </div>
+        <div class="func-input">
+            <input type="text" id="funcion3" placeholder="Función 3 (ej: sin(x))" size="30">
+            <span style="color: green;">(Verde)</span>
+        </div>
+        <label for="funcionesEjemplo">Ejemplos:</label>
+        <select id="funcionesEjemplo" onchange="cargarEjemplo()">
+            <option value="">Selecciona una función</option>
+            <option value="2*x + 1">Lineal: 2x + 1</option>
+            <option value="x^2 - 3">Cuadrática: x² - 3</option>
+            <option value="x^3 - 2*x">Cúbica: x³ - 2x</option>
+            <option value="log(x)">Logarítmica: log(x) (x > 0)</option>
+            <option value="sqrt(x)">Raíz cuadrada: √x (x ≥ 0)</option>
+            <option value="exp(x)">Exponencial: e^x</option>
+            <option value="sin(x)">Trigonométrica: sin(x)</option>
+            <option value="cos(x)">Trigonométrica: cos(x)</option>
+            <option value="tan(x)">Trigonométrica: tan(x)</option>
+        </select>
+        <div class="controls">
+            <div class="control-group">
+                <label for="xRange">Rango X (±):</label>
+                <input type="range" id="xRange" min="1" max="20" value="6">
+                <span id="xRangeValue">6</span>
+            </div>
+            <div class="control-group">
+                <label for="yRange">Rango Y (±):</label>
+                <input type="range" id="yRange" min="1" max="20" value="4">
+                <span id="yRangeValue">4</span>
+            </div>
+        </div>
+        <button onclick="graficar()">Graficar</button>
+        <div id="mensajeDominio"></div>
+        <canvas id="grafico" width="600" height="400"></canvas>
+    </div>
+    <footer>
+        Elaborado por el Profesor Ángel Chacín Ávila, Licenciado en Física, UNES Núcleo Zulia
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/10.0.0/math.min.js"></script>
+    <script>
+        function cargarEjemplo() {
+            const select = document.getElementById('funcionesEjemplo');
+            const input1 = document.getElementById('funcion1');
+            input1.value = select.value;
+            document.getElementById('funcion2').value = '';
+            document.getElementById('funcion3').value = '';
+            verificarDominio(select.value);
+        }
+
+        function verificarDominio(funcion) {
+            const mensajeDiv = document.getElementById('mensajeDominio');
+            if (funcion.includes('log(') || funcion.includes('sqrt(')) {
+                mensajeDiv.innerHTML = funcion.includes('log(')
+                    ? 'Nota: log(x) está definido para x > 0'
+                    : 'Nota: sqrt(x) está definido para x ≥ 0';
+            } else if (funcion.includes('tan(')) {
+                mensajeDiv.innerHTML = 'Nota: tan(x) tiene discontinuidades en ±π/2 + kπ';
+            } else {
+                mensajeDiv.innerHTML = '';
+            }
+        }
+
+        function graficar() {
+            const canvas = document.getElementById('grafico');
+            const ctx = canvas.getContext('2d');
+            const funciones = [
+                { input: document.getElementById('funcion1').value, color: 'blue' },
+                { input: document.getElementById('funcion2').value, color: 'red' },
+                { input: document.getElementById('funcion3').value, color: 'green' }
+            ];
+            const xRange = parseFloat(document.getElementById('xRange').value);
+            const yRange = parseFloat(document.getElementById('yRange').value);
+            document.getElementById('xRangeValue').textContent = xRange;
+            document.getElementById('yRangeValue').textContent = yRange;
+
+            // Limpiar el canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Configurar el sistema de coordenadas
+            const width = canvas.width;
+            const height = canvas.height;
+            const escalaX = width / (2 * xRange);
+            const escalaY = height / (2 * yRange);
+            const xMin = -xRange;
+            const xMax = xRange;
+            const yMin = -yRange;
+            const yMax = yRange;
+
+            // Dibujar cuadrícula
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 0.5;
+            for (let x = Math.ceil(xMin); x <= xMax; x++) {
+                ctx.beginPath();
+                const px = width / 2 + x * escalaX;
+                ctx.moveTo(px, 0);
+                ctx.lineTo(px, height);
+                ctx.stroke();
+            }
+            for (let y = Math.ceil(yMin); y <= yMax; y++) {
+                ctx.beginPath();
+                const py = height / 2 - y * escalaY;
+                ctx.moveTo(0, py);
+                ctx.lineTo(width, py);
+                ctx.stroke();
+            }
+
+            // Dibujar ejes
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(0, height / 2);
+            ctx.lineTo(width, height / 2); // Eje X
+            ctx.moveTo(width / 2, 0);
+            ctx.lineTo(width / 2, height); // Eje Y
+            ctx.stroke();
+
+            // Dibujar marcas y etiquetas en los ejes
+            ctx.fillStyle = 'black';
+            ctx.font = '12px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            for (let x = Math.ceil(xMin); x <= xMax; x++) {
+                if (x !== 0) {
+                    const px = width / 2 + x * escalaX;
+                    ctx.fillText(x, px, height / 2 + 15);
+                }
+            }
+            ctx.textAlign = 'right';
+            for (let y = Math.ceil(yMin); y <= yMax; y++) {
+                if (y !== 0) {
+                    const py = height / 2 - y * escalaY;
+                    ctx.fillText(y, width / 2 - 10, py);
+                }
+            }
+
+            // Dibujar funciones
+            const parser = math.parser();
+            funciones.forEach(func => {
+                if (!func.input) return;
+                ctx.beginPath();
+                ctx.strokeStyle = func.color;
+                ctx.lineWidth = 2;
+                let first = true;
+
+                try {
+                    const expr = func.input.replace('^', '**');
+                    for (let px = 0; px <= width; px++) {
+                        const x = xMin + (px / width) * (xMax - xMin);
+                        let y;
+                        try {
+                            y = parser.evaluate(`f(x) = ${expr}; f(${x})`);
+                            if (isNaN(y) || y === Infinity || y === -Infinity) continue;
+                        } catch (e) {
+                            continue;
+                        }
+
+                        const py = height / 2 - y * escalaY;
+                        if (py < 0 || py > height) continue;
+
+                        if (first) {
+                            ctx.moveTo(px, py);
+                            first = false;
+                        } else {
+                            ctx.lineTo(px, py);
+                        }
+                    }
+                    ctx.stroke();
+                } catch (e) {
+                    alert(`Error en la función ${func.input}: ${e.message}`);
+                }
+            });
+        }
+
+        // Actualizar valores de rango en tiempo real
+        document.getElementById('xRange').addEventListener('input', () => {
+            document.getElementById('xRangeValue').textContent = document.getElementById('xRange').value;
+            graficar();
+        });
+        document.getElementById('yRange').addEventListener('input', () => {
+            document.getElementById('yRangeValue').textContent = document.getElementById('yRange').value;
+            graficar();
+        });
+        document.getElementById('funcion1').addEventListener('input', () => verificarDominio(document.getElementById('funcion1').value));
+    </script>
+</body>
+                  </html>
