@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulación Cúpula de Hierro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #e8ecef;
+            min-height: 100vh;
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            color: #2d3748;
+        }
+
+        header {
+            background-color: #2b6cb0;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 2rem auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            padding: 0 1rem;
+        }
+
+        #simulation {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        canvas {
+            border: 3px solid #2d3748;
+            background-color: #87ceeb;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #score {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #2d3748;
+        }
+
+        #info {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            max-height: 600px;
+        }
+
+        #info h2 {
+            color: #2b6cb0;
+            margin-bottom: 1rem;
+        }
+
+        #info h3 {
+            color: #4a5568;
+            margin: 1rem 0 0.5rem;
+        }
+
+        #info p, #info ul, #info ol {
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        #info ul {
+            list-style-type: disc;
+            padding-left: 1.5rem;
+        }
+
+        #info ol {
+            list-style-type: decimal;
+            padding-left: 1.5rem;
+        }
+
+        footer {
+            background-color: #2d3748;
+            color: white;
+            text-align: center;
+            padding: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            main {
+                grid-template-columns: 1fr;
+            }
+
+            canvas {
+                width: 100%;
+                height: auto;
+            }
+
+            #info {
+                max-height: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Simulación del Sistema Antimisiles Cúpula de Hierro</h1>
+    </header>
+
+    <main>
+        <section id="simulation">
+            <div id="score">Interceptados: 0 | Impactos: 0</div>
+            <canvas id="canvas" width="500" height="500"></canvas>
+        </section>
+
+        <section id="info">
+            <h2>Funcionamiento Real del Sistema</h2>
+            <p>El <strong>Cúpula de Hierro</strong> es un sistema de defensa aérea móvil de corto alcance desarrollado por Israel para interceptar cohetes, morteros y proyectiles de artillería (4-70 km) que amenacen áreas pobladas.</p>
+            
+            <h3>Componentes</h3>
+            <ul>
+                <li><strong>Radar EL/M-2084</strong>: Detecta proyectiles y calcula su trayectoria en tiempo real.</li>
+                <li><strong>Centro de Gestión de Batalla (BMC)</strong>: Evalúa si el proyectil impactará áreas críticas; si no, evita la intercepción.</li>
+                <li><strong>Lanzadores</strong>: 3-4 por batería, con hasta 20 misiles Tamir (sensores electroópticos, ojiva de proximidad).</li>
+            </ul>
+            
+            <h3>Operación</h3>
+            <ol>
+                <li><strong>Detección</strong>: Radar identifica el proyectil en segundos.</li>
+                <li><strong>Evaluación</strong>: BMC calcula el impacto y decide interceptar.</li>
+                <li><strong>Intercepción</strong>: Misil Tamir detona cerca del proyectil enemigo.</li>
+            </ol>
+            
+            <h3>Características</h3>
+            <ul>
+                <li><strong>Efectividad</strong>: ~90% en condiciones óptimas, debatida en ataques masivos.</li>
+                <li><strong>Costo</strong>: Batería (~50-100M USD), misil (~50K USD).</li>
+                <li><strong>Movilidad</strong>: 10+ baterías móviles en Israel.</li>
+                <li><strong>Limitaciones</strong>: Vulnerable a saturación; no efectivo contra misiles balísticos de largo alcance.</li>
+            </ul>
+            
+            <h3>Contexto Histórico</h3>
+            <p>Desarrollado tras la Guerra del Líbano (2006) por Rafael e IAI, con apoyo de EE. UU. (~2.6B USD). Primera intercepción en 2011. Variantes: I-Dome (móvil), C-Dome (naval).</p>
+            
+            <h3>Conflicto Israel-Irán (Junio 2025)</h3>
+            <p>El conflicto de 12 días comenzó el 13 de junio de 2025 con ataques israelíes a instalaciones nucleares iraníes. Irán respondió con misiles Fattah y Khorramshahr ("True Promise 3"). La Cúpula de Hierro interceptó ~100 misiles, pero algunos impactaron Tel Aviv y Beersheba.</p>
+            <ul>
+                <li>Netanyahu afirmó que retrasó el programa nuclear iraní, pero inteligencia de EE. UU. estima un retroceso de meses.</li>
+                <li>Pezeshkian (Irán) calificó el cese al fuego como victoria, negando daños significativos.</li>
+                <li>Trump, mediador, criticó violaciones israelíes al cese al fuego y afirmó control aéreo de EE. UU., cuestionado por expertos.</li>
+                <li>Posts en X sugieren baja efectividad (10-15%) contra drones/misiles iraníes, pero sin verificación oficial.</li>
+                <li>Analistas de RAND advierten que los ataques podrían acelerar el programa nuclear iraní.</li>
+            </ul>
+            <p><strong>Análisis</strong>: Las narrativas de victoria son contradictorias. La Cúpula de Hierro mostró limitaciones ante ataques masivos, especialmente contra misiles balísticos avanzados.</p>
+        </section>
+    </main>
+
+    <footer>
+        Elaborado por el Prof. Ángel Chacín Ávila, Lic. en Física, UNES Núcleo Zulia
+    </footer>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        let interceptados = 0;
+        let impactos = 0;
+
+        class MisilEnemigo {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = 0;
+                this.speed = Math.random() * 2 + 2;
+                this.width = 8;
+                this.height = 16;
+                this.active = true;
+            }
+
+            draw() {
+                if (this.active) {
+                    ctx.fillStyle = '#e53e3e';
+                    ctx.fillRect(this.x, this.y, this.width, this.height);
+                }
+            }
+
+            update() {
+                if (this.active) {
+                    this.y += this.speed;
+                    if (this.y > canvas.height) {
+                        this.active = false;
+                        impactos++;
+                        updateScore();
+                    }
+                }
+            }
+        }
+
+        class Interceptor {
+            constructor(targetX, targetY) {
+                this.x = canvas.width / 2;
+                this.y = canvas.height;
+                this.targetX = targetX;
+                this.targetY = targetY;
+                this.speed = 5;
+                this.width = 4;
+                this.height = 12;
+                this.active = true;
+            }
+
+            draw() {
+                if (this.active) {
+                    ctx.fillStyle = '#2b6cb0';
+                    ctx.fillRect(this.x, this.y, this.width, this.height);
+                }
+            }
+
+            update() {
+                if (this.active) {
+                    let dx = this.targetX - this.x;
+                    let dy = this.targetY - this.y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance > this.speed) {
+                        this.x += (dx / distance) * this.speed;
+                        this.y += (dy / distance) * this.speed;
+                    } else {
+                        this.active = false;
+                    }
+                }
+            }
+        }
+
+        let misilesEnemigos = [];
+        let interceptores = [];
+
+        function generarMisilEnemigo() {
+            if (Math.random() < 0.02) {
+                misilesEnemigos.push(new MisilEnemigo());
+            }
+        }
+
+        function detectarColision() {
+            interceptores.forEach((interceptor, iIndex) => {
+                if (!interceptor.active) return;
+                misilesEnemigos.forEach((misil, mIndex) => {
+                    if (!misil.active) return;
+                    if (
+                        interceptor.x < misil.x + misil.width &&
+                        interceptor.x + interceptor.width > misil.x &&
+                        interceptor.y < misil.y + misil.height &&
+                        interceptor.y + interceptor.height > misil.y
+                    ) {
+                        interceptor.active = false;
+                        misil.active = false;
+                        interceptados++;
+                        updateScore();
+                    }
+                });
+            });
+        }
+
+        function updateScore() {
+            document.getElementById('score').innerText = `Interceptados: ${interceptados} | Impactos: ${impactos}`;
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            generarMisilEnemigo();
+            misilesEnemigos.forEach((misil, index) => {
+                misil.update();
+                misil.draw();
+                if (!misil.active) misilesEnemigos.splice(index, 1);
+            });
+            interceptores.forEach((interceptor, index) => {
+                interceptor.update();
+                interceptor.draw();
+                if (!interceptor.active) interceptores.splice(index, 1);
+            });
+            detectarColision();
+            requestAnimationFrame(animate);
+        }
+
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            interceptores.push(new Interceptor(x, y));
+        });
+
+        animate();
+    </script>
+</body>
+</html>
