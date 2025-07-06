@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explicación de Códigos Fortran - Simulación Monte Carlo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        .accordion {
+            margin: 20px 0;
+        }
+        .accordion-item {
+            background: #ecf0f1;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .accordion-header {
+            padding: 15px;
+            background: #3498db;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .accordion-header:hover {
+            background: #2980b9;
+        }
+        .accordion-content {
+            padding: 15px;
+            display: none;
+            background: #fff;
+        }
+        .details-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        .details-btn:hover {
+            background: #c0392b;
+        }
+        .details-content {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-left: 4px solid #3498db;
+        }
+        .active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Explicación de los Códigos Fortran - Simulación Monte Carlo</h1>
+        <p>A continuación se hace un resumen de cómo están estructurados los 4 códigos Fortran que forman parte del Trabajo de Investigación titulado "Simulación Monte Carlo de los procesos de deposición en películas delgadas de Cr y Fe sobre un sustrato sólido de Mg(001)". ¡Explora cada sección para descubrir más!</p>
+
+        <div class="accordion">
+            <!-- Sección 1: Simulación 2D Fe -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">Simulación 2D para Fe</div>
+                <div class="accordion-content">
+                    <p>Este código simula la deposición y pulverización de hierro (Fe) en una superficie 2D de 300x300 sitios. Utiliza un modelo Monte Carlo con eventos aleatorios para modelar la adsorción, difusión y pulverización.</p>
+                    <button class="details-btn" onclick="toggleDetails(this)">Más detalles</button>
+                    <div class="details-content">
+                        <ul>
+                            <li><strong>Parámetros clave:</strong> 
+                                <ul>
+                                    <li><code>MAX_PARTICULAS = 1000000</code>: Número máximo de eventos (actualizado a 1 millón).</li>
+                                    <li><code>TASA_EVENTOS = 100000.0</code>: Frecuencia de eventos.</li>
+                                    <li><code>ENERGIA_ACTIVACION = 0.7 eV</code>: Energía necesaria para la difusión.</li>
+                                    <li><code>TEMP_SUBSTRATO = 500.0 K</code>: Temperatura del sustrato.</li>
+                                </ul>
+                            </li>
+                            <li><strong>Flujo de simulación:</strong> 
+                                <ol>
+                                    <li>Inicializa una rejilla con un 5% de sitios ocupados.</li>
+                                    <li>Genera eventos aleatorios (adsorción, difusión o pulverización) con probabilidades basadas en energía (0-10 eV).</li>
+                                    <li>Actualiza la altura de la rejilla y guarda los resultados en <code>fe_2d_altura.dat</code>.</li>
+                                </ol>
+                            </li>
+                            <li><strong>Resultados:</strong> Espesor promedio ~0.05 capas, altura máxima 1.0 (normalizada).</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección 2: Simulación 2D Cr -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">Simulación 2D para Cr</div>
+                <div class="accordion-content">
+                    <p>Similar a la simulación 2D de Fe, pero ajustada para cromo (Cr) con parámetros específicos para reflejar sus propiedades físicas.</p>
+                    <button class="details-btn" onclick="toggleDetails(this)">Más detalles</button>
+                    <div class="details-content">
+                        <ul>
+                            <li><strong>Parámetros clave:</strong> 
+                                <ul>
+                                    <li><code>MAX_PARTICULAS = 1000000</code>: 1 millón de eventos.</li>
+                                    <li><code>TASA_EVENTOS = 100000.0</code>: Frecuencia de eventos.</li>
+                                    <li><code>ENERGIA_ACTIVACION = 0.65 eV</code>: Menor energía de difusión.</li>
+                                    <li><code>TEMP_SUBSTRATO = 450.0 K</code>: Temperatura más baja.</li>
+                                    <li><code>ENERGIA_ENLACE_CR = 4.1 eV</code>: Energía de enlace específica para Cr.</li>
+                                </ul>
+                            </li>
+                            <li><strong>Flujo de simulación:</strong> Igual que Fe 2D, pero con ajustes en las probabilidades de adsorción y pulverización.</li>
+                            <li><strong>Resultados:</strong> Espesor promedio ~0.049 capas, altura máxima 1.0.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección 3: Simulación 3D Fe -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">Simulación 3D para Fe</div>
+                <div class="accordion-content">
+                    <p>Este código extiende la simulación a 3D, permitiendo una altura máxima de 100 capas para modelar la deposición de Fe en un volumen.</p>
+                    <button class="details-btn" onclick="toggleDetails(this)">Más detalles</button>
+                    <div class="details-content">
+                        <ul>
+                            <li><strong>Parámetros clave:</strong> 
+                                <ul>
+                                    <li><code>MAX_PARTICULAS = 3000000</code>: 3 millones de eventos.</li>
+                                    <li><code>TASA_EVENTOS = 3000000.0</code>: Alta frecuencia de eventos.</li>
+                                    <li><code>ENERGIA_DIFUSION = 0.7 eV</code>: Igual que 2D Fe.</li>
+                                    <li><code>TEMP_SUBSTRATO = 500.0 K</code>: Igual que 2D Fe.</li>
+                                    <li><code>TEMP_PLASMA = 1000.0 K</code>: Temperatura del plasma.</li>
+                                    <li><code>ADHESION = 0.85</code>: Probabilidad de adhesión.</li>
+                                </ul>
+                            </li>
+                            <li><strong>Flujo de simulación:</strong> 
+                                <ol>
+                                    <li>Inicializa las dos primeras capas con valor 3 (sustrato).</li>
+                                    <li>Simula eventos con distribución de Poisson, depositando partículas según <code>prob_adhesion</code>.</li>
+                                    <li>Permite difusión lateral si <code>z_max > 2</code>.</li>
+                                    <li>Guarda la altura máxima por sitio en <code>fe_3d_altura.dat</code>.</li>
+                                </ol>
+                            </li>
+                            <li><strong>Predicción:</strong> Alturas mayores a 1.0 debido a la dimensión 3D.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección 4: Simulación 3D Cr -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">Simulación 3D para Cr</div>
+                <div class="accordion-content">
+                    <p>Versión 3D para cromo, con ajustes en los parámetros para reflejar sus propiedades físicas distintas.</p>
+                    <button class="details-btn" onclick="toggleDetails(this)">Más detalles</button>
+                    <div class="details-content">
+                        <ul>
+                            <li><strong>Parámetros clave:</strong> 
+                                <ul>
+                                    <li><code>MAX_PARTICULAS = 3000000</code>: 3 millones de eventos.</li>
+                                    <li><code>TASA_EVENTOS = 3000000.0</code>: Alta frecuencia.</li>
+                                    <li><code>ENERGIA_DIFUSION = 0.6 eV</code>: Menor energía de difusión.</li>
+                                    <li><code>TEMP_SUBSTRATO = 500.0 K</code>: Igual que Fe 3D.</li>
+                                    <li><code>TEMP_PLASMA = 1000.0 K</code>: Igual que Fe 3D.</li>
+                                    <li><code>ADHESION = 0.9</code>: Mayor probabilidad de adhesión.</li>
+                                </ul>
+                            </li>
+                            <li><strong>Flujo de simulación:</strong> Similar a Fe 3D, pero con ajustes en <code>prob_adhesion</code>.</li>
+                            <li><strong>Predicción:</strong> Alturas similares a Fe 3D, pero con mayor cobertura debido a <code>ADHESION = 0.9</code>.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleAccordion(element) {
+            const content = element.nextElementSibling;
+            content.classList.toggle('active');
+        }
+
+        function toggleDetails(element) {
+            const content = element.nextElementSibling;
+            content.classList.toggle('active');
+        }
+    </script>
+</body>
+  </html>
