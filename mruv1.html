@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movimiento Rectilíneo Uniforme Variado (MRUV)</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        h1, h2 {
+            color: #2c3e50;
+        }
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .controls {
+            margin: 20px 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        canvas {
+            border: 1px solid #333;
+            margin: 20px 0;
+        }
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #555;
+        }
+        .results {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e8f4f8;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Movimiento Rectilíneo Uniforme Variado (MRUV)</h1>
+        <p>El <strong>Movimiento Rectilíneo Uniforme Variado (MRUV)</strong> es un tipo de movimiento en el que un objeto se desplaza en línea recta con una aceleración constante. Esto significa que la velocidad del objeto cambia de manera uniforme con el tiempo.</p>
+        <h2>Fórmulas principales:</h2>
+        <ul>
+            <li>Posición: <code>x = x₀ + v₀t + (1/2)at²</code></li>
+            <li>Velocidad: <code>v = v₀ + at</code></li>
+            <li>Velocidad al cuadrado: <code>v² = v₀² + 2a(x - x₀)</code></li>
+        </ul>
+        <p>Donde:</p>
+        <ul>
+            <li><code>x</code>: posición final</li>
+            <li><code>x₀</code>: posición inicial</li>
+            <li><code>v₀</code>: velocidad inicial</li>
+            <li><code>a</code>: aceleración</li>
+            <li><code>t</code>: tiempo</li>
+            <li><code>v</code>: velocidad final</li>
+        </ul>
+
+        <h2>Simulación Interactiva</h2>
+        <p>Ajusta los valores de velocidad inicial, aceleración y tiempo para observar cómo cambia el movimiento:</p>
+        <div class="controls">
+            <div class="control-group">
+                <label for="v0">Velocidad Inicial (m/s):</label>
+                <input type="range" id="v0" min="-10" max="10" value="5" step="0.1">
+                <span id="v0-value">5 m/s</span>
+            </div>
+            <div class="control-group">
+                <label for="a">Aceleración (m/s²):</label>
+                <input type="range" id="a" min="-2" max="2" value="1" step="0.1">
+                <span id="a-value">1 m/s²</span>
+            </div>
+            <div class="control-group">
+                <label for="t">Tiempo (s):</label>
+                <input type="range" id="t" min="0" max="10" value="5" step="0.1">
+                <span id="t-value">5 s</span>
+            </div>
+        </div>
+        <div class="results">
+            <p>Resultados:</p>
+            <p>Posición final: <span id="x-result">0</span> m</p>
+            <p>Velocidad final: <span id="v-result">0</span> m/s</p>
+        </div>
+        <h2>Visualización del Movimiento</h2>
+        <p>El objeto (cuadrado rojo) se mueve en la dirección horizontal según los parámetros seleccionados:</p>
+    </div>
+    <footer>
+        Elaborado por Profesor Ángel Chacín Ávila, Licenciado en Física, Especialista en Ciencias Computacionales, UNES Núcleo Zulia
+    </footer>
+
+    <script>
+        let v0 = 5; // Velocidad inicial (m/s)
+        let a = 1;  // Aceleración (m/s²)
+        let t = 5;  // Tiempo (s)
+        let x0 = 0; // Posición inicial (m)
+        let x;      // Posición final
+        let v;      // Velocidad final
+        let objX;   // Posición del objeto en el canvas
+
+        function setup() {
+            let canvas = createCanvas(800, 100);
+            canvas.parent('body');
+            updateCalculations();
+            objX = map(x0, -100, 100, 0, width); // Mapeo inicial
+        }
+
+        function draw() {
+            background(220);
+            // Dibujar el objeto (cuadrado rojo)
+            fill(255, 0, 0);
+            rect(objX, height / 2 - 25, 50, 50);
+            // Actualizar posición en el canvas
+            let simTime = (frameCount / 60) % t; // Simula el tiempo hasta t
+            x = x0 + v0 * simTime + 0.5 * a * simTime * simTime;
+            objX = map(x, -100, 100, 0, width); // Mapea posición a píxeles
+        }
+
+        function updateCalculations() {
+            // Calcular posición y velocidad final
+            x = x0 + v0 * t + 0.5 * a * t * t;
+            v = v0 + a * t;
+            // Actualizar resultados en la interfaz
+            document.getElementById('x-result').textContent = x.toFixed(2);
+            document.getElementById('v-result').textContent = v.toFixed(2);
+        }
+
+        // Actualizar valores desde los sliders
+        document.getElementById('v0').addEventListener('input', function() {
+            v0 = parseFloat(this.value);
+            document.getElementById('v0-value').textContent = v0.toFixed(1) + ' m/s';
+            updateCalculations();
+        });
+
+        document.getElementById('a').addEventListener('input', function() {
+            a = parseFloat(this.value);
+            document.getElementById('a-value').textContent = a.toFixed(1) + ' m/s²';
+            updateCalculations();
+        });
+
+        document.getElementById('t').addEventListener('input', function() {
+            t = parseFloat(this.value);
+            document.getElementById('t-value').textContent = t.toFixed(1) + ' s';
+            updateCalculations();
+        });
+    </script>
+</body>
+</html>
