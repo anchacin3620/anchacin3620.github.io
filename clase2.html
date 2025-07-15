@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MRUV - Movimiento Rectilíneo Uniformemente Variado</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M0,0 L100,100 M20,0 L0,20 M0,80 L20,100 M100,20 L80,0" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></svg>');
+            z-index: -1;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            position: relative;
+            display: inline-block;
+        }
+        
+        h1::after {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #4dabf7, transparent);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .content {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .theory {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .theory::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="1" fill="rgba(255,255,255,0.05)"/><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.05)"/><circle cx="80" cy="80" r="1" fill="rgba(255,255,255,0.05)"/></svg>');
+            z-index: -1;
+        }
+        
+        .calculator {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #4dabf7;
+            border-bottom: 2px solid #4dabf7;
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        h2 i {
+            font-size: 1.5rem;
+        }
+        
+        h3 {
+            font-size: 1.4rem;
+            margin: 20px 0 15px;
+            color: #ffd43b;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        .formula {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            border-left: 4px solid #4dabf7;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .formula::before {
+            content: "Fórmula";
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: #4dabf7;
+            color: white;
+            font-size: 0.8rem;
+            padding: 3px 8px;
+            border-bottom-left-radius: 5px;
+        }
+        
+        .variables {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .variable {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .variable:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .variable i {
+            font-size: 2rem;
+            color: #ffd43b;
+            margin-bottom: 10px;
+        }
+        
+        .calculator-controls {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        label {
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #ffd43b;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        input, select, button {
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: none;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            font-size: 1rem;
+        }
+        
+        input:focus {
+            outline: 2px solid #4dabf7;
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        button {
+            background: #4dabf7;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        button:hover {
+            background: #339af0;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .result {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+            border-left: 4px solid #4dabf7;
+        }
+        
+        .result.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .examples {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .example-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            transition: transform 0.3s ease;
+        }
+        
+        .example-card:hover {
+            transform: translateX(5px);
+        }
+        
+        .example-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            color: #ffd43b;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 40px;
+            color: rgba(255, 255, 255, 0.9);
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        
+        .professor-info {
+            font-weight: bold;
+            color: #ffd43b;
+            margin-top: 10px;
+            display: block;
+        }
+        
+        .university {
+            font-style: italic;
+            color: #4dabf7;
+        }
+        
+        .physics-icon {
+            font-size: 2rem;
+            margin: 0 10px;
+            vertical-align: middle;
+            color: #ffd43b;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            .variables {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+        }
+        
+        .formula-diagram {
+            width: 100%;
+            max-width: 400px;
+            margin: 20px auto;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .formula-diagram img {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        .section-icon {
+            font-size: 1.2rem;
+        }
+        
+        .input-icon {
+            position: absolute;
+            right: 15px;
+            top: 38px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-rocket"></i> Movimiento Rectilíneo Uniformemente Variado</h1>
+            <p class="subtitle">Explora el fascinante mundo de la física con esta calculadora interactiva que te permite resolver problemas de MRUV y comprender los conceptos fundamentales del movimiento con aceleración constante.</p>
+        </header>
+        
+        <div class="content">
+            <section class="theory">
+                <h2><i class="fas fa-book-open section-icon"></i> Teoría del MRUV</h2>
+                
+                <p>El Movimiento Rectilíneo Uniformemente Variado (MRUV) es un tipo de movimiento en el que un objeto se desplaza a lo largo de una línea recta con una aceleración constante. Es fundamental en física para comprender cómo se mueven los objetos bajo la acción de fuerzas constantes.</p>
+                
+                <h3><i class="fas fa-star"></i> Conceptos fundamentales</h3>
+                <div class="variables">
+                    <div class="variable">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <h4>Aceleración (a)</h4>
+                        <p>Cambio en la velocidad por unidad de tiempo (m/s²)</p>
+                    </div>
+                    <div class="variable">
+                        <i class="fas fa-running"></i>
+                        <h4>Velocidad (v)</h4>
+                        <p>Rapidez y dirección del movimiento (m/s)</p>
+                    </div>
+                    <div class="variable">
+                        <i class="fas fa-road"></i>
+                        <h4>Distancia (d)</h4>
+                        <p>Espacio recorrido por el objeto (m)</p>
+                    </div>
+                    <div class="variable">
+                        <i class="fas fa-clock"></i>
+                        <h4>Tiempo (t)</h4>
+                        <p>Duración del movimiento (s)</p>
+                    </div>
+                </div>
+                
+                <h3><i class="fas fa-calculator"></i> Fórmulas principales</h3>
+                <div class="formula">Velocidad final: v = v₀ + a·t</div>
+                <div class="formula">Distancia: d = v₀·t + ½·a·t²</div>
+                <div class="formula">Velocidad final (sin tiempo): v² = v₀² + 2·a·d</div>
+                <div class="formula">Distancia (con velocidad media): d = (v₀ + v)/2 · t</div>
+                
+                <div class="formula-diagram">
+                    <p><i class="fas fa-project-diagram"></i> Relación entre variables</p>
+                    <p>v₀ → [a, t] → v</p>
+                    <p>d = Área bajo la curva v-t</p>
+                </div>
+                
+                <h3><i class="fas fa-apple-alt"></i> Casos especiales: Caída Libre</h3>
+                <p>En caída libre, los objetos se mueven bajo la influencia exclusiva de la gravedad:</p>
+                <div class="formula">Aceleración: a = g ≈ 9.8 m/s² (hacia abajo)</div>
+                <p>Las fórmulas de MRUV se aplican directamente, considerando:</p>
+                <ul>
+                    <li>La dirección positiva hacia abajo</li>
+                    <li>Aceleración constante g</li>
+                    <li>Velocidad inicial cero si se deja caer</li>
+                </ul>
+            </section>
+            
+            <section class="calculator">
+                <h2><i class="fas fa-calculator section-icon"></i> Calculadora de MRUV</h2>
+                
+                <div class="calculator-controls">
+                    <div class="input-group">
+                        <label for="v0"><i class="fas fa-play"></i> Velocidad inicial (v₀) en m/s:</label>
+                        <input type="number" id="v0" placeholder="Ej: 10">
+                        <span class="input-icon">v₀</span>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="v"><i class="fas fa-stop"></i> Velocidad final (v) en m/s:</label>
+                        <input type="number" id="v" placeholder="Ej: 30">
+                        <span class="input-icon">v</span>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="a"><i class="fas fa-bolt"></i> Aceleración (a) en m/s²:</label>
+                        <input type="number" id="a" placeholder="Ej: 2">
+                        <span class="input-icon">a</span>
+                        <div style="margin-top: 10px;">
+                            <input type="checkbox" id="freefall">
+                            <label for="freefall" style="display: inline; color: #fff;"><i class="fas fa-apple-alt"></i> Caída libre (a = g = 9.8 m/s²)</label>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="t"><i class="fas fa-clock"></i> Tiempo (t) en segundos:</label>
+                        <input type="number" id="t" placeholder="Ej: 5">
+                        <span class="input-icon">t</span>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="d"><i class="fas fa-ruler"></i> Distancia (d) en metros:</label>
+                        <input type="number" id="d" placeholder="Ej: 100">
+                        <span class="input-icon">d</span>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="calculate"><i class="fas fa-question-circle"></i> Calcular variable:</label>
+                        <select id="calculate">
+                            <option value="">-- Selecciona variable a calcular --</option>
+                            <option value="v0">Velocidad inicial (v₀)</option>
+                            <option value="v">Velocidad final (v)</option>
+                            <option value="a">Aceleración (a)</option>
+                            <option value="t">Tiempo (t)</option>
+                            <option value="d">Distancia (d)</option>
+                        </select>
+                    </div>
+                    
+                    <button id="calculate-btn"><i class="fas fa-calculator"></i> Calcular</button>
+                    
+                    <div class="result" id="result">
+                        <h3><i class="fas fa-clipboard-check"></i> Resultado:</h3>
+                        <p id="result-text"></p>
+                    </div>
+                </div>
+            </section>
+        </div>
+        
+        <section class="examples">
+            <h2><i class="fas fa-lightbulb section-icon"></i> Ejemplos de MRUV</h2>
+            
+            <div class="example-card">
+                <div class="example-title">
+                    <i class="fas fa-car"></i>
+                    <h3>Aceleración de un automóvil</h3>
+                </div>
+                <p>Un automóvil parte del reposo (v₀ = 0) y acelera a 3 m/s² durante 10 segundos.</p>
+                <p><strong>Cálculo de velocidad final:</strong> v = v₀ + a·t = 0 + 3·10 = 30 m/s (108 km/h)</p>
+                <p><strong>Cálculo de distancia recorrida:</strong> d = v₀·t + ½·a·t² = 0 + 0.5·3·100 = 150 m</p>
+            </div>
+            
+            <div class="example-card">
+                <div class="example-title">
+                    <i class="fas fa-apple-alt"></i>
+                    <h3>Caída libre de una manzana</h3>
+                </div>
+                <p>Una manzana cae desde un árbol de 5 metros de altura (v₀ = 0, a = g = 9.8 m/s²).</p>
+                <p><strong>Cálculo de tiempo de caída:</strong> d = ½·g·t² → t = √(2d/g) = √(10/9.8) ≈ 1.01 s</p>
+                <p><strong>Cálculo de velocidad al tocar suelo:</strong> v = g·t = 9.8·1.01 ≈ 9.9 m/s (35.6 km/h)</p>
+            </div>
+            
+            <div class="example-card">
+                <div class="example-title">
+                    <i class="fas fa-space-shuttle"></i>
+                    <h3>Desaceleración de un cohete</h3>
+                </div>
+                <p>Un cohete que viaja a 200 m/s frena con aceleración constante de -15 m/s².</p>
+                <p><strong>Cálculo de distancia hasta detenerse:</strong> v² = v₀² + 2·a·d → 0 = 40000 + 2·(-15)·d → d = 40000/30 ≈ 1333.3 m</p>
+                <p><strong>Cálculo de tiempo hasta detenerse:</strong> v = v₀ + a·t → 0 = 200 - 15t → t = 200/15 ≈ 13.33 s</p>
+            </div>
+        </section>
+        
+        <footer>
+            <p>© 2023 Calculadora de MRUV | Física | Movimiento Rectilíneo Uniformemente Variado</p>
+            <span class="professor-info">
+                Elaborado por el Profesor Ángel Chacín Ávila <i class="fas fa-user-graduate physics-icon"></i>
+            </span>
+            <p>Licenciado en Física, Especialista en Ciencias Computacionales</p>
+            <p class="university">UNES Núcleo Zulia</p>
+        </footer>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const calculateBtn = document.getElementById('calculate-btn');
+            const resultDiv = document.getElementById('result');
+            const resultText = document.getElementById('result-text');
+            const freefallCheckbox = document.getElementById('freefall');
+            
+            // Configurar caída libre
+            freefallCheckbox.addEventListener('change', function() {
+                const aInput = document.getElementById('a');
+                if (this.checked) {
+                    aInput.value = 9.8;
+                    aInput.disabled = true;
+                } else {
+                    aInput.value = '';
+                    aInput.disabled = false;
+                }
+            });
+            
+            // Función de cálculo
+            calculateBtn.addEventListener('click', function() {
+                // Obtener valores
+                const v0 = parseFloat(document.getElementById('v0').value) || 0;
+                const v = parseFloat(document.getElementById('v').value);
+                let a = parseFloat(document.getElementById('a').value);
+                const t = parseFloat(document.getElementById('t').value);
+                const d = parseFloat(document.getElementById('d').value);
+                const calculateVar = document.getElementById('calculate').value;
+                
+                // Validar caída libre
+                if (freefallCheckbox.checked) {
+                    a = 9.8;
+                }
+                
+                // Validar selección de variable a calcular
+                if (!calculateVar) {
+                    showResult("Por favor selecciona la variable a calcular", true);
+                    return;
+                }
+                
+                let result;
+                let formulaUsed = "";
+                
+                // Realizar cálculos según variable seleccionada
+                try {
+                    switch(calculateVar) {
+                        case 'v0':
+                            if (!isNaN(v) && !isNaN(a) && !isNaN(t)) {
+                                // v = v0 + a*t → v0 = v - a*t
+                                result = v - a * t;
+                                formulaUsed = "v₀ = v - a·t";
+                                showResult(`Velocidad inicial (v₀) = <strong>${result.toFixed(2)} m/s</strong><br>Fórmula utilizada: ${formulaUsed}`);
+                            } else if (!isNaN(v) && !isNaN(a) && !isNaN(d)) {
+                                // v² = v₀² + 2*a*d → v₀² = v² - 2*a*d
+                                result = Math.sqrt(v*v - 2*a*d);
+                                formulaUsed = "v₀ = √(v² - 2·a·d)";
+                                showResult(`Velocidad inicial (v₀) = <strong>${result.toFixed(2)} m/s</strong> (positiva)<br>o <strong>${(-result).toFixed(2)} m/s</strong> (negativa)<br>Fórmula utilizada: ${formulaUsed}`);
+                            } else {
+                                showResult("Datos insuficientes para calcular v₀", true);
+                            }
+                            break;
+                            
+                        case 'v':
+                            if (!isNaN(v0) && !isNaN(a) && !isNaN(t)) {
+                                // v = v0 + a*t
+                                result = v0 + a * t;
+                                formulaUsed = "v = v₀ + a·t";
+                                showResult(`Velocidad final (v) = <strong>${result.toFixed(2)} m/s</strong><br>Fórmula utilizada: ${formulaUsed}`);
+                            } else if (!isNaN(v0) && !isNaN(a) && !isNaN(d)) {
+                                // v² = v₀² + 2*a*d
+                                result = Math.sqrt(v0*v0 + 2*a*d);
+                                formulaUsed = "v = √(v₀² + 2·a·d)";
+                                showResult(`Velocidad final (v) = <strong>${result.toFixed(2)} m/s</strong> (positiva)<br>o <strong>${(-result).toFixed(2)} m/s</strong> (negativa)<br>Fórmula utilizada: ${formulaUsed}`);
+                            } else {
+                                showResult("Datos insuficientes para calcular v", true);
+                            }
+                            break;
+                            
+                        case 'a':
+                            if (!isNaN(v0) && !isNaN(v) && !isNaN(t)) {
+                                // v = v0 + a*t → a = (v - v0)/t
+                                result = (v - v0) / t;
+                                formulaUsed = "a = (v - v₀)/t";
+                                showResult(`Aceleración (a) = <strong>${result.toFixed(2)} m/s²</strong><br>Fórmula utilizada: ${formulaUsed}`);
+                            } else if (!isNaN(v0) && !isNaN(v) && !isNaN(d)) {
+                                // v² = v₀² + 2*a*d → a = (v² - v₀²)/(2*d)
+                                result = (v*v - v0*v0) / (2*d);
+                                formulaUsed = "a = (v² - v₀²)/(2·d)";
+                                showResult(`Aceleración (a) = <strong>${result.toFixed(2)} m/s²</strong><br>Fórmula utilizada: ${formulaUsed}`);
+                            } else if (!isNaN(v0) && !isNaN(t) && !isNaN(d)) {
+                                // d = v0*t + 0.5*a*t² → a = 2*(d - v0*t)/t²
+                                result = 2 * (d - v0*t) / (t*t);
+                                formulaUsed = "a = 2·(d - v₀·t)/t²";
+                                showResult(`Aceleración (a) = <strong>${result.toFixed(2)} m/s²</strong><br>Fórmula utilizada: ${formulaUsed}`);
+                            } else {
+                                showResult("Datos insuficientes para calcular a", true);
+                            }
+                            break;
+                            
+                        case 't':
+                            if (!isNaN(v0) && !isNaN(v) && !isNaN(a)) {
+                                // v = v0 + a*t → t = (v - v0)/a
+                                result = (v - v0) / a;
+                                formulaUsed = "t = (v - v₀)/a";
+                                showResult(`Tiempo (t) = <strong>${result.toFixed(2)} segundos</strong><br>Fórmula utilizada: ${formulaUsed}`);
+                            } else if (!isNaN(v0) && !isNaN(a) && !isNaN(d)) {
+                                // d = v0*t + 0.5*a*t²
+                                // Resolver ecuación cuadrática: 0.5*a*t² + v0*t - d = 0
+                                const discriminant = v0*v0 + 2*a*d;
+                                if (discriminant < 0) {
+                                    showResult("No hay solución real para el tiempo", true);
+                                } else {
+                                    const t1 = (-v0 + Math.sqrt(discriminant)) / a;
+                                    const t2 = (-v0 - Math.sqrt(discriminant)) / a;
+                                    if (t1 >= 0 && t2 >= 0) {
+                                        formulaUsed = "t = [-v₀ ± √(v₀² + 2·a·d)] / a";
+                                        showResult(`Tiempo (t) = <strong>${t1.toFixed(2)} segundos</strong> o <strong>${t2.toFixed(2)} segundos</strong><br>Fórmula utilizada: ${formulaUsed}`);
+                                    } else if (t1 >= 0) {
+                                        showResult(`Tiempo (t) = <strong>${t1.toFixed(2)} segundos</strong><br>Fórmula utilizada: t = [-v₀ + √(v₀² + 2·a·d)] / a`);
+                                    } else if (t2 >= 0) {
+                                        showResult(`Tiempo (t) = <strong>${t2.toFixed(2)} segundos</strong><br>Fórmula utilizada: t = [-v₀ - √(v₀² + 2·a·d)] / a`);
+                                    } else {
+                                        showResult("No hay solución positiva para el tiempo", true);
+                                    }
+                                }
+                            } else {
+                                showResult("Datos insuficientes para calcular t", true);
+                            }
+                            break;
+                            
+                        case 'd':
+                            if (!isNaN(v0) && !isNaN(a) && !isNaN(t)) {
+                                // d = v0*t + 0.5*a*t²
+                                result = v0*t + 0.5*a*t*t;
+                                formulaUsed = "d = v₀·t + ½·a·t²";
+                                showResult(`Distancia (d) = <strong>${result.toFixed(2)} metros</strong><br>Fórmula utilizada: ${formulaUsed}`);
+                            } else if (!isNaN(v0) && !isNaN(v) && !isNaN(a)) {
+                                // v² = v₀² + 2*a*d → d = (v² - v₀²)/(2*a)
+                                result = (v*v - v0*v0) / (2*a);
+                                formulaUsed = "d = (v² - v₀²)/(2·a)";
+                                showResult(`Distancia (d) = <strong>${result.toFixed(2)} metros</strong><br>Fórmula utilizada: ${formulaUsed}`);
+                            } else if (!isNaN(v0) && !isNaN(v) && !isNaN(t)) {
+                                // d = (v0 + v)/2 * t
+                                result = (v0 + v) * t / 2;
+                                formulaUsed = "d = (v₀ + v)/2 · t";
+                                showResult(`Distancia (d) = <strong>${result.toFixed(2)} metros</strong><br>Fórmula utilizada: ${formulaUsed}`);
+                            } else {
+                                showResult("Datos insuficientes para calcular d", true);
+                            }
+                            break;
+                    }
+                } catch (error) {
+                    showResult("Error en el cálculo: " + error.message, true);
+                }
+            });
+            
+            function showResult(message, isError = false) {
+                resultText.innerHTML = message;
+                resultDiv.className = isError ? 'result show error' : 'result show';
+            }
+        });
+    </script>
+</body>
+</html>
