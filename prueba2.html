@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Simulación Monte Carlo Pulverización 3D</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        canvas { border: 1px solid black; }
+        #stats { margin-top: 10px; }
+        button { padding: 10px 20px; margin: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Simulación Monte Carlo 3D para Fe</h1>
+    <canvas id="canvas" width="500" height="500"></canvas>
+    <div id="stats">
+        Depósitos: <span id="depositos">0</span> | 
+        Difusiones: <span id="difusiones">0</span> | 
+        Eventos: <span id="num_eventos">0</span> | 
+        Tiempo: <span id="tiempo">0.0</span>
+    </div>
+    <button id="toggleSim">Iniciar Simulación</button>
+    <script>
+        // Constantes
+        const TAM_REJILLA = 50;
+        const ALTURA_MAX = 50;
+        const MAX_PARTICULAS = 10000;
+        const KB = 8.617e-5;
+        const ENERGIA_DIFUSION = 0.8;
+        const TEMP_SUBSTRATO = 500.0;
+        const TASA_EVENTOS = 25000.0;
+        const ADHESION = 0.95;
+        const ENERGIA_PROMEDIO = 3.0;
+        const MAX_ENERGIA = 5.0;
+        const MIN_R = 1.0e-10;
+
+        // Variables
+        let material = new Array(TAM_REJILLA).fill().map(() => 
+            new Array(TAM_REJILLA).fill().map(() => 
+                new Array(ALTURA_MAX).fill(0)
+            )
+        );
+        let altura_max_local = new Array(TAM_REJILLA).fill().map(() => 
+            new Array(TAM_REJILLA).fill(0)
+        );
+        let num_eventos = 0;
+        let depositos = 0;
+        let difusiones = 0;
+        let tiempo = 0.0;
+        const prob_difusion_const = Math.exp(-ENERGIA_DIFUSION / (KB * TEMP_SUBSTRATO));
+        let isRunning = false;
+
+        // Elementos DOM
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const cellSize = canvas.width / TAM_REJILLA;
+        const toggleButton = document.getElementById('toggleSim');
+        const depositosSpan = document.getElementById('depositos');
+        const difusionesSpan = document.getElementById('difusiones');
+        const eventosSpan = document.getElementById('num_eventos');
+        const tiempoSpan = document.getElementById('tiempo');
+
+        // Validación de parámetros
+        if (ENERGIA_DIFUSION <= 0 || TEMP_SUBSTRATO <= 0 || 
+            TASA_EVENTOS <= 0 || ADHESION <= 0) {
+            console.error('Error: ENERGIA_DIFUSION, TEMP_SUBSTRATO, TASA_EVENTOS y ADHESION deben ser positivos');
+            return;
+        }
+
+        // Inicializar rejilla
+        function inicializar_rejilla() {
+            console.log('Inicializando rejilla...');
+            for (let i = 0; i < TAM_REJILLA; i++) {
+                for (let j = 0; j < TAM_REJILLA; j++) {
+                    material[i][j][0] = 3; // z=1 en Fortran es z=0 en JS
+                    material[i][j][1] = 3; // z=2 en Fortran es z=1 en JS
+                    altura_max_local[i][j] = 2;
+                }
+            }
+        }
+
+        // Encontrar altura máxima en una columna
+        function find_z_max(columna) {
+            for (let k = ALTURA_MAX - 1; k >= 0; k--) {
+                if (columna[k] > 0) return k;
+            }
+            return 0;
+        }
+
+        // Generar número aleatorio seguro
+        function safe_random() {
+            const r = Math.random();
+            return MIN_R + (1 - 2 * MIN_R) * r;
+        }
+
+        // Simular un evento
+        function simular_evento() {
+            if (num_eventos >= MAX_PARTICULAS) {
+                console.log('Simulación completada: máximo de eventos alcanzado');
+                isRunning = false;
+                toggleButton.textContent = 'Simulación Completada';
+                toggleButton.disabled = true;
+                return;
+            }
+
+            num_eventos++;
+            eventosSpan.textContent = num_eventos;
+
+            // Avance del tiempo (Poisson)
+            let r_tiempo = safe_random();
+            tiempo += -Math.log(r_tiempo) / TASA_EVENTOS;
+            tiempoSpan.textContent = tiempo.toFixed(3);
+
+            // Selección de posición
+            let r = safe_random();
+            let x = Math.floor(r * TAM_REJILLA);
+            r = safe_random();
+            let y = Math.floor(r * TAM_REJILLA);
+            x = Math.max(0, Math.min(TAM_REJILLA - 1, x));
+            y = Math.max(0, Math.min(TAM_REJILLA - 1, y));
+
+            // Altura máxima en vecindario 3x3
+            let z_max = 0;
+            for (let i = Math.max(0, x-1); i <= Math.min(TAM_REJILLA-1, x+1); i++) {
+                for (let j = Math.max(0, y-1); j <= Math.min(TAM_REJILLA-1, y+1); j++) {
+                    z_max = Math.max(z_max, altura_max_local[i][j]);
+                }
+            }
+
+            // Energía y probabilidad de adhesión
+            r = safe_random();
+            let energia = ENERGIA_PROMEDIO + (r - 0.5) * MAX_ENERGIA;
+            r = safe_random();
+            let prob_adhesion = ADHESION * (1.0 + (energia / MAX_ENERGIA) * 0.2);
+
+            // Depósito
+            if (prob_adhesion > r && z_max < ALTURA_MAX - 1) {
+                depositos++;
+                depositosSpan.textContent = depositos;
+                material[x][y][z_max + 1] = 2;
+                altura_max_local[x][y] = z_max + 1;
+                console.log(`Depósito en (${x}, ${y}), z_max = ${z_max + 1}`);
+
+                // Difusión
+                if (z_max > 2) {
+                    r = safe_random();
+                    if (prob_difusion_const > r) {
+                        difusiones++;
+                        difusionesSpan.textContent = difusiones;
+                        let dx = r < 0.5 ? -1 : 1;
+                        let dy = r > 0.5 ? -1 : 1;
+                        let nuevo_x = (x + dx + TAM_REJILLA) % TAM_REJILLA;
+                        let nuevo_y = (y + dy + TAM_REJILLA) % TAM_REJILLA;
+                        material[nuevo_x][nuevo_y][z_max] = 2;
+                        material[x][y][z_max] = 0;
+                        altura_max_local[x][y] = find_z_max(material[x][y]);
+                        altura_max_local[nuevo_x][nuevo_y] = find_z_max(material[nuevo_x][nuevo_y]);
+                        console.log(`Difusión de (${x}, ${y}) a (${nuevo_x}, ${nuevo_y})`);
+                    }
+                }
+            }
+        }
+
+        // Dibujar rejilla
+        function drawGrid() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < TAM_REJILLA; i++) {
+                for (let j = 0; j < TAM_REJILLA; j++) {
+                    let z_max = altura_max_local[i][j];
+                    let intensity = Math.min(z_max / ALTURA_MAX, 1);
+                    let r = Math.floor(intensity * 255);
+                    let b = Math.floor((1 - intensity) * 255);
+                    ctx.fillStyle = `rgb(${r}, 0, ${b})`;
+                    ctx.fillRect(i * cellSize, j * cellSize, cellSize, cellSize);
+                }
+            }
+        }
+
+        // Bucle de animación
+        function animate() {
+            if (!isRunning) {
+                console.log('Simulación pausada');
+                return;
+            }
+            simular_evento();
+            drawGrid();
+            requestAnimationFrame(animate);
+        }
+
+        // Iniciar/pausar simulación
+        function toggleSimulation() {
+            isRunning = !isRunning;
+            toggleButton.textContent = isRunning ? 'Pausar Simulación' : 'Reanudar Simulación';
+            console.log(`Simulación ${isRunning ? 'iniciada' : 'pausada'}`);
+            if (isRunning) {
+                requestAnimationFrame(animate);
+            }
+        }
+
+        // Inicialización
+        console.log('Inicializando simulación...');
+        inicializar_rejilla();
+        drawGrid();
+        toggleButton.addEventListener('click', toggleSimulation);
+    </script>
+</body>
+</html>
