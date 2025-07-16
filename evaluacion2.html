@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario de MRUV - Física</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #34495e;
+            --accent: #1abc9c;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .header-banner {
+            background: linear-gradient(to right, #2c3e50, #3498db);
+            height: 180px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 2;
+            padding: 30px;
+            text-align: center;
+            color: white;
+        }
+        
+        .header-content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header-content p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .physics-icon {
+            position: absolute;
+            font-size: 8rem;
+            opacity: 0.1;
+            color: white;
+            z-index: 1;
+        }
+        
+        .physics-icon.top-left {
+            top: 10px;
+            left: 10px;
+        }
+        
+        .physics-icon.top-right {
+            top: 10px;
+            right: 10px;
+            transform: rotate(90deg);
+        }
+        
+        .physics-icon.bottom-left {
+            bottom: 10px;
+            left: 10px;
+            transform: rotate(270deg);
+        }
+        
+        .physics-icon.bottom-right {
+            bottom: 10px;
+            right: 10px;
+            transform: rotate(180deg);
+        }
+        
+        .form-section {
+            padding: 30px;
+            background-color: var(--light);
+            border-bottom: 2px solid #ddd;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--accent);
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 10px;
+            color: var(--accent);
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .input-group input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        .quiz-container {
+            padding: 30px;
+        }
+        
+        .question-card {
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .question-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .question-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .question-number {
+            background: linear-gradient(to bottom right, #3498db, #2c3e50);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 18px;
+            margin-right: 15px;
+        }
+        
+        .question-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .options-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        
+        .option:hover {
+            background-color: #e9ecef;
+            transform: translateX(5px);
+        }
+        
+        .option.selected {
+            background-color: #d1ecf1;
+            border-color: var(--primary);
+        }
+        
+        .option input {
+            margin-right: 12px;
+            transform: scale(1.3);
+        }
+        
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            padding: 25px;
+            background-color: var(--light);
+            border-top: 2px solid #ddd;
+        }
+        
+        .btn {
+            padding: 15px 40px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, #3498db, #2c3e50);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(to right, #2980b9, #1a252f);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-success {
+            background: linear-gradient(to right, #27ae60, #219653);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: linear-gradient(to right, #219653, #1e8449);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .result-container {
+            padding: 40px;
+            text-align: center;
+            display: none;
+        }
+        
+        .score-circle {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: conic-gradient(var(--success) 0% var(--p), #f0f0f0 var(--p) 100%);
+            margin: 0 auto 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .score-inner {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--dark);
+        }
+        
+        .score-value {
+            font-size: 3rem;
+            line-height: 1;
+            color: var(--primary);
+        }
+        
+        .score-text {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            color: var(--dark);
+        }
+        
+        .feedback {
+            font-size: 1.4rem;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+        
+        .feedback.good {
+            color: var(--success);
+        }
+        
+        .feedback.medium {
+            color: var(--warning);
+        }
+        
+        .feedback.poor {
+            color: var(--danger);
+        }
+        
+        .student-info {
+            background-color: var(--light);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: left;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+        
+        .student-info p {
+            margin: 10px 0;
+            font-size: 18px;
+            display: flex;
+        }
+        
+        .student-info strong {
+            color: var(--secondary);
+            min-width: 120px;
+            display: inline-block;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            margin: 25px 0;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(to right, #3498db, #2c3e50);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        
+        .email-status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .email-status.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .email-status.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        footer {
+            text-align: center;
+            color: white;
+            padding: 20px;
+            font-size: 16px;
+            opacity: 0.9;
+            max-width: 900px;
+            margin-top: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            width: 100%;
+        }
+        
+        footer p {
+            line-height: 1.6;
+        }
+        
+        .footer-highlight {
+            font-weight: 600;
+            color: #1abc9c;
+        }
+        
+        .university-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 5px 15px;
+            border-radius: 20px;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .options-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .question-text {
+                font-size: 16px;
+            }
+            
+            .container {
+                margin: 10px 0;
+            }
+            
+            .header-content h1 {
+                font-size: 2rem;
+            }
+            
+            .physics-icon {
+                font-size: 5rem;
+            }
+            
+            .student-info p {
+                flex-direction: column;
+            }
+            
+            .student-info strong {
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-banner">
+            <i class="physics-icon top-left fas fa-atom"></i>
+            <i class="physics-icon top-right fas fa-atom"></i>
+            <i class="physics-icon bottom-left fas fa-atom"></i>
+            <i class="physics-icon bottom-right fas fa-atom"></i>
+            <div class="header-content">
+                <h1>Cuestionario de MRUV</h1>
+                <p>Movimiento Rectilíneo Uniformemente Variado - Evaluación de conocimientos físicos</p>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <div class="section-title">
+                <i class="fas fa-user-graduate"></i>
+                <span>Datos del Estudiante</span>
+            </div>
+            <div class="input-group">
+                <label for="nombre"><i class="fas fa-user"></i> Nombre Completo</label>
+                <input type="text" id="nombre" placeholder="Ingresa tu nombre completo">
+            </div>
+            <div class="input-group">
+                <label for="email"><i class="fas fa-envelope"></i> Correo Electrónico</label>
+                <input type="email" id="email" placeholder="Ingresa tu correo electrónico">
+            </div>
+            <div class="input-group">
+                <label for="cedula"><i class="fas fa-id-card"></i> Número de Cédula</label>
+                <input type="text" id="cedula" placeholder="Ingresa tu número de cédula">
+            </div>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress" id="progress" style="width: 0%"></div>
+        </div>
+        
+        <div class="quiz-container" id="quiz-container">
+            <!-- Las preguntas se generarán dinámicamente con JavaScript -->
+        </div>
+        
+        <div class="btn-container">
+            <button class="btn btn-primary" id="submit-btn">
+                <i class="fas fa-paper-plane"></i> Enviar Respuestas
+            </button>
+        </div>
+        
+        <div class="result-container" id="result-container">
+            <div class="score-circle">
+                <div class="score-inner">
+                    <span class="score-value" id="score-value">0</span>
+                    <span>/ 20</span>
+                </div>
+            </div>
+            
+            <div class="feedback" id="feedback">¡Buen trabajo!</div>
+            
+            <div class="student-info">
+                <p><strong><i class="fas fa-user"></i> Estudiante:</strong> <span id="result-nombre"></span></p>
+                <p><strong><i class="fas fa-envelope"></i> Correo:</strong> <span id="result-email"></span></p>
+                <p><strong><i class="fas fa-id-card"></i> Cédula:</strong> <span id="result-cedula"></span></p>
+                <p><strong><i class="fas fa-star"></i> Puntuación:</strong> <span id="result-puntaje"></span>/20</p>
+            </div>
+            
+            <div class="btn-container">
+                <button class="btn btn-success" id="send-email-btn">
+                    <i class="fas fa-envelope"></i> Enviar Resultados por Correo
+                </button>
+            </div>
+            
+            <div class="email-status" id="email-status">
+                <!-- Mensaje de estado del correo -->
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>Elaborado por <span class="footer-highlight">Ángel Chacín Ávila</span>, Licenciado en Física, Especialista en Ciencias Computacionales</p>
+        <div class="university-badge">UNES Núcleo Zulia</div>
+    </footer>
+    
+    <script>
+        // Datos del cuestionario
+        const preguntas = [
+            {
+                pregunta: "¿Qué define al Movimiento Rectilíneo Uniformemente Variado (MRUV)?",
+                opciones: [
+                    "Velocidad constante y trayectoria curva.",
+                    "Aceleración constante y trayectoria recta.",
+                    "Velocidad variable y aceleración cero.",
+                    "Trayectoria circular con rapidez constante."
+                ],
+                respuesta: 1
+            },
+            {
+                pregunta: "En el MRUV, la aceleración es...",
+                opciones: [
+                    "Constante en magnitud y dirección.",
+                    "Siempre cero.",
+                    "Proporcional al tiempo.",
+                    "Inversa a la velocidad."
+                ],
+                respuesta: 0
+            },
+            {
+                pregunta: "La ecuación que describe la posición (x) en función del tiempo (t) en el MRUV es:",
+                opciones: [
+                    "x = v · t",
+                    "x = x₀ + v₀t + ½at²",
+                    "x = v₀ + at",
+                    "x = (v + v₀)/2 · t"
+                ],
+                respuesta: 1
+            },
+            {
+                pregunta: "Si un automóvil parte del reposo (v₀ = 0) y acelera a 2 m/s², ¿cuál será su velocidad a los 5 segundos?",
+                opciones: [
+                    "5 m/s",
+                    "10 m/s",
+                    "15 m/s",
+                    "20 m/s"
+                ],
+                respuesta: 1
+            },
+            {
+                pregunta: "Verdadero o Falso: 'En el MRUV, la distancia recorrida es proporcional al cuadrado del tiempo.'",
+                opciones: [
+                    "Verdadero",
+                    "Falso"
+                ],
+                respuesta: 0
+            },
+            {
+                pregunta: "La ecuación v = v₀ + at permite calcular...",
+                opciones: [
+                    "La posición final.",
+                    "La aceleración media.",
+                    "La velocidad en función del tiempo.",
+                    "La distancia total recorrida."
+                ],
+                respuesta: 2
+            },
+            {
+                pregunta: "¿Qué representa la pendiente en una gráfica de velocidad vs tiempo (v-t) en el MRUV?",
+                opciones: [
+                    "La posición.",
+                    "La aceleración.",
+                    "La distancia recorrida.",
+                    "La velocidad inicial."
+                ],
+                respuesta: 1
+            },
+            {
+                pregunta: "Un objeto en MRUV con aceleración negativa (a < 0)...",
+                opciones: [
+                    "Aumenta su velocidad linealmente.",
+                    "Disminuye su velocidad (está frenando).",
+                    "Se mueve con velocidad constante.",
+                    "Cambia su dirección instantáneamente."
+                ],
+                respuesta: 1
+            },
+            {
+                pregunta: "Si la velocidad de un móvil se duplica en un MRUV, ¿qué sucede con la distancia recorrida en el mismo intervalo de tiempo?",
+                opciones: [
+                    "Se duplica.",
+                    "Se cuadruplica.",
+                    "Se reduce a la mitad.",
+                    "Permanece igual."
+                ],
+                respuesta: 1
+            },
+            {
+                pregunta: "Calcula la aceleración de un coche que parte del reposo y alcanza 72 km/h en 10 segundos.",
+                opciones: [
+                    "1 m/s²",
+                    "2 m/s²",
+                    "5 m/s²",
+                    "7.2 m/s²"
+                ],
+                respuesta: 1
+            },
+            {
+                pregunta: "En una gráfica de posición vs tiempo (x-t) para MRUV, la curva es...",
+                opciones: [
+                    "Una recta horizontal.",
+                    "Una recta con pendiente constante.",
+                    "Una parábola.",
+                    "Una hipérbola."
+                ],
+                respuesta: 2
+            },
+            {
+                pregunta: "La ecuación v² = v₀² + 2a(x - x₀) es útil cuando se desconoce...",
+                opciones: [
+                    "La aceleración.",
+                    "El tiempo transcurrido.",
+                    "La velocidad inicial.",
+                    "La posición inicial."
+                ],
+                respuesta: 1
+            },
+            {
+                pregunta: "Un objeto se lanza verticalmente hacia arriba. En el punto más alto de su trayectoria...",
+                opciones: [
+                    "Su velocidad y aceleración son cero.",
+                    "Su velocidad es cero pero su aceleración es -g.",
+                    "Su aceleración es cero pero su velocidad es máxima.",
+                    "Su velocidad y aceleración son máximas."
+                ],
+                respuesta: 1
+            },
+            {
+                pregunta: "Si un móvil recorre 100 m en 10 s con MRUV partiendo del reposo, ¿cuál es su aceleración?",
+                opciones: [
+                    "1 m/s²",
+                    "2 m/s²",
+                    "4 m/s²",
+                    "5 m/s²"
+                ],
+                respuesta: 1
+            },
+            {
+                pregunta: "En una gráfica v-t para MRUV, el área bajo la curva representa...",
+                opciones: [
+                    "La aceleración.",
+                    "La velocidad media.",
+                    "El desplazamiento.",
+                    "La rapidez instantánea."
+                ],
+                respuesta: 2
+            },
+            {
+                pregunta: "Verdadero o Falso: 'En el MRUV, la velocidad media entre dos puntos es (v₀ + v)/2, solo si la aceleración es constante.'",
+                opciones: [
+                    "Verdadero",
+                    "Falso"
+                ],
+                respuesta: 0
+            },
+            {
+                pregunta: "Un tren reduce su velocidad de 108 km/h a 54 km/h en 10 s. ¿Cuál es su aceleración?",
+                opciones: [
+                    "-0.5 m/s²",
+                    "-1.5 m/s²",
+                    "-2.5 m/s²",
+                    "-5 m/s²"
+                ],
+                respuesta: 1
+            },
+            {
+                pregunta: "¿Qué significa físicamente una aceleración de -3 m/s²?",
+                opciones: [
+                    "El móvil aumenta su velocidad en 3 m/s cada segundo.",
+                    "El móvil disminuye su velocidad en 3 m/s cada segundo.",
+                    "El móvil recorre 3 m menos cada segundo.",
+                    "El móvil tiene velocidad constante de -3 m/s."
+                ],
+                respuesta: 1
+            },
+            {
+                pregunta: "Si dos móviles parten del reposo con aceleraciones a₁ = 2a₂, ¿en cuánto tiempo uno recorrerá el doble de distancia que el otro?",
+                opciones: [
+                    "t₁ = t₂",
+                    "t₁ = 2t₂",
+                    "t₁ = (1/√2)t₂",
+                    "t₁ = √2 t₂"
+                ],
+                respuesta: 3
+            },
+            {
+                pregunta: "Un cohete aumenta su velocidad de 200 m/s a 400 m/s en 10 s. ¿Qué distancia recorrió en ese tiempo?",
+                opciones: [
+                    "1500 m",
+                    "3000 m",
+                    "4500 m",
+                    "6000 m"
+                ],
+                respuesta: 1
+            }
+        ];
+
+        // Variables globales
+        let respuestasUsuario = Array(preguntas.length).fill(null);
+        let emailSent = false;
+
+        // Función para generar el cuestionario
+        function generarCuestionario() {
+            const quizContainer = document.getElementById('quiz-container');
+            quizContainer.innerHTML = '';
+            
+            preguntas.forEach((pregunta, index) => {
+                const questionCard = document.createElement('div');
+                questionCard.className = 'question-card';
+                
+                const questionHeader = document.createElement('div');
+                questionHeader.className = 'question-header';
+                
+                const questionNumber = document.createElement('div');
+                questionNumber.className = 'question-number';
+                questionNumber.textContent = index + 1;
+                
+                const questionText = document.createElement('div');
+                questionText.className = 'question-text';
+                questionText.textContent = pregunta.pregunta;
+                
+                questionHeader.appendChild(questionNumber);
+                questionHeader.appendChild(questionText);
+                
+                const optionsContainer = document.createElement('div');
+                optionsContainer.className = 'options-container';
+                
+                pregunta.opciones.forEach((opcion, opcionIndex) => {
+                    const optionDiv = document.createElement('div');
+                    optionDiv.className = 'option';
+                    if (respuestasUsuario[index] === opcionIndex) {
+                        optionDiv.classList.add('selected');
+                    }
+                    
+                    const input = document.createElement('input');
+                    input.type = 'radio';
+                    input.name = `pregunta-${index}`;
+                    input.value = opcionIndex;
+                    input.id = `p${index}-op${opcionIndex}`;
+                    
+                    input.addEventListener('change', () => {
+                        respuestasUsuario[index] = opcionIndex;
+                        optionDiv.classList.add('selected');
+                        actualizarProgreso();
+                        
+                        // Remover selección de otras opciones
+                        const options = optionsContainer.querySelectorAll('.option');
+                        options.forEach(opt => {
+                            if (opt !== optionDiv) {
+                                opt.classList.remove('selected');
+                            }
+                        });
+                    });
+                    
+                    const label = document.createElement('label');
+                    label.htmlFor = `p${index}-op${opcionIndex}`;
+                    label.textContent = opcion;
+                    
+                    optionDiv.appendChild(input);
+                    optionDiv.appendChild(label);
+                    optionsContainer.appendChild(optionDiv);
+                });
+                
+                questionCard.appendChild(questionHeader);
+                questionCard.appendChild(optionsContainer);
+                quizContainer.appendChild(questionCard);
+            });
+        }
+
+        // Actualizar barra de progreso
+        function actualizarProgreso() {
+            const respuestasContestadas = respuestasUsuario.filter(resp => resp !== null).length;
+            const porcentaje = (respuestasContestadas / preguntas.length) * 100;
+            document.getElementById('progress').style.width = `${porcentaje}%`;
+        }
+
+        // Calcular puntuación
+        function calcularPuntuacion() {
+            let puntuacion = 0;
+            preguntas.forEach((pregunta, index) => {
+                if (respuestasUsuario[index] === pregunta.respuesta) {
+                    puntuacion++;
+                }
+            });
+            return puntuacion;
+        }
+
+        // Mostrar resultados
+        function mostrarResultados() {
+            const nombre = document.getElementById('nombre').value;
+            const email = document.getElementById('email').value;
+            const cedula = document.getElementById('cedula').value;
+            
+            if (!nombre || !email || !cedula) {
+                alert('Por favor, completa todos tus datos antes de enviar el cuestionario.');
+                return;
+            }
+            
+            const respuestasContestadas = respuestasUsuario.filter(resp => resp !== null).length;
+            if (respuestasContestadas < preguntas.length) {
+                if (!confirm(`Solo has respondido ${respuestasContestadas} de ${preguntas.length} preguntas. ¿Deseas enviar de todas formas?`)) {
+                    return;
+                }
+            }
+            
+            const puntuacion = calcularPuntuacion();
+            
+            // Actualizar elementos de resultados
+            document.getElementById('result-nombre').textContent = nombre;
+            document.getElementById('result-email').textContent = email;
+            document.getElementById('result-cedula').textContent = cedula;
+            document.getElementById('result-puntaje').textContent = puntuacion;
+            document.getElementById('score-value').textContent = puntuacion;
+            
+            // Actualizar círculo de puntuación
+            const porcentaje = (puntuacion / preguntas.length) * 100;
+            document.querySelector('.score-circle').style.setProperty('--p', `${porcentaje}%`);
+            
+            // Mostrar retroalimentación
+            const feedbackElement = document.getElementById('feedback');
+            if (puntuacion >= 17) {
+                feedbackElement.textContent = "¡Excelente! Dominas completamente el MRUV.";
+                feedbackElement.className = "feedback good";
+            } else if (puntuacion >= 12) {
+                feedbackElement.textContent = "¡Buen trabajo! Tienes un buen dominio del tema.";
+                feedbackElement.className = "feedback medium";
+            } else if (puntuacion >= 8) {
+                feedbackElement.textContent = "Aprobado. Sigue estudiando para mejorar.";
+                feedbackElement.className = "feedback medium";
+            } else {
+                feedbackElement.textContent = "Necesitas repasar más el tema de MRUV.";
+                feedbackElement.className = "feedback poor";
+            }
+            
+            // Mostrar sección de resultados
+            document.getElementById('quiz-container').style.display = 'none';
+            document.querySelector('.btn-container').style.display = 'none';
+            document.getElementById('result-container').style.display = 'block';
+            
+            // Desplazar a la sección de resultados
+            document.getElementById('result-container').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Enviar resultados por correo
+        function enviarResultadosPorCorreo() {
+            if (emailSent) {
+                mostrarEstadoCorreo("Ya has enviado los resultados por correo.", "success");
+                return;
+            }
+            
+            const nombre = document.getElementById('nombre').value;
+            const email = document.getElementById('email').value;
+            const cedula = document.getElementById('cedula').value;
+            const puntuacion = calcularPuntuacion();
+            
+            // Simular envío del correo (en un entorno real se usaría un servidor)
+            setTimeout(() => {
+                emailSent = true;
+                mostrarEstadoCorreo(`Los resultados se han enviado correctamente a lordcanaimalinux@gmail.com. Se ha enviado una copia a ${email}.`, "success");
+                
+                // Aquí iría el código real para enviar el correo
+                console.log("Enviando correo a: lordcanaimalinux@gmail.com");
+                console.log(`Asunto: Resultados del cuestionario MRUV - ${nombre}`);
+                console.log(`Contenido: 
+                    Nombre: ${nombre}
+                    Email: ${email}
+                    Cédula: ${cedula}
+                    Puntuación: ${puntuacion}/20
+                `);
+            }, 1500);
+        }
+
+        // Mostrar estado del correo
+        function mostrarEstadoCorreo(mensaje, tipo) {
+            const emailStatus = document.getElementById('email-status');
+            emailStatus.textContent = mensaje;
+            emailStatus.className = `email-status ${tipo}`;
+            emailStatus.style.display = 'block';
+            
+            // Ocultar después de 5 segundos
+            setTimeout(() => {
+                emailStatus.style.display = 'none';
+            }, 5000);
+        }
+
+        // Inicializar la aplicación
+        document.addEventListener('DOMContentLoaded', () => {
+            generarCuestionario();
+            
+            // Evento para enviar respuestas
+            document.getElementById('submit-btn').addEventListener('click', mostrarResultados);
+            
+            // Evento para enviar por correo
+            document.getElementById('send-email-btn').addEventListener('click', enviarResultadosPorCorreo);
+        });
+    </script>
+</body>
+</html>
