@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario Guerra Cognitiva</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="container mx-auto p-4 max-w-4xl">
+        <h1 class="text-3xl font-bold text-center mb-6">Evaluación de Progreso Académico: Guerra Cognitiva</h1>
+        <p class="text-center mb-8">Lea cada pregunta detenidamente. Seleccione una opción para Selección Simple y exactamente tres opciones para Selección Múltiple.</p>
+        
+        <div id="quiz" class="space-y-6"></div>
+        
+        <div class="text-center mt-8">
+            <button id="submitQuiz" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">Enviar Respuestas</button>
+        </div>
+        
+        <div id="results" class="mt-6 hidden">
+            <h2 class="text-2xl font-semibold mb-4">Resultados</h2>
+            <p id="score" class="text-lg mb-4"></p>
+            <div id="feedback" class="space-y-4"></div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            // Selección Simple
+            {
+                type: "single",
+                question: "En el contexto de la Seguridad Ciudadana ¿Cuál es el objetivo principal al evaluar la Guerra Cognitiva?",
+                options: [
+                    "a) Desarrollar armas psicológicas ofensivas.",
+                    "b) Comprender y contrarrestar la manipulación de percepciones para proteger a la población.",
+                    "c) Promover el uso de técnicas cognitivas para el control social absoluto.",
+                    "d) Reemplazar las estrategias de seguridad física tradicionales."
+                ],
+                correct: "b"
+            },
+            {
+                type: "single",
+                question: "El concepto central de la Guerra Cognitiva gira en torno a:",
+                options: [
+                    "a) La conquista territorial mediante fuerza militar.",
+                    "b) La batalla por el control de las percepciones, creencias y comportamientos.",
+                    "c) El desarrollo exclusivo de tecnologías de inteligencia artificial.",
+                    "d) La imposición de ideologías únicamente a través de leyes."
+                ],
+                correct: "b"
+            },
+            {
+                type: "single",
+                question: "Un hito fundamental en la evolución histórica de la Guerra Cognitiva moderna fue:",
+                options: [
+                    "a) La Revolución Industrial",
+                    "b) La Segunda Guerra Mundial y la Guerra Fría",
+                    "c) El descubrimiento de América",
+                    "d) La invención de la imprenta"
+                ],
+                correct: "b"
+            },
+            {
+                type: "single",
+                question: "La Teoría de la Hegemonía aplicada a la Guerra Cognitiva se refiere principalmente a:",
+                options: [
+                    "a) La dominación política exclusivamente mediante la fuerza económica",
+                    "b) La construcción de consenso y legitimidad para el dominio de un grupo o ideología",
+                    "c) La eliminación física de los opositores ideológicos",
+                    "d) El control absoluto de los medios de producción"
+                ],
+                correct: "b"
+            },
+            {
+                type: "single",
+                question: "El principio básico de los Cuadrantes de Paz es:",
+                options: [
+                    "a) Integración comunitaria para prevención situacional",
+                    "b) Respuesta reactiva a delitos consumados",
+                    "c) Militarización de espacios públicos",
+                    "d) Centralización de decisiones en altos mandos"
+                ],
+                correct: "a"
+            },
+            {
+                type: "single",
+                question: "En el contexto de la Guerra Cognitiva, el estudio de los Procesos Cognitivos busca entender:",
+                options: [
+                    "a) Cómo reparar daños cerebrales físicos",
+                    "b) Cómo las personas perciben, procesan información y toman decisiones, para identificar vulnerabilidades a la manipulación.",
+                    "c) Exclusivamente las bases neurológicas de la inteligencia",
+                    "d) Métodos para aumentar el coeficiente intelectual"
+                ],
+                correct: "b"
+            },
+            {
+                type: "single",
+                question: "La influencia de la emoción en la percepción dentro de la Guerra Cognitiva implica que:",
+                options: [
+                    "a) Las emociones no tienen ningún impacto en cómo interpretamos la realidad",
+                    "b) Las emociones intensas pueden nublar el juicio racional y hacer a las personas más susceptibles a mensajes manipuladores.",
+                    "c) Solo las emociones positivas afectan la percepción.",
+                    "d) Controlar las emociones garantiza inmunidad total a la manipulación"
+                ],
+                correct: "b"
+            },
+            {
+                type: "single",
+                question: "Una estrategia común de manipulación cognitiva es:",
+                options: [
+                    "a) Proporcionar siempre información completa y veraz desde todas las perspectivas",
+                    "b) La repetición constante de un mensaje (efecto de mera exposición) para aumentar su familiaridad y aceptación.",
+                    "c) Fomentar el pensamiento crítico y el debate abierto",
+                    "d) Respetar escrupulosamente todas las normas éticas de comunicación"
+                ],
+                correct: "b"
+            },
+            {
+                type: "single",
+                question: "El análisis de Casos Históricos de Guerra Cognitiva sirve para:",
+                options: [
+                    "a) Admirar las tácticas de potencias extranjeras sin crítica",
+                    "b) Identificar patrones, estrategias recurrentes y aprender lecciones aplicables al presente.",
+                    "c) Justificar acciones pasadas de cualquier gobierno",
+                    "d) Demostrar que estas tácticas solo se usaron en el pasado lejano."
+                ],
+                correct: "b"
+            },
+            {
+                type: "single",
+                question: "Los algoritmos y la Inteligencia Artificial se utilizan como estrategias de manipulación y control social principalmente porque:",
+                options: [
+                    "a) Son inherentemente éticos y neutrales",
+                    "b) Permiten personalizar y dirigir masivamente información (y desinformación) a públicos específicos, explotando sesgos y preferencias.",
+                    "c) Su único propósito es mejorar la eficiencia de los servicios públicos",
+                    "d) Garantizan la diversidad de opiniones en el espacio digital"
+                ],
+                correct: "b"
+            },
+            {
+                type: "single",
+                question: "La Ley contra el Odio, por la Convivencia Pacífica y la Tolerancia en Venezuela se relaciona con la Guerra Cognitiva al buscar:",
+                options: [
+                    "a) Eliminar cualquier forma de crítica al gobierno",
+                    "b) Criminalizar el uso de redes sociales",
+                    "c) Contrarrestar discursos que promuevan el fascismo, la intolerancia y la violencia, considerados herramientas de guerra cognitiva.",
+                    "d) Establecer una única ideología oficial permitida"
+                ],
+                correct: "c"
+            },
+            {
+                type: "single",
+                question: "El concepto de 'Guerra Cognitiva' enfatiza que el campo de batalla principal es:",
+                options: [
+                    "a) El espacio físico y las fronteras nacionales",
+                    "b) La mente humana y la esfera de la información.",
+                    "c) Los mercados financieros internacionales",
+                    "d) Los recursos naturales estratégicos"
+                ],
+                correct: "b"
+            },
+            {
+                type: "single",
+                question: "Según el diplomado, una característica clave de la Guerra Cognitiva contemporánea es su:",
+                options: [
+                    "a) Limitación a conflictos armados convencionales",
+                    "b) Uso exclusivo por parte de actores estatales reconocidos",
+                    "c) Operación constante, incluso en tiempos de paz aparente, y por diversos actores (estatales y no estatales).",
+                    "d) Transparencia y fácil identificación por parte del público objetivo."
+                ],
+                correct: "c"
+            },
+            {
+                type: "single",
+                question: "La aplicación de la Teoría de la Hegemonía en la Guerra Cognitiva busca lograr que la población:",
+                options: [
+                    "a) Obedezca únicamente por miedo a la represión",
+                    "b) Acepte las ideas dominantes como propias, naturales o beneficiosas (consentimiento).",
+                    "c) Se mantenga completamente ajena a los conflictos ideológicos",
+                    "d) Desarrolle una pluralidad irreductible de visiones críticas."
+                ],
+                correct: "b"
+            },
+            {
+                type: "single",
+                question: "¿Qué aspecto del terrorismo lo convierte en un vector de la Guerra Cognitiva?",
+                options: [
+                    "a) Su capacidad para ganar batallas militares convencionales",
+                    "b) Su objetivo de causar daño psicológico masivo y difundir un mensaje político o ideológico a través del miedo.",
+                    "c) Su dependencia exclusiva de ataques cibernéticos",
+                    "d) Su falta de impacto en la opinión pública"
+                ],
+                correct: "b"
+            },
+            {
+                type: "single",
+                question: "Con respecto a la Guerra Cognitiva, el estudio del 'Funcionamiento del Cerebro' permite comprender:",
+                options: [
+                    "a) Trastornos neurológicos clínicos específicos",
+                    "b) Cómo los procesos mentales básicos (atención, memoria, emoción) pueden ser explotados para influir en creencias y conductas.",
+                    "c) La anatomía detallada del sistema nervioso central",
+                    "d) Técnicas avanzadas de neurocirugía"
+                ],
+                correct: "b"
+            },
+            {
+                type: "single",
+                question: "¿Qué papel juegan los sesgos cognitivos en la vulnerabilidad a la manipulación?",
+                options: [
+                    "a) Los sesgos cognitivos son errores irrelevantes sin impacto en la toma de decisiones",
+                    "b) Son atajos mentales que pueden ser explotados para dirigir percepciones y decisiones de manera predecible.",
+                    "c) Solo afectan a personas con bajo nivel educativo",
+                    "d) Son fáciles de eliminar completamente con entrenamiento simple"
+                ],
+                correct: "b"
+            },
+            {
+                type: "single",
+                question: "La 'Influencia de la emoción en la percepción' significa que:",
+                options: [
+                    "a) Las emociones proporcionan siempre una evaluación objetiva de la realidad",
+                    "b) El estado emocional puede filtrar y distorsionar la interpretación de la información recibida.",
+                    "c) Las emociones racionales (como la lógica pura) son las únicas que importan",
+                    "d) Las emociones solo afectan las relaciones personales, no la percepción de eventos políticos o sociales"
+                ],
+                correct: "b"
+            },
+            {
+                type: "single",
+                question: "Una estrategia de manipulación cognitiva basada en crear una falsa dicotomía busca:",
+                options: [
+                    "a) Presentar múltiples perspectivas complejas y matizadas",
+                    "b) Reducir un tema complejo a solo dos opciones opuestas y extremas, forzando una elección polarizada.",
+                    "c) Fomentar el pensamiento crítico y el debate abierto.",
+                    "d) Ocultar información relevante para todas las partes"
+                ],
+                correct: "b"
+            },
+            {
+                type: "single",
+                question: "Analizar ejemplos históricos de Guerra Cognitiva (como campañas de propaganda) permite:",
+                options: [
+                    "a) Copiar exactamente esas tácticas para usarlas hoy sin adaptación",
+                    "b) Identificar principios y técnicas subyacentes que pueden reaparecer con nuevos ropajes en contextos actuales.",
+                    "c) Demostrar que todas las guerras cognitivas del pasado fracasaron",
+                    "d) Concentrarse únicamente en los éxitos militares asociados"
+                ],
+                correct: "b"
+            },
+            {
+                type: "single",
+                question: "¿Cómo pueden los algoritmos de redes sociales contribuir a la manipulación cognitiva?",
+                options: [
+                    "a) Mostrando siempre una diversidad equilibrada de puntos de vista contrarios",
+                    "b) Creando 'cámaras de eco' y 'burbujas de filtro' que refuerzan creencias existentes y limitan la exposición a información diversa.",
+                    "c) Eliminando automáticamente todo el contenido sesgado o falso",
+                    "d) Promoviendo exclusivamente fuentes de información oficiales gubernamentales"
+                ],
+                correct: "b"
+            },
+            {
+                type: "single",
+                question: "La Ley contra el Odio en Venezuela aborda discursos que promueven:",
+                options: [
+                    "a) El debate académico riguroso y la crítica política constructiva",
+                    "b) La discriminación, la intolerancia, la incitación a la violencia y el fascismo, considerados destructivos para la convivencia.",
+                    "c) Cualquier expresión de descontento social",
+                    "d) El uso de lenguas indígenas en espacios públicos."
+                ],
+                correct: "b"
+            },
+            {
+                type: "single",
+                question: "La Guerra Cognitiva se diferencia de la guerra convencional principalmente porque:",
+                options: [
+                    "a) Requiere mayores recursos financieros y militares",
+                    "b) Busca destruir físicamente al enemigo",
+                    "c) Su objetivo es dominar la voluntad, las percepciones y la toma de decisiones del adversario o la población, no necesariamente su territorio.",
+                    "d) Solo puede ser declarada por estados soberanos"
+                ],
+                correct: "c"
+            },
+            {
+                type: "single",
+                question: "El concepto de 'Hegemonía Cultural' dentro de la Teoría de la Hegemonía implica:",
+                options: [
+                    "a) La imposición violenta y explícita de una cultura sobre otra",
+                    "b) La difusión y aceptación generalizada de los valores, normas y creencias de un grupo dominante como si fueran universales o naturales.",
+                    "c) La erradicación de todas las culturas minoritarias",
+                    "d) El aislamiento cultural completo de una sociedad"
+                ],
+                correct: "b"
+            },
+            {
+                type: "single",
+                question: "En la estrategia de manipulación cognitiva, el uso de 'chivos expiatorios' busca:",
+                options: [
+                    "a) Fomentar la responsabilidad colectiva y el análisis multicausal",
+                    "b) Dirigir la frustración y la ira de la población hacia un grupo o individuo específico, simplificando problemas complejos.",
+                    "c) Promover la reconciliación nacional",
+                    "d) Identificar soluciones técnicas a problemas sociales"
+                ],
+                correct: "b"
+            },
+            {
+                type: "single",
+                question: "El estudio de los Procesos Cognitivos en la toma de decisiones revela que las personas:",
+                options: [
+                    "a) Son siempre agentes racionales que maximizan su beneficio con información completa",
+                    "b) Utilizan heurísticos (atajos mentales) que pueden llevar a errores sistemáticos y ser explotados.",
+                    "c) Son completamente impredecibles en sus elecciones",
+                    "d) Toman decisiones idénticas independientemente del contexto emocional o informativo"
+                ],
+                correct: "b"
+            },
+            {
+                type: "single",
+                question: "¿Por qué es importante comprender la relación entre emoción y percepción para la Seguridad Ciudadana?",
+                options: [
+                    "a) Para eliminar todas las emociones de los agentes de seguridad",
+                    "b) Para reconocer cómo actores malintencionados pueden usar mensajes emocionales (miedo, ira) para manipular a la población o a los propios funcionarios, afectando su juicio.",
+                    "c) Porque las emociones no tienen relevancia en situaciones de crisis o conflicto",
+                    "d) Para justificar respuestas puramente emocionales de las autoridades"
+                ],
+                correct: "b"
+            },
+            {
+                type: "single",
+                question: "La táctica de 'Gaslighting' como estrategia de manipulación cognitiva consiste en:",
+                options: [
+                    "a) Proporcionar información verificada y transparente",
+                    "b) Hacer dudar a una persona o grupo de su propia percepción de la realidad, memoria o cordura.",
+                    "c) Apoyar incondicionalmente las decisiones del otro",
+                    "d) Fomentar la autoestima y la confianza individual."
+                ],
+                correct: "b"
+            },
+            {
+                type: "single",
+                question: "El análisis de la Guerra Cognitiva a través de la Inteligencia Artificial debe considerar el riesgo de:",
+                options: [
+                    "a) Que la IA se convierta en una entidad consciente y rebelde",
+                    "b) La automatización de la discriminación (sesgos algorítmicos) y la creación de perfiles invasivos para manipulación personalizada a gran escala.",
+                    "c) Que la IA reemplace completamente el pensamiento humano creativo",
+                    "d) Que la IA solo se use para fines benévolos sin supervisión"
+                ],
+                correct: "b"
+            },
+            {
+                type: "single",
+                question: "La Ley contra el Odio busca promover fundamentalmente:",
+                options: [
+                    "a) La censura indiscriminada de cualquier opinión disidente",
+                    "b) La cultura de paz, el respeto a la diversidad y la convivencia, como antídotos contra discursos que son herramientas de guerra cognitiva divisiva.",
+                    "c) La hegemonía absoluta de un partido político",
+                    "d) La limitación de la libertad de prensa crítica"
+                ],
+                correct: "b"
+            },
+            {
+                type: "single",
+                question: "El objetivo principal de identificar técnicas de desinformación es:",
+                options: [
+                    "a) Replicar noticias virales sin verificación",
+                    "b) Desarrollar capacidad crítica para detectar manipulación mediática.",
+                    "c) Eliminar todas las fuentes informativas no oficiales",
+                    "d) Monitorear exclusivamente redes extranjeras."
+                ],
+                correct: "b"
+            },
+            {
+                type: "single",
+                question: "Una característica clave de las 'noticias falsas' es:",
+                options: [
+                    "a) Usar siempre fuentes académicas revisadas por pares",
+                    "b) Incluir sistemáticamente todas las perspectivas",
+                    "c) Presentar datos estadísticos complejos",
+                    "d) Emplear titulares sensacionalistas y apelación emocional."
+                ],
+                correct: "d"
+            },
+            {
+                type: "single",
+                question: "Las Estrategias de Comunicación contra la Hegemonía priorizan:",
+                options: [
+                    "a) Centralizar la información en un único emisor oficial",
+                    "b) Imitar tácticas de manipulación emocional",
+                    "c) Construir narrativas alternativas basadas en verdades verificables.",
+                    "d) Restringir el acceso a plataformas digitales"
+                ],
+                correct: "c"
+            },
+            {
+                type: "single",
+                question: "Los 'Fast-Checkers' son eficaces cuando:",
+                options: [
+                    "a) Emplean metodología transparente y fuentes primarias verificables.",
+                    "b) Validan información solo de fuentes gubernamentales",
+                    "c) Priorizan velocidad sobre precisión en sus verificaciones",
+                    "d) Evitan contradecir narrativas dominantes"
+                ],
+                correct: "a"
+            },
+            {
+                type: "single",
+                question: "El análisis de redes sociales para contrarrestar guerra cognitiva debe focalizarse en:",
+                options: [
+                    "a) Eliminar perfiles disidentes",
+                    "b) Promover tendencias virales sin supervisión",
+                    "c) Detectar patrones de difusión de desinformación y cuentas falsas.",
+                    "d) Reemplazar plataformas internacionales"
+                ],
+                correct: "c"
+            },
+            {
+                type: "single",
+                question: "La técnica de desinformación 'Contexto falseado' consiste en:",
+                options: [
+                    "a) Utilizar información real distorsionando su marco interpretativo.",
+                    "b) Presentar datos completos con múltiples perspectivas",
+                    "c) Generar contenido 100% ficticio sin base real",
+                    "d) Citar exclusivamente fuentes científicas."
+                ],
+                correct: "a"
+            },
+            {
+                type: "single",
+                question: "Una estrategia comunicacional efectiva contra la hegemonía es:",
+                options: [
+                    "a) La transparencia proactiva y publicación de datos verificables.",
+                    "b) Restringir el acceso a información de seguridad",
+                    "c) Usar lenguaje técnico inaccesible para la población",
+                    "d) Centralizar mensajes en figuras de autoridad exclusivamente"
+                ],
+                correct: "a"
+            },
+            {
+                type: "single",
+                question: "El Vértice 8 de los Cuadrantes de Paz se relaciona con:",
+                options: [
+                    "a) Operativos de patrullaje intensivo",
+                    "b) Prevención de guerra cognitiva y protección del tejido social.",
+                    "c) Protocolos de intervención en protestas",
+                    "d) Estrategias de inteligencia militar ofensiva"
+                ],
+                correct: "b"
+            },
+            {
+                type: "single",
+                question: "La herramienta más efectiva para verificar imágenes virales es:",
+                options: [
+                    "a) Usar motores de búsqueda inversa y análisis de metadatos.",
+                    "b) Confiar en la cantidad de compartidas",
+                    "c) Validar solo si coincide con narrativas oficiales",
+                    "d) Consultar exclusivamente a 'influencers'"
+                ],
+                correct: "a"
+            },
+            {
+                type: "single",
+                question: "Los Órganos de Seguridad Ciudadana deben contrarrestar desinformación mediante:",
+                options: [
+                    "a) Censura previa masiva sin criterio técnico",
+                    "b) Delegación exclusiva en agencias internacionales",
+                    "c) Desconexión total de redes sociales",
+                    "d) Acciones coordinadas con verificadores y comunicación estratégica."
+                ],
+                correct: "d"
+            },
+            {
+                type: "single",
+                question: "La técnica 'Hashtag Flooding' busca:",
+                options: [
+                    "a) Promover debates plurales",
+                    "b) Ahogar información relevante con contenido irrelevante masivo.",
+                    "c) Organizar ayuda humanitaria",
+                    "d) Facilitar búsquedas académicas"
+                ],
+                correct: "b"
+            },
+            {
+                type: "single",
+                question: "La principal innovación de los Cuadrantes de Paz es:",
+                options: [
+                    "a) Integrar prevención, inteligencia y acción comunitaria.",
+                    "b) Incrementar armamento de fuerzas de seguridad",
+                    "c) Reducir rendición de cuentas a la ciudadanía.",
+                    "d) Externalizar seguridad a empresas privadas"
+                ],
+                correct: "a"
+            },
+            {
+                type: "single",
+                question: "Al detectar una campaña de desinformación, la primera acción debe ser:",
+                options: [
+                    "a) Censurar todas las redes sociales",
+                    "b) Verificar técnicamente los contenidos y fuentes.",
+                    "c) Arrestar preventivamente a usuarios críticos",
+                    "d) Ignorarla hasta que alcance masividad."
+                ],
+                correct: "b"
+            },
+            {
+                type: "single",
+                question: "El 'Efecto de Ilusión de Verdad' se combate con:",
+                options: [
+                    "a) Repetición de consignas oficiales",
+                    "b) Educación en verificación y pensamiento crítico.",
+                    "c) Eliminación de toda información no gubernamental",
+                    "d) Sanciones económicas a plataformas"
+                ],
+                correct: "b"
+            },
+            {
+                type: "single",
+                question: "El componente esencial del Vértice 8 es:",
+                options: [
+                    "a) Protección del espacio psicosocial comunitario.",
+                    "b) Desarrollo de armas no letales",
+                    "c) Control migratorio fronterizo",
+                    "d) Intervención en estados de excepción"
+                ],
+                correct: "a"
+            },
+            {
+                type: "single",
+                question: "La técnica de desinformación 'Fabricación de Consenso Artificial' usa:",
+                options: [
+                    "a) Cuentas falsas para simular apoyo/rechazo masivo.",
+                    "b) Encuestas científicas validadas",
+                    "c) Debates parlamentarios transparentes.",
+                    "d) Informes académicos independientes"
+                ],
+                correct: "a"
+            },
+            {
+                type: "single",
+                question: "En comunicación estratégica, el 'principio de oportunidad' exige:",
+                options: [
+                    "a) Respuesta ágil antes que desinformación se consolide.",
+                    "b) Esperar autorización de todos los niveles jerárquicos",
+                    "c) Ocultar información hasta tener versiones definitivas",
+                    "d) Delegar solo en portavoces nacionales"
+                ],
+                correct: "a"
+            },
+            {
+                type: "single",
+                question: "Indicador de contenido manipulado:",
+                options: [
+                    "a) Ausencia de fuentes primarias verificables.",
+                    "b) Citas de organismos internacionales",
+                    "c) Uso de lenguaje formal y técnico",
+                    "d) Publicación en horas laborales"
+                ],
+                correct: "a"
+            },
+            {
+                type: "single",
+                question: "La función PRIMARIA de seguridad ciudadana ante guerra cognitiva es:",
+                options: [
+                    "a) Proteger derechos ciudadanos y cohesión social.",
+                    "b) Controlar opinión pública a favor del gobierno",
+                    "c) Sustituir medios de comunicación independientes",
+                    "d) Crear perfiles falsos para contra información"
+                ],
+                correct: "a"
+            },
+            {
+                type: "single",
+                question: "Los Cuadrantes de Paz requieren mapeo de:",
+                options: [
+                    "a) Actores comunitarios, vulnerabilidades y redes locales.",
+                    "b) Patrimonios privados de opositores",
+                    "c) Afiliaciones políticas de ciudadanos.",
+                    "d) Sistemas de vigilancia biométrica masiva"
+                ],
+                correct: "a"
+            },
+            {
+                type: "single",
+                question: "La herramienta más eficaz para resiliencia cognitiva es:",
+                options: [
+                    "a) Alfabetización mediática y pensamiento crítico.",
+                    "b) Bloqueo total de redes globales",
+                    "c) Sólo fuentes oficiales como información válida",
+                    "d) Vigilancia permanente de comunicaciones"
+                ],
+                correct: "a"
+            },
+            // Selección Múltiple
+            {
+                type: "multiple",
+                question: "¿Cuáles son los objetivos principales del análisis de la 'Guerra Cognitiva'?",
+                options: [
+                    "a) Estudiar conceptos, principios y técnicas de la Guerra Cognitiva.",
+                    "b) Diseñar armas biológicas avanzadas",
+                    "c) Comprender su relevancia en el contexto de la Seguridad Ciudadana.",
+                    "d) Aprender técnicas de combate cuerpo a cuerpo",
+                    "e) Dominar el desarrollo de software malicioso (malware)",
+                    "f) Estudiar la historia y evolución del concepto."
+                ],
+                correct: ["a", "c", "f"]
+            },
+            {
+                type: "multiple",
+                question: "Los temas clave que definen a la 'Guerra Cognitiva' incluyen:",
+                options: [
+                    "a) Definiciones fundamentales de Guerra Cognitiva.",
+                    "b) Instrucción detallada en tiro al blanco",
+                    "c) El objetivo de influir en percepciones, creencias y comportamientos.",
+                    "d) Protocolos de evacuación en desastres naturales",
+                    "e) La distinción entre guerra convencional y guerra cognitiva.",
+                    "f) Manejo de equipos de extinción de incendios."
+                ],
+                correct: ["a", "c", "e"]
+            },
+            {
+                type: "multiple",
+                question: "Para comprender a profundidad la 'Historia y Evolución de la Guerra Cognitiva', se debe analizar períodos o aspectos como:",
+                options: [
+                    "a) Orígenes y antecedentes históricos (ej: propaganda antigua).",
+                    "b) Planificación urbana y vial",
+                    "c) La Guerra Fría como momento crucial de desarrollo.",
+                    "d) Técnicas de primeros auxilios avanzados",
+                    "e) La evolución hacia la era digital y de la información.",
+                    "f) La Revolución Francesa exclusivamente"
+                ],
+                correct: ["a", "c", "e"]
+            },
+            {
+                type: "multiple",
+                question: "La 'Teoría de la Hegemonía y su aplicación' se enfoca en conceptos como:",
+                options: [
+                    "a) La construcción de consenso y legitimidad cultural.",
+                    "b) Procedimientos de investigación penal forense",
+                    "c) El rol de las instituciones en la difusión de ideologías dominantes.",
+                    "d) El combate físico contra grupos insurgentes",
+                    "e) La hegemonía como dominación no basada solo en la fuerza.",
+                    "f) Mantenimiento de vehículos policiales."
+                ],
+                correct: ["a", "c", "e"]
+            }
+        ];
+
+        const quizContainer = document.getElementById('quiz');
+        const submitButton = document.getElementById('submitQuiz');
+        const resultsContainer = document.getElementById('results');
+        const scoreContainer = document.getElementById('score');
+        const feedbackContainer = document.getElementById('feedback');
+
+        function renderQuiz() {
+            quizContainer.innerHTML = '';
+            let singleChoiceHTML = '<h2 class="text-xl font-semibold mb-4">I. Selección Simple</h2>';
+            let multipleChoiceHTML = '<h2 class="text-xl font-semibold mb-4 mt-8">II. Selección Múltiple</h2>';
+
+            questions.forEach((q, index) => {
+                const questionHTML = `
+                    <div class="bg-white p-4 rounded shadow">
+                        <p class="font-medium mb-2">${index + 1}. ${q.question}</p>
+                        <div class="space-y-2">
+                            ${q.options.map((option, i) => `
+                                <label class="flex items-center">
+                                    <input type="${q.type === 'single' ? 'radio' : 'checkbox'}" name="q${index}" value="${option[0]}" class="mr-2">
+                                    ${option}
+                                </label>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                if (q.type === 'single') {
+                    singleChoiceHTML += questionHTML;
+                } else {
+                    multipleChoiceHTML += questionHTML;
+                }
+            });
+
+            quizContainer.innerHTML = singleChoiceHTML + multipleChoiceHTML;
+        }
+
+        function checkAnswers() {
+            let score = 0;
+            let totalQuestions = questions.length;
+            let feedbackHTML = '';
+
+            questions.forEach((q, index) => {
+                const selected = Array.from(document.querySelectorAll(`input[name="q${index}"]:checked`)).map(input => input.value);
+                
+                let isCorrect = false;
+                if (q.type === 'single') {
+                    isCorrect = selected.length === 1 && selected[0] === q.correct;
+                } else {
+                    isCorrect = selected.length === 3 && q.correct.every(c => selected.includes(c)) && selected.every(s => q.correct.includes(s));
+                }
+
+                if (isCorrect) {
+                    score++;
+                    feedbackHTML += `
+                        <div class="bg-green-100 p-4 rounded">
+                            <p class="font-medium">Pregunta ${index + 1}: Correcta</p>
+                            <p>${q.question}</p>
+                            <p>Tu respuesta: ${selected.join(', ')}</p>
+                        </div>
+                    `;
+                } else {
+                    feedbackHTML += `
+                        <div class="bg-red-100 p-4 rounded">
+                            <p class="font-medium">Pregunta ${index + 1}: Incorrecta</p>
+                            <p>${q.question}</p>
+                            <p>Tu respuesta: ${selected.join(', ') || 'Ninguna seleccionada'}</p>
+                            <p>Respuesta correcta: ${q.type === 'single' ? q.correct : q.correct.join(', ')}</p>
+                        </div>
+                    `;
+                }
+            });
+
+            scoreContainer.textContent = `Puntuación: ${score} de ${totalQuestions} (${((score / totalQuestions) * 100).toFixed(2)}%)`;
+            feedbackContainer.innerHTML = feedbackHTML;
+            resultsContainer.classList.remove('hidden');
+            submitButton.disabled = true;
+        }
+
+        renderQuiz();
+        submitButton.addEventListener('click', checkAnswers);
+    </script>
+</body>
+</html>
