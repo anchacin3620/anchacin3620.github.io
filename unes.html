@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluación de Progreso Académico: Guerra Cognitiva</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 20px auto;
+        }
+        h1, h2 {
+            color: #0056b3;
+        }
+        .section-title {
+            border-bottom: 2px solid #0056b3;
+            padding-bottom: 10px;
+            margin-top: 30px;
+            margin-bottom: 20px;
+        }
+        .question-group {
+            margin-bottom: 25px;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #fdfdfd;
+        }
+        .question-group p {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #555;
+        }
+        .question-group label {
+            display: block;
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+        .question-group input[type="radio"],
+        .question-group input[type="checkbox"] {
+            margin-right: 8px;
+        }
+        .user-info label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .user-info input[type="text"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .feedback {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            display: none; /* Hidden by default */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>EVALUACIÓN DE PROGRESO ACADEMICO</h1>
+        <h2>MATERIA COMPLEMENTARIA: “GUERRA COGNITIVA”</h2>
+        <p>Instrucciones: Lea cada pregunta detenidamente. Razone su respuesta. Éxito.</p>
+        <p>Lea cuidadosamente cada pregunta.</p>
+        <p>Seleccione solo una respuesta correcta para las preguntas de Selección Simple. [span_0](start_span)Seleccione exactamente tres respuestas correctas para las preguntas de Selección Múltiple.[span_0](end_span)</p>
+
+        <form id="cognitiveWarfareQuiz">
+            <div class="user-info">
+                <label for="fullName">Nombre Completo:</label>
+                <input type="text" id="fullName" name="fullName" required>
+
+                <label for="idNumber">Cédula de Identidad Venezolana:</label>
+                <input type="text" id="idNumber" name="idNumber" required pattern="[VEG]-\d{7,9}">
+                <small>Formato: V-12345678, E-12345678, G-12345678 (V, E o G seguido de 7 a 9 dígitos)</small>
+
+                <label for="pnf">Programa de Formación Nacional (PNF):</label>
+                <input type="text" id="pnf" name="pnf" required>
+            </div>
+
+            <h3 class="section-title">I. [span_1](start_span)SELECCIÓN SIMPLE <small>(Solo una opción es correcta por pregunta)</small>[span_1](end_span)</h3>
+
+            <div class="question-group">
+                <p>1. En el contexto de la Seguridad Ciudadana ¿Cuál es el objetivo principal al evaluar la Guerra Cognitiva?</p>
+                [span_2](start_span)<label><input type="radio" name="q1" value="a"> a) Desarrollar armas psicológicas ofensivas.[span_2](end_span)</label>
+                <label><input type="radio" name="q1" value="b"> b) Comprender y contrarrestar la manipulación de percepciones para proteger a la población</label>
+                [span_3](start_span)<label><input type="radio" name="q1" value="c"> c) Promover el uso de técnicas cognitivas para el control social absoluto.[span_3](end_span)</label>
+                [span_4](start_span)<label><input type="radio" name="q1" value="d"> d) Reemplazar las estrategias de seguridad física tradicionales[span_4](end_span)</label>
+            </div>
+
+            <div class="question-group">
+                <p>2. El concepto central de la Guerra Cognitiva gira en torno a:</p>
+                <label><input type="radio" name="q2" value="a"> a) La conquista territorial mediante fuerza militar.</label>
+                [span_5](start_span)<label><input type="radio" name="q2" value="b"> b) La batalla por el control de las percepciones, creencias y comportamientos[span_5](end_span)</label>
+                <label><input type="radio" name="q2" value="c"> c) El desarrollo exclusivo de tecnologías de inteligencia artificial.</label>
+                [span_6](start_span)<label><input type="radio" name="q2" value="d"> d) La imposición de ideologías únicamente a través de leyes[span_6](end_span)</label>
+            </div>
+
+            <div class="question-group">
+                <p>3. Un hito fundamental en la evolución histórica de la Guerra Cognitiva moderna fue:</p>
+                <label><input type="radio" name="q3" value="a"> a) La Revolución Industrial</label>
+                <label><input type="radio" name="q3" value="b"> b) La Segunda Guerra Mundial y la Guerra Fría</label>
+                <label><input type="radio" name="q3" value="c"> c) El descubrimiento de América</label>
+                <label><input type="radio" name="q3" value="d"> d) La invención de la imprenta</label>
+            </div>
+
+            <div class="question-group">
+                <p>4. La Teoría de la Hegemonía aplicada a la Guerra Cognitiva se refiere principalmente a:</p>
+                <label><input type="radio" name="q4" value="a"> a) La dominación política exclusivamente mediante la fuerza económica</label>
+                <label><input type="radio" name="q4" value="b"> b) La construcción de consenso y legitimidad para el dominio de un grupo o ideología</label>
+                <label><input type="radio" name="q4" value="c"> c) La eliminación física de los opositores ideológicos</label>
+                <label><input type="radio" name="q4" value="d"> d) El control absoluto de los medios de producción</label>
+            </div>
+
+            <div class="question-group">
+                <p>5. El principio básico de los Cuadrantes de Paz es:</p>
+                [span_7](start_span)<label><input type="radio" name="q5" value="a"> a) Integración comunitaria para prevención situacional[span_7](end_span)</label>
+                <label><input type="radio" name="q5" value="b"> b) Respuesta reactiva a delitos consumados</label>
+                <label><input type="radio" name="q5" value="c"> c) Militarización de espacios públicos</label>
+                <label><input type="radio" name="q5" value="d"> d) Centralización de decisiones en altos mandos</label>
+            </div>
+
+            <div class="question-group">
+                <p>6. En el contexto de la Guerra Cognitiva, el estudio de los Procesos Cognitivos busca entender:</p>
+                <label><input type="radio" name="q6" value="a"> a) Cómo reparar daños cerebrales físicos</label>
+                <label><input type="radio" name="q6" value="b"> b) Cómo las personas perciben, procesan información y toman decisiones, para identificar vulnerabilidades a la manipulación</label>
+                <label><input type="radio" name="q6" value="c"> c) Exclusivamente las bases neurológicas de la inteligencia</label>
+                <label><input type="radio" name="q6" value="d"> d) Métodos para aumentar el coeficiente intelectual</label>
+            </div>
+
+            <div class="question-group">
+                <p>7. La influencia de la emoción en la percepción dentro de la Guerra Cognitiva implica que:</p>
+                <label><input type="radio" name="q7" value="a"> a) Las emociones no tienen ningún impacto en cómo interpretamos la realidad</label>
+                [span_8](start_span)<label><input type="radio" name="q7" value="b"> b) Las emociones intensas pueden nublar el juicio racional y hacer a las personas más susceptibles a mensajes manipuladores[span_8](end_span)</label>
+                <label><input type="radio" name="q7" value="c"> c) Solo las emociones positivas afectan la percepción</label>
+                <label><input type="radio" name="q7" value="d"> d) Controlar las emociones garantiza inmunidad total a la manipulación</label>
+            </div>
+
+            <div class="question-group">
+                <p>8. Una estrategia común de manipulación cognitiva es:</p>
+                <label><input type="radio" name="q8" value="a"> a) Proporcionar siempre información completa y veraz desde todas las perspectivas</label>
+                <label><input type="radio" name="q8" value="b"> b) La repetición constante de un mensaje (efecto de mera exposición) para aumentar su familiaridad y aceptación</label>
+                <label><input type="radio" name="q8" value="c"> c) Fomentar el pensamiento crítico y el debate abierto</label>
+                <label><input type="radio" name="q8" value="d"> d) Respetar escrupulosamente todas las normas éticas de comunicación</label>
+            </div>
+
+            <div class="question-group">
+                <p>9. El análisis de Casos Históricos de Guerra Cognitiva sirve para:</p>
+                <label><input type="radio" name="q9" value="a"> a) Admirar las tácticas de potencias extranjeras sin crítica</label>
+                <label><input type="radio" name="q9" value="b"> b) Identificar patrones, estrategias recurrentes y aprender lecciones aplicables al presente</label>
+                [span_9](start_span)<label><input type="radio" name="q9" value="c"> c) Justificar acciones pasadas de cualquier gobierno[span_9](end_span)</label>
+                <label><input type="radio" name="q9" value="d"> d) Demostrar que estas tácticas solo se usaron en el pasado lejano</label>
+            </div>
+
+            <div class="question-group">
+                <p>10. Los algoritmos y la Inteligencia Artificial se utilizan como estrategias de manipulación y control social principalmente porque:</p>
+                <label><input type="radio" name="q10" value="a"> a) Son inherentemente éticos y neutrales</label>
+                <label><input type="radio" name="q10" value="b"> b) Permiten personalizar y dirigir masivamente información (y desinformación) a públicos específicos, explotando sesgos y preferencias</label>
+                <label><input type="radio" name="q10" value="c"> c) Su único propósito es mejorar la eficiencia de los servicios públicos</label>
+                <label><input type="radio" name="q10" value="d"> d) Garantizan la diversidad de opiniones en el espacio digital</label>
+            </div>
+
+            <div class="question-group">
+                <p>11. La Ley contra el Odio, por la Convivencia Pacífica y la Tolerancia en Venezuela se relaciona con la Guerra Cognitiva al buscar:</p>
+                <label><input type="radio" name="q11" value="a"> a) Eliminar cualquier forma de crítica al gobierno</label>
+                [span_10](start_span)<label><input type="radio" name="q11" value="b"> b) Criminalizar el uso de redes sociales[span_10](end_span)</label>
+                <label><input type="radio" name="q11" value="c"> c) Contrarrestar discursos que promuevan el fascismo, la intolerancia y la violencia, considerados herramientas de guerra cognitiva</label>
+                <label><input type="radio" name="q11" value="d"> d) Establecer una única ideología oficial permitida</label>
+            </div>
+
+            <div class="question-group">
+                <p>12. El concepto de "Guerra Cognitiva" enfatiza que el campo de batalla principal es:</p>
+                <label><input type="radio" name="q12" value="a"> a) El espacio físico y las fronteras nacionales</label>
+                <label><input type="radio" name="q12" value="b"> b) La mente humana y la esfera de la información</label>
+                <label><input type="radio" name="q12" value="c"> c) Los mercados financieros internacionales</label>
+                <label><input type="radio" name="q12" value="d"> d) Los recursos naturales estratégicos</label>
+            </div>
+
+            <div class="question-group">
+                <p>13. Según el diplomado, una característica clave de la Guerra Cognitiva contemporánea es su:</p>
+                <label><input type="radio" name="q13" value="a"> a) Limitación a conflictos armados convencionales</label>
+                <label><input type="radio" name="q13" value="b"> b) Uso exclusivo por parte de actores estatales reconocidos</label>
+                <label><input type="radio" name="q13" value="c"> c) Operación constante, incluso en tiempos de paz aparente, y por diversos actores (estatales y no estatales)</label>
+                [span_11](start_span)<label><input type="radio" name="q13" value="d"> d) Transparencia y fácil identificación por parte del público objetivo[span_11](end_span)</label>
+            </div>
+
+            <div class="question-group">
+                <p>14. La aplicación de la Teoría de la Hegemonía en la Guerra Cognitiva busca lograr que la población:</p>
+                <label><input type="radio" name="q14" value="a"> a) Obedezca únicamente por miedo a la represión</label>
+                <label><input type="radio" name="q14" value="b"> b) Acepte las ideas dominantes como propias, naturales o beneficiosas (consentimiento)</label>
+                <label><input type="radio" name="q14" value="c"> c) Se mantenga completamente ajena a los conflictos ideológicos</label>
+                <label><input type="radio" name="q14" value="d"> d) Desarrolle una pluralidad irreductible de visiones críticas</label>
+            </div>
+
+            <div class="question-group">
+                <p>15. ¿Qué aspecto del terrorismo lo convierte en un vector de la Guerra Cognitiva?</p>
+                [span_12](start_span)<label><input type="radio" name="q15" value="a"> a) Su capacidad para ganar batallas militares convencionales[span_12](end_span)</label>
+                <label><input type="radio" name="q15" value="b"> b) Su objetivo de causar daño psicológico masivo y difundir un mensaje político o ideológico a través del miedo</label>
+                <label><input type="radio" name="q15" value="c"> c) Su dependencia exclusiva de ataques cibernéticos</label>
+                <label><input type="radio" name="q15" value="d"> d) Su falta de impacto en la opinión pública</label>
+            </div>
+
+            <div class="question-group">
+                <p>16. Con respecto a la Guerra Cognitiva, el estudio del "Funcionamiento del Cerebro" permite comprender:</p>
+                <label><input type="radio" name="q16" value="a"> a) Trastornos neurológicos clínicos específicos</label>
+                <label><input type="radio" name="q16" value="b"> b) Cómo los procesos mentales básicos (atención, memoria, emoción) pueden ser explotados para influir en creencias y conductas</label>
+                <label><input type="radio" name="q16" value="c"> c) La anatomía detallada del sistema nervioso central</label>
+                <label><input type="radio" name="q16" value="d"> d) Técnicas avanzadas de neurocirugía</label>
+            </div>
+
+            <div class="question-group">
+                <p>17. ¿Qué papel juegan los sesgos cognitivos en la vulnerabilidad a la manipulación?</p>
+                [span_13](start_span)<label><input type="radio" name="q17" value="a"> a) Los sesgos cognitivos son errores irrelevantes sin impacto en la toma de decisiones[span_13](end_span)</label>
+                <label><input type="radio" name="q17" value="b"> b) Son atajos mentales que pueden ser explotados para dirigir percepciones y decisiones de manera predecible</label>
+                <label><input type="radio" name="q17" value="c"> c) Solo afectan a personas con bajo nivel educativo</label>
+                <label><input type="radio" name="q17" value="d"> d) Son fáciles de eliminar completamente con entrenamiento simple</label>
+            </div>
+
+            <div class="question-group">
+                <p>18. La "Influencia de la emoción en la percepción" significa que:</p>
+                <label><input type="radio" name="q18" value="a"> a) Las emociones proporcionan siempre una evaluación objetiva de la realidad</label>
+                <label><input type="radio" name="q18" value="b"> b) El estado emocional puede filtrar y distorsionar la interpretación de la información recibida</label>
+                <label><input type="radio" name="q18" value="c"> c) Las emociones racionales (como la lógica pura) son las únicas que importan</label>
+                [span_14](start_span)<label><input type="radio" name="q18" value="d"> d) Las emociones solo afectan las relaciones personales, no la percepción de eventos políticos o sociales[span_14](end_span)</label>
+            </div>
+
+            <div class="question-group">
+                <p>19. Una estrategia de manipulación cognitiva basada en crear una falsa dicotomía busca:</p>
+                <label><input type="radio" name="q19" value="a"> a) Presentar múltiples perspectivas complejas y matizadas</label>
+                <label><input type="radio" name="q19" value="b"> b) Reducir un tema complejo a solo dos opciones opuestas y extremas, forzando una elección polarizada</label>
+                <label><input type="radio" name="q19" value="c"> c) Fomentar el pensamiento crítico y la evaluación de matices</label>
+                <label><input type="radio" name="q19" value="d"> d) Ocultar información relevante para todas las partes</label>
+            </div>
+
+            <div class="question-group">
+                <p>20. Analizar ejemplos históricos de Guerra Cognitiva (como campañas de propaganda) permite:</p>
+                <label><input type="radio" name="q20" value="a"> a) Copiar exactamente esas tácticas para usarlas hoy sin adaptación</label>
+                <label><input type="radio" name="q20" value="b"> b) Identificar principios y técnicas subyacentes que pueden reaparecer con nuevos ropajes en contextos actuales</label>
+                <label><input type="radio" name="q20" value="c"> c) Demostrar que todas las guerras cognitivas del pasado fracasaron</label>
+                <label><input type="radio" name="q20" value="d"> d) Concentrarse únicamente en los éxitos militares asociados</label>
+            </div>
+
+            <div class="question-group">
+                <p>21. [span_15](start_span)¿Cómo pueden los algoritmos de redes sociales contribuir a la manipulación cognitiva?[span_15](end_span)</p>
+                <label><input type="radio" name="q21" value="a"> a) Mostrando siempre una diversidad equilibrada de puntos de vista contrarios</label>
+                <label><input type="radio" name="q21" value="b"> b) Creando "cámaras de eco" y "burbujas de filtro" que refuerzan creencias existentes y limitan la exposición a información diversa</label>
+                <label><input type="radio" name="q21" value="c"> c) Eliminando automáticamente todo el contenido sesgado o falso</label>
+                <label><input type="radio" name="q21" value="d"> d) Promoviendo exclusivamente fuentes de información oficiales gubernamentales</label>
+            </div>
+
+            <div class="question-group">
+                <p>22. La Ley contra el Odio en Venezuela aborda discursos que promueven:</p>
+                <label><input type="radio" name="q22" value="a"> a) El debate académico riguroso y la crítica política constructiva</label>
+                <label><input type="radio" name="q22" value="b"> b) La discriminación, la intolerancia, la incitación a la violencia y el fascismo, considerados destructivos para la convivencia</label>
+                <label><input type="radio" name="q22" value="c"> c) Cualquier expresión de descontento social</label>
+                <label><input type="radio" name="q22" value="d"> d) El uso de lenguas indígenas en espacios públicos</label>
+            </div>
+
+            <div class="question-group">
+                <p>23. [span_16](start_span)La Guerra Cognitiva se diferencia de la guerra convencional principalmente porque:[span_16](end_span)</p>
+                <label><input type="radio" name="q23" value="a"> a) Requiere mayores recursos financieros y militares</label>
+                <label><input type="radio" name="q23" value="b"> b) Busca destruir físicamente al enemigo</label>
+                <label><input type="radio" name="q23" value="c"> c) Su objetivo es dominar la voluntad, las percepciones y la toma de decisiones del adversario o la población, no necesariamente su territorio</label>
+                <label><input type="radio" name="q23" value="d"> d) Solo puede ser declarada por estados soberanos</label>
+            </div>
+
+            <div class="question-group">
+                <p>24. El concepto de "Hegemonía Cultural" dentro de la Teoría de la Hegemonía implica:</p>
+                <label><input type="radio" name="q24" value="a"> a) La imposición violenta y explícita de una cultura sobre otra</label>
+                <label><input type="radio" name="q24" value="b"> b) La difusión y aceptación generalizada de los valores, normas y creencias de un grupo dominante como si fueran universales o naturales</label>
+                <label><input type="radio" name="q24" value="c"> c) La erradicación de todas las culturas minoritarias</label>
+                [span_17](start_span)<label><input type="radio" name="q24" value="d"> d) El aislamiento cultural completo de una sociedad[span_17](end_span)</label>
+            </div>
+
+            <div class="question-group">
+                <p>25. En la estrategia de manipulación cognitiva, el uso de "chivos expiatorios" busca:</p>
+                <label><input type="radio" name="q25" value="a"> a) Fomentar la responsabilidad colectiva y el análisis multicausal</label>
+                <label><input type="radio" name="q25" value="b"> b) Dirigir la frustración y la ira de la población hacia un grupo o individuo específico, simplificando problemas complejos</label>
+                <label><input type="radio" name="q25" value="c"> c) Promover la reconciliación nacional</label>
+                <label><input type="radio" name="q25" value="d"> d) Identificar soluciones técnicas a problemas sociales</label>
+            </div>
+
+            <div class="question-group">
+                <p>26. El estudio de los Procesos Cognitivos en la toma de decisiones revela que las personas:</p>
+                <label><input type="radio" name="q26" value="a"> a) Son siempre agentes racionales que maximizan su beneficio con información completa</label>
+                <label><input type="radio" name="q26" value="b"> b) Utilizan heurísticos (atajos mentales) que pueden llevar a errores sistemáticos y ser explotados</label>
+                <label><input type="radio" name="q26" value="c"> c) Son completamente impredecibles en sus elecciones</label>
+                [span_18](start_span)<label><input type="radio" name="q26" value="d"> d) Toman decisiones idénticas independientemente del contexto emocional o informativo[span_18](end_span)</label>
+            </div>
+
+            <div class="question-group">
+                <p>27. [span_19](start_span)¿Por qué es importante comprender la relación entre emoción y percepción para la Seguridad Ciudadana?[span_19](end_span)</p>
+                <label><input type="radio" name="q27" value="a"> a) Para eliminar todas las emociones de los agentes de seguridad</label>
+                <label><input type="radio" name="q27" value="b"> b) Para reconocer cómo actores malintencionados pueden usar mensajes emocionales (miedo, ira) para manipular a la población o a los propios funcionarios, afectando su juicio</label>
+                <label><input type="radio" name="q27" value="c"> c) Porque las emociones no tienen relevancia en situaciones de crisis o conflicto</label>
+                <label><input type="radio" name="q27" value="d"> d) Para justificar respuestas puramente emocionales de las autoridades</label>
+            </div>
+
+            <div class="question-group">
+                <p>28. La táctica de "Gaslighting" como estrategia de manipulación cognitiva consiste en:</p>
+                <label><input type="radio" name="q28" value="a"> a) Proporcionar información verificada y transparente</label>
+                <label><input type="radio" name="q28" value="b"> b) Hacer dudar a una persona o grupo de su propia percepción de la realidad, memoria o cordura</label>
+                <label><input type="radio" name="q28" value="c"> c) Apoyar incondicionalmente las decisiones del otro</label>
+                <label><input type="radio" name="q28" value="d"> d) Fomentar la autoestima y la confianza individual</label>
+            </div>
+
+            <div class="question-group">
+                <p>29. [span_20](start_span)El análisis de la Guerra Cognitiva a través de la Inteligencia Artificial debe considerar el riesgo de:[span_20](end_span)</p>
+                <label><input type="radio" name="q29" value="a"> a) Que la IA se convierta en una entidad consciente y rebelde</label>
+                <label><input type="radio" name="q29" value="b"> b) La automatización de la discriminación (sesgos algorítmicos) y la creación de perfiles invasivos para manipulación personalizada a gran escala</label>
+                <label><input type="radio" name="q29" value="c"> c) Que la IA reemplace completamente el pensamiento humano creativo</label>
+                <label><input type="radio" name="q29" value="d"> d) Que la IA solo se use para fines benévolos sin supervisión</label>
+            </div>
+
+            <div class="question-group">
+                <p>30. La Ley contra el Odio busca promover fundamentalmente:</p>
+                <label><input type="radio" name="q30" value="a"> a) La censura indiscriminada de cualquier opinión disidente</label>
+                [span_21](start_span)<label><input type="radio" name="q30" value="b"> b) La cultura de paz, el respeto a la diversidad y la convivencia, como antídotos contra discursos que son herramientas de guerra cognitiva divisiva[span_21](end_span)</label>
+                <label><input type="radio" name="q30" value="c"> c) La hegemonía absoluta de un partido político</label>
+                <label><input type="radio" name="q30" value="d"> d) La limitación de la libertad de prensa crítica</label>
+            </div>
+
+            <div class="question-group">
+                <p>31. El objetivo principal de identificar técnicas de desinformación es:</p>
+                <label><input type="radio" name="q31" value="a"> a) Replicar noticias virales sin verificación</label>
+                <label><input type="radio" name="q31" value="b"> b) Desarrollar capacidad crítica para detectar manipulación mediática</label>
+                <label><input type="radio" name="q31" value="c"> c) Eliminar todas las fuentes informativas no oficiales</label>
+                <label><input type="radio" name="q31" value="d"> d) Monitorear exclusivamente redes extranjeras</label>
+            </div>
+
+            <div class="question-group">
+                <p>32. Una característica clave de las "noticias falsas" es:</p>
+                <label><input type="radio" name="q32" value="a"> a) Usar siempre fuentes académicas revisadas por pares</label>
+                <label><input type="radio" name="q32" value="b"> b) Incluir sistemáticamente todas las perspectivas</label>
+                <label><input type="radio" name="q32" value="c"> c) Presentar datos estadísticos complejos</label>
+                <label><input type="radio" name="q32" value="d"> d) Emplear titulares sensacionalistas y apelación emocional</label>
+            </div>
+
+            <div class="question-group">
+                <p>33. Las Estrategias de Comunicación contra la Hegemonía priorizan:</p>
+                <label><input type="radio" name="q33" value="a"> a) Centralizar la información en un único emisor oficial</label>
+                <label><input type="radio" name="q33" value="b"> b) Imitar tácticas de manipulación emocional</label>
+                [span_22](start_span)<label><input type="radio" name="q33" value="c"> c) Construir narrativas alternativas basadas en verdades verificables[span_22](end_span)</label>
+                <label><input type="radio" name="q33" value="d"> d) Restringir el acceso a plataformas digitales</label>
+            </div>
+
+            <div class="question-group">
+                <p>34. Los "Fast-Checkers" son eficaces cuando:</p>
+                <label><input type="radio" name="q34" value="a"> a) Emplean metodología transparente y fuentes primarias verificables</label>
+                <label><input type="radio" name="q34" value="b"> b) Validar información solo de fuentes gubernamentales</label>
+                <label><input type="radio" name="q34" value="c"> c) Priorizan velocidad sobre precisión en sus verificaciones</label>
+                <label><input type="radio" name="q34" value="d"> d) Evitan contradecir narrativas dominantes</label>
+            </div>
+
+            <div class="question-group">
+                <p>35. El análisis de redes sociales para contrarrestar guerra cognitiva debe focalizarse en:</p>
+                <label><input type="radio" name="q35" value="a"> a) Eliminar perfiles disidentes</label>
+                <label><input type="radio" name="q35" value="b"> b) Promover tendencias virales sin supervisión</label>
+                <label><input type="radio" name="q35" value="c"> c) Detectar patrones de difusión de desinformación y cuentas falsas</label>
+                <label><input type="radio" name="q35" value="d"> d) Reemplazar plataformas internacionales</label>
+            </div>
+
+            <div class="question-group">
+                <p>36. La técnica de desinformación "Contexto falseado" consiste en:</p>
+                <label><input type="radio" name="q36" value="a"> a) Utilizar información real distorsionando su marco interpretativo</label>
+                <label><input type="radio" name="q36" value="b"> b) Presentar datos completos con múltiples perspectivas</label>
+                <label><input type="radio" name="q36" value="c"> c) Generar contenido 100% ficticio sin base real</label>
+                <label><input type="radio" name="q36" value="d"> d) Citar exclusivamente fuentes científicas</label>
+            </div>
+
+            <div class="question-group">
+                <p>37. [span_23](start_span)Una estrategia comunicacional efectiva contra la hegemonía es:[span_23](end_span)</p>
+                <label><input type="radio" name="q37" value="a"> a) La transparencia proactiva y publicación de datos verificables</label>
+                <label><input type="radio" name="q37" value="b"> b) Restringir el acceso a información de seguridad</label>
+                <label><input type="radio" name="q37" value="c"> c) Usar lenguaje técnico inaccesible para la población</label>
+                <label><input type="radio" name="q37" value="d"> d) Centralizar mensajes en figuras de autoridad exclusivamente</label>
+            </div>
+
+            <div class="question-group">
+                <p>38. El Vértice 8 de los Cuadrantes de Paz se relaciona con:</p>
+                <label><input type="radio" name="q38" value="a"> a) Operativos de patrullaje intensivo</label>
+                <label><input type="radio" name="q38" value="b"> b) Prevención de guerra cognitiva y protección del tejido social</label>
+                <label><input type="radio" name="q38" value="c"> c) Protocolos de intervención en protestas</label>
+                <label><input type="radio" name="q38" value="d"> d) Estrategias de inteligencia militar ofensiva</label>
+            </div>
+
+            <div class="question-group">
+                <p>39. La herramienta más efectiva para verificar imágenes virales es:</p>
+                <label><input type="radio" name="q39" value="a"> a) Usar motores de búsqueda inversa y análisis de metadatos</label>
+                <label><input type="radio" name="q39" value="b"> b) Confiar en la cantidad de compartidas</label>
+                <label><input type="radio" name="q39" value="c"> c) Validar solo si coincide con narrativas oficiales</label>
+                [span_24](start_span)<label><input type="radio" name="q39" value="d"> d) Consultar exclusivamente a "influencers"[span_24](end_span)</label>
+            </div>
+
+            <div class="question-group">
+                <p>40. Los Órganos de Seguridad Ciudadana deben contrarrestar desinformación mediante:</p>
+                <label><input type="radio" name="q40" value="a"> a) Censura previa masiva sin criterio técnico</label>
+                <label><input type="radio" name="q40" value="b"> b) Delegación exclusiva en agencias internacionales</label>
+                <label><input type="radio" name="q40" value="c"> c) Desconexión total de redes sociales</label>
+                <label><input type="radio" name="q40" value="d"> d) Acciones coordinadas con verificadores y comunicación estratégica</label>
+            </div>
+
+            <div class="question-group">
+                <p>41. La técnica "Hashtag Flooding" busca:</p>
+                <label><input type="radio" name="q41" value="a"> a) Promover debates plurales</label>
+                <label><input type="radio" name="q41" value="b"> b) Ahogar información relevante con contenido irrelevante masivo</label>
+                <label><input type="radio" name="q41" value="c"> c) Organizar ayuda humanitaria</label>
+                <label><input type="radio" name="q41" value="d"> d) Facilitar búsquedas académicas</label>
+            </div>
+
+            <div class="question-group">
+                <p>42. La principal innovación de los Cuadrantes de Paz es:</p>
+                <label><input type="radio" name="q42" value="a"> a) Integrar prevención, inteligencia y acción comunitaria</label>
+                <label><input type="radio" name="q42" value="b"> b) Incrementar armamento de fuerzas de seguridad</label>
+                <label><input type="radio" name="q42" value="c"> c) Reducir rendición de cuentas a la ciudadanía</label>
+                <label><input type="radio" name="q42" value="d"> d) Externalizar seguridad a empresas privadas</label>
+            </div>
+
+            <div class="question-group">
+                <p>43. [span_25](start_span)Al detectar una campaña de desinformación, la primera acción debe ser:[span_25](end_span)</p>
+                <label><input type="radio" name="q43" value="a"> a) Censurar todas las redes sociales</label>
+                <label><input type="radio" name="q43" value="b"> b) Verificar técnicamente los contenidos y fuentes</label>
+                <label><input type="radio" name="q43" value="c"> c) Arrestar preventivamente a usuarios críticos</label>
+                <label><input type="radio" name="q43" value="d"> d) Ignorarla hasta que alcance masividad</label>
+            </div>
+
+            <div class="question-group">
+                <p>44. El "Efecto de Ilusión de Verdad" se combate con:</p>
+                <label><input type="radio" name="q44" value="a"> a) Repetición de consignas oficiales</label>
+                <label><input type="radio" name="q44" value="b"> b) Educación en verificación y pensamiento crítico</label>
+                <label><input type="radio" name="q44" value="c"> c) Eliminación de toda información no gubernamental</label>
+                <label><input type="radio" name="q44" value="d"> d) Sanciones económicas a plataformas</label>
+            </div>
+
+            <div class="question-group">
+                <p>45. El componente esencial del Vértice 8 es:</p>
+                <label><input type="radio" name="q45" value="a"> a) Protección del espacio psicosocial comunitario</label>
+                <label><input type="radio" name="q45" value="b"> b) Desarrollo de armas no letales</label>
+                <label><input type="radio" name="q45" value="c"> c) Control migratorio fronterizo</label>
+                <label><input type="radio" name="q45" value="d"> d) Intervención en estados de excepción</label>
+            </div>
+
+            <div class="question-group">
+                <p>46. La técnica de desinformación "Fabricación de Consenso Artificial" usa:</p>
+                <label><input type="radio" name="q46" value="a"> a) Cuentas falsas para simular apoyo/rechazo masivo</label>
+                <label><input type="radio" name="q46" value="b"> b) Encuestas científicas validadas</label>
+                <label><input type="radio" name="q46" value="c"> c) Debates parlamentarios transparentes</label>
+                <label><input type="radio" name="q46" value="d"> d) Informes académicos independientes</label>
+            </div>
+
+            <div class="question-group">
+                <p>47. [span_26](start_span)En comunicación estratégica, el "principio de oportunidad" exige:[span_26](end_span)</p>
+                <label><input type="radio" name="q47" value="a"> a) Respuesta ágil antes que desinformación se consolide</label>
+                <label><input type="radio" name="q47" value="b"> b) Esperar autorización de todos los niveles jerárquicos</label>
+                <label><input type="radio" name="q47" value="c"> c) Ocultar información hasta tener versiones definitivas</label>
+                <label><input type="radio" name="q47" value="d"> d) Delegar solo en portavoces nacionales</label>
+            </div>
+
+            <div class="question-group">
+                <p>48. Indicador de contenido manipulado:</p>
+                <label><input type="radio" name="q48" value="a"> a) Ausencia de fuentes primarias verificables</label>
+                <label><input type="radio" name="q48" value="b"> b) Citas de organismos internacionales</label>
+                <label><input type="radio" name="q48" value="c"> c) Uso de lenguaje formal y técnico</label>
+                <label><input type="radio" name="q48" value="d"> d) Publicación en horas laborales</label>
+            </div>
+
+            <div class="question-group">
+                <p>49. La función PRIMARIA de seguridad ciudadana ante guerra cognitiva es:</p>
+                <label><input type="radio" name="q49" value="a"> a) Proteger derechos ciudadanos y cohesión social</label>
+                <label><input type="radio" name="q49" value="b"> b) Controlar opinión pública a favor del gobierno</label>
+                <label><input type="radio" name="q49" value="c"> c) Sustituir medios de comunicación independientes</label>
+                <label><input type="radio" name="q49" value="d"> d) Crear perfiles falsos para contra información</label>
+            </div>
+
+            <div class="question-group">
+                <p>50. [span_27](start_span)Los Cuadrantes de Paz requieren mapeo de:[span_27](end_span)</p>
+                <label><input type="radio" name="q50" value="a"> a) Actores comunitarios, vulnerabilidades y redes locales</label>
+                <label><input type="radio" name="q50" value="b"> b) Patrimonios privados de opositores</label>
+                <label><input type="radio" name="q50" value="c"> c) Afiliaciones políticas de ciudadanos</label>
+                <label><input type="radio" name="q50" value="d"> d) Sistemas de vigilancia biométrica masiva</label>
+            </div>
+
+            <div class="question-group">
+                <p>51. La herramienta más eficaz para resiliencia cognitiva es:</p>
+                <label><input type="radio" name="q51" value="a"> a) Alfabetización mediática y pensamiento crítico</label>
+                <label><input type="radio" name="q51" value="b"> b) Bloqueo total de redes globales</label>
+                <label><input type="radio" name="q51" value="c"> c) Sólo fuentes oficiales como información válida</label>
+                <label><input type="radio" name="q51" value="d"> d) Vigilancia permanente de comunicaciones</label>
+            </div>
+
+            <h3 class="section-title">II. [span_28](start_span)SELECCIÓN MÚLTIPLE <small>(Seleccione exactamente tres respuestas correctas por pregunta)</small>[span_28](end_span)</h3>
+
+            <div class="question-group">
+                <p>52. ¿Cuáles son los objetivos principales del análisis de la "Guerra Cognitiva?</p>
+                <label><input type="checkbox" name="q52" value="a"> a) Estudiar conceptos, principios y técnicas de la Guerra Cognitiva</label>
+                <label><input type="checkbox" name="q52" value="b"> b) Diseñar armas biológicas avanzadas</label>
+                <label><input type="checkbox" name="q52" value="c"> c) Comprender su relevancia en el contexto de la Seguridad Ciudadana</label>
+                <label><input type="checkbox" name="q52" value="d"> d) Aprender técnicas de combate cuerpo a cuerpo</label>
+                <label><input type="checkbox" name="q52" value="e"> e) Dominar el desarrollo de software malicioso (malware)</label>
+                <label><input type="checkbox" name="q52" value="f"> f) Estudiar la historia y evolución del concepto</label>
+            </div>
+
+            <div class="question-group">
+                <p>53. Los temas clave que definen a la “Guerra Cognitiva” incluyen:</p>
+                <label><input type="checkbox" name="q53" value="a"> a) Definiciones fundamentales de Guerra Cognitiva</label>
+                <label><input type="checkbox" name="q53" value="b"> b) Instrucción detallada en tiro al blanco</label>
+                <label><input type="checkbox" name="q53" value="c"> c) El objetivo de influir en percepciones, creencias y comportamientos</label>
+                <label><input type="checkbox" name="q53" value="d"> d) Protocolos de evacuación en desastres naturales</label>
+                <label><input type="checkbox" name="q53" value="e"> e) La distinción entre guerra convencional y guerra cognitiva</label>
+                [span_29](start_span)<label><input type="checkbox" name="q53" value="f"> f) Manejo de equipos de extinción de incendios[span_29](end_span)</label>
+            </div>
+
+            <div class="question-group">
+                <p>54. Para comprender a profundidad la "Historia y Evolución de la Guerra Cognitiva", se debe analizar períodos o aspectos como:</p>
+                <label><input type="checkbox" name="q54" value="a"> a) Orígenes y antecedentes históricos (ej: propaganda antigua)</label>
+                <label><input type="checkbox" name="q54" value="b"> b) Planificación urbana y vial</label>
+                <label><input type="checkbox" name="q54" value="c"> c) La Guerra Fría como momento crucial de desarrollo</label>
+                <label><input type="checkbox" name="q54" value="d"> d) Técnicas de primeros auxilios avanzados</label>
+                <label><input type="checkbox" name="q54" value="e"> e) La evolución hacia la era digital y de la información</label>
+                <label><input type="checkbox" name="q54" value="f"> f) La Revolución Francesa exclusivamente</label>
+            </div>
+
+            <div class="question-group">
+                <p>55. La "Teoría de la Hegemonía y su aplicación" se enfoca en conceptos como:</p>
+                <label><input type="checkbox" name="q55" value="a"> a) La construcción de consenso y legitimidad cultural</label>
+                <label><input type="checkbox" name="q55" value="b"> b) Procedimientos de investigación penal forense</label>
+                <label><input type="checkbox" name="q55" value="c"> c) El rol de las instituciones en la difusión de ideologías dominantes</label>
+                <label><input type="checkbox" name="q55" value="d"> d) El combate físico contra grupos insurgentes</label>
+                [span_30](start_span)<label><input type="checkbox" name="q55" value="e"> e) La hegemonía como dominación no basada solo en la fuerza[span_30](end_span)</label>
+                <label><input type="checkbox" name="q55" value="f"> f) Mantenimiento de vehículos policiales</label>
+            </div>
+
+            <div class="question-group">
+                <p>56. El vínculo entre "Terrorismo" y Guerra Cognitiva se comprueba a través de:</p>
+                <label><input type="checkbox" name="q56" value="a"> a) El uso del terror para infundir miedo y propagar mensajes (terrorismo como comunicación)</label>
+                <label><input type="checkbox" name="q56" value="b"> b) Tácticas de desactivación de explosivos</label>
+                <label><input type="checkbox" name="q56" value="c"> c) La explotación de medios y redes sociales por grupos terroristas</label>
+                <label><input type="checkbox" name="q56" value="d"> d) Protocolos de rescate en altura</label>
+                <label><input type="checkbox" name="q56" value="e"> e) El impacto psicológico del terrorismo como objetivo</label>
+                <label><input type="checkbox" name="q56" value="f"> f) La historia de todas las religiones del mundo</label>
+            </div>
+
+            <div class="question-group">
+                <p>57. Los "Procesos Cognitivos y toma de decisiones" relevantes para la Guerra Cognitiva incluyen el estudio de:</p>
+                <label><input type="checkbox" name="q57" value="a"> a) Cómo se percibe, procesa y recuerda la información</label>
+                <label><input type="checkbox" name="q57" value="b"> b) Procedimientos contables y administrativos</label>
+                <label><input type="checkbox" name="q57" value="c"> c) Los sesgos cognitivos y su influencia en el juicio</label>
+                [span_31](start_span)<label><input type="checkbox" name="q57" value="d"> d) Técnicas de conducción de alta velocidad[span_31](end_span)</label>
+                <label><input type="checkbox" name="q57" value="e"> e) Modelos de toma de decisiones (racionales vs. basadas en heurísticos)</label>
+                <label><input type="checkbox" name="q57" value="f"> f) El funcionamiento del sistema digestivo humano</label>
+            </div>
+
+            <div class="question-group">
+                <p>58. La "Influencia de la emoción en la percepción" implica comprender que:</p>
+                <label><input type="checkbox" name="q58" value="a"> a) Las emociones pueden distorsionar la interpretación de la realidad</label>
+                <label><input type="checkbox" name="q58" value="b"> b) Las emociones son muy influyentes en las personas</label>
+                <label><input type="checkbox" name="q58" value="c"> c) Los estados emocionales intensos (miedo, ira) aumentan la susceptibilidad a mensajes manipuladores</label>
+                <label><input type="checkbox" name="q58" value="d"> d) La reparación de equipos electrónicos complejos</label>
+                <label><input type="checkbox" name="q58" value="e"> e) Las emociones solo afectan la esfera privada, no la pública</label>
+                <label><input type="checkbox" name="q58" value="f"> f) Existen emociones que garantizan objetividad absoluta</label>
+            </div>
+
+            <div class="question-group">
+                <p>59. Ejemplos de "Estrategias de manipulación cognitiva" cubiertas incluyen:</p>
+                <label><input type="checkbox" name="q59" value="a"> a) La repetición constante (efecto de mera exposición)</label>
+                <label><input type="checkbox" name="q59" value="b"> b) Normativas de vestuario para funcionarios</label>
+                [span_32](start_span)<label><input type="checkbox" name="q59" value="c"> c) La creación de falsas dicotomías (reducción a "nosotros vs. ellos")[span_32](end_span)</label>
+                <label><input type="checkbox" name="q59" value="d"> d) Técnicas de manejo de multitudes exclusivamente físicas</label>
+                <label><input type="checkbox" name="q59" value="e"> e) El uso de chivos expiatorios</label>
+                <label><input type="checkbox" name="q59" value="f"> f) Protocolos de almacenamiento de archivos físicos</label>
+            </div>
+
+            <div class="question-group">
+                <p>60. Ejemplos de "Casos Históricos de la Guerra Cognitiva", son:</p>
+                <label><input type="checkbox" name="q60" value="a"> a) Campañas de propaganda en conflictos del siglo XX (ej: WWI, WWII, Guerra Fría)</label>
+                <label><input type="checkbox" name="q60" value="b"> b) La construcción de las pirámides de Egipto</label>
+                <label><input type="checkbox" name="q60" value="c"> c) Operaciones de desinformación en diversos contextos geopolíticos</label>
+                <label><input type="checkbox" name="q60" value="d"> d) La historia de la aviación comercial</label>
+                <label><input type="checkbox" name="q60" value="e"> e) El uso de símbolos y narrativas para movilizar masas</label>
+                <label><input type="checkbox" name="q60" value="f"> f) La evolución de la música popular</label>
+            </div>
+
+            <div class="question-group">
+                <p>61. [span_33](start_span)Los riesgos asociados con "Algoritmos e Inteligencia Artificial como estrategias de Manipulación y Control Social" incluyen:[span_33](end_span)</p>
+                <label><input type="checkbox" name="q61" value="a"> a) Creación de burbujas de filtro y cámaras de eco</label>
+                <label><input type="checkbox" name="q61" value="b"> b) Desarrollo de vacunas</label>
+                <label><input type="checkbox" name="q61" value="c"> c) Amplificación de sesgos existentes (discriminación algorítmica)</label>
+                <label><input type="checkbox" name="q61" value="d"> d) Técnicas de cultivo hidropónico</label>
+                <label><input type="checkbox" name="q61" value="e"> e) La micro-dirección de mensajes manipuladores a públicos vulnerables</label>
+                <label><input type="checkbox" name="q61" value="f"> f) La garantía automática de diversidad de opiniones</label>
+            </div>
+
+            <div class="question-group">
+                <p>62. Los objetivos de la "Ley contra el Odio y el Fascismo" en el contexto de la Guerra Cognitiva son:</p>
+                <label><input type="checkbox" name="q62" value="a"> a) Contrarrestar discursos que promuevan violencia, discriminación e intolerancia (herramientas de división cognitiva)</label>
+                <label><input type="checkbox" name="q62" value="b"> b) Establecer una religión estatal oficial</label>
+                <label><input type="checkbox" name="q62" value="c"> c) Promover la cultura de paz y convivencia</label>
+                <label><input type="checkbox" name="q62" value="d"> d) Eliminar la libertad de expresión en todas sus formas</label>
+                <label><input type="checkbox" name="q62" value="e"> e) Proteger a grupos vulnerables de discursos de odio utilizados como armas cognitivas</label>
+                <label><input type="checkbox" name="q62" value="f"> f) Controlar el acceso a internet de toda la población</label>
+            </div>
+
+            <div class="question-group">
+                <p>63. [span_34](start_span)El estudio del "Fascismo y Guerra Cognitiva" busca identificar:[span_34](end_span)</p>
+                <label><input type="checkbox" name="q63" value="a"> a) Patrones discursivos y simbólicos característicos del fascismo</label>
+                <label><input type="checkbox" name="q63" value="b"> b) Planes de estudio de educación básica</label>
+                <label><input type="checkbox" name="q63" value="c"> c) Estrategias históricas y actuales de manipulación asociadas a ideologías fascistas</label>
+                <label><input type="checkbox" name="q63" value="d"> d) Modelos económicos neoliberales</label>
+                <label><input type="checkbox" name="q63" value="e"> e) La relación entre el fascismo y el uso de técnicas de guerra cognitiva para ganar adhesión y estigmatizar oponentes</label>
+                <label><input type="checkbox" name="q63" value="f"> f) Técnicas de culturismo</label>
+            </div>
+
+            <div class="question-group">
+                <p>64. [span_35](start_span)Los aspectos clave de la "Teoría de la Hegemonía" aplicables a la comprensión de la Guerra Cognitiva son:[span_35](end_span)</p>
+                <label><input type="checkbox" name="q64" value="a"> a) El concepto de "consentimiento" versus dominación por pura fuerza</label>
+                <label><input type="checkbox" name="q64" value="b"> b) El rol de la sociedad civil y las instituciones en la difusión de ideas</label>
+                <label><input type="checkbox" name="q64" value="c"> c) La construcción de un sentido común favorable al grupo dominante</label>
+                <label><input type="checkbox" name="q64" value="d"> d) La teoría de la relatividad general</label>
+                <label><input type="checkbox" name="q64" value="e"> e) La superioridad genética de ciertos grupos</label>
+                <label><input type="checkbox" name="q64" value="f"> f) Modelos matemáticos de predicción del clima</label>
+            </div>
+
+            <div class="question-group">
+                <p>65. [span_36](start_span)¿Qué hace que el contexto digital sea particularmente fértil para la Guerra Cognitiva?[span_36](end_span)</p>
+                <label><input type="checkbox" name="q65" value="a"> a) La velocidad y el alcance global de la difusión de información/desinformación</label>
+                <label><input type="checkbox" name="q65" value="b"> b) La dificultad para verificar fuentes y contenidos de manera inmediata</label>
+                <label><input type="checkbox" name="q65" value="c"> c) La capacidad de anonimato y creación de perfiles falsos</label>
+                <label><input type="checkbox" name="q65" value="d"> d) La imposibilidad técnica de usar imágenes o videos</label>
+                <label><input type="checkbox" name="q65" value="e"> e) La garantía inherente de veracidad en todas las plataformas</label>
+                <label><input type="checkbox" name="q65" value="f"> f) La ausencia total de regulación en todos los países</label>
+            </div>
+
+            <div class="question-group">
+                <p>66. [span_37](start_span)La comprensión de los procesos cognitivos básicos es esencial para la Seguridad Ciudadana porque permite:[span_37](end_span)</p>
+                <label><input type="checkbox" name="q66" value="a"> a) Identificar cómo actores maliciosos pueden intentar manipular a la población o a los funcionarios</label>
+                <label><input type="checkbox" name="q66" value="b"> b) Desarrollar estrategias de comunicación más efectivas y resistentes a la manipulación desde las instituciones</label>
+                <label><input type="checkbox" name="q66" value="c"> c) Mejorar la toma de decisiones de los funcionarios bajo presión, reconociendo sus propias vulnerabilidades cognitivas</label>
+                <label><input type="checkbox" name="q66" value="d"> d) Diagnosticar enfermedades neurológicas en la población</label>
+                <label><input type="checkbox" name="q66" value="e"> e) Diseñar uniformes más ergonómicos</label>
+                <label><input type="checkbox" name="q66" value="f"> f) Reemplazar completamente el juicio humano por sistemas automatizados</label>
+            </div>
+
+            <div class="question-group">
+                <p>67. Técnicas de desinformación que deben identificar los órganos de seguridad:</p>
+                <label><input type="checkbox" name="q67" value="a"> a) Uso de deepfakes o medios sintéticos</label>
+                <label><input type="checkbox" name="q67" value="b"> b) Manipulación de imágenes/videos fuera de contexto</label>
+                <label><input type="checkbox" name="q67" value="c"> c) Creación de perfiles falsos (sockpuppets)</label>
+                <label><input type="checkbox" name="q67" value="d"> d) Publicación de artículos científicos revisados</label>
+                <label><input type="checkbox" name="q67" value="e"> e) Transmisión de informes meteorológicos oficiales</label>
+                <label><input type="checkbox" name="q67" value="f"> f) Difusión de convocatorias culturales comunitarias</label>
+            </div>
+
+            <div class="question-group">
+                <p>68. [span_38](start_span)Componentes clave de estrategias comunicacionales contra-hegemónicas:[span_38](end_span)</p>
+                <label><input type="checkbox" name="q68" value="a"> a) Lenguaje accesible y cercano a la población</label>
+                <label><input type="checkbox" name="q68" value="b"> b) Vinculación con actores comunitarios legítimos</label>
+                <label><input type="checkbox" name="q68" value="c"> c) Respuesta rápida ante desinformación con datos verificados</label>
+                <label><input type="checkbox" name="q68" value="d"> d) Uso exclusivo de canales televisivos privados</label>
+                <label><input type="checkbox" name="q68" value="e"> e) Omisión de evidencias contrarias a la narrativa oficial</label>
+                <label><input type="checkbox" name="q68" value="f"> f) Centralización en figuras políticas partidistas</label>
+            </div>
+
+            <div class="question-group">
+                <p>69. Funciones de los "Fast-Checkers" en seguridad ciudadana:</p>
+                <label><input type="checkbox" name="q69" value="a"> a) Auditar contenidos virales de impacto social</label>
+                <label><input type="checkbox" name="q69" value="b"> b) Elaborar informes técnicos para autoridades</label>
+                <label><input type="checkbox" name="q69" value="c"> c) Capacitar a funcionarios en verificación digital</label>
+                <label><input type="checkbox" name="q69" value="d"> d) Monitorear conversaciones privadas ciudadanas</label>
+                <label><input type="checkbox" name="q69" value="e"> e) Sustituir labores de inteligencia policial</label>
+                <label><input type="checkbox" name="q69" value="f"> f) Desarrollar software de vigilancia masiva</label>
+            </div>
+
+            <div class="question-group">
+                <p>70. El análisis de redes sociales permite detectar:</p>
+                <label><input type="checkbox" name="q70" value="a"> a) Tendencias de desinformación organizada</label>
+                <label><input type="checkbox" name="q70" value="b"> b) Redes de cuentas falsas coordinadas (bot farms)</label>
+                <label><input type="checkbox" name="q70" value="c"> c) Campañas de desprestigio sistemático</label>
+                <label><input type="checkbox" name="q70" value="d"> d) Situaciones económicas personales de usuarios</label>
+                <label><input type="checkbox" name="q70" value="e"> e) Preferencias deportivas de la población</label>
+                <label><input type="checkbox" name="q70" value="f"> f) Historiales médicos individuales</label>
+            </div>
+
+            <div class="question-group">
+                <p>71. [span_39](start_span)Los Cuadrantes de Paz operan mediante:[span_39](end_span)</p>
+                <label><input type="checkbox" name="q71" value="a"> a) Diagnóstico participativo de problemas comunitarios</label>
+                <label><input type="checkbox" name="q71" value="b"> b) Coordinación policía-comunidad-otros actores</label>
+                <label><input type="checkbox" name="q71" value="c"> c) Intervenciones territorializadas y preventivas</label>
+                <label><input type="checkbox" name="q71" value="d"> d) Acciones represivas sin mediación</label>
+                <label><input type="checkbox" name="q71" value="e"> e) Jerarquización vertical excluyente</label>
+                <label><input type="checkbox" name="q71" value="f"> f) Desconocimiento de dinámicas locales</label>
+            </div>
+
+            <div class="question-group">
+                <p>72. El Vértice 8 (Guerra Cognitiva) implica:</p>
+                <label><input type="checkbox" name="q72" value="a"> a) Alertas tempranas sobre campañas desestabilizadoras</label>
+                <label><input type="checkbox" name="q72" value="b"> b) Talleres comunitarios de alfabetización mediática</label>
+                <label><input type="checkbox" name="q72" value="c"> c) Monitoreo de amenazas híbridas en redes</label>
+                <label><input type="checkbox" name="q72" value="d"> d) Intervención armada en protestas</label>
+                <label><input type="checkbox" name="q72" value="e"> e) Censura de opiniones políticas diversas</label>
+                <label><input type="checkbox" name="q72" value="f"> f) Eliminación de espacios de diálogo</label>
+            </div>
+
+            <div class="question-group">
+                <p>73. Indicadores de amenaza de guerra cognitiva:</p>
+                <label><input type="checkbox" name="q73" value="a"> a) Aumento súbito de tendencias divisivas virales</label>
+                <label><input type="checkbox" name="q73" value="b"> b) Coordinación de cuentas anónimas para descredito</label>
+                <label><input type="checkbox" name="q73" value="c"> c) Narrativas que incitan violencia contra instituciones</label>
+                <label><input type="checkbox" name="q73" value="d"> d) Debate académico sobre políticas públicas</label>
+                <label><input type="checkbox" name="q73" value="e"> e) Crítica constructiva con fundamentos verificables</label>
+                <label><input type="checkbox" name="q73" value="f"> f) Campañas de salud pública oficiales</label>
+            </div>
+
+            <div class="question-group">
+                <p>74. [span_40](start_span)Herramientas para identificar DEEPFAKES:[span_40](end_span)</p>
+                <label><input type="checkbox" name="q74" value="a"> a) Análisis de inconsistencias en iluminación/sombras</label>
+                <label><input type="checkbox" name="q74" value="b"> b) Detectores de anomalías en parpadeo o movimientos labiales</label>
+                <label><input type="checkbox" name="q74" value="c"> c) Verificación de fuente original y metadatos</label>
+                <label><input type="checkbox" name="q74" value="d"> d) Aceptación acrítica por viralización</label>
+                <label><input type="checkbox" name="q74" value="e"> e) Validación por número de "me gusta"</label>
+                <label><input type="checkbox" name="q74" value="f"> f) Priorización de contenido emocional sobre técnico</label>
+            </div>
+
+            <div class="question-group">
+                <p>75. El rol de los órganos de seguridad ante desinformación incluye:</p>
+                <label><input type="checkbox" name="q75" value="a"> a) Alertar públicamente sobre campañas verificadas</label>
+                <label><input type="checkbox" name="q75" value="b"> b) Fortalecer canales oficiales de información clara</label>
+                <label><input type="checkbox" name="q75" value="c"> c) Colaborar con plataformas para remover contenido malicioso</label>
+                <label><input type="checkbox" name="q75" value="d"> d) Sancionar judicialmente a quienes compartan noticias críticas</label>
+                <label><input type="checkbox" name="q75" value="e"> e) Sustituir a medios de comunicación independientes</label>
+                <label><input type="checkbox" name="q75" value="f"> f) Ocultar errores institucionales sistemáticamente</label>
+            </div>
+
+            <h3 class="section-title">III. [span_41](start_span)PREGUNTAS VERDADERO/FALSO[span_41](end_span)</h3>
+
+            <div class="question-group">
+                <p>76. [span_42](start_span)La Guerra Cognitiva tiene como principal objetivo la destrucción física de infraestructuras enemigas[span_42](end_span)</p>
+                <label><input type="radio" name="q76" value="false"> a) Falso</label>
+                <label><input type="radio" name="q76" value="true"> b) Verdadero</label>
+            </div>
+
+            <div class="question-group">
+                <p>77. La Teoría de la Hegemonía sostiene que el dominio se mantiene únicamente mediante el uso de la fuerza bruta</p>
+                <label><input type="radio" name="q77" value="false"> a) Falso</label>
+                <label><input type="radio" name="q77" value="true"> b) Verdadero</label>
+            </div>
+
+            <div class="question-group">
+                <p>78. Los grupos terroristas utilizan tácticas de guerra cognitiva para amplificar el impacto psicológico de sus acciones y difundir su ideología</p>
+                <label><input type="radio" name="q78" value="true"> a) Verdadero</label>
+                <label><input type="radio" name="q78" value="false"> b) Falso</label>
+            </div>
+
+            <div class="question-group">
+                <p>79. Las emociones no influyen en absoluto en cómo las personas perciben la información relacionada con la seguridad o amenazas</p>
+                <label><input type="radio" name="q79" value="false"> a) Falso</label>
+                <label><input type="radio" name="q79" value="true"> b) Verdadero</label>
+            </div>
+
+            <div class="question-group">
+                <p>80. La repetición constante de un mensaje (incluso si es falso) puede aumentar su percepción de veracidad entre la población (Efecto de Mera Exposición)</p>
+                <label><input type="radio" name="q80" value="true"> a) Verdadero</label>
+                <label><input type="radio" name="q80" value="false"> b) Falso</label>
+            </div>
+
+            <div class="question-group">
+                <p>81. [span_43](start_span)Analizar casos históricos de propaganda y desinformación es irrelevante para comprender las tácticas de guerra cognitiva actuales[span_43](end_span)</p>
+                <label><input type="radio" name="q81" value="false"> a) Falso</label>
+                <label><input type="radio" name="q81" value="true"> b) Verdadero</label>
+            </div>
+
+            <div class="question-group">
+                <p>82. Los algoritmos de redes sociales siempre promueven de manera equilibrada información diversa y puntos de vista contrarios</p>
+                <label><input type="radio" name="q82" value="false"> a) Falso</label>
+                <label><input type="radio" name="q82" value="true"> b) Verdadero</label>
+            </div>
+
+            <div class="question-group">
+                <p>83. La Ley contra el Odio en Venezuela busca criminalizar específicamente discursos que promuevan el fascismo, la discriminación, la intolerancia y la violencia</p>
+                <label><input type="radio" name="q83" value="true"> a) Verdadero</label>
+                <label><input type="radio" name="q83" value="false"> b) Falso</label>
+            </div>
+
+            <div class="question-group">
+                <p>84. El concepto de Guerra Cognitiva surge exclusivamente en el siglo XXI con el advenimiento de Internet</p>
+                <label><input type="radio" name="q84" value="false"> a) Falso</label>
+                <label><input type="radio" name="q84" value="true"> b) Verdadero</label>
+            </div>
+
+            <div class="question-group">
+                <p>85. Los sesgos cognitivos son errores sistemáticos en el pensamiento que hacen a las personas más vulnerables a la manipulación de información</p>
+                <label><input type="radio" name="q85" value="true"> a) Verdadero</label>
+                <label><input type="radio" name="q85" value="false"> b) Falso</label>
+            </div>
+
+            <div class="question-group">
+                <p>86. [span_44](start_span)La "hegemonía cultural" implica que la ideología dominante es aceptada pasivamente por todos sin ningún tipo de resistencia o conflicto[span_44](end_span)</p>
+                <label><input type="radio" name="q86" value="false"> a) Falso</label>
+                <label><input type="radio" name="q86" value="true"> b) Verdadero</label>
+            </div>
+
+            <div class="question-group">
+                <p>87. La táctica de "Gaslighting" tiene como objetivo fortalecer la confianza y la autoestima de la víctima</p>
+                <label><input type="radio" name="q87" value="false"> a) Falso</label>
+                <label><input type="radio" name="q87" value="true"> b) Verdadero</label>
+            </div>
+
+            <div class="question-group">
+                <p>88. La Inteligencia Artificial se utiliza exclusivamente para fines benéficos y nunca como herramienta de manipulación masiva</p>
+                <label><input type="radio" name="q88" value="false"> a) Falso</label>
+                <label><input type="radio" name="q88" value="true"> b) Verdadero</label>
+            </div>
+
+            <div class="question-group">
+                <p>89. La Guerra Cognitiva es un fenómeno que solo afecta a las esferas políticas de alto nivel, sin impacto en la seguridad ciudadana cotidiana</p>
+                <label><input type="radio" name="q89" value="false"> a) Falso</label>
+                <label><input type="radio" name="q89" value="true"> b) Verdadero</label>
+            </div>
+
+            <div class="question-group">
+                <p>90. El estudio del funcionamiento del cerebro en este diplomado se centra en comprender cómo sus procesos pueden ser explotados para manipular percepciones y conductas, en el contexto de la seguridad</p>
+                <label><input type="radio" name="q90" value="true"> a) Verdadero</label>
+                <label><input type="radio" name="q90" value="false"> b) Falso</label>
+            </div>
+
+            <div class="question-group">
+                <p>91. [span_45](start_span)Los Cuadrantes de Paz son estrategias reactivas que operan solo tras cometerse delitos[span_45](end_span)</p>
+                <label><input type="radio" name="q91" value="false"> a) Falso</label>
+                <label><input type="radio" name="q91" value="true"> b) Verdadero</label>
+            </div>
+
+            <div class="question-group">
+                <p>92. El Vértice 8 se enfoca exclusivamente en ciberseguridad técnica ignorando factores sociales</p>
+                <label><input type="radio" name="q92" value="false"> a) Falso</label>
+                <label><input type="radio" name="q92" value="true"> b) Verdadero</label>
+            </div>
+
+            <div class="question-group">
+                <p>93. La Ley Contra el Odio faculta a seguridad ciudadana para perseguir discursos que promuevan fascismo</p>
+                <label><input type="radio" name="q93" value="true"> a) Verdadero</label>
+                <label><input type="radio" name="q93" value="false"> b) Falso</label>
+            </div>
+
+            <div class="question-group">
+                <p>94. Identificar "astroturfing" (movimientos falsamente espontáneos) es clave para detectar manipulación</p>
+                <label><input type="radio" name="q94" value="true"> a) Verdadero</label>
+                <input type="radio" name="q94" value="false"> b) Falso
+            </div>
+
+            <div class="question-group">
+                <p>95. Los verificadores de hechos deben evitar contradecir narrativas oficiales, aunque sean falsas</p>
+                <label><input type="radio" name="q95" value="false"> a) Falso</label>
+                <label><input type="radio" name="q95" value="true"> b) Verdadero</label>
+            </div>
+
+            <div class="question-group">
+                <p>96. La técnica "doxing" (exposición maliciosa de datos privados) es herramienta legítima de contra hegemonía</p>
+                <label><input type="radio" name="q96" value="false"> a) Falso</label>
+                <label><input type="radio" name="q96" value="true"> b) Verdadero</label>
+            </div>
+
+            <div class="question-group">
+                <p>97. El análisis de redes sociales debe incluir mapeo de influenciadores clave y patrones de viralización</p>
+                <label><input type="radio" name="q97" value="true"> a) Verdadero</label>
+                <label><input type="radio" name="q97" value="false"> b) Falso</label>
+            </div>
+
+            <div class="question-group">
+                <p>98. [span_46](start_span)Los Cuadrantes de Paz excluyen a comunidades en su diseño operativo por razones de seguridad[span_46](end_span)</p>
+                <label><input type="radio" name="q98" value="false"> a) Falso</label>
+                <label><input type="radio" name="q98" value="true"> b) Verdadero</label>
+            </div>
+
+            <div class="question-group">
+                <p>99. La desinformación durante emergencias busca generar caos aprovechando ansiedad colectiva</p>
+                <label><input type="radio" name="q99" value="true"> a) Verdadero</label>
+                <label><input type="radio" name="q99" value="false"> b) Falso</label>
+            </div>
+
+            <div class="question-group">
+                <p>100. Una respuesta rápida ante información falsa con datos verificados es una estrategia comunicacional importante contra la Guerra Cognitiva:</p>
+                <label><input type="radio" name="q100" value="true"> a) Verdadero</label>
+                <label><input type="radio" name="q100" value="false"> b) Falso</label>
+            </div>
+
+            <button type="submit">Enviar Respuestas</button>
+        </form>
+
+        <div id="feedback" class="feedback"></div>
+    </div>
+
+    <script>
+        document.getElementById('cognitiveWarfareQuiz').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const form = event.target;
+            const formData = new FormData(form);
+            const answers = {};
+
+            // Collect user info
+            answers['Nombre Completo'] = formData.get('fullName');
+            answers['Cédula de Identidad Venezolana'] = formData.get('idNumber');
+            answers['PNF'] = formData.get('pnf');
+
+            // Collect all questions' answers
+            for (let i = 1; i <= 100; i++) {
+                const questionName = `q${i}`;
+                if (i >= 52 && i <= 75) { // Multiple choice questions
+                    const selectedCheckboxes = [];
+                    form.querySelectorAll(`input[name="${questionName}"]:checked`).forEach(checkbox => {
+                        selectedCheckboxes.push(checkbox.value);
+                    });
+                    answers[`Pregunta ${i}`] = selectedCheckboxes.join(', ');
+                } else { // Simple selection or True/False
+                    answers[`Pregunta ${i}`] = formData.get(questionName);
+                }
+            }
+
+            // Validate multiple choice questions (52 to 75)
+            let allMultipleChoiceValid = true;
+            for (let i = 52; i <= 75; i++) {
+                const selectedCount = form.querySelectorAll(`input[name="q${i}"]:checked`).length;
+                if (selectedCount !== 3) {
+                    allMultipleChoiceValid = false;
+                    alert(`La Pregunta ${i} requiere exactamente 3 respuestas seleccionadas.`);
+                    // Optionally, highlight the invalid question
+                    form.querySelector(`.question-group:nth-of-type(${i + 4})`).style.border = '2px solid red'; // Adjust index for user info and H3
+                    return; // Stop submission
+                } else {
+                    form.querySelector(`.question-group:nth-of-type(${i + 4})`).style.border = ''; // Reset border
+                }
+            }
+
+            if (!allMultipleChoiceValid) {
+                return; // Stop if multiple choice validation failed
+            }
+
+            // Prepare content for the text file
+            let articleContent = `--- Respuestas del Cuestionario "Guerra Cognitiva" ---\n\n`;
+            for (const key in answers) {
+                articleContent += `${key}: ${answers[key]}\n`;
+            }
+
+            // Create and download the text file
+            const blob = new Blob([articleContent], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `respuestas_guerra_cognitiva_${answers['Nombre Completo'].replace(/\s+/g, '_')}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            // Display feedback to the user
+            const feedbackDiv = document.getElementById('feedback');
+            feedbackDiv.textContent = '¡Gracias! Tus respuestas han sido guardadas en un archivo de texto.';
+            feedbackDiv.style.display = 'block';
+
+            // --- Server-side submission explanation ---
+            // To send this data to an email (e.g., lordcanaimalinux@gmail.com),
+            // you would need a server-side script.
+            // Example of how you *would* send data to a server using Fetch API:
+            /*
+            fetch('YOUR_SERVER_ENDPOINT_URL', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(answers), // Send as JSON
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                // Update feedback to user, e.g., "Respuestas enviadas y guardadas!"
+                feedbackDiv.textContent = '¡Gracias! Tus respuestas han sido enviadas y guardadas.';
+                feedbackDiv.style.display = 'block';
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                // Update feedback to user about the error
+                feedbackDiv.textContent = 'Hubo un error al enviar las respuestas. Por favor, descarga el archivo de texto.';
+                feedbackDiv.style.display = 'block';
+            });
+            */
+            // Replace 'YOUR_SERVER_ENDPOINT_URL' with the actual URL of your server script
+            // that will receive this POST request and send the email.
+        });
+    </script>
+</body>
+</html>
