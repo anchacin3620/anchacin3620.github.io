@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulación y Comparación: Arleigh Burke vs. Guaiquerí</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #333;
+            text-align: center;
+        }
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #ddd;
+            margin: 0 5px;
+            border-radius: 5px 5px 0 0;
+        }
+        .tab.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 0 0 5px 5px;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        label {
+            display: block;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+        input[type="number"], input[type="range"] {
+            width: 200px;
+            padding: 5px;
+            margin: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin: 20px 0;
+            font-weight: bold;
+            font-size: 16px;
+            text-align: center;
+        }
+        canvas {
+            max-width: 600px;
+            margin: 20px auto;
+        }
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Simulación y Comparación: Arleigh Burke vs. Guaiquerí</h1>
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('info')">Información</div>
+            <div class="tab" onclick="showTab('comparison')">Comparación</div>
+            <div class="tab" onclick="showTab('wargame')">Juego de Guerra</div>
+        </div>
+
+        <!-- Pestaña de Información -->
+        <div id="info" class="tab-content active">
+            <h2>Información sobre los Buques</h2>
+            <h3>Clase Arleigh Burke (EE. UU.)</h3>
+            <p>Los destructores de la clase Arleigh Burke son la columna vertebral de la Marina de los EE. UU., diseñados en torno al sistema de combate Aegis y el radar SPY-1D (SPY-6 en Flight III). Entraron en servicio en 1991 y son buques multimisión capaces de realizar guerra antiaérea, antisubmarina, antisuperficie y ataques terrestres.</p>
+            <ul>
+                <li><strong>Desplazamiento</strong>: 8,300-9,700 toneladas</li>
+                <li><strong>Longitud</strong>: 505-509.5 pies (153.9-155.3 m)</li>
+                <li><strong>Armamento</strong>: 90-96 celdas VLS (misiles SM-2, SM-6, Tomahawk, ASROC), 8 misiles Harpoon (en algunos), cañón de 5", CIWS Phalanx</li>
+                <li><strong>Propulsión</strong>: 4 turbinas de gas LM2500, >30 nudos</li>
+                <li><strong>Tripulación</strong>: ~300</li>
+                <li><strong>Radar</strong>: AN/SPY-1D (Flight I/II), AN/SPY-6 (Flight III)</li>
+            </ul>
+            <h3>Clase Guaiquerí (Venezuela)</h3>
+            <p>Las corbetas de la clase Guaiquerí, construidas por Navantia (España), son patrulleros oceánicos diseñados para vigilancia y defensa costera. Están armadas con misiles antibuque chinos C-802A y tienen capacidades limitadas de defensa antiaérea.</p>
+            <ul>
+                <li><strong>Desplazamiento</strong>: 2,419 toneladas</li>
+                <li><strong>Longitud</strong>: 98.9 m</li>
+                <li><strong>Armamento</strong>: 1 cañón Oto Melara 76 mm, CIWS Millennium 35 mm, 8 misiles C-802A, torpedos A244/S</li>
+                <li><strong>Propulsión</strong>: 4 motores diésel MTU, 24 nudos</li>
+                <li><strong>Tripulación</strong>: ~60-70</li>
+                <li><strong>Radar</strong>: Thales SMART-S Mk2, STING EO Mk2</li>
+            </ul>
+        </div>
+
+        <!-- Pestaña de Comparación -->
+        <div id="comparison" class="tab-content">
+            <h2>Comparación: Arleigh Burke vs. Guaiquerí</h2>
+            <table>
+                <tr>
+                    <th>Característica</th>
+                    <th>Arleigh Burke</th>
+                    <th>Guaiquerí</th>
+                </tr>
+                <tr>
+                    <td>Desplazamiento</td>
+                    <td>8,300-9,700 toneladas</td>
+                    <td>2,419 toneladas</td>
+                </tr>
+                <tr>
+                    <td>Longitud</td>
+                    <td>153.9-155.3 m</td>
+                    <td>98.9 m</td>
+                </tr>
+                <tr>
+                    <td>Armamento Principal</td>
+                    <td>90-96 celdas VLS (SM-2, SM-6, Tomahawk, ASROC), Harpoon, cañón 5"</td>
+                    <td>8 misiles C-802A, cañón 76 mm, CIWS 35 mm, torpedos</td>
+                </tr>
+                <tr>
+                    <td>Alcance Misiles Antibuque</td>
+                    <td>Harpoon (~150 km), SM-6 (~370 km en modo ASuW)</td>
+                    <td>C-802A (~200 km)</td>
+                </tr>
+                <tr>
+                    <td>Defensa Antiaérea</td>
+                    <td>Sistema Aegis, misiles SM-2/SM-6, CIWS Phalanx</td>
+                    <td>CIWS Millennium, sin SAM de largo alcance</td>
+                </tr>
+                <tr>
+                    <td>Radar</td>
+                    <td>AN/SPY-1D o SPY-6, alta capacidad</td>
+                    <td>Thales SMART-S Mk2, capacidad limitada</td>
+                </tr>
+                <tr>
+                    <td>Velocidad</td>
+                    <td>>30 nudos</td>
+                    <td>24 nudos</td>
+                </tr>
+                <tr>
+                    <td>Tripulación</td>
+                    <td>~300</td>
+                    <td>~60-70</td>
+                </tr>
+            </table>
+            <p><strong>Análisis</strong>: El Arleigh Burke supera ampliamente a la Guaiquerí en capacidades multimisión, armamento, y tecnología de radar. La Guaiquerí es más ágil y adecuada para patrullas costeras, con misiles C-802A competitivos en alcance, pero carece de defensa antiaérea robusta y capacidad de ataque terrestre.</p>
+        </div>
+
+        <!-- Pestaña de Juego de Guerra -->
+        <div id="wargame" class="tab-content">
+            <h2>Simulación de Juego de Guerra</h2>
+            <p>Simula un enfrentamiento entre un Arleigh Burke y una Guaiquerí, considerando detección radar y capacidades de misiles.</p>
+            <label>
+                Distancia Inicial (km):
+                <input type="number" id="distance" value="100" min="1" step="any">
+                <input type="range" id="distanceSlider" min="10" max="500" value="100" step="10">
+            </label>
+            <label>
+                Escala de Ruido (W):
+                <input type="number" id="noiseScale" value="1e-12" min="0" step="any">
+                <input type="range" id="noiseScaleSlider" min="1e-13" max="1e-11" value="1e-12" step="1e-13">
+            </label>
+            <button onclick="simulateWargame()">Simular Enfrentamiento</button>
+            <div id="result"></div>
+            <canvas id="radarChart" width="600" height="300"></canvas>
+        </div>
+
+        <footer>
+            Elaborado por Ángel Chacín Ávila, Licenciado en Física, Especialista en Ciencias Computacionales, UNES Núcleo Zulia
+        </footer>
+    </div>
+
+    <script>
+        // Configuración de las pestañas
+        function showTab(tabId) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            document.querySelector(`.tab[onclick="showTab('${tabId}')"]`).classList.add('active');
+        }
+
+        // Configuración del gráfico con Chart.js
+        const ctx = document.getElementById('radarChart').getContext('2d');
+        const radarChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [
+                    {
+                        label: 'Potencia Recibida Arleigh Burke (W)',
+                        data: [],
+                        borderColor: 'blue',
+                        fill: false,
+                        tension: 0.1
+                    },
+                    {
+                        label: 'Potencia Recibida Guaiquerí (W)',
+                        data: [],
+                        borderColor: 'red',
+                        fill: false,
+                        tension: 0.1
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    y: { type: 'logarithmic', title: { display: true, text: 'Potencia Recibida (W)' } },
+                    x: { title: { display: true, text: 'Distancia (km)' } }
+                },
+                plugins: { title: { display: true, text: 'Detección Radar: Arleigh Burke vs. Guaiquerí' } }
+            }
+        });
+
+        // Sincronizar inputs y sliders
+        const inputs = {
+            distance: document.getElementById('distance'),
+            distanceSlider: document.getElementById('distanceSlider'),
+            noiseScale: document.getElementById('noiseScale'),
+            noiseScaleSlider: document.getElementById('noiseScaleSlider')
+        };
+
+        for (let key in inputs) {
+            if (key.includes('Slider')) {
+                inputs[key].addEventListener('input', () => {
+                    const baseKey = key.replace('Slider', '');
+                    inputs[baseKey].value = inputs[key].value;
+                    simulateWargame();
+                });
+            } else {
+                inputs[key].addEventListener('input', () => {
+                    const sliderKey = key + 'Slider';
+                    inputs[sliderKey].value = inputs[key].value;
+                    simulateWargame();
+                });
+            }
+        }
+
+        function simulateWargame() {
+            // Parámetros del radar (simplificados)
+            const params = {
+                arleigh: {
+                    Pt: 1000, // W
+                    Gt: 30,   // Ganancia transmisora
+                    Gr: 30,   // Ganancia receptora
+                    sigma: 10,// RCS de la Guaiquerí (m², menor por su tamaño)
+                    lambda: 0.1, // Longitud de onda (m)
+                    loss: 1.2 // Pérdida atmosférica
+                },
+                guaiqueri: {
+                    Pt: 500,  // W (menor potencia)
+                    Gt: 20,   // Menor ganancia
+                    Gr: 20,   // Menor ganancia
+                    sigma: 1000, // RCS del Arleigh Burke (m², mayor por tamaño)
+                    lambda: 0.3, // Longitud de onda (m)
+                    loss: 1.5 // Mayor pérdida por radar menos avanzado
+                }
+            };
+
+            const distance = parseFloat(inputs.distance.value) * 1000; // Convertir a metros
+            const noiseScale = parseFloat(inputs.noiseScale.value);
+
+            // Validación de entradas
+            if (isNaN(distance) || isNaN(noiseScale) || distance <= 0 || noiseScale < 0) {
+                document.getElementById('result').innerHTML = "Por favor, ingrese valores válidos.";
+                return;
+            }
+
+            // Ecuación del radar: Pr = (Pt * Gt * σ * Gr * λ^2) / ((4π)^3 * R^4 * L)
+            const pi = Math.PI;
+            const PrArleigh = (params.arleigh.Pt * params.arleigh.Gt * params.arleigh.sigma * params.arleigh.Gr * Math.pow(params.arleigh.lambda, 2)) /
+                              (Math.pow(4 * pi, 3) * Math.pow(distance, 4) * params.arleigh.loss);
+            const PrGuaiqueri = (params.guaiqueri.Pt * params.guaiqueri.Gt * params.guaiqueri.sigma * params.guaiqueri.Gr * Math.pow(params.guaiqueri.lambda, 2)) /
+                                (Math.pow(4 * pi, 3) * Math.pow(distance, 4) * params.guaiqueri.loss);
+
+            // Simular ruido (Monte Carlo simplificado)
+            const noiseArleigh = noiseScale * (Math.random() - 0.5) * 2;
+            const noiseGuaiqueri = noiseScale * (Math.random() - 0.5) * 2;
+            const PrArleighWithNoise = PrArleigh + noiseArleigh;
+            const PrGuaiqueriWithNoise = PrGuaiqueri + noiseGuaiqueri;
+
+            // Umbrales de detección (arbitrarios, ajustados para realismo)
+            const thresholdArleigh = 1e-12;
+            const thresholdGuaiqueri = 5e-12; // Menor sensibilidad del radar Guaiquerí
+            const detectArleigh = PrArleighWithNoise > thresholdArleigh;
+            const detectGuaiqueri = PrGuaiqueriWithNoise > thresholdGuaiqueri;
+
+            // Simulación de enfrentamiento (probabilidad simplificada)
+            const missileRangeArleigh = 370; // SM-6 en modo ASuW (km)
+            const missileRangeGuaiqueri = 200; // C-802A (km)
+            let outcome = "";
+            if (distance/1000 > missileRangeArleigh && distance/1000 > missileRangeGuaiqueri) {
+                outcome = "Ningún buque puede atacar: distancia fuera del alcance de los misiles.";
+            } else if (detectArleigh && !detectGuaiqueri && distance/1000 <= missileRangeArleigh) {
+                outcome = "Arleigh Burke detecta y puede atacar primero con SM-6. Alta probabilidad de victoria debido a su superioridad tecnológica y defensas.";
+            } else if (!detectArleigh && detectGuaiqueri && distance/1000 <= missileRangeGuaiqueri) {
+                outcome = "Guaiquerí detecta y puede atacar primero con C-802A. Posible ventaja inicial, pero limitada por defensas débiles.";
+            } else if (detectArleigh && detectGuaiqueri) {
+                outcome = "Ambos buques se detectan. Arleigh Burke tiene ventaja por mayor capacidad de misiles, defensas Aegis y contramedidas electrónicas.";
+            } else {
+                outcome = "Ningún buque detecta al otro. Enfrentamiento incierto.";
+            }
+
+            // Mostrar resultados
+            document.getElementById('result').innerHTML = `
+                Potencia Recibida (Arleigh Burke): ${PrArleigh.toExponential(4)} W<br>
+                Potencia Recibida (Guaiquerí): ${PrGuaiqueri.toExponential(4)} W<br>
+                Resultado del Enfrentamiento: ${outcome}
+            `;
+
+            // Generar datos para la gráfica
+            const distances = [];
+            const powersArleigh = [];
+            const powersGuaiqueri = [];
+            const maxDistance = (distance * 2) / 1000; // En km
+            for (let i = 0; i <= 100; i++) {
+                const r = (i / 100) * maxDistance * 1000; // Convertir a metros
+                if (r === 0) continue; // Evitar división por cero
+                const prArleigh = (params.arleigh.Pt * params.arleigh.Gt * params.arleigh.sigma * params.arleigh.Gr * Math.pow(params.arleigh.lambda, 2)) /
+                                  (Math.pow(4 * pi, 3) * Math.pow(r, 4) * params.arleigh.loss);
+                const prGuaiqueri = (params.guaiqueri.Pt * params.guaiqueri.Gt * params.guaiqueri.sigma * params.guaiqueri.Gr * Math.pow(params.guaiqueri.lambda, 2)) /
+                                    (Math.pow(4 * pi, 3) * Math.pow(r, 4) * params.guaiqueri.loss);
+                distances.push((r / 1000).toFixed(0));
+                powersArleigh.push(prArleigh);
+                powersGuaiqueri.push(prGuaiqueri);
+            }
+
+            // Actualizar la gráfica
+            radarChart.data.labels = distances;
+            radarChart.data.datasets[0].data = powersArleigh;
+            radarChart.data.datasets[1].data = powersGuaiqueri;
+            radarChart.update();
+        }
+
+        // Calcular inicialmente
+        simulateWargame();
+    </script>
+</body>
+</html>
