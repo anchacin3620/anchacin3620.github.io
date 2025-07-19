@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulación y Comparación: Su-30MK2, F-16, K-8W vs. F-22, F-35</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #333;
+            text-align: center;
+        }
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #ddd;
+            margin: 0 5px;
+            border-radius: 5px 5px 0 0;
+        }
+        .tab.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 0 0 5px 5px;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        label {
+            display: block;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+        input[type="number"], input[type="range"] {
+            width: 200px;
+            padding: 5px;
+            margin: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin: 20px 0;
+            font-weight: bold;
+            font-size: 16px;
+            text-align: center;
+        }
+        canvas {
+            max-width: 600px;
+            margin: 20px auto;
+        }
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Simulación y Comparación: Su-30MK2, F-16, K-8W vs. F-22, F-35</h1>
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('info')">Información</div>
+            <div class="tab" onclick="showTab('comparison')">Comparación</div>
+            <div class="tab" onclick="showTab('wargame')">Juego de Guerra</div>
+        </div>
+
+        <!-- Pestaña de Información -->
+        <div id="info" class="tab-content active">
+            <h2>Información sobre los Sistemas</h2>
+            <h3>Su-30MK2 (Venezuela)</h3>
+            <p>Caza polivalente ruso, operado por la AMB, diseñado para superioridad aérea y ataque a tierra.</p>
+            <ul>
+                <li><strong>Velocidad</strong>: Mach 1.9 (~2,100 km/h)</li>
+                <li><strong>Alcance</strong>: 3,000 km</li>
+                <li><strong>Radar</strong>: N011M Bars (~200 km)</li>
+                <li><strong>Armamento</strong>: R-77 (110 km), R-27ER (130 km), R-73 (30 km), Kh-31, Kh-59ME</li>
+                <li><strong>RCS</strong>: ~4-6 m²</li>
+                <li><strong>Estado</strong>: 22 unidades (~12 operativas)</li>
+            </ul>
+            <h3>F-16A/B Block 15 Modernizados (Venezuela)</h3>
+            <p>Caza ligero polivalente, modernizado con pods Litening, limitado por embargos.</p>
+            <ul>
+                <li><strong>Velocidad</strong>: Mach 2 (~2,450 km/h)</li>
+                <li><strong>Alcance</strong>: ~3,200 km</li>
+                <li><strong>Radar</strong>: AN/APG-66 (~100 km)</li>
+                <li><strong>Armamento</strong>: AIM-9, Python IV, bombas guiadas</li>
+                <li><strong>RCS</strong>: ~1-2 m²</li>
+                <li><strong>Estado</strong>: 15 unidades (~8 operativas)</li>
+            </ul>
+            <h3>K-8W Karakorum (Venezuela)</h3>
+            <p>Entrenador avanzado con capacidad de ataque ligero, usado para misiones secundarias.</p>
+            <ul>
+                <li><strong>Velocidad</strong>: 800 km/h</li>
+                <li><strong>Alcance</strong>: 2,140 km</li>
+                <li><strong>Radar</strong>: Básico (sin BVR)</li>
+                <li><strong>Armamento</strong>: Cohetes, bombas no guiadas</li>
+                <li><strong>RCS</strong>: ~3-5 m²</li>
+                <li><strong>Estado</strong>: 22 unidades (~18 operativas)</li>
+            </ul>
+            <h3>F-22 Raptor (EE.UU.)</h3>
+            <p>Caza de superioridad aérea furtivo, diseñado para combates BVR y dogfights.</p>
+            <ul>
+                <li><strong>Velocidad</strong>: >Mach 2.25 (supercrucero)</li>
+                <li><strong>Alcance</strong>: ~3,000 km</li>
+                <li><strong>Radar</strong>: AN/APG-77 AESA (~400 km)</li>
+                <li><strong>Armamento</strong>: 6 × AIM-120 AMRAAM (180 km), 2 × AIM-9</li>
+                <li><strong>RCS</strong>: ~0.0001 m²</li>
+            </ul>
+            <h3>F-35 Lightning II (EE.UU.)</h3>
+            <p>Caza polivalente furtivo, optimizado para misiones aire-aire, aire-tierra y SEAD.</p>
+            <ul>
+                <li><strong>Velocidad</strong>: Mach 1.6 (~1,930 km/h)</li>
+                <li><strong>Alcance</strong>: ~2,200 km</li>
+                <li><strong>Radar</strong>: AN/APG-81 AESA (~300 km)</li>
+                <li><strong>Armamento</strong>: 4 × AIM-120, 2 × AIM-9X, AGM-158 JASSM</li>
+                <li><strong>RCS</strong>: ~0.001 m²</li>
+            </ul>
+            <h3>Sistemas Antiaéreos (Venezuela)</h3>
+            <p>Defensa en capas con sistemas rusos y portátiles.</p>
+            <ul>
+                <li><strong>S-400 (hipotético)</strong>: Alcance 400 km, 36 blancos simultáneos, radar 91N6E (~600 km).</li>
+                <li><strong>S-300VM</strong>: Alcance 250 km, 24 blancos, radar 9S32 (~300 km).</li>
+                <li><strong>Buk-M2</strong>: Alcance 50 km, 24 blancos.</li>
+                <li><strong>S-125 Pechora</strong>: Alcance 35 km, obsoleto.</li>
+                <li><strong>Igla-S</strong>: Alcance 6 km, miles de lanzadores portátiles.</li>
+            </ul>
+        </div>
+
+        <!-- Pestaña de Comparación -->
+        <div id="comparison" class="tab-content">
+            <h2>Comparación: Su-30MK2, F-16, K-8W vs. F-22, F-35</h2>
+            <table>
+                <tr>
+                    <th>Característica</th>
+                    <th>Su-30MK2</th>
+                    <th>F-16A/B</th>
+                    <th>K-8W</th>
+                    <th>F-22</th>
+                    <th>F-35</th>
+                </tr>
+                <tr>
+                    <td>Rol</td>
+                    <td>Caza polivalente</td>
+                    <td>Caza ligero</td>
+                    <td>Entrenador/ataque ligero</td>
+                    <td>Superioridad aérea furtivo</td>
+                    <td>Polivalente furtivo</td>
+                </tr>
+                <tr>
+                    <td>Velocidad</td>
+                    <td>Mach 1.9</td>
+                    <td>Mach 2</td>
+                    <td>800 km/h</td>
+                    <td>>Mach 2.25</td>
+                    <td>Mach 1.6</td>
+                </tr>
+                <tr>
+                    <td>Alcance</td>
+                    <td>3,000 km</td>
+                    <td>3,200 km</td>
+                    <td>2,140 km</td>
+                    <td>3,000 km</td>
+                    <td>2,200 km</td>
+                </tr>
+                <tr>
+                    <td>Radar</td>
+                    <td>N011M Bars (~200 km)</td>
+                    <td>AN/APG-66 (~100 km)</td>
+                    <td>Básico (sin BVR)</td>
+                    <td>AN/APG-77 AESA (~400 km)</td>
+                    <td>AN/APG-81 AESA (~300 km)</td>
+                </tr>
+                <tr>
+                    <td>RCS</td>
+                    <td>~4-6 m²</td>
+                    <td>~1-2 m²</td>
+                    <td>~3-5 m²</td>
+                    <td>~0.0001 m²</td>
+                    <td>~0.001 m²</td>
+                </tr>
+                <tr>
+                    <td>Armamento</td>
+                    <td>R-77, R-27ER, R-73, Kh-31, Kh-59ME</td>
+                    <td>AIM-9, Python IV, bombas</td>
+                    <td>Cohetes, bombas</td>
+                    <td>AIM-120, AIM-9</td>
+                    <td>AIM-120, AIM-9X, JASSM</td>
+                </tr>
+                <tr>
+                    <td>Estado (VEN)</td>
+                    <td>22 (~12 operativas)</td>
+                    <td>15 (~8 operativas)</td>
+                    <td>22 (~18 operativas)</td>
+                    <td>N/A</td>
+                    <td>N/A</td>
+                </tr>
+            </table>
+            <h3>Comparación Antiaérea</h3>
+            <table>
+                <tr>
+                    <th>Sistema</th>
+                    <th>Alcance</th>
+                    <th>Capacidad</th>
+                    <th>Radar</th>
+                    <th>Efectividad vs. Furtivos</th>
+                </tr>
+                <tr>
+                    <td>S-400 (hipotético)</td>
+                    <td>400 km</td>
+                    <td>36 blancos</td>
+                    <td>91N6E (~600 km)</td>
+                    <td>Baja (~30-50 km)</td>
+                </tr>
+                <tr>
+                    <td>S-300VM</td>
+                    <td>250 km</td>
+                    <td>24 blancos</td>
+                    <td>9S32 (~300 km)</td>
+                    <td>Baja (~30-50 km)</td>
+                </tr>
+                <tr>
+                    <td>Buk-M2</td>
+                    <td>50 km</td>
+                    <td>24 blancos</td>
+                    <td>9S18M1 (~160 km)</td>
+                    <td>Muy baja (~20-30 km)</td>
+                </tr>
+                <tr>
+                    <td>S-125 Pechora</td>
+                    <td>35 km</td>
+                    <td>1 blanco/batería</td>
+                    <td>SNR-125 (~80 km)</td>
+                    <td>Nula</td>
+                </tr>
+                <tr>
+                    <td>Igla-S</td>
+                    <td>6 km</td>
+                    <td>1 blanco/lanzador</td>
+                    <td>Óptico/infrarrojo</td>
+                    <td>Nula</td>
+                </tr>
+            </table>
+            <p><strong>Análisis</strong>: Los F-22 y F-35 dominan por su furtividad (RCS ~0.0001-0.001 m²), radares AESA y misiles de largo alcance (AIM-120, 180 km). El Su-30MK2 tiene ventaja en dogfights, pero es superado en BVR. Los F-16A/B y K-8W son obsoletos frente a cazas de 5ª generación. El S-400 (hipotético) mejora la defensa aérea, pero es ineficaz contra F-22/F-35 debido a su baja detectabilidad.</p>
+        </div>
+
+        <!-- Pestaña de Juego de Guerra -->
+        <div id="wargame" class="tab-content">
+            <h2>Simulación de Juego de Guerra</h2>
+            <p>Simula un enfrentamiento en el espacio aéreo venezolano entre una fuerza de la AMB (12 Su-30MK2, 8 F-16A/B, 18 K-8W, S-400, S-300VM, Buk-M2, S-125, Igla-S) y EE.UU. (12 F-22, 24 F-35, EA-18G, AWACS).</p>
+            <label>
+                Distancia Inicial (km):
+                <input type="number" id="distance" value="50" min="1" step="any">
+                <input type="range" id="distanceSlider" min="10" max="500" value="50" step="10">
+            </label>
+            <label>
+                Escala de Ruido (W):
+                <input type="number" id="noiseScale" value="1e-12" min="0" step="any">
+                <input type="range" id="noiseScaleSlider" min="1e-13" max="1e-11" value="1e-12" step="1e-13">
+            </label>
+            <button onclick="simulateWargame()">Simular Enfrentamiento</button>
+            <div id="result"></div>
+            <canvas id="radarChart" width="600" height="300"></canvas>
+        </div>
+
+        <footer>
+            Elaborado por el Profesor Ángel Chacín Ávila, Licenciado en Física, Especialista en Ciencias Computacionales, UNES Núcleo Zulia
+        </footer>
+    </div>
+
+    <script>
+        // Configuración de las pestañas
+        function showTab(tabId) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            document.querySelector(`.tab[onclick="showTab('${tabId}')"]`).classList.add('active');
+        }
+
+        // Configuración del gráfico con Chart.js
+        const ctx = document.getElementById('radarChart').getContext('2d');
+        const radarChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [
+                    {
+                        label: 'Potencia Recibida F-22 (W)',
+                        data: [],
+                        borderColor: 'blue',
+                        fill: false,
+                        tension: 0.1
+                    },
+                    {
+                        label: 'Potencia Recibida F-35 (W)',
+                        data: [],
+                        borderColor: 'cyan',
+                        fill: false,
+                        tension: 0.1
+                    },
+                    {
+                        label: 'Potencia Recibida Su-30MK2 (W)',
+                        data: [],
+                        borderColor: 'red',
+                        fill: false,
+                        tension: 0.1
+                    },
+                    {
+                        label: 'Potencia Recibida S-400 (W)',
+                        data: [],
+                        borderColor: 'green',
+                        fill: false,
+                        tension: 0.1
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    y: { type: 'logarithmic', title: { display: true, text: 'Potencia Recibida (W)' } },
+                    x: { title: { display: true, text: 'Distancia (km)' } }
+                },
+                plugins: { title: { display: true, text: 'Detección Radar: EE.UU. vs. Fuerza Venezolana' } }
+            }
+        });
+
+        // Sincronizar inputs y sliders
+        const inputs = {
+            distance: document.getElementById('distance'),
+            distanceSlider: document.getElementById('distanceSlider'),
+            noiseScale: document.getElementById('noiseScale'),
+            noiseScaleSlider: document.getElementById('noiseScaleSlider')
+        };
+
+        for (let key in inputs) {
+            if (key.includes('Slider')) {
+                inputs[key].addEventListener('input', () => {
+                    const baseKey = key.replace('Slider', '');
+                    inputs[baseKey].value = inputs[key].value;
+                    simulateWargame();
+                });
+            } else {
+                inputs[key].addEventListener('input', () => {
+                    const sliderKey = key + 'Slider';
+                    inputs[sliderKey].value = inputs[key].value;
+                    simulateWargame();
+                });
+            }
+        }
+
+        function simulateWargame() {
+            // Parámetros del radar (simplificados)
+            const params = {
+                f22: {
+                    Pt: 1200, // W
+                    Gt: 35,   // Ganancia transmisora
+                    Gr: 35,   // Ganancia receptora
+                    sigma: 4, // RCS promedio Su-30MK2 (~4-6 m²)
+                    lambda: 0.03, // Longitud de onda (m)
+                    loss: 1.1 // Pérdida atmosférica
+                },
+                f35: {
+                    Pt: 1000, // W
+                    Gt: 30,   // Ganancia transmisora
+                    Gr: 30,   // Ganancia receptora
+                    sigma: 4, // RCS promedio Su-30MK2
+                    lambda: 0.03, // Longitud de onda (m)
+                    loss: 1.2
+                },
+                su30: {
+                    Pt: 600,  // W
+                    Gt: 25,   // Menor ganancia
+                    Gr: 25,   // Menor ganancia
+                    sigma: 0.0001, // RCS del F-22 (~0.0001 m²)
+                    lambda: 0.05, // Longitud de onda (m)
+                    loss: 1.3
+                },
+                s400: {
+                    Pt: 2000, // W (radar 91N6E)
+                    Gt: 40,   // Alta ganancia
+                    Gr: 40,   // Alta ganancia
+                    sigma: 0.0001, // RCS del F-22
+                    lambda: 0.1, // Longitud de onda (m)
+                    loss: 1.2
+                }
+            };
+
+            const distance = parseFloat(inputs.distance.value) * 1000; // Convertir a metros
+            const noiseScale = parseFloat(inputs.noiseScale.value);
+
+            // Validación de entradas
+            if (isNaN(distance) || isNaN(noiseScale) || distance <= 0 || noiseScale < 0) {
+                document.getElementById('result').innerHTML = "Por favor, ingrese valores válidos.";
+                return;
+            }
+
+            // Ecuación del radar: Pr = (Pt * Gt * σ * Gr * λ^2) / ((4π)^3 * R^4 * L)
+            const pi = Math.PI;
+            const PrF22 = (params.f22.Pt * params.f22.Gt * params.f22.sigma * params.f22.Gr * Math.pow(params.f22.lambda, 2)) /
+                          (Math.pow(4 * pi, 3) * Math.pow(distance, 4) * params.f22.loss);
+            const PrF35 = (params.f35.Pt * params.f35.Gt * params.f35.sigma * params.f35.Gr * Math.pow(params.f35.lambda, 2)) /
+                          (Math.pow(4 * pi, 3) * Math.pow(distance, 4) * params.f35.loss);
+            const PrSu30 = (params.su30.Pt * params.su30.Gt * params.su30.sigma * params.su30.Gr * Math.pow(params.su30.lambda, 2)) /
+                           (Math.pow(4 * pi, 3) * Math.pow(distance, 4) * params.su30.loss);
+            const PrS400 = (params.s400.Pt * params.s400.Gt * params.s400.sigma * params.s400.Gr * Math.pow(params.s400.lambda, 2)) /
+                           (Math.pow(4 * pi, 3) * Math.pow(distance, 4) * params.s400.loss);
+
+            // Simular ruido (Monte Carlo simplificado)
+            const noiseF22 = noiseScale * (Math.random() - 0.5) * 2;
+            const noiseF35 = noiseScale * (Math.random() - 0.5) * 2;
+            const noiseSu30 = noiseScale * (Math.random() - 0.5) * 2;
+            const noiseS400 = noiseScale * (Math.random() - 0.5) * 2;
+            const PrF22WithNoise = PrF22 + noiseF22;
+            const PrF35WithNoise = PrF35 + noiseF35;
+            const PrSu30WithNoise = PrSu30 + noiseSu30;
+            const PrS400WithNoise = PrS400 + noiseS400;
+
+            // Umbrales de detección (arbitrarios, ajustados para realismo)
+            const thresholdF22 = 1e-12;
+            const thresholdF35 = 1e-12;
+            const thresholdSu30 = 3e-12;
+            const thresholdS400 = 5e-13; // Radar más potente
+            const detectF22 = PrF22WithNoise > thresholdF22;
+            const detectF35 = PrF35WithNoise > thresholdF35;
+            const detectSu30 = PrSu30WithNoise > thresholdSu30;
+            const detectS400 = PrS400WithNoise > thresholdS400;
+
+            // Simulación de enfrentamiento
+            const missileRangeF22 = 180; // AIM-120 AMRAAM (km)
+            const missileRangeF35 = 180; // AIM-120 AMRAAM
+            const missileRangeSu30 = 130; // R-27ER
+            const missileRangeS400 = 400; // 40N6E
+            const missileCountSu30 = 12 * 4; // 12 Su-30MK2 x 4 R-77
+            const missileCountF22 = 12 * 6; // 12 F-22 x 6 AIM-120
+            const missileCountF35 = 24 * 4; // 24 F-35 x 4 AIM-120
+            const missileCountS400 = 48; // 1 batería S-400, ~48 misiles
+
+            let outcome = "";
+            if (distance / 1000 > Math.max(missileRangeF22, missileRangeF35, missileRangeSu30, missileRangeS400)) {
+                outcome = "Ningún sistema puede atacar: distancia fuera del alcance de los misiles.";
+            } else if ((detectF22 || detectF35) && !detectSu30 && !detectS400 && distance / 1000 <= Math.max(missileRangeF22, missileRangeF35)) {
+                outcome = `F-22/F-35 detectan primero y lanzan ${missileCountF22 + missileCountF35} AIM-120. Alta probabilidad de victoria para EE.UU. debido a furtividad y superioridad tecnológica.`;
+            } else if ((detectSu30 || detectS400) && !detectF22 && !detectF35 && distance / 1000 <= Math.max(missileRangeSu30, missileRangeS400)) {
+                outcome = `Fuerza venezolana detecta primero y lanza ${missileCountSu30} R-77 y ${missileCountS400} misiles S-400. Posible ventaja inicial, pero limitada por guerra electrónica y furtividad de EE.UU.`;
+            } else if ((detectF22 || detectF35) && (detectSu30 || detectS400)) {
+                const hitsUS = Math.floor((missileCountSu30 + missileCountS400) * 0.1); // 10% evaden contramedidas
+                const hitsVEN = Math.floor((missileCountF22 + missileCountF35) * 0.8); // 80% impacto por furtividad
+                outcome = `Ambos lados se detectan. EE.UU. lanza ${missileCountF22 + missileCountF35} AIM-120, Venezuela lanza ${missileCountSu30} R-77 y ${missileCountS400} misiles S-400. EE.UU. neutraliza ~${hitsVEN} aviones venezolanos, recibiendo ~${hitsUS} impactos. Victoria probable para EE.UU.`;
+            } else {
+                outcome = "Ningún sistema detecta al otro. Enfrentamiento incierto.";
+            }
+
+            // Mostrar resultados
+            document.getElementById('result').innerHTML = `
+                Potencia Recibida (F-22): ${PrF22.toExponential(4)} W<br>
+                Potencia Recibida (F-35): ${PrF35.toExponential(4)} W<br>
+                Potencia Recibida (Su-30MK2): ${PrSu30.toExponential(4)} W<br>
+                Potencia Recibida (S-400): ${PrS400.toExponential(4)} W<br>
+                Resultado del Enfrentamiento: ${outcome}
+            `;
+
+            // Generar datos para la gráfica
+            const distances = [];
+            const powersF22 = [];
+            const powersF35 = [];
+            const powersSu30 = [];
+            const powersS400 = [];
+            const maxDistance = (distance * 2) / 1000; // En km
+            for (let i = 0; i <= 100; i++) {
+                const r = (i / 100) * maxDistance * 1000; // Convertir a metros
+                if (r === 0) continue; // Evitar división por cero
+                const prF22 = (params.f22.Pt * params.f22.Gt * params.f22.sigma * params.f22.Gr * Math.pow(params.f22.lambda, 2)) /
+                              (Math.pow(4 * pi, 3) * Math.pow(r, 4) * params.f22.loss);
+                const prF35 = (params.f35.Pt * params.f35.Gt * params.f35.sigma * params.f35.Gr * Math.pow(params.f35.lambda, 2)) /
+                              (Math.pow(4 * pi, 3) * Math.pow(r, 4) * params.f35.loss);
+                const prSu30 = (params.su30.Pt * params.su30.Gt * params.su30.sigma * params.su30.Gr * Math.pow(params.su30.lambda, 2)) /
+                               (Math.pow(4 * pi, 3) * Math.pow(r, 4) * params.su30.loss);
+                const prS400 = (params.s400.Pt * params.s400.Gt * params.s400.sigma * params.s400.Gr * Math.pow(params.s400.lambda, 2)) /
+                               (Math.pow(4 * pi, 3) * Math.pow(r, 4) * params.s400.loss);
+                distances.push((r / 1000).toFixed(0));
+                powersF22.push(prF22);
+                powersF35.push(prF35);
+                powersSu30.push(prSu30);
+                powersS400.push(prS400);
+            }
+
+            // Actualizar la gráfica
+            radarChart.data.labels = distances;
+            radarChart.data.datasets[0].data = powersF22;
+            radarChart.data.datasets[1].data = powersF35;
+            radarChart.data.datasets[2].data = powersSu30;
+            radarChart.data.datasets[3].data = powersS400;
+            radarChart.update();
+        }
+
+        // Calcular inicialmente
+        simulateWargame();
+    </script>
+</body>
+</html>
