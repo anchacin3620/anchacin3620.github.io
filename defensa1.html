@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis Comparativo: Combate Aéreo Venezuela vs EE.UU.</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #2c3e50, #4a235a);
+            color: #f0f0f0;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 20px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid #4a9fc9;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.3rem;
+            color: #a8d8ff;
+            max-width: 800px;
+            margin: 0 auto 20px;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+        
+        @media (min-width: 900px) {
+            .content-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        .card {
+            background: rgba(15, 30, 60, 0.85);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #3a6a8c;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+            border-color: #4facfe;
+        }
+        
+        .card-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #4facfe;
+            border-bottom: 2px solid #3a6a8c;
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .card-title i {
+            font-size: 1.5rem;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: rgba(25, 45, 80, 0.7);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        th {
+            background: rgba(74, 107, 163, 0.8);
+            padding: 15px;
+            text-align: left;
+            color: #fff;
+            font-weight: 600;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        tr:last-child td {
+            border-bottom: none;
+        }
+        
+        tr:nth-child(even) {
+            background: rgba(30, 55, 95, 0.5);
+        }
+        
+        .venezuela {
+            color: #ffcc00;
+        }
+        
+        .usa {
+            color: #4facfe;
+        }
+        
+        .scenario {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: rgba(25, 45, 80, 0.6);
+            border-radius: 12px;
+            border-left: 4px solid #4facfe;
+        }
+        
+        .scenario-title {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: #00f2fe;
+        }
+        
+        .scenario-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        
+        @media (min-width: 600px) {
+            .scenario-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        .tactic {
+            background: rgba(40, 60, 100, 0.7);
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .tactic-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #ffcc00;
+        }
+        
+        .additional-factors {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+        
+        .factor-card {
+            background: rgba(35, 55, 95, 0.8);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid #4a9fc9;
+        }
+        
+        .factor-card h3 {
+            color: #ffcc00;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        .factor-card ul {
+            text-align: left;
+            padding-left: 25px;
+        }
+        
+        .factor-card li {
+            margin-bottom: 10px;
+            color: #a8d8ff;
+        }
+        
+        .conclusion {
+            background: rgba(20, 40, 70, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 40px 0;
+            border: 2px solid #4facfe;
+        }
+        
+        .conclusion-title {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 25px;
+            color: #00f2fe;
+        }
+        
+        .conclusion-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            margin-top: 40px;
+            border-top: 2px solid #4facfe;
+        }
+        
+        .credits {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #ffcc00;
+        }
+        
+        .title-separator {
+            height: 3px;
+            background: linear-gradient(to right, transparent, #4facfe, #00f2fe, #4facfe, transparent);
+            margin: 25px 0;
+            border-radius: 3px;
+        }
+        
+        .radar-icon {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="none" stroke="%234facfe" stroke-width="3" stroke-dasharray="10,5"/><line x1="50" y1="50" x2="50" y2="15" stroke="%234facfe" stroke-width="3"/><line x1="50" y1="50" x2="85" y2="50" stroke="%234facfe" stroke-width="3"/><line x1="50" y1="50" x2="65" y2="65" stroke="%234facfe" stroke-width="3"/></svg>');
+            animation: rotate 4s linear infinite;
+            margin-right: 15px;
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .flag {
+            display: inline-block;
+            width: 25px;
+            height: 15px;
+            margin: 0 5px;
+            vertical-align: middle;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        
+        .flag.venezuela {
+            background: linear-gradient(to bottom, #ffcc00 33%, #0038a8 33%, #0038a8 66%, #cf142b 66%);
+        }
+        
+        .flag.usa {
+            background: linear-gradient(to bottom, #b22234 40%, #3c3b6e 40%, #3c3b6e 100%);
+            background-size: 100% 7.7%;
+        }
+        
+        .highlight {
+            background: linear-gradient(120deg, rgba(79, 172, 254, 0.3), rgba(0, 242, 254, 0.3));
+            padding: 0 5px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="radar-icon"></div>
+            <h1>Análisis Comparativo: Capacidades Aéreas Venezuela vs EE.UU.</h1>
+            <p class="subtitle">Simulación de escenarios de combate con tecnología de 4.5ª y 5ª Generación</p>
+        </header>
+        
+        <div class="content-grid">
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-fighter-jet"></i> Comparación Técnica</h2>
+                <table>
+                    <tr>
+                        <th>Característica</th>
+                        <th>Su-30MKII <span class="flag venezuela"></span></th>
+                        <th>F-22 Raptor <span class="flag usa"></span></th>
+                        <th>F-35 Lightning II <span class="flag usa"></span></th>
+                    </tr>
+                    <tr>
+                        <td>Generación</td>
+                        <td class="venezuela">4.5</td>
+                        <td class="usa">5</td>
+                        <td class="usa">5</td>
+                    </tr>
+                    <tr>
+                        <td>Sigilo (Stealth)</td>
+                        <td class="venezuela">Mínimo</td>
+                        <td class="usa">Muy Alto</td>
+                        <td class="usa">Alto</td>
+                    </tr>
+                    <tr>
+                        <td>Sensores (Radar)</td>
+                        <td class="venezuela">PESA N011M Bars (200-250km)</td>
+                        <td class="usa">AESA AN/APG-77 (>250km)</td>
+                        <td class="usa">AESA AN/APG-81 (~200km)</td>
+                    </tr>
+                    <tr>
+                        <td>Conciencia Situacional</td>
+                        <td class="venezuela">Limitada</td>
+                        <td class="usa">Avanzada</td>
+                        <td class="usa">Líder mundial</td>
+                    </tr>
+                    <tr>
+                        <td>Armamento Aire-Aire</td>
+                        <td class="venezuela">R-27, R-73, R-77</td>
+                        <td class="usa">AIM-120 AMRAAM, AIM-9X</td>
+                        <td class="usa">AIM-120 AMRAAM, AIM-9X</td>
+                    </tr>
+                    <tr>
+                        <td>Maniobrabilidad</td>
+                        <td class="venezuela">Excelente (TVC)</td>
+                        <td class="usa">Excelente (TVC)</td>
+                        <td class="usa">Buena</td>
+                    </tr>
+                    <tr>
+                        <td>Velocidad/Máximo Techo</td>
+                        <td class="venezuela">Mach 2+, Alto techo</td>
+                        <td class="usa">Mach 2.25+, Supercrucero</td>
+                        <td class="usa">Mach 1.6, Buen techo</td>
+                    </tr>
+                    <tr>
+                        <td>Guerra Electrónica</td>
+                        <td class="venezuela">Sistema integrado + pods</td>
+                        <td class="usa">Muy avanzado</td>
+                        <td class="usa">Más avanzado (AN/ASQ-239)</td>
+                    </tr>
+                    <tr>
+                        <td>Disponibilidad</td>
+                        <td class="venezuela">Problemas reportados</td>
+                        <td class="usa">Bien soportada</td>
+                        <td class="usa">Soporte robusto</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-crosshairs"></i> Factores Adicionales FAV</h2>
+                <div class="additional-factors">
+                    <div class="factor-card">
+                        <h3>F-16 A/B Modernizados</h3>
+                        <ul>
+                            <li>Radar modernizado (posible AESA)</li>
+                            <li>Armamento AIM-9L/M Sidewinder</li>
+                            <li>Posible integración Python IV</li>
+                            <li>Sistemas EW mejorados</li>
+                        </ul>
+                    </div>
+                    <div class="factor-card">
+                        <h3>Hongdu K-8W Karakorum</h3>
+                        <ul>
+                            <li>Entrenador avanzado/ataque ligero</li>
+                            <li>Armamento limitado</li>
+                            <li>Vulnerable en combate aéreo</li>
+                            <li>Útil para reconocimiento</li>
+                        </ul>
+                    </div>
+                    <div class="factor-card">
+                        <h3>Sistemas SAM</h3>
+                        <ul>
+                            <li>S-300VM (Alcance ~200km)</li>
+                            <li>S-400 Triumf (Alcance hasta 400km)</li>
+                            <li>Buk-M2 (Alcance medio ~50km)</li>
+                            <li>S-125 Pechora modernizados</li>
+                        </ul>
+                    </div>
+                    <div class="factor-card">
+                        <h3>Defensa de Corto Alcance</h3>
+                        <ul>
+                            <li>Miles de lanzadores Igla-S</li>
+                            <li>Efectivos contra helicópteros</li>
+                            <li>Peligrosos a baja altura</li>
+                            <li>Móviles y difíciles de detectar</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="title-separator"></div>
+        
+        <h2 class="card-title" style="margin: 30px 0;"><i class="fas fa-fire"></i> Simulación de Escenarios de Combate</h2>
+        
+        <div class="card">
+            <div class="scenario">
+                <h3 class="scenario-title">Escenario 1: Interceptación de Alto Valor (AWACS/Tanquero)</h3>
+                <div class="scenario-content">
+                    <div class="tactic">
+                        <div class="tactic-title">Táctica USAF:</div>
+                        <p>F-22 penetran sigilosamente a gran altitud usando supercrucero. Localizan blancos con sensores pasivos y lanzan AIM-120D desde BVR extremo (>150km).</p>
+                        <p>F-35 operan en segunda línea, proporcionando conciencia de batalla y perturbando radares con EW.</p>
+                    </div>
+                    <div class="tactic">
+                        <div class="tactic-title">Táctica FAV:</div>
+                        <p>Su-30 dependen de alertas terrestres vulnerables a EW. Intentan trepar rápidamente pero misiles AMRAAM llegan antes de adquirir blanco.</p>
+                        <p>F-16 modernizados podrían reforzar defensa pero enfrentan mismos problemas de detección.</p>
+                    </div>
+                </div>
+                <div class="result">
+                    <p><span class="highlight">Resultado: Victoria abrumadora USAF.</span> Blancos destruidos antes de que FAV pueda responder efectivamente.</p>
+                </div>
+            </div>
+            
+            <div class="scenario">
+                <h3 class="scenario-title">Escenario 2: Defensa Aérea de Área Venezolana</h3>
+                <div class="scenario-content">
+                    <div class="tactic">
+                        <div class="tactic-title">Táctica USAF:</div>
+                        <p>F-35 penetran a baja altitud usando terreno y sigilo. Identifican emplazamientos SAM y radares.</p>
+                        <p>F-22 proporcionan cobertura superior eliminando cualquier caza que despegue. Apoyo de EA-18G Growler para EW.</p>
+                    </div>
+                    <div class="tactic">
+                        <div class="tactic-title">Táctica FAV:</div>
+                        <p>Su-30 operan dentro de "burbuja" defensiva, guiados por radares terrestres. Intentan emboscadas usando relieve.</p>
+                        <p>Defensa SAM estratificada (S-400, S-300, Buk, Pechora) obliga a atacantes a volar bajo.</p>
+                    </div>
+                </div>
+                <div class="result">
+                    <p><span class="highlight">Resultado: Victoria USAF con posibles pérdidas.</span> Defensa integrada venezolana representa desafío significativo, especialmente con S-400.</p>
+                </div>
+            </div>
+            
+            <div class="scenario">
+                <h3 class="scenario-title">Escenario 3: Combate Cerrado (Dogfight)</h3>
+                <div class="scenario-content">
+                    <div class="tactic">
+                        <div class="tactic-title">Táctica USAF:</div>
+                        <p>F-22 usan TVC para maniobras agresivas. Disparan AIM-9X con DAS/EOTS (off-boresight).</p>
+                        <p>F-35 evitan combate girador, usan sensores para disparar en ángulos extremos.</p>
+                    </div>
+                    <div class="tactic">
+                        <div class="tactic-title">Táctica FAV:</div>
+                        <p>Su-30 aprovechan TVC y canards para forzar combate girador. Usan R-73 con HMS.</p>
+                        <p>F-16 modernizados apoyan con AIM-9X si disponibles, aumentando ventaja numérica.</p>
+                    </div>
+                </div>
+                <div class="result">
+                    <p><span class="highlight">Resultado: Ventaja para EE.UU. pero oportunidad para FAV.</span> Su-30 y F-16 modernizados pueden lograr derribos en combate cercano con pilotos experimentados.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="conclusion">
+            <h2 class="conclusion-title">Conclusiones Estratégicas</h2>
+            <div class="conclusion-content">
+                <p>La Fuerza Aérea Venezolana ha desarrollado una capacidad defensiva significativa con la modernización de sus F-16, despliegue de sistemas SAM avanzados (S-300, S-400, Buk, Pechora) y miles de lanzadores Igla-S.</p>
+                
+                <p>Sin embargo, la <span class="highlight">brecha tecnológica de la 5ª generación</span> (sigilo avanzado, conciencia situacional superior, redes de combate integradas) otorga a EE.UU. una ventaja decisiva en la mayoría de escenarios, especialmente en combate BVR.</p>
+                
+                <p>La defensa aérea integrada venezolana representa el mayor desafío, particularmente con los sistemas S-400 que obligarían a la USAF a volar a baja altura, exponiéndose a SAMs de medio alcance y MANPADS. En este contexto, los F-16 modernizados y Su-30MKII podrían ejecutar tácticas de emboscada más efectivas.</p>
+                
+                <p>En última instancia, la superioridad en C4ISR, experiencia de combate real, logística y capacidad de reposición darían a EE.UU. la ventaja en un conflicto prolongado, aunque con posibles pérdidas significativas debido a las defensas terrestres venezolanas.</p>
+            </div>
+        </div>
+        
+        <footer>
+            <div class="credits">
+                Elaborado por: Ángel Chacín Ávila<br>
+                Licenciado en Física, Especialista en Ciencias Computacionales<br>
+                UNES Núcleo Zulia
+            </div>
+            <p>Análisis Táctico-Aéreo | Simulación de Escenarios de Combate | Julio 2025</p>
+        </footer>
+    </div>
+    
+    <script>
+        // Efecto de radar en el encabezado
+        const radar = document.querySelector('.radar-icon');
+        
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            radar.style.transform = `rotate(${x * 360}deg)`;
+        });
+        
+        // Animación para tarjetas de factores
+        const factorCards = document.querySelectorAll('.factor-card');
+        
+        factorCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'scale(1.05)';
+                card.style.boxShadow = '0 15px 35px rgba(0, 0, 0, 0.6)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'scale(1)';
+                card.style.boxShadow = '0 8px 20px rgba(0, 0, 0, 0.4)';
+            });
+        });
+    </script>
+</body>
+</html>
