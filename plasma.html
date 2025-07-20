@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>¿Qué son las armas de plasma y las afirmaciones sobre Irán?</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f9;
+      color: #333;
+    }
+    header {
+      background-color: #2c3e50;
+      color: white;
+      text-align: center;
+      padding: 2rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+    }
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .section {
+      background-color: white;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .section h2 {
+      color: #2c3e50;
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+    }
+    .section p {
+      margin: 0.5rem 0;
+    }
+    .toggle-btn {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      border-radius: 5px;
+      margin-top: 1rem;
+      transition: background-color 0.3s;
+    }
+    .toggle-btn:hover {
+      background-color: #2980b9;
+    }
+    .hidden {
+      display: none;
+    }
+    footer {
+      background-color: #2c3e50;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      position: relative;
+      bottom: 0;
+      width: 100%;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>¿Qué son las armas de plasma y por qué se habla de Irán?</h1>
+  </header>
+
+  <div class="container">
+    <div class="section">
+      <h2>¿Qué es un arma de plasma?</h2>
+      <p>Un arma de plasma es un tipo de arma teórica que utiliza <strong>plasma</strong>, un estado de la materia compuesto por partículas cargadas (iones y electrones), para causar daño. El plasma se genera al calentar un gas a temperaturas extremas o mediante campos electromagnéticos.</p>
+      <p>Estas armas, comunes en la ciencia ficción (como en videojuegos o películas), dispararían proyectiles o rayos de plasma confinados por campos magnéticos, transfiriendo gran cantidad de energía al impactar. Sin embargo, en la realidad, son tecnológicamente muy complejas y aún no son viables.</p>
+      <button class="toggle-btn" onclick="toggleSection('plasmaDetails')">Más detalles</button>
+      <div id="plasmaDetails" class="hidden">
+        <p><strong>Desafíos tecnológicos:</strong></p>
+        <ul>
+          <li>Fuente de energía: Se requiere una cantidad masiva de energía para generar y mantener el plasma.</li>
+          <li>Contención: Campos magnéticos fuertes son necesarios para evitar que el plasma se disipe en el aire.</li>
+          <li>Miniaturización: Crear un arma portátil con estas capacidades es un reto enorme.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>¿Por qué se dice que Irán tiene armas de plasma?</h2>
+      <p>En marzo de 2025, el Pentágono afirmó que Irán está desarrollando armas de plasma, basándose en supuesta evidencia de satélites de la NASA desde 2022. Sin embargo, <strong>no se han presentado pruebas concretas</strong>, lo que genera escepticismo entre expertos.</p>
+      <p>Estas afirmaciones ocurren en un contexto de tensiones en Oriente Medio, incluyendo conflictos entre Irán e Israel. Podrían ser parte de una estrategia de <strong>propaganda</strong> o <strong>disuasión</strong> para presionar a Irán o justificar acciones políticas.</p>
+      <button class="toggle-btn" onclick="toggleSection('iranDetails')">Más detalles</button>
+      <div id="iranDetails" class="hidden">
+        <p><strong>Contexto geopolítico:</strong></p>
+        <ul>
+          <li>Irán ha enfrentado sanciones y tensiones con EE.UU. e Israel, especialmente por su programa nuclear.</li>
+          <li>En octubre de 2024, Irán lanzó ataques con misiles contra Israel, aumentando la tensión regional.</li>
+          <li>La falta de respuesta oficial de Irán a estas afirmaciones sugiere que podrían ser rumores o exageraciones.</li>
+        </ul>
+        <p><strong>Evidencia:</strong> No hay pruebas verificables de que Irán posea armas de plasma operativas. La tecnología actual hace improbable su desarrollo a corto plazo.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>¿Son reales estas armas?</h2>
+      <p>Actualmente, las armas de plasma son más un concepto teórico que una realidad práctica. Aunque la investigación en tecnologías de plasma existe (por ejemplo, en armas de energía dirigida), no hay evidencia de que Irán o cualquier otro país tenga armas de plasma operativas.</p>
+      <p>Las afirmaciones podrían ser parte de una <strong>guerra psicológica</strong> o un intento de proyectar poder en un momento de alta tensión geopolítica.</p>
+    </div>
+  </div>
+
+  <footer>
+    <p>Elaborado por el Profesor Ángel Chacín Ávila, Licenciado en Física, Especialista en Ciencias Computacionales,UNES Núcleo Zulia </p>
+  </footer>
+
+  <script>
+    function toggleSection(sectionId) {
+      const section = document.getElementById(sectionId);
+      section.classList.toggle('hidden');
+    }
+  </script>
+</body>
+</html>
