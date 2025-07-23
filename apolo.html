@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exploración Lunar: Pasado, Presente y Futuro</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f5;
+            color: #333;
+        }
+        header {
+            background: linear-gradient(to right, #1a1a3d, #3a3a7a);
+            color: white;
+            text-align: center;
+            padding: 2em;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        nav {
+            background-color: #2a2a5a;
+            padding: 1em;
+            text-align: center;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 1em;
+            font-weight: bold;
+        }
+        nav a:hover {
+            color: #ffd700;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2em;
+        }
+        .section {
+            background: white;
+            margin: 1em 0;
+            padding: 1.5em;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .section h2 {
+            cursor: pointer;
+            background: #3a3a7a;
+            color: white;
+            padding: 0.5em;
+            border-radius: 5px;
+            margin: 0;
+        }
+        .section h2:hover {
+            background: #4a4a9a;
+        }
+        .content {
+            display: none;
+            padding: 1em;
+        }
+        .content.active {
+            display: block;
+        }
+        .timeline {
+            position: relative;
+            margin: 2em 0;
+            padding: 0;
+            list-style: none;
+        }
+        .timeline li {
+            margin-bottom: 2em;
+            padding-left: 2em;
+            position: relative;
+        }
+        .timeline li:before {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background: #3a3a7a;
+            border-radius: 50%;
+            position: absolute;
+            left: 0;
+            top: 0.5em;
+        }
+        footer {
+            background: #1a1a3d;
+            color: white;
+            text-align: center;
+            padding: 1em;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+        .bibliography {
+            font-size: 0.9em;
+            margin-top: 1em;
+        }
+        .bibliography li {
+            margin-bottom: 0.5em;
+        }
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+            nav a {
+                display: block;
+                margin: 0.5em 0;
+            }
+            .container {
+                padding: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Exploración Lunar: Pasado, Presente y Futuro</h1>
+    </header>
+    <nav>
+        <a href="#apollo">Misiones Apolo</a>
+        <a href="#soviet">Programa Soviético</a>
+        <a href="#recent">Misiones No Tripuladas</a>
+        <a href="#artemis">Programa Artemis</a>
+        <a href="#lunar-bases">Bases Lunares</a>
+        <a href="#bibliography">Bibliografía</a>
+    </nav>
+    <div class="container">
+        <div class="section" id="apollo">
+            <h2 onclick="toggleSection(this)">Misiones Apolo (1961-1972)</h2>
+            <div class="content">
+                <p>El programa Apolo de la NASA marcó un hito en la exploración espacial al lograr el primer alunizaje tripulado en 1969. Con un costo de ~25,400 millones de dólares, culminó con seis alunizajes (Apolo 11, 12, 14, 15, 16, 17), recolectando 382 kg de rocas lunares y dejando reflectores láser aún operativos. La tecnología del cohete Saturno V, diseñada por Wernher von Braun, fue clave.</p>
+                <p>El negacionismo, que alega que las misiones fueron falsificadas, es refutado por evidencia material (rocas lunares, reflectores), telemetría, y la participación de más de 400,000 personas. Las misiones fueron suspendidas en 1972 por altos costos, la Guerra de Vietnam y la distensión en la Guerra Fría.</p>
+                <p><strong>Origen tecnológico:</strong> La tecnología nazi del cohete V-2, liderada por von Braun, fue fundamental para el Saturno V.</p>
+            </div>
+        </div>
+        <div class="section" id="soviet">
+            <h2 onclick="toggleSection(this)">Programa Lunar Soviético</h2>
+            <div class="content">
+                <p>La URSS lideró la carrera espacial con hitos como el Sputnik 1 (1957), Luna 2 (1959, primer impacto lunar), y Lunojod 1 (1970, primer rover lunar). Sin embargo, su programa tripulado fracasó debido a problemas con el cohete N1 y la muerte de Serguéi Korolev en 1966, que desorganizó el esfuerzo. El programa automático (Luna 16, 20, 24) recolectó muestras, pero fue abandonado por costos y pérdida de relevancia geopolítica tras Apolo.</p>
+                <p><strong>Origen tecnológico:</strong> Los soviéticos adaptaron la tecnología V-2 para sus cohetes R-7, base de sus programas espaciales.</p>
+            </div>
+        </div>
+        <div class="section" id="recent">
+            <h2 onclick="toggleSection(this)">Misiones No Tripuladas Lunares (1990-Presente)</h2>
+            <div class="content">
+                <p>Desde los 90, varias naciones y empresas privadas han enviado misiones no tripuladas a la Luna:</p>
+                <ul class="timeline">
+                    <li><strong>EE. UU.:</strong> Clementine (1994) mapeó la superficie lunar; Lunar Prospector (1998) detectó posibles depósitos de hielo en los polos.</li>
+                    <li><strong>Japón:</strong> Kaguya (2007) realizó mapeo 3D y estudió el subsuelo lunar.</li>
+                    <li><strong>India:</strong> Chandrayaan-1 (2008) confirmó agua en la superficie; Chandrayaan-2 (2019) intentó un alunizaje (fallido); Chandrayaan-3 (2023) logró un alunizaje exitoso en el polo sur.</li>
+                    <li><strong>China:</strong> Chang’e-1 (2007) mapeó la Luna; Chang’e-3 (2013) desplegó el rover Yutu; Chang’e-4 (2019) logró el primer alunizaje en el lado oculto; Chang’e-5 (2020) retornó 2 kg de muestras.</li>
+                    <li><strong>Agencias Privadas:</strong> SpaceIL (Israel, Beresheet, 2019) falló en el alunizaje; Intuitive Machines (EE. UU., Odysseus, 2024) logró el primer alunizaje privado en el polo sur.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="section" id="artemis">
+            <h2 onclick="toggleSection(this)">Programa Artemis</h2>
+            <div class="content">
+                <p>El programa Artemis de la NASA, iniciado en 2017, busca establecer una presencia humana permanente en la Luna para 2030, como preparación para misiones a Marte. Utiliza el cohete SLS y la nave Orion.</p>
+                <ul class="timeline">
+                    <li><strong>Artemis I (2022):</strong> Prueba no tripulada del SLS y Orion, orbitando la Luna con éxito.</li>
+                    <li><strong>Artemis II (2026):</strong> Primer vuelo tripulado, un sobrevuelo lunar con cuatro astronautas.</li>
+                    <li><strong>Artemis III (2027):</strong> Primer alunizaje tripulado en el polo sur, usando el Starship HLS de SpaceX.</li>
+                    <li><strong>Artemis IV-VI (2028-2031):</strong> Construcción de la estación Lunar Gateway y alunizajes anuales.</li>
+                </ul>
+                <p>El programa incluye colaboraciones con SpaceX, Blue Origin, y agencias internacionales (ESA, CSA).</p>[](https://en.wikipedia.org/wiki/Artemis_program)[](https://www.nasa.gov/humans-in-space/artemis/)
+            </div>
+        </div>
+        <div class="section" id="lunar-bases">
+            <h2 onclick="toggleSection(this)">Planes de Bases Lunares</h2>
+            <div class="content">
+                <p>Varios países y agencias planean bases lunares:</p>
+                <ul>
+                    <li><strong>EE. UU. (Artemis Base Camp):</strong> NASA planea una base en el polo sur para 2030, con cabañas, rovers presurizados y energía nuclear para estancias de hasta dos meses.</li>[](https://www.nasa.gov/blogs/missions/2020/10/28/lunar-living-nasas-artemis-base-camp-concept/)
+                    <li><strong>China:</strong> La CNSA planea la Estación Internacional de Investigación Lunar (ILRS) para 2035, en colaboración con Rusia, con módulos habitables y rovers.</li>
+                    <li><strong>Rusia:</strong> Roscosmos colabora con China en la ILRS, pero enfrenta retrasos por limitaciones económicas y tecnológicas.</li>
+                    <li><strong>India:</strong> ISRO planea misiones precursoras para una base lunar en la década de 2030.</li>
+                    <li><strong>Agencias Privadas:</strong> Empresas como SpaceX y Blue Origin desarrollan tecnologías para bases lunares, como el Starship HLS y el Blue Moon lander.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="section" id="bibliography">
+            <h2 onclick="toggleSection(this)">Bibliografía</h2>
+            <div class="content">
+                <ul class="bibliography">
+                    <li>Chaikin, A. (1994). <em>A Man on the Moon: The Voyages of the Apollo Astronauts</em>. Penguin Books.</li>
+                    <li>Logsdon, J. M. (2010). <em>John F. Kennedy and the Race to the Moon</em>. Palgrave Macmillan.</li>
+                    <li>Siddiqi, A. A. (2000). <em>Challenge to Apollo: The Soviet Union and the Space Race</em>. NASA History Series.</li>
+                    <li>NASA. (2025). <em>Artemis Program Overview</em>. Recuperado de <a href="https://www.nasa.gov/artemis">www.nasa.gov/artemis</a>.</li>[](https://www.nasa.gov/humans-in-space/artemis/)
+                    <li>GAO. (2023). <em>NASA Artemis Programs: Lunar Landing Plans</em>. Recuperado de <a href="https://www.gao.gov">www.gao.gov</a>.</li>[](https://www.gao.gov/products/gao-24-106256)
+                </ul>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <p>Elaborado por el Profesor Ángel Chacín Ávila, Licenciado en Física, Especialista en Ciencias Computacionales, UNES Núcleo Zulia</p>
+    </footer>
+    <script>
+        function toggleSection(element) {
+            const content = element.nextElementSibling;
+            content.classList.toggle('active');
+        }
+        // Open the first section by default
+        document.querySelector('.content').classList.add('active');
+    </script>
+</body>
+</html>
