@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Misiones Lunokhod: Los Primeros Rovers Lunares</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --soviet-red: #c62d30;
+            --space-blue: #0b3d91;
+            --moon-gray: #e6e6e6;
+            --tech-silver: #a0a0a0;
+            --cosmic-dark: #121212;
+            --highlight: #ffd700;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0d1b2a, #1b263b);
+            color: #f8f9fa;
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .soviet-header {
+            background: linear-gradient(rgba(0, 0, 0, 0.8), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23c62d30" opacity="0.3"/><circle cx="50" cy="50" r="20" fill="%23ffd700" opacity="0.1"/><path d="M30,30 L70,70 M70,30 L30,70" stroke="%23ffffff" stroke-width="2" opacity="0.1"/></svg>');
+            padding: 4rem 0 3rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 3px solid var(--highlight);
+        }
+        
+        .soviet-header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="1" fill="%23ffffff" opacity="0.3"/></svg>');
+            opacity: 0.2;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .lunokhod-icon {
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 60"><rect x="10" y="20" width="80" height="20" rx="5" fill="%23a0a0a0"/><circle cx="25" cy="45" r="10" fill="%23333"/><circle cx="75" cy="45" r="10" fill="%23333"/><rect x="40" y="10" width="20" height="15" fill="%23c62d30"/><rect x="35" y="25" width="30" height="5" fill="%23ffd700"/><circle cx="50" cy="15" r="3" fill="%230b3d91"/></svg>') no-repeat center;
+            background-size: contain;
+            width: 180px;
+            height: 100px;
+            margin: 0 auto 20px;
+        }
+        
+        h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 3px 10px rgba(0, 0, 0, 0.7);
+        }
+        
+        .subtitle {
+            font-size: 1.5rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            color: #d1d1d1;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+        
+        .section {
+            margin-bottom: 5rem;
+            position: relative;
+        }
+        
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: var(--highlight);
+            position: relative;
+            padding-left: 1.5rem;
+        }
+        
+        .section-title::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 80%;
+            background: var(--soviet-red);
+        }
+        
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .card {
+            background: rgba(30, 30, 40, 0.7);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            border-color: var(--highlight);
+        }
+        
+        .card-header {
+            background: var(--soviet-red);
+            padding: 1.5rem;
+            text-align: center;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .card-content {
+            padding: 1.5rem;
+        }
+        
+        .card-content h3 {
+            color: var(--highlight);
+            margin-bottom: 1rem;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        
+        .card-content ul {
+            padding-left: 1.5rem;
+            margin: 1rem 0;
+        }
+        
+        .card-content li {
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+        
+        .card-content li::before {
+            content: "•";
+            color: var(--soviet-red);
+            position: absolute;
+            left: -1rem;
+            font-weight: bold;
+        }
+        
+        .tech-specs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .spec-card {
+            background: rgba(40, 40, 60, 0.5);
+            border-radius: 8px;
+            padding: 1.5rem;
+            border-left: 4px solid var(--soviet-red);
+        }
+        
+        .spec-card h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            margin-bottom: 0.5rem;
+            color: var(--highlight);
+            font-size: 1.2rem;
+        }
+        
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .mission-card {
+            background: rgba(20, 20, 30, 0.8);
+            border-radius: 10px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .mission-card h3 {
+            color: var(--highlight);
+            font-family: 'Space Grotesk', sans-serif;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 1.8rem;
+        }
+        
+        .achievement-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .achievement {
+            background: rgba(30, 40, 60, 0.5);
+            border-radius: 8px;
+            padding: 1.5rem;
+            border-top: 3px solid var(--soviet-red);
+        }
+        
+        .achievement h4 {
+            color: var(--highlight);
+            margin-bottom: 0.5rem;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .gallery-item {
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            height: 250px;
+            background: rgba(50, 50, 70, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .gallery-item::before {
+            content: "Imagen Lunokhod";
+            position: absolute;
+            color: rgba(255, 255, 255, 0.5);
+            font-style: italic;
+        }
+        
+        .gallery-item:nth-child(1)::before {
+            content: "Lunokhod 1 en la Luna";
+        }
+        
+        .gallery-item:nth-child(2)::before {
+            content: "Esquema técnico del rover";
+        }
+        
+        .gallery-item:nth-child(3)::before {
+            content: "Centro de control terrestre";
+        }
+        
+        .gallery-item:nth-child(4)::before {
+            content: "Lunokhod 2 y su recorrido";
+        }
+        
+        .legacy-section {
+            background: rgba(30, 30, 50, 0.6);
+            border-radius: 10px;
+            padding: 2.5rem;
+            margin-top: 3rem;
+            border-left: 5px solid var(--highlight);
+        }
+        
+        .footer {
+            background: rgba(10, 10, 20, 0.9);
+            padding: 3rem 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .author {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--highlight);
+        }
+        
+        .credentials {
+            font-style: italic;
+            margin-bottom: 2rem;
+            opacity: 0.8;
+        }
+        
+        .bibliography {
+            text-align: left;
+            margin-top: 2rem;
+            background: rgba(30, 30, 40, 0.5);
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+        
+        .bibliography h3 {
+            color: var(--highlight);
+            margin-bottom: 1rem;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        
+        .bibliography ul {
+            list-style-type: none;
+        }
+        
+        .bibliography li {
+            margin-bottom: 0.8rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        
+        .bibliography li::before {
+            content: "▹";
+            position: absolute;
+            left: 0;
+            color: var(--soviet-red);
+        }
+        
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--soviet-red);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: all 0.3s;
+            z-index: 100;
+            border: 1px solid var(--highlight);
+        }
+        
+        .back-to-top:hover {
+            opacity: 1;
+            transform: translateY(-5px);
+        }
+        
+        .fade-in {
+            animation: fadeIn 1s ease forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Soviet-style Header -->
+    <header class="soviet-header">
+        <div class="header-content">
+            <div class="lunokhod-icon"></div>
+            <h1>Misiones Lunokhod</h1>
+            <p class="subtitle">Los primeros rovers lunares de la historia: un triunfo de la ingeniería soviética</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Contexto Histórico -->
+        <section class="section fade-in">
+            <h2 class="section-title">Contexto Histórico</h2>
+            <p>El programa Lunokhod fue la respuesta de la Unión Soviética a la carrera espacial durante la Guerra Fría. Mientras Estados Unidos centraba sus esfuerzos en misiones tripuladas a la Luna (Programa Apolo), la URSS desarrolló una alternativa innovadora: vehículos robóticos controlados remotamente desde la Tierra.</p>
+            
+            <div class="card-grid">
+                <div class="card">
+                    <div class="card-header">Carrera Espacial</div>
+                    <div class="card-content">
+                        <p>Tras los primeros éxitos soviéticos (Sputnik, Laika, Gagarin), la URSS enfocó sus esfuerzos en la exploración lunar. El fracaso del cohete N1 para misiones tripuladas llevó a priorizar misiones robóticas.</p>
+                        <p>Las misiones Lunokhod fueron parte del programa Luna, que incluyó orbitadores, impactadores y retorno de muestras.</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">Diseño Innovador</div>
+                    <div class="card-content">
+                        <p>Desarrollados por el Instituto de Investigación de Ingeniería de Transporte de Leningrado bajo la dirección de Alexander Kemurdzhian.</p>
+                        <p>Los Lunokhod fueron pioneros en:</p>
+                        <ul>
+                            <li>Movilidad en terreno extraterrestre</li>
+                            <li>Teleoperación a gran distancia</li>
+                            <li>Supervivencia en condiciones lunares extremas</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">Legado Científico</div>
+                    <div class="card-content">
+                        <p>Las misiones Lunokhod establecieron récords de duración y distancia recorrida que permanecieron imbatidos durante décadas.</p>
+                        <p>Demostraron la viabilidad de la exploración robótica remota y sentaron las bases para futuros rovers como los de NASA en Marte.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tecnología y Diseño -->
+        <section class="section fade-in">
+            <h2 class="section-title">Tecnología y Diseño</h2>
+            <p>Los rovers Lunokhod eran maravillas de ingeniería para su época, diseñados para sobrevivir a las extremas condiciones lunares: temperaturas de -170°C a 130°C, vacío espacial y terreno desconocido.</p>
+            
+            <div class="tech-specs">
+                <div class="spec-card">
+                    <h4><i class="fas fa-cogs"></i> Configuración</h4>
+                    <p>Peso: 756 kg (Lunokhod 1), 840 kg (Lunokhod 2)</p>
+                    <p>Dimensiones: 2.3m de largo × 1.6m de ancho × 1.35m de alto</p>
+                    <p>Forma: Bañera octogonal presurizada con tapa solar</p>
+                </div>
+                
+                <div class="spec-card">
+                    <h4><i class="fas fa-tachometer-alt"></i> Movilidad</h4>
+                    <p>8 ruedas motorizadas independientes</p>
+                    <p>Suspensión individual con barras de torsión</p>
+                    <p>Velocidad máxima: 2 km/h</p>
+                    <p>Capacidad de superar obstáculos de 40 cm y pendientes de 20°</p>
+                </div>
+                
+                <div class="spec-card">
+                    <h4><i class="fas fa-sun"></i> Energía</h4>
+                    <p>Baterías de plata-zinc recargadas mediante panel solar</p>
+                    <p>Tapa solar que se abría durante el día lunar para generar energía y se cerraba durante la noche para aislamiento térmico</p>
+                    <p>Sistema de calefacción con polonio-210 radioactivo</p>
+                </div>
+                
+                <div class="spec-card">
+                    <h4><i class="fas fa-camera"></i> Instrumentación</h4>
+                    <p>4 cámaras panorámicas (2 delanteras, 2 traseras)</p>
+                    <p>Antena direccional para comunicación con la Tierra</p>
+                    <p>Espectrómetro de rayos X, telescopio de rayos X</p>
+                    <p>Penetrómetro para pruebas de suelo</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Misiones Lunokhod -->
+        <section class="section fade-in">
+            <h2 class="section-title">Misiones Lunokhod</h2>
+            
+            <div class="comparison">
+                <div class="mission-card">
+                    <h3>Lunokhod 1 (Luna 17)</h3>
+                    <p><strong>Lanzamiento:</strong> 10 de noviembre de 1970</p>
+                    <p><strong>Alunizaje:</strong> 17 de noviembre de 1970 en Mare Imbrium</p>
+                    <p><strong>Duración:</strong> 11 meses (10.5 meses planeados)</p>
+                    <p><strong>Operaciones:</strong> 322 días terrestres (11 días lunares)</p>
+                    
+                    <h4>Logros Principales:</h4>
+                    <ul>
+                        <li>Primer rover en operar en otro cuerpo celeste</li>
+                        <li>Recorrió 10.54 km durante 11 días lunares</li>
+                        <li>Transmitió más de 20,000 imágenes</li>
+                        <li>Realizó 25 análisis de suelo</li>
+                        <li>500 pruebas de propiedades físicas del suelo</li>
+                    </ul>
+                </div>
+                
+                <div class="mission-card">
+                    <h3>Lunokhod 2 (Luna 21)</h3>
+                    <h4>La misión más exitosa</h4>
+                    <p><strong>Lanzamiento:</strong> 8 de enero de 1973</p>
+                    <p><strong>Alunizaje:</strong> 15 de enero de 1973 en Le Monnier crater</p>
+                    <p><strong>Duración:</strong> 4 meses (3 meses planeados)</p>
+                    <p><strong>Operaciones:</strong> 4 meses (4 días lunares)</p>
+                    
+                    <h4>Logros Principales:</h4>
+                    <ul>
+                        <li>Recorrió 42 km (récord que duró 41 años)</li>
+                        <li>Transmitió 86 panoramas y 80,000 imágenes</li>
+                        <li>Mejor movilidad y cámaras actualizadas</li>
+                        <li>Magnetómetro para estudiar el campo magnético lunar</li>
+                        <li>Fotómetro para medir el brillo lunar</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="achievement-list">
+                <div class="achievement">
+                    <h4><i class="fas fa-trophy"></i> Récords Históricos</h4>
+                    <p>Lunokhod 2 mantuvo el récord de distancia recorrida en otro cuerpo celeste durante 41 años, hasta que el rover Opportunity de NASA lo superó en 2014.</p>
+                </div>
+                
+                <div class="achievement">
+                    <h4><i class="fas fa-flask"></i> Descubrimientos Científicos</h4>
+                    <p>Confirmaron la existencia de regolito lunar y analizaron su composición. Descubrieron "manchas lunares" - áreas con propiedades magnéticas inusuales.</p>
+                </div>
+                
+                <div class="achievement">
+                    <h4><i class="fas fa-users"></i> Equipo de Control</h4>
+                    <p>Cada rover era operado por un equipo de 5 personas: conductor, navegador, ingeniero, operador de antena y comandante. Los turnos seguían el ciclo día/noche lunar (14 días terrestres cada uno).</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Galería -->
+        <section class="section fade-in">
+            <h2 class="section-title">Galería</h2>
+            
+            <div class="gallery">
+                <div class="gallery-item"></div>
+                <div class="gallery-item"></div>
+                <div class="gallery-item"></div>
+                <div class="gallery-item"></div>
+            </div>
+        </section>
+
+        <!-- Legado -->
+        <section class="section fade-in">
+            <h2 class="section-title">Legado e Influencia</h2>
+            
+            <div class="legacy-section">
+                <h3>Impacto en la Exploración Espacial</h3>
+                <p>Las misiones Lunokhod demostraron que:</p>
+                <ul>
+                    <li>La exploración robótica remota era viable y efectiva</li>
+                    <li>Los vehículos podían sobrevivir largos periodos en ambientes extraterrestres</li>
+                    <li>La teleoperación a distancia planetaria era posible</li>
+                </ul>
+                
+                <h3>Influencia en Misiones Posteriores</h3>
+                <div class="tech-specs">
+                    <div class="spec-card">
+                        <h4><i class="fas fa-robot"></i> Mars Rovers</h4>
+                        <p>Sojourner, Spirit, Opportunity y Curiosity de NASA heredaron conceptos de los Lunokhod</p>
+                    </div>
+                    
+                    <div class="spec-card">
+                        <h4><i class="fas fa-satellite"></i> Modernos Rovers Lunares</h4>
+                        <p>Yutu (China) y Pragyan (India) siguen el concepto de rover lunar iniciado por la URSS</p>
+                    </div>
+                    
+                    <div class="spec-card">
+                        <h4><i class="fas fa-wifi"></i> Teleoperación</h4>
+                        <p>Las técnicas desarrolladas para controlar los Lunokhod se usan hoy en operaciones de robots en la ISS y misiones interplanetarias</p>
+                    </div>
+                </div>
+                
+                <h3>Redescubrimiento de Lunokhod 1</h3>
+                <p>En 2010, el Lunar Reconnaissance Orbiter de NASA localizó a Lunokhod 1 y su módulo de aterrizaje. Sorprendentemente, los retroreflectores láser del rover todavía funcionaban, permitiendo mediciones precisas de la distancia Tierra-Luna.</p>
+            </div>
+        </section>
+
+        <!-- Bibliografía -->
+        <section class="section fade-in">
+            <h2 class="section-title">Bibliografía</h2>
+            
+            <div class="bibliography">
+                <ul>
+                    <li>Harvey, B. (2007). <em>Soviet and Russian Lunar Exploration</em>. Springer-Praxis.</li>
+                    <li>Wesoff, E. (2013). "How the Soviets drove on the Moon". <em>Popular Mechanics</em>.</li>
+                    <li>Kemurdzhian, A. (1990). <em>Planetary Rovers: The Soviet Experience</em>. Nauka.</li>
+                    <li>NASA (2010). <em>LRO Finds Apollo 11 and Lunokhod 1 on the Moon</em>. NASA Press Release.</li>
+                    <li>Zak, A. (2013). "Lunokhod-2: The legendary Moon rover". <em>RussianSpaceWeb.com</em>.</li>
+                    <li>Murdin, P. (2016). <em>Planetary Exploration with Rovers: From Lunokhod to Mars</em>. Cambridge University Press.</li>
+                    <li>Vetrov, G. (2002). <em>The History of the Soviet Space Program</em>. University Press of the Pacific.</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p class="author">Elaborado por el Profesor Ángel Chacín Ávila</p>
+            <p class="credentials">Licenciado en Física, Especialista en Ciencias Computacionales<br>
+            UNES Núcleo Zulia</p>
+            <p>© 2023 - Todos los derechos reservados</p>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <div class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <script>
+        // Animación de desplazamiento suave
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Mostrar/ocultar botón "Volver arriba"
+        window.addEventListener('scroll', function() {
+            const backToTopButton = document.querySelector('.back-to-top');
+            if (window.pageYOffset > 300) {
+                backToTopButton.style.display = 'flex';
+            } else {
+                backToTopButton.style.display = 'none';
+            }
+        });
+
+        // Animación de aparición al hacer scroll
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.section').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
