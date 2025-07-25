@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Las Leyes de Newton - Interactivo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        .law-container {
+            background-color: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .law-title {
+            color: #2980b9;
+            cursor: pointer;
+        }
+        .law-content {
+            display: none;
+            margin-top: 10px;
+        }
+        .law-content.show {
+            display: block;
+        }
+        canvas {
+            border: 1px solid #ccc;
+            margin: 10px 0;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 14px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <h1>¡Explora las Leyes de Newton!</h1>
+
+    <!-- Primera Ley -->
+    <div class="law-container">
+        <h2 class="law-title">Primera Ley: Ley de la Inercia</h2>
+        <div class="law-content">
+            <p>Un objeto en reposo permanece en reposo, y un objeto en movimiento sigue en movimiento a velocidad constante en línea recta, a menos que una fuerza externa actúe sobre él.</p>
+            <p><strong>Ejemplo:</strong> Un libro sobre una mesa no se mueve a menos que alguien lo empuje.</p>
+            <button onclick="startInertiaAnimation()">Ver Animación</button>
+            <canvas id="inertiaCanvas" width="400" height="100"></canvas>
+        </div>
+    </div>
+
+    <!-- Segunda Ley -->
+    <div class="law-container">
+        <h2 class="law-title">Segunda Ley: Ley de la Fuerza</h2>
+        <div class="law-content">
+            <p>La aceleración de un objeto es directamente proporcional a la fuerza neta que actúa sobre él e inversamente proporcional a su masa. Se expresa como: <strong>F = m * a</strong>.</p>
+            <p><strong>Ejemplo:</strong> Empujar un carrito ligero requiere menos fuerza que empujar uno pesado para lograr la misma aceleración.</p>
+            <button onclick="startForceAnimation()">Ver Animación</button>
+            <canvas id="forceCanvas" width="400" height="100"></canvas>
+        </div>
+    </div>
+
+    <!-- Tercera Ley -->
+    <div class="law-container">
+        <h2 class="law-title">Tercera Ley: Ley de Acción y Reacción</h2>
+        <div class="law-content">
+            <p>Por cada acción, hay una reacción igual y opuesta.</p>
+            <p><strong>Ejemplo:</strong> Al remar un bote, empujas el agua hacia atrás y el agua te empuja hacia adelante.</p>
+            <button onclick="startActionReactionAnimation()">Ver Animación</button>
+            <canvas id="actionReactionCanvas" width="400" height="100"></canvas>
+        </div>
+    </div>
+
+    <footer>
+        Elaborado por el Profesor Ángel Chacín Ávila, Licenciado en Física, Especialista en Ciencias Computacionales, UNES Núcleo Zulia
+    </footer>
+
+    <script>
+        // Toggle para mostrar/ocultar contenido
+        document.querySelectorAll('.law-title').forEach(title => {
+            title.addEventListener('click', () => {
+                const content = title.nextElementSibling;
+                content.classList.toggle('show');
+            });
+        });
+
+        // Animación para la Primera Ley (Inercia)
+        function startInertiaAnimation() {
+            const canvas = document.getElementById('inertiaCanvas');
+            const ctx = canvas.getContext('2d');
+            let x = 0;
+            let moving = true;
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#e74c3c';
+                ctx.fillRect(x, 40, 50, 20); // Objeto
+                ctx.fillStyle = '#000';
+                ctx.fillText('Objeto en movimiento', x, 30);
+                if (moving) {
+                    x += 2;
+                    if (x > canvas.width) x = 0;
+                }
+                requestAnimationFrame(animate);
+            }
+            animate();
+            setTimeout(() => moving = false, 3000); // Simula una fuerza que detiene el objeto
+        }
+
+        // Animación para la Segunda Ley (Fuerza)
+        function startForceAnimation() {
+            const canvas = document.getElementById('forceCanvas');
+            const ctx = canvas.getContext('2d');
+            let x = 0;
+            let velocity = 0;
+            const mass = 10;
+            const force = 20;
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#2ecc71';
+                ctx.fillRect(x, 40, 50, 20); // Objeto
+                ctx.fillStyle = '#000';
+                ctx.fillText(`F = ${force} N, m = ${mass} kg`, 10, 20);
+                const acceleration = force / mass;
+                velocity += acceleration * 0.1;
+                x += velocity;
+                if (x > canvas.width) x = 0;
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        // Animación para la Tercera Ley (Acción-Reacción)
+        function startActionReactionAnimation() {
+            const canvas = document.getElementById('actionReactionCanvas');
+            const ctx = canvas.getContext('2d');
+            let x1 = 100;
+            let x2 = 250;
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#3498db';
+                ctx.fillRect(x1, 40, 50, 20); // Objeto 1
+                ctx.fillStyle = '#e67e22';
+                ctx.fillRect(x2, 40, 50, 20); // Objeto 2
+                ctx.fillStyle = '#000';
+                ctx.fillText('Acción', x1, 30);
+                ctx.fillText('Reacción', x2, 30);
+                x1 -= 1; // Objeto 1 se mueve a la izquierda
+                x2 += 1; // Objeto 2 se mueve a la derecha
+                if (x1 < 0 || x2 > canvas.width) {
+                    x1 = 100;
+                    x2 = 250;
+                }
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+    </script>
+</body>
+</html>
