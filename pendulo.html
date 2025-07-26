@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Péndulos y Leyes de la Naturaleza</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px 0;
+            text-align: center;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        header h1 {
+            font-size: 3.5rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .subtitle {
+            font-size: 1.8rem;
+            color: #3498db;
+            font-weight: 300;
+            margin-bottom: 15px;
+        }
+        
+        .content {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .content p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            text-align: justify;
+        }
+        
+        .content h2 {
+            color: #e74c3c;
+            margin: 30px 0 20px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        .concepts {
+            background: rgba(236, 240, 241, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            margin: 40px 0;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .concepts h2 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .concept-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .concept-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .concept-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .concept-card h3 {
+            color: #3498db;
+            margin-bottom: 15px;
+        }
+        
+        .concept-card p {
+            margin-bottom: 0;
+        }
+        
+        .foucault-section {
+            background: rgba(52, 152, 219, 0.1);
+            padding: 30px;
+            border-radius: 10px;
+            margin: 40px 0;
+            border-left: 5px solid #3498db;
+        }
+        
+        .foucault-content {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 30px;
+        }
+        
+        .foucault-text {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .foucault-image {
+            flex: 1;
+            min-width: 300px;
+            text-align: center;
+        }
+        
+        .foucault-image img {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border: 5px solid white;
+        }
+        
+        .image-caption {
+            font-style: italic;
+            margin-top: 10px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .pendulum-animation {
+            background: #2c3e50;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 40px 0;
+            text-align: center;
+        }
+        
+        .pendulum-container {
+            position: relative;
+            height: 300px;
+            margin: 0 auto;
+            width: 300px;
+        }
+        
+        .pendulum {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform-origin: 50% 0;
+            animation: swing 4s infinite ease-in-out;
+        }
+        
+        .string {
+            height: 200px;
+            width: 2px;
+            background: #fff;
+            margin: 0 auto;
+        }
+        
+        .bob {
+            width: 40px;
+            height: 40px;
+            background: #e74c3c;
+            border-radius: 50%;
+            margin: 0 auto;
+            position: relative;
+            top: -20px;
+            box-shadow: 0 0 10px rgba(231, 76, 60, 0.7);
+        }
+        
+        @keyframes swing {
+            0% { transform: rotate(-30deg); }
+            50% { transform: rotate(30deg); }
+            100% { transform: rotate(-30deg); }
+        }
+        
+        footer {
+            background: rgba(44, 62, 80, 0.9);
+            color: white;
+            text-align: center;
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+        
+        .credits {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+        
+        .copyright {
+            font-size: 0.9rem;
+            color: #bdc3c7;
+        }
+        
+        .highlight {
+            background: linear-gradient(to right, #3498db, #2c3e50);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1.3rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .foucault-content {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>PÉNDULOS Y LEYES DE LA NATURALEZA</h1>
+            <p class="subtitle">De la mitología al descubrimiento de las leyes físicas</p>
+        </header>
+        
+        <div class="content">
+            <p>Los antiguos griegos pensaban que los rayos eran un arma arrojada por el dios Zeus cuando estaba enojado. Los antiguos chinos creían que la lluvia era un regalo del cielo, controlado por un dragón mítico llamado "Long", que podía crear prosperidad o destrucción. Para muchas civilizaciones a lo largo de la historia, se creía que los fenómenos de la naturaleza estaban gobernados por los dioses y otras fuerzas sobrenaturales, a menudo impredecibles y que no obedecían ninguna lógica o razón humana.</p>
+            
+            <p>Luego, en el siglo XVII, el gran físico Isaac Newton propuso sus "leyes matemáticas del movimiento", las cuales sugerían que el universo es como un reloj mecánico gigante, con cada evento siguiendo a un evento anterior de una manera completamente predecible. Además, según la visión de Newton y la de la ciencia moderna, todo en la naturaleza sigue leyes que nosotros, los seres humanos, podemos descubrir. Aún así, muchas personas creen que algunos fenómenos y eventos no obedecen las leyes y están más allá del alcance de la comprensión científica.</p>
+            
+            <div class="pendulum-animation">
+                <div class="pendulum-container">
+                    <div class="pendulum">
+                        <div class="string"></div>
+                        <div class="bob"></div>
+                    </div>
+                </div>
+                <p style="color: white; margin-top: 20px;">Simulación de un péndulo oscilando</p>
+            </div>
+            
+            <p>Una de las primeras leyes cuantitativas de la naturaleza provino del estudio de los péndulos a finales del siglo XVI. En ese momento, el físico italiano Galileo encontró una relación cuantitativa entre la longitud de un péndulo y el tiempo que tarda en realizar un movimiento completo (llamado su período). Resulta que muchos fenómenos en la naturaleza, como las mareas oceánicas y las ondas sísmicas en la Tierra, tienen un comportamiento similar al de un péndulo. De hecho, todos los sistemas físicos, cuando se mueven ligeramente de su posición más estable, oscilan alrededor de esa posición como un péndulo. Por lo tanto, los péndulos no solo demuestran una ley cuantitativa de la naturaleza, sino que también tienen una amplia aplicación.</p>
+            
+            <div class="foucault-section">
+                <h2>Léon Foucault y el péndulo que demostró la rotación terrestre</h2>
+                <div class="foucault-content">
+                    <div class="foucault-text">
+                        <p>Una de las aplicaciones más famosas del péndulo es el experimento realizado por el físico francés <span class="highlight">Léon Foucault</span> en 1851. En el Panteón de París, Foucault suspendió una pesada esfera de 28 kg de un cable de 67 metros de largo. Al poner el péndulo en movimiento, observó que el plano de oscilación rotaba gradualmente.</p>
+                        
+                        <p>Este fenómeno no podía explicarse por las leyes del péndulo simple, sino que demostraba la <span class="highlight">rotación de la Tierra</span>. En el Polo Norte, el péndulo completaría una rotación completa cada 24 horas, mientras que en París (48°51'N) toma aproximadamente 32 horas para completar una rotación completa.</p>
+                        
+                        <p>El experimento de Foucault proporcionó la primera prueba mecánica directa de la rotación terrestre, un hito fundamental en la historia de la física y la comprensión de nuestro planeta.</p>
+                    </div>
+                    <div class="foucault-image">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Foucault_pendulum_at_CAS.jpg/800px-Foucault_pendulum_at_CAS.jpg" alt="Réplica del péndulo de Foucault">
+                        <p class="image-caption">Réplica moderna del péndulo de Foucault (Crédito: Wikimedia Commons)</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concepts">
+                <h2>CONCEPTOS CLAVE Y VOCABULARIO</h2>
+                <div class="concept-grid">
+                    <div class="concept-card">
+                        <h3>Movimiento armónico simple</h3>
+                        <p>Vibración alrededor de una posición de equilibrio en la que una fuerza restauradora es proporcional al desplazamiento desde el equilibrio.</p>
+                    </div>
+                    
+                    <div class="concept-card">
+                        <h3>Período</h3>
+                        <p>El tiempo que tarda en ocurrir un ciclo completo u oscilación de onda.</p>
+                    </div>
+                    
+                    <div class="concept-card">
+                        <h3>Amplitud</h3>
+                        <p>El desplazamiento máximo desde el equilibrio.</p>
+                    </div>
+                    
+                    <div class="concept-card">
+                        <h3>Péndulo</h3>
+                        <p>Un cuerpo suspendido de un punto fijo para que oscile libremente bajo la influencia de la gravedad.</p>
+                    </div>
+                    
+                    <div class="concept-card">
+                        <h3>Oscilación</h3>
+                        <p>Movimiento periódico que se repite en intervalos regulares de tiempo.</p>
+                    </div>
+                    
+                    <div class="concept-card">
+                        <h3>Ley del péndulo</h3>
+                        <p>El período de oscilación es proporcional a la raíz cuadrada de la longitud del péndulo e independiente de la masa y la amplitud (para pequeñas oscilaciones).</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p class="credits">Contenido creado por Alan Lightman, Doctor en Física Teórica</p>
+            <p class="credits">Traducido y adaptado por Ángel Chacín Ávila, Licenciado en Física, Especialista en Ciencias Computacionales</p>
+            <p class="credits">UNES Núcleo Zulia</p>
+            <p class="copyright">© 2023 - Todos los derechos reservados</p>
+        </footer>
+    </div>
+</body>
+</html>
