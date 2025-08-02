@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Implementación de Métodos de Monte Carlo en Fortran para Campos Electromagnéticos</title>
+  <script src="https://cdn.tailwindcss.com"></ SUCHEVAN>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-fortran.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
+  <!-- MathJax para renderizar ecuaciones LaTeX -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    pre { background: #f4f4f4; padding: 1rem; border-radius: 8px; }
+    .download-btn { margin-top: 1rem; }
+    .mathjax { font-size: 1.1rem; }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+  <div class="container mx-auto p-6 max-w-4xl">
+    <!-- Título -->
+    <h1 class="text-3xl font-bold text-center mb-6">Implementación de Métodos de Monte Carlo en Fortran para Problemas de Campos Electromagnéticos</h1>
+
+    <!-- Resumen -->
+    <section class="mb-8">
+      <h2 class="text-2xl font-semibold mb-4">Resumen</h2>
+      <p class="text-justify">
+        Este artículo presenta una implementación de métodos de Monte Carlo en Fortran para simular el movimiento de partículas cargadas en campos electromagnéticos uniformes. Se describe la teoría física subyacente, basada en la fuerza de Lorentz y las ecuaciones de Maxwell, y se detalla un enfoque computacional que combina integración numérica con simulaciones estocásticas. Se proporcionan dos códigos en Fortran: una versión básica usando el método de Euler y una avanzada con Runge-Kutta de orden 4. Los códigos son accesibles para su lectura y descarga, demostrando la aplicación práctica de los métodos discutidos.
+      </p>
+    </section>
+
+    <!-- Introducción -->
+    <section class="mb-8">
+      <h2 class="text-2xl font-semibold mb-4">1. Introducción</h2>
+      <p class="text-justify">
+        Los métodos de Monte Carlo son herramientas poderosas para modelar sistemas con incertidumbre, como el movimiento de partículas en campos electromagnéticos. En este trabajo, se explora su implementación en Fortran, un lenguaje eficiente para cálculos numéricos, aplicado a la simulación de trayectorias de partículas cargadas bajo la influencia de campos eléctricos y magnéticos uniformes. Este enfoque es relevante para aplicaciones en física de plasmas, óptica y diseño de dispositivos electromagnéticos.
+      </p>
+    </section>
+
+    <!-- Teoría Física -->
+    <section class="mb-8">
+      <h2 class="text-2xl font-semibold mb-4">2. Teoría Física</h2>
+      <p class="text-justify">
+        El movimiento de una partícula cargada en un campo electromagnético se describe mediante la fuerza de Lorentz:
+        \[
+        \mathbf{F} = q \left( \mathbf{E} + \mathbf{v} \times \mathbf{B} \right),
+        \]
+        donde \( q \) es la carga de la partícula, \( \mathbf{E} \) es el campo eléctrico, \( \mathbf{v} \) es la velocidad, y \( \mathbf{B} \) es el campo magnético. Las ecuaciones de movimiento resultantes son:
+        \[
+        \frac{d^2 \mathbf{r}}{dt^2} = \frac{q}{m} \left( \mathbf{E} + \frac{d\mathbf{r}}{dt} \times \mathbf{B} \right),
+        \]
+        donde \( m \) es la masa de la partícula. En un campo electromagnético uniforme, la componente magnética genera trayectorias helicoidales, mientras que el campo eléctrico produce una aceleración lineal. Las interacciones aleatorias, como colisiones con el medio, se modelan usando métodos de Monte Carlo, que introducen perturbaciones estocásticas en la velocidad de la partícula.
+      </p>
+      <p class="text-justify">
+        Las ecuaciones de Maxwell, que gobiernan los campos electromagnéticos, son:
+        \[
+        \begin{aligned}
+        \nabla \cdot \mathbf{E} &= \frac{\rho}{\epsilon_0}, \quad \nabla \cdot \mathbf{B} = 0, \\
+        \nabla \times \mathbf{E} &= -\frac{\partial \mathbf{B}}{\partial t}, \quad \nabla \times \mathbf{B} = \mu_0 \mathbf{J} + \mu_0 \epsilon_0 \frac{\partial \mathbf{E}}{\partial t},
+        \end{aligned}
+        \]
+        donde \( \rho \) es la densidad de carga, \( \mathbf{J} \) es la densidad de corriente, \( \epsilon_0 \) es la permitividad del vacío, y \( \mu_0 \) es la permeabilidad del vacío. En este trabajo, se asume un campo uniforme para simplificar las simulaciones.
+      </p>
+    </section>
+
+    <!-- Métodos de Monte Carlo -->
+    <section class="mb-8">
+      <h2 class="text-2xl font-semibold mb-4">3. Métodos de Monte Carlo</h2>
+      <p class="text-justify">
+        Los métodos de Monte Carlo utilizan números aleatorios para simular procesos estocásticos. En este contexto, se emplean para modelar colisiones aleatorias, calculando promedios estadísticos (como la posición o velocidad) sobre múltiples trayectorias. La precisión mejora con el número de simulaciones \( N \), con un error que escala como \( \frac{1}{\sqrt{N}} \). En los códigos presentados, se introduce aleatoriedad mediante perturbaciones en la velocidad con una probabilidad basada en una sección eficaz.
+      </p>
+    </section>
+
+    <!-- Implementación en Fortran -->
+    <section class="mb-8">
+      <h2 class="text-2xl font-semibold mb-4">4. Implementación en Fortran</h2>
+      <p class="text-justify">
+        Se presentan dos códigos en Fortran: una implementación básica usando el método de Euler y una avanzada con Runge-Kutta de orden 4. Ambos simulan el movimiento de partículas en un campo electromagnético uniforme, con colisiones modeladas mediante Monte Carlo.
+      </p>
+
+      <!-- Código 1: Versión Básica -->
+      <h3 class="text-xl font-semibold mb-2">4.1 Código Básico (Euler)</h3>
+      <pre><code id="code1" class="language-fortran"></code></pre>
+      <button class="download-btn bg-blue-500 text-white px-4 py-2 rounded" onclick="downloadCode('code1', 'monte_carlo_em.f90')">Descargar Código Básico</button>
+
+      <!-- Código 2: Versión Avanzada -->
+      <h3 class="text-xl font-semibold mb-2 mt-6">4.2 Código Avanzado (Runge-Kutta 4)</h3>
+      <pre><code id="code2" class="language-fortran"></code></pre>
+      <button class="download-btn bg-blue-500 text-white px-4 py-2 rounded" onclick="downloadCode('code2', 'monte_carlo_em_advanced.f90')">Descargar Código Avanzado</button>
+    </section>
+
+    <!-- Resultados -->
+    <section class="mb-8">
+      <h2 class="text-2xl font-semibold mb-4">5. Resultados</h2>
+      <p class="text-justify">
+        Los códigos generan trayectorias promedio de partículas cargadas, mostrando el efecto combinado de los campos eléctrico y magnético. La versión básica es adecuada para simulaciones rápidas, mientras que la avanzada ofrece mayor precisión gracias al método Runge-Kutta. Los resultados incluyen posiciones y velocidades promedio, útiles para analizar el comportamiento estadístico del sistema.
+      </p>
+    </section>
+
+    <!-- Conclusiones -->
+    <section class="mb-8">
+      <h2 class="text-2xl font-semibold mb-4">6. Conclusiones</h2>
+      <p class="text-justify">
+        Los métodos de Monte Carlo en Fortran son efectivos para modelar sistemas electromagnéticos complejos con incertidumbre. La implementación presentada demuestra su aplicabilidad en simulaciones de partículas cargadas, con potencial para extenderse a problemas como dispersión de ondas o física de plasmas. Futuras mejoras podrían incluir paralelización y modelos de colisión más sofisticados.
+      </p>
+    </section>
+
+    <!-- Referencias -->
+    <section class="mb-8">
+      <h2 class="text-2xl font-semibold mb-4">7. Referencias</h2>
+      <ul class="list-disc pl-6">
+        <li>Jackson, J. D. (1998). <i>Classical Electrodynamics</i>. Wiley.</li>
+        <li>Metropolis, N., & Ulam, S. (1949). The Monte Carlo Method. <i>Journal of the American Statistical Association</i>.</li>
+        <li>Press, W. H., et al. (2007). <i>Numerical Recipes: The Art of Scientific Computing</i>. Cambridge University Press.</li>
+      </ul>
+    </section>
+
+    <!-- Footer -->
+    <footer class="mt-12 text-center text-gray-600">
+      <p><strong>Autor:</strong> Profesor Ángel Chacín Ávila, Licenciado en Física, Especialista en Ciencias Computacionales, UNES Núcleo Zulia</p>
+      <p>&copy; 2023. Todos los derechos reservados.</p>
+    </footer>
+  </div>
+
+  <script>
+    // Código Fortran 1 (Básico)
+    const code1 = `! Programa en Fortran para simular la propagación de una partícula cargada
+! en un campo electromagnético uniforme usando métodos de Monte Carlo
+program monte_carlo_em
+  implicit none
+
+  ! Definición de constantes físicas
+  real, parameter :: q = 1.602e-19  ! Carga del electrón (C)
+  real, parameter :: m = 9.109e-31  ! Masa del electrón (kg)
+  real, parameter :: dt = 1.0e-12   ! Paso de tiempo (s)
+  integer, parameter :: n_steps = 10000  ! Número de pasos de simulación
+  integer, parameter :: n_particles = 1000 ! Número de partículas para Monte Carlo
+
+  ! Campos electromagnéticos uniformes
+  real, parameter :: E_field = 1.0e5  ! Campo eléctrico en z (V/m)
+  real, parameter :: B_field = 0.01   ! Campo magnético en y (T)
+
+  ! Variables para posición, velocidad y aceleración
+  real :: r(3), v(3), a(3)
+  real :: r_avg(3)  ! Posición promedio
+  real :: v_rand(3) ! Velocidad aleatoria para Monte Carlo
+  integer :: i, j
+  real :: rand_num
+
+  ! Inicialización de la posición promedio
+  r_avg = 0.0
+
+  ! Bucle de Monte Carlo sobre partículas
+  do i = 1, n_particles
+    ! Condiciones iniciales de la partícula
+    r = 0.0  ! Posición inicial en (0,0,0)
+    v = 0.0  ! Velocidad inicial en (0,0,0)
+
+    ! Bucle de integración temporal
+    do j = 1, n_steps
+      ! Fuerza de Lorentz: F = q(E + v x B)
+      a(1) = (q / m) * (v(2) * B_field)  ! ax = (q/m) * vy * B
+      a(2) = (q / m) * (-v(1) * B_field) ! ay = -(q/m) * vx * B
+      a(3) = (q / m) * E_field           ! az = (q/m) * E
+
+      ! Actualización de velocidad (método de Euler)
+      v = v + a * dt
+
+      ! Introducir aleatoriedad (Monte Carlo) para simular colisiones
+      call random_number(rand_num)
+      if (rand_num < 0.1) then ! Probabilidad de colisión del 10%
+        call random_number(v_rand)
+        v_rand = (v_rand - 0.5) * 1.0e5 ! Perturbación aleatoria en velocidad
+        v = v + v_rand
+      end if
+
+      ! Actualización de posición
+      r = r + v * dt
+    end do
+
+    ! Acumular posición para calcular promedio
+    r_avg = r_avg + r
+  end do
+
+  ! Calcular posición promedio
+  r_avg = r_avg / real(n_particles)
+
+  ! Imprimir resultados
+  print *, 'Posición promedio después de ', n_steps, ' pasos:'
+  print *, 'x = ', r_avg(1), 'm'
+  print *, 'y = ', r_avg(2), 'm'
+  print *, 'z = ', r_avg(3), 'm'
+
+end program monte_carlo_em`;
+
+    // Código Fortran 2 (Avanzado)
+    const code2 = `! Programa mejorado en Fortran para simular partículas en un campo electromagnético
+! usando Monte Carlo y Runge-Kutta 4
+program monte_carlo_em_advanced
+  implicit none
+
+  ! Constantes físicas
+  real, parameter :: q = 1.602e-19  ! Carga del electrón (C)
+  real, parameter :: m = 9.109e-31  ! Masa del electrón (kg)
+  real, parameter :: dt = 1.0e-12   ! Paso de tiempo (s)
+  integer, parameter :: n_steps = 10000  ! Número de pasos
+  integer, parameter :: n_particles = 1000 ! Número de partículas
+
+  ! Campos electromagnéticos
+  real, parameter :: E_field = 1.0e5  ! Campo eléctrico en z (V/m)
+  real, parameter :: B_field = 0.01   ! Campo magnético en y (T)
+
+  ! Variables
+  real :: r(3), v(3), a(3), k1_v(3), k2_v(3), k3_v(3), k4_v(3)
+  real :: r_avg(3), v_avg(3)
+  real :: v_rand(3), rand_num, sigma
+  integer :: i, j
+
+  ! Inicialización
+  r_avg = 0.0
+  v_avg = 0.0
+  call random_seed() ! Inicializar generador de números aleatorios
+
+  ! Bucle Monte Carlo
+  do i = 1, n_particles
+    r = 0.0  ! Posición inicial
+    v = 0.0  ! Velocidad inicial
+
+    ! Bucle temporal
+    do j = 1, n_steps
+      ! Runge-Kutta 4 para velocidad
+      call lorentz_acc(r, v, a)  ! k1
+      k1_v = a * dt
+
+      call lorentz_acc(r + 0.5*dt*v, v + 0.5*k1_v, a)  ! k2
+      k2_v = a * dt
+
+      call lorentz_acc(r + 0.5*dt*v + 0.25*dt*k1_v, v + 0.5*k2_v, a)  ! k3
+      k3_v = a * dt
+
+      call lorentz_acc(r + dt*v + 0.5*dt*k2_v, v + k3_v, a)  ! k4
+      k4_v = a * dt
+
+      ! Actualizar velocidad
+      v = v + (k1_v + 2.0*k2_v + 2.0*k3_v + k4_v) / 6.0
+
+      ! Actualizar posición
+      r = r + v * dt
+
+      ! Modelo de colisión Monte Carlo (sección eficaz simple)
+      call random_number(rand_num)
+      sigma = 1.0e-20  ! Sección eficaz (m^2)
+      if (rand_num < sigma * dt * 1.0e20) then ! Probabilidad de colisión
+        call random_number(v_rand)
+        v_rand = (v_rand - 0.5) * 1.0e5  ! Perturbación aleatoria
+        v = v + v_rand
+      end if
+    end do
+
+    ! Acumular resultados
+    r_avg = r_avg + r
+    v_avg = v_avg + v
+  end do
+
+  ! Calcular promedios
+  r_avg = r_avg / real(n_particles)
+  v_avg = v_avg / real(n_particles)
+
+  ! Imprimir resultados
+  print *, 'Resultados promedio después de ', n_steps, ' pasos:'
+  print *, 'Posición (x, y, z) = ', r_avg, ' m'
+  print *, 'Velocidad (vx, vy, vz) = ', v_avg, ' m/s'
+
+contains
+
+  ! Subrutina para calcular la aceleración por la fuerza de Lorentz
+  subroutine lorentz_acc(r, v, a)
+    real, intent(in) :: r(3), v(3)
+    real, intent(out) :: a(3)
+    a(1) = (q / m) * (v(2) * B_field)  ! ax = (q/m) * vy * B
+    a(2) = (q / m) * (-v(1) * B_field) ! ay = -(q/m) * vx * B
+    a(3) = (q / m) * E_field           ! az = (q/m) * E
+  end subroutine lorentz_acc
+
+end program monte_carlo_em_advanced`;
+
+    // Insertar códigos en los elementos <code>
+    document.getElementById('code1').textContent = code1;
+    document.getElementById('code2').textContent = code2;
+
+    // Función para descargar códigos
+    function downloadCode(elementId, filename) {
+      const code = document.getElementById(elementId).textContent;
+      const blob = new Blob([code], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // Resaltar sintaxis con Prism.js
+    Prism.highlightAll();
+
+    // Forzar re-renderizado de ecuaciones MathJax
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+  </script>
+</body>
+</html>
