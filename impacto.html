@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Impacto de un Objeto Relativista de 1 kg a 0.5c - Análisis Teórico</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1a237e;
+            --secondary: #283593;
+            --accent: #5c6bc0;
+            --light: #e8eaf6;
+            --dark: #0d47a1;
+            --text: #212121;
+            --background: #f5f5f5;
+            --card: #ffffff;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: linear-gradient(135deg, var(--background) 0%, #e0e0e0 100%);
+            background-attachment: fixed;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 40px 30px;
+            border-radius: 10px 10px 0 0;
+            box-shadow: 0 5px 15px var(--shadow);
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at top right, rgba(255,255,255,0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.4rem;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            font-weight: 300;
+            opacity: 0.9;
+        }
+        
+        .author-info {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 15px;
+            border-radius: 8px;
+            display: inline-block;
+            backdrop-filter: blur(10px);
+            margin-top: 20px;
+        }
+        
+        .author-info h2 {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+        
+        .author-info p {
+            font-size: 1.1rem;
+            margin-bottom: 3px;
+        }
+        
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .main-content {
+            background: var(--card);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+        
+        .sidebar {
+            background: var(--card);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px var(--shadow);
+            align-self: start;
+        }
+        
+        h2 {
+            color: var(--primary);
+            margin: 25px 0 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--accent);
+            font-size: 1.8rem;
+        }
+        
+        h3 {
+            color: var(--secondary);
+            margin: 20px 0 12px;
+            font-size: 1.4rem;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        
+        .highlight {
+            background: linear-gradient(120deg, rgba(92, 107, 192, 0.15) 0%, transparent 100%);
+            padding: 15px 20px;
+            border-left: 4px solid var(--accent);
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .equation {
+            background: var(--light);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            overflow-x: auto;
+            text-align: center;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+        
+        .comparison-card {
+            background: var(--light);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent);
+            transition: transform 0.3s ease;
+        }
+        
+        .comparison-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .comparison-card h4 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .key-points {
+            background: var(--light);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .key-points ul {
+            padding-left: 25px;
+        }
+        
+        .key-points li {
+            margin-bottom: 10px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            background: var(--card);
+            box-shadow: 0 2px 8px var(--shadow);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        th {
+            background: var(--primary);
+            color: white;
+            text-align: left;
+            padding: 15px;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        tr:nth-child(even) {
+            background: var(--light);
+        }
+        
+        .timeline {
+            position: relative;
+            padding: 20px 0 20px 40px;
+            margin: 30px 0;
+        }
+        
+        .timeline::before {
+            content: "";
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--accent);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            padding-left: 30px;
+        }
+        
+        .timeline-item::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 5px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--secondary);
+            border: 4px solid var(--card);
+            box-shadow: 0 0 0 2px var(--secondary);
+        }
+        
+        .timeline-date {
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 5px;
+            display: block;
+        }
+        
+        .conclusion {
+            background: linear-gradient(135deg, var(--light) 0%, var(--card) 100%);
+            padding: 30px;
+            border-radius: 10px;
+            border-left: 5px solid var(--primary);
+            margin: 30px 0;
+        }
+        
+        footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 25px;
+            border-radius: 0 0 10px 10px;
+            margin-top: 40px;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .footer-author {
+            text-align: left;
+        }
+        
+        .footer-author h3 {
+            color: white;
+            border: none;
+            margin-bottom: 10px;
+        }
+        
+        .copyright {
+            text-align: right;
+        }
+        
+        .keywords {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .keyword {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 900px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .footer-author, .copyright {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Impacto de un Objeto Relativista de 1 kg en la Tierra a 0.5c</h1>
+            <p class="subtitle">Análisis teórico de los efectos de un proyectil superdenso viajando a la mitad de la velocidad de la luz</p>
+            <div class="author-info">
+                <h2>Profesor Ángel Chacín Ávila</h2>
+                <p>Licenciado en Física, Especialista en Ciencias Computacionales</p>
+                <p>UNES Núcleo Zulia</p>
+            </div>
+        </header>
+        
+        <div class="content">
+            <div class="main-content">
+                <div class="highlight">
+                    <p><strong>Resumen:</strong> Este análisis teórico evalúa los efectos de un objeto esférico de 1.6 cm de diámetro y 1 kg de masa, compuesto de un material exótico superdenso hipotético (\(\rho \approx 4.66 \times 10^5 \, \text{kg/m}^3\)), impactando la Tierra a \(v = 0.5c \approx 1.498 \times 10^8 \, \text{m/s}\). Se calcula la energía cinética relativista, los efectos atmosféricos y terrestres, y la detectabilidad previa. El impacto libera \(\approx 1.39 \times 10^{16} \, \text{J}\) (3.32 megatones de TNT), comparable a tres bombas nucleares estratégicas de 1 megatón. Provoca devastación local (cráter de ~100-200 m, destrucción en ~1-2 km), pero no un evento de extinción masiva global. La detección es teóricamente posible ~1-2 años antes mediante emisiones electromagnéticas.</p>
+                </div>
+                
+                <h2>1. Introducción</h2>
+                <p>El impacto de objetos relativistas en la Tierra representa un escenario extremo en astrofísica y física planetaria. Este estudio analiza un objeto de 1 kg, con dimensiones de una canica (diámetro de 1.6 cm), viajando a \(0.5c\) (mitad de la velocidad de la luz), una velocidad típica de eventos astrofísicos como restos de supernovas. Se asume un material exótico superdenso y resistente para minimizar la ablación atmosférica. El análisis teórico se basa en modelos de impacto y relatividad especial para calcular la energía del impacto, sus efectos en la atmósfera y la superficie, su comparación con explosiones nucleares estratégicas, y la posibilidad de detección previa.</p>
+                
+                <h2>2. Parámetros Clave</h2>
+                
+                <table>
+                    <tr>
+                        <th>Propiedad</th>
+                        <th>Valor</th>
+                        <th>Comparación</th>
+                    </tr>
+                    <tr>
+                        <td>Masa</td>
+                        <td>1 kg</td>
+                        <td>Equivalente a 1 litro de agua</td>
+                    </tr>
+                    <tr>
+                        <td>Diámetro</td>
+                        <td>1.6 cm</td>
+                        <td>Tamaño de una canica</td>
+                    </tr>
+                    <tr>
+                        <td>Densidad</td>
+                        <td>\(4.66 \times 10^5 \, \text{kg/m}^3\)</td>
+                        <td>466 × acero, inferior a estrellas de neutrones (\(10^{17} \, \text{kg/m}^3\))</td>
+                    </tr>
+                    <tr>
+                        <td>Velocidad</td>
+                        <td>0.5c (149,800 km/s)</td>
+                        <td>Mitad de la velocidad de la luz</td>
+                    </tr>
+                    <tr>
+                        <td>Energía cinética</td>
+                        <td>\(1.39 \times 10^{16} \, \text{J}\)</td>
+                        <td>3.32 megatones de TNT</td>
+                    </tr>
+                </table>
+                
+                <div class="equation">
+                    <p>Cálculo de densidad:</p>
+                    \[
+                    \rho = \frac{m}{V} = \frac{1}{\frac{4}{3} \pi (0.008)^3} \approx 4.66 \times 10^5 \, \text{kg/m}^3
+                    \]
+                </div>
+                
+                <div class="equation">
+                    <p>Energía cinética relativista:</p>
+                    \[
+                    E_k = (\gamma - 1) m c^2, \quad \gamma = \frac{1}{\sqrt{1 - (v/c)^2}} = \frac{1}{\sqrt{0.75}} \approx 1.1547
+                    \]
+                    \[
+                    E_k = (1.1547 - 1) \cdot 1 \cdot (2.998 \times 10^8)^2 \approx 1.39 \times 10^{16} \, \text{J} = 3.32 \, \text{Mt}
+                    \]
+                </div>
+                
+                <h2>3. Física del Impacto</h2>
+                
+                <h3>3.1. Atravesando la atmósfera</h3>
+                <p>El objeto atraviesa ~100 km de atmósfera terrestre en aproximadamente 0.67 ms. La densidad atmosférica a gran altura (\(\rho_{\text{aire}} \approx 10^{-5} \, \text{kg/m}^3\) a 100 km) es mucho menor que al nivel del suelo. La altísima velocidad genera un frente de choque radiativo que ioniza el aire, no solo ablación clásica. El plasma generado (~10<sup>6</sup>-10<sup>8</sup> K) emite rayos X, gamma y luz visible. La dureza extrema limita la pérdida de masa a ~10-15%, dejando ~2.8-3.0 Mt al impactar.</p>
+                
+                <h3>3.2. Efectos en la superficie</h3>
+                <p>El impacto ocurre en una ciudad hipotética. Los efectos se estiman con modelos de explosiones nucleares y cráteres de impacto:</p>
+                
+                <div class="equation">
+                    <p>Diámetro del cráter:</p>
+                    \[
+                    D \approx 0.07 \cdot E^{0.26} \cdot \left(\frac{\rho_{\text{proyectil}}}{\rho_{\text{suelo}}}\right)^{0.33}
+                    \]
+                    \[
+                    E^{0.26} \approx (1.39 \times 10^{16})^{0.26} \approx 2.75 \times 10^4, \quad 
+                    \frac{\rho_{\text{proyectil}}}{\rho_{\text{suelo}}} \approx 172.6, \quad (172.6)^{0.33} \approx 5.58
+                    \]
+                    \[
+                    D \approx 0.07 \cdot 2.75 \times 10^4 \cdot 5.58 \approx 107 \, \text{m}
+                    \]
+                    <p>Fórmula aplicable a impactores < 100 m. Para este caso (objeto minúsculo pero hiperveloz), el cráter depende más de la transferencia de energía que del tamaño del proyectil. El cráter tiene un diámetro de ~100-200 m (dependiendo del terreno). En sedimentos sería 30-50% mayor.</p>
+                </div>
+                
+                <div class="comparison-grid">
+                    <div class="comparison-card">
+                        <h4><i class="fas fa-blast"></i> Onda de choque</h4>
+                        <p>Basado en modelos de explosiones nucleares (NUKEMAP para ~3 Mt):</p>
+                        <ul>
+                            <li><strong>Destrucción total</strong> (~20 psi): ~1-2 km</li>
+                            <li><strong>Daño severo</strong> (~5 psi): ~2-5 km</li>
+                            <li><strong>Daño moderado</strong> (~1 psi): ~5-10 km</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="comparison-card">
+                        <h4><i class="fas fa-fire"></i> Radiación térmica</h4>
+                        <p>Incendios en ~5-10 km, quemaduras graves a personas expuestas. Similar al evento de Tunguska (3-5 Mt) pero con mayor radiación térmica.</p>
+                    </div>
+                    
+                    <div class="comparison-card">
+                        <h4><i class="fas fa-users"></i> Efectos humanos</h4>
+                        <p>Miles de víctimas en el epicentro, decenas de miles de heridos en una ciudad densa. Efectos limitados a una región de decenas de kilómetros.</p>
+                    </div>
+                </div>
+                
+                <h2>4. Detectabilidad y Advertencia</h2>
+                <p>La detección de un objeto de 1.6 cm depende únicamente de sus emisiones EM por interacción con el medio interestelar, no de reflexión óptica:</p>
+                
+                <div class="key-points">
+                    <ul>
+                        <li><strong>Emisiones electromagnéticas:</strong> Colisiones con el medio interestelar (\(n \approx 10^6 \, \text{átomos/m}^3\)) generan rayos X/gamma:
+                            \[
+                            P \approx n \cdot A \cdot v \cdot E_{\text{part}} \approx 10^9 - 10^{10} \, \text{W}
+                            \]
+                            Detectable a ~1-2 años luz por Fermi-LAT o Chandra.
+                        </li>
+                        <li><strong>Desplazamiento Doppler:</strong> Emisiones desplazadas al azul:
+                            \[
+                            \lambda_{\text{obs}} = \lambda_{\text{emit}} \sqrt{\frac{1 - 0.5}{1 + 0.5}} \approx 0.577 \lambda_{\text{emit}}
+                            \]
+                        </li>
+                    </ul>
+                </div>
+                
+                <h3>Cronología de detección</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <span class="timeline-date">1-2 años antes</span>
+                        <p>Detección de rayos X/gamma por telescopios espaciales (Fermi-LAT, Chandra)</p>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-date">6-12 meses antes</span>
+                        <p>Confirmación de trayectoria mediante observaciones coordinadas</p>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-date">1 mes antes</span>
+                        <p>Detección óptica con Vera C. Rubin Observatory (LSST)</p>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-date">Segundos antes</span>
+                        <p>Destello atmosférico detectable por telescopios terrestres</p>
+                    </div>
+                </div>
+                
+                <div class="highlight">
+                    <p><strong>Limitación:</strong> Aunque detectable, la intercepción es actualmente imposible por el tiempo de reacción (< 1 minuto al entrar al sistema solar) y la energía involucrada.</p>
+                </div>
+                
+                <h2>5. Escala del Evento</h2>
+                <div class="comparison-grid">
+                    <div class="comparison-card">
+                        <h4><i class="fas fa-meteor"></i> Chicxulub</h4>
+                        <p>~10<sup>23</sup> J (24 millones de Mt)</p>
+                        <p>Extinción masiva (75% especies)</p>
+                    </div>
+                    
+                    <div class="comparison-card">
+                        <h4><i class="fas fa-bomb"></i> Tsar Bomba</h4>
+                        <p>50-58 Mt</p>
+                        <p>Mayor arma nuclear probada</p>
+                    </div>
+                    
+                    <div class="comparison-card">
+                        <h4><i class="fas fa-city"></i> Este impacto</h4>
+                        <p>3.32 Mt</p>
+                        <p>Devastación regional</p>
+                    </div>
+                </div>
+                
+                <p>El impacto de Chicxulub (~10<sup>23</sup> J, ~24 millones de Mt) causó una extinción masiva (~75% de especies). Este impacto (~3.32 Mt) es ~7.2 millones de veces menos energético, limitando sus efectos a una región de decenas de kilómetros. No genera suficiente polvo o cenizas para un invierno de impacto global, por lo que <strong>no causa una extinción masiva</strong>.</p>
+                
+                <div class="conclusion">
+                    <h3>Conclusión</h3>
+                    <p>Un objeto de 1 kg y 1.6 cm de diámetro impactando la Tierra a \(0.5c\) libera ~3.3 megatones, devastando un área urbana (~1-10 km) pero sin causar una extinción masiva. Este escenario demuestra que objetos muy pequeños a velocidades relativistas son amenazas planetarias reales, donde la energía, no la masa, domina la destrucción.</p>
+                    <p>La detección es teóricamente factible ~1-2 años antes mediante rayos X/gamma y movimiento propio, pero la tecnología actual no permite interceptar objetos relativistas tan pequeños. Futuros telescopios (CTA, Athena) mejorarían la detección. Este análisis subraya la importancia de sistemas de monitoreo avanzados para objetos relativistas.</p>
+                </div>
+                
+                <div class="keywords">
+                    <span class="keyword">Impacto relativista</span>
+                    <span class="keyword">Objeto hiperveloz</span>
+                    <span class="keyword">Energía cinética</span>
+                    <span class="keyword">Detección astronómica</span>
+                    <span class="keyword">Amenaza planetaria</span>
+                    <span class="keyword">Modelo de cráter</span>
+                </div>
+            </div>
+            
+            <div class="sidebar">
+                <h2>Datos Destacados</h2>
+                
+                <div class="key-points">
+                    <h3><i class="fas fa-bolt"></i> Energética</h3>
+                    <ul>
+                        <li>3.32 megatones de TNT</li>
+                        <li>Equivalente a 3 bombas B83</li>
+                        <li>220 bombas de Hiroshima</li>
+                    </ul>
+                    
+                    <h3><i class="fas fa-mountain"></i> Efectos Físicos</h3>
+                    <ul>
+                        <li>Cráter: 100-200 m</li>
+                        <li>Zona destrucción total: 1-2 km</li>
+                        <li>Zona incendios: 5-10 km</li>
+                    </ul>
+                    
+                    <h3><i class="fas fa-satellite"></i> Detección</h3>
+                    <ul>
+                        <li>Detección posible a 1-2 años luz</li>
+                        <li>Telescopios clave: Fermi-LAT, Chandra</li>
+                        <li>Intercepción actual: Imposible</li>
+                    </ul>
+                    
+                    <h3><i class="fas fa-radiation"></i> Diferencias con Nuclear</h3>
+                    <ul>
+                        <li>Sin pulso electromagnético (EMP)</li>
+                        <li>Sin lluvia radiactiva</li>
+                        <li>Sin invierno nuclear</li>
+                    </ul>
+                </div>
+                
+                <h2>Comparación Visual</h2>
+                <div style="background: var(--light); padding: 15px; border-radius: 8px; margin: 20px 0; text-align: center;">
+                    <div style="height: 200px; background: linear-gradient(90deg, #5c6bc0 0%, #3949ab 50%, #1a237e 100%); border-radius: 6px; position: relative;">
+                        <div style="position: absolute; left: 10%; top: 50%; transform: translateY(-50%); width: 10px; height: 10px; background: white; border-radius: 50%;"></div>
+                        <div style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 200px; height: 100px; background: rgba(255,255,255,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                            Cráter 150m
+                        </div>
+                        <div style="position: absolute; left: 90%; top: 50%; transform: translateY(-50%); width: 300px; height: 200px; background: rgba(255,255,255,0.3); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                            Zona destrucción 5km
+                        </div>
+                    </div>
+                    <p style="margin-top: 10px; font-size: 0.9rem;">Escala de efectos: objeto (1.6cm) → cráter (150m) → zona destrucción (5km)</p>
+                </div>
+                
+                <h2>Efectos Temporales</h2>
+                <div style="background: var(--light); padding: 15px; border-radius: 8px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span>t=0</span>
+                        <span>t=1s</span>
+                        <span>t=10s</span>
+                        <span>t=1min</span>
+                    </div>
+                    <div style="height: 8px; background: #e0e0e0; border-radius: 4px; position: relative; margin-bottom: 20px;">
+                        <div style="position: absolute; height: 100%; width: 20%; background: #ff5722; border-radius: 4px 0 0 4px;"></div>
+                        <div style="position: absolute; height: 100%; width: 40%; left: 20%; background: #ff9800;"></div>
+                        <div style="position: absolute; height: 100%; width: 30%; left: 60%; background: #4caf50;"></div>
+                        <div style="position: absolute; height: 100%; width: 10%; left: 90%; background: #2196f3; border-radius: 0 4px 4px 0;"></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
+                        <div>Impacto</div>
+                        <div>Onda de choque</div>
+                        <div>Incendios</div>
+                        <div>Rescate</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <div class="footer-content">
+                <div class="footer-author">
+                    <h3>Profesor Ángel Chacín Ávila</h3>
+                    <p>Licenciado en Física, Especialista en Ciencias Computacionales</p>
+                    <p>UNES Núcleo Zulia</p>
+                </div>
+                <div class="copyright">
+                    <p>&copy; 2025 Todos los derechos reservados</p>
+                    <p>Fecha de publicación: 4 de agosto de 2025</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
