@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulación Teórica de una Nave Interestelar</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --primary: #1a237e;
+            --secondary: #283593;
+            --accent: #5c6bc0;
+            --background: #0c1021;
+            --card: #121933;
+            --text: #e0e0e0;
+            --highlight: #00bcd4;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(40, 53, 147, 0.15) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(92, 107, 192, 0.15) 0%, transparent 20%);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-bottom: 2px solid var(--highlight);
+            margin-bottom: 30px;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin: 0;
+            color: white;
+            text-shadow: 0 0 10px rgba(0, 188, 212, 0.7);
+            letter-spacing: 1px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 15px auto 0;
+        }
+        
+        .card {
+            background-color: var(--card);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(92, 107, 192, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+            border-color: rgba(92, 107, 192, 0.6);
+        }
+        
+        .card-title {
+            color: var(--highlight);
+            font-size: 1.8rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--accent);
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .simulation-container {
+            background: rgba(18, 25, 51, 0.8);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 1px solid rgba(92, 107, 192, 0.4);
+        }
+        
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(26, 35, 126, 0.2);
+            border-radius: 8px;
+        }
+        
+        .control-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--highlight);
+            font-weight: 500;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            margin-top: 8px;
+            background: rgba(92, 107, 192, 0.3);
+            height: 6px;
+            border-radius: 3px;
+            outline: none;
+        }
+        
+        .value-display {
+            background: rgba(0, 188, 212, 0.1);
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-top: 5px;
+            font-family: monospace;
+            font-size: 1.1rem;
+        }
+        
+        canvas {
+            width: 100% !important;
+            max-height: 400px;
+        }
+        
+        .equation {
+            background: rgba(26, 35, 126, 0.2);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+            font-size: 1.2rem;
+            overflow-x: auto;
+        }
+        
+        .conclusion {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 30px;
+            border-radius: 12px;
+            margin-top: 30px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+            background: rgba(10, 15, 30, 0.9);
+            border-top: 1px solid var(--accent);
+            font-size: 1rem;
+        }
+        
+        .highlight {
+            color: var(--highlight);
+            font-weight: bold;
+        }
+        
+        .key-point {
+            background: rgba(0, 188, 212, 0.15);
+            padding: 15px;
+            border-left: 4px solid var(--highlight);
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Simulación Teórica de una Nave Interestelar</h1>
+            <div class="subtitle">Análisis de detección de una nave de 1 km viajando al 50% de la velocidad de la luz y desacelerando desde 2 años luz</div>
+        </header>
+        
+        <div class="card">
+            <h2 class="card-title">Resumen del Escenario</h2>
+            <p>Analizamos cómo los astrónomos terrestres podrían detectar una nave interestelar con las siguientes características:</p>
+            
+            <div class="grid">
+                <div class="key-point">
+                    <h3>Características de la nave</h3>
+                    <ul>
+                        <li>Longitud: <span class="highlight">1 km</span></li>
+                        <li>Masa: <span class="highlight">1 millón de toneladas</span> (10<sup>9</sup> kg)</li>
+                        <li>Velocidad inicial: <span class="highlight">50% de la velocidad de la luz</span> (c/2 ≈ 149,896,229 m/s)</li>
+                        <li>Distancia inicial: <span class="highlight">2 años luz</span> (1.892×10<sup>16</sup> m)</li>
+                    </ul>
+                </div>
+                
+                <div class="key-point">
+                    <h3>Sistemas clave</h3>
+                    <ul>
+                        <li>Propulsión: <span class="highlight">Sistema de pulso avanzado</span> (antimateria/fusión nuclear)</li>
+                        <li>Protección: <span class="highlight">Escudo frontal de ablación</span> (hielo/material exótico)</li>
+                        <li>Desaceleración: <span class="highlight">Gradual hasta detenerse</span> cerca del Sistema Solar</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="equation">
+                <h3>Energía Cinética Inicial</h3>
+                <p>\[ E_k = \frac{1}{2} m v^2 = \frac{1}{2} \cdot 10^9 \cdot (1.498 \times 10^8)^2 \approx 1.12 \times 10^{25} \, \text{J} \]</p>
+                <p>Equivalente a <span class="highlight">250 gigatoneladas de TNT</span> - suficiente energía para desacelerar requiere un sistema de propulsión extremadamente potente.</p>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2 class="card-title">Simulación de Espectros de Aniquilación</h2>
+            <p>La propulsión por antimateria produce firmas espectrales características que serían detectables desde la Tierra.</p>
+            
+            <div class="simulation-container">
+                <div class="controls">
+                    <div class="control-group">
+                        <label for="velocity">Velocidad de la nave (c): <span id="velocity-value">0.5</span></label>
+                        <input type="range" id="velocity" min="0.1" max="0.9" step="0.01" value="0.5">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="distance">Distancia (años luz): <span id="distance-value">2.0</span></label>
+                        <input type="range" id="distance" min="0.5" max="5" step="0.1" value="2.0">
+                    </div>
+                </div>
+                
+                <canvas id="spectrumChart"></canvas>
+                
+                <div class="equation">
+                    <h3>Desplazamiento Doppler Relativista</h3>
+                    <p>\[ \lambda_{\text{obs}} = \lambda_{\text{emit}} \sqrt{\frac{1 - \beta}{1 + \beta}} \quad \text{donde} \quad \beta = \frac{v}{c} \]</p>
+                    <p>Para rayos gamma de 511 keV (\(\lambda_{\text{emit}} = 2.43 \, \text{pm}\)) a \(\beta = 0.5\):</p>
+                    <p>\[ \lambda_{\text{obs}} \approx 1.67 \, \text{pm} \quad (\text{745 keV}) \]</p>
+                </div>
+            </div>
+            
+            <div class="key-point">
+                <h3>Características clave del espectro:</h3>
+                <ul>
+                    <li><span class="highlight">Pico de 511 keV:</span> Aniquilación electrón-positrón</li>
+                    <li><span class="highlight">Pico de 67.5 MeV:</span> Decaimiento de piones neutros (π⁰ → γγ)</li>
+                    <li><span class="highlight">Espectro continuo:</span> Bremsstrahlung y otras interacciones secundarias</li>
+                    <li><span class="highlight">Desplazamiento Doppler:</span> Las líneas espectrales aparecen desplazadas al azul</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2 class="card-title">Almacenamiento de Antimateria</h2>
+            <p>Para desacelerar la nave se requiere una cantidad enorme de antimateria:</p>
+            
+            <div class="equation">
+                <h3>Cálculo de antimateria requerida</h3>
+                <p>\[ m_{\text{antimateria}} = \frac{E_k}{c^2} = \frac{1.12 \times 10^{25}}{(3 \times 10^8)^2} \approx 1.24 \times 10^8 \, \text{kg} \quad (\text{124,000 toneladas}) \]</p>
+                <p>Esto representa aproximadamente <span class="highlight">12.4% de la masa inicial</span> de la nave.</p>
+            </div>
+            
+            <div class="grid">
+                <div class="simulation-container">
+                    <canvas id="storageChart"></canvas>
+                </div>
+                
+                <div>
+                    <h3>Desafíos de ingeniería</h3>
+                    <ul>
+                        <li><span class="highlight">Confinamiento:</span> Requiere campos magnéticos intensos (>15 Tesla) en vacío ultra alto (10⁻¹⁴ Pa)</li>
+                        <li><span class="highlight">Enfriamiento:</span> Temperaturas criogénicas (< 4K) para reducir movimiento térmico</li>
+                        <li><span class="highlight">Estabilidad:</span> Cualquier contacto con materia normal causa aniquilación instantánea</li>
+                        <li><span class="highlight">Presión de radiación:</span> Los fotones de aniquilación generan presión sobre las paredes del contenedor</li>
+                    </ul>
+                    
+                    <div class="key-point">
+                        <p>El almacenamiento de antimateria requeriría tecnología avanzada como:</p>
+                        <ul>
+                            <li>Trampas de Penning multicelda</li>
+                            <li>Espejos magnéticos superconductores</li>
+                            <li>Sistemas de enfriamiento por láser</li>
+                            <li>Contenedores de diamante dopado</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2 class="card-title">Diseño de Escudos de Ablación</h2>
+            <p>A velocidades relativistas, el medio interestelar representa una amenaza significativa que requiere protección avanzada.</p>
+            
+            <div class="grid">
+                <div>
+                    <h3>Presión dinámica</h3>
+                    <div class="equation">
+                        <p>\[ P = \frac{1}{2} \rho v^2 \]</p>
+                        <p>Con \(\rho \approx 1.67 \times 10^{-21} \, \text{kg/m}^3\) (1 átomo H/cm³) y \(v = 1.5 \times 10^8 \, \text{m/s}\):</p>
+                        <p>\[ P \approx 1.88 \times 10^{-5} \, \text{Pa} \]</p>
+                    </div>
+                    
+                    <div class="key-point">
+                        <p>Aunque la presión parece baja, la energía por partícula es enorme:</p>
+                        <p>\[ E_{\text{part}} = \frac{1}{2} m_p v^2 \approx 117 \, \text{MeV} \]</p>
+                        <p>Cada protón impacta con energía comparable a partículas aceleradas en el LHC.</p>
+                    </div>
+                </div>
+                
+                <div class="simulation-container">
+                    <canvas id="shieldChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <div class="control-group">
+                    <label for="material">Material del escudo:</label>
+                    <select id="material" class="value-display" style="width:100%; padding:10px; background:rgba(0,188,212,0.1); border:1px solid #5c6bc0; color:white;">
+                        <option value="ice">Hielo de agua</option>
+                        <option value="graphene">Grafeno</option>
+                        <option value="boron">Carburo de boro</option>
+                        <option value="exotic">Material exótico (teórico)</option>
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <label for="thickness">Espesor del escudo (m): <span id="thickness-value">5.0</span></label>
+                    <input type="range" id="thickness" min="1" max="20" step="0.1" value="5.0">
+                </div>
+            </div>
+            
+            <div class="key-point">
+                <h3>Tasa de ablación estimada</h3>
+                <p>\[ \dot{m} = \rho_{\text{med}} \cdot A \cdot v \cdot \sigma \]</p>
+                <p>Donde \(\sigma\) es la sección eficaz de ablación. Para hielo (\(\sigma \approx 10^{-19} \, \text{cm}^2\)):</p>
+                <p>\[ \dot{m} \approx 150 \, \text{kg/s} \]</p>
+                <p>Para un viaje de 4 años: \( m_{\text{perdida}} \approx 1.9 \times 10^7 \, \text{toneladas} \)</p>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2 class="card-title">Detección desde la Tierra</h2>
+            <p>Cronología de cómo los astrónomos podrían detectar la nave:</p>
+            
+            <div class="simulation-container">
+                <canvas id="timelineChart"></canvas>
+            </div>
+            
+            <div class="grid">
+                <div>
+                    <h3>4-5 años antes de llegada (2 años luz)</h3>
+                    <ul>
+                        <li>Detección de rayos gamma/X por Fermi-LAT o Chandra</li>
+                        <li>Movimiento propio detectable por Gaia</li>
+                        <li>Señal periódica si usa propulsión por pulsos</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>1-2 años antes de llegada (0.5-1 año luz)</h3>
+                    <ul>
+                        <li>Halo de radio detectable por SKA/ALMA</li>
+                        <li>Espectro Doppler cambiante en IR/óptico (JWST/LSST)</li>
+                        <li>Confirmación de naturaleza artificial</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>6 meses antes (0.25 años luz)</h3>
+                    <ul>
+                        <li>Resolución de estructura (E-ELT)</li>
+                        <li>Periodicidad de pulsos identificable</li>
+                        <li>Detección de emisiones térmicas intensas</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="key-point">
+                <h3>Firma distintiva</h3>
+                <p>La combinación de estas señales confirmaría su origen artificial:</p>
+                <ul>
+                    <li>Fuente con movimiento propio rápido (0.0016"/s)</li>
+                    <li>Espectro con líneas de aniquilación (511 keV, 67.5 MeV)</li>
+                    <li>Periodicidad exacta en las emisiones</li>
+                    <li>Desplazamiento Doppler dinámico decreciente</li>
+                    <li>Falta de contrapartida astrofísica natural</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="conclusion">
+            <h2>Conclusión</h2>
+            <p>El análisis demuestra que la detección de una nave interestelar de estas características es <span class="highlight">factible con tecnología actual y futura</span>. La combinación de:</p>
+            <ul>
+                <li>Emisiones características de propulsión por antimateria</li>
+                <li>Radiación de interacción con el medio interestelar</li>
+                <li>Movimiento propio hiperveloz</li>
+                <li>Firmas espectrales anómalas</li>
+            </ul>
+            <p>proporcionaría evidencia concluyente de su naturaleza artificial, permitiendo detección con <span class="highlight">4-5 años de antelación</span> y confirmación definitiva con <span class="highlight">1-2 años antes de su llegada</span>.</p>
+            <p>La detección requeriría <span class="highlight">sinergia observacional</span> (combinar datos multi-longitud de onda) y <span class="highlight">monitoreo continuo</span>, pero es técnicamente viable con los instrumentos astronómicos actuales y próximos a entrar en funcionamiento.</p>
+        </div>
+    </div>
+    
+    <footer>
+        <p>Elaborado por el Profesor Ángel Chacín Ávila, Licenciado en Física, Especialista en Ciencias Computacionales</p>
+        <p>UNES Núcleo Zulia - Simulación Teórica del Proceso de Aproximación de una Nave Espacial Interestelar al Sistema Solar viajando a la mitad de la velocidad de la luz</p>
+        <p>© 2023 - Todos los derechos reservados</p>
+    </footer>
+    
+    <script>
+        // Initialize charts after page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Spectrum Chart
+            const spectrumCtx = document.getElementById('spectrumChart').getContext('2d');
+            const spectrumChart = new Chart(spectrumCtx, {
+                type: 'line',
+                data: {
+                    labels: Array.from({length: 141}, (_, i) => i/10), // 0.0 to 14.0 in 0.1 steps
+                    datasets: [{
+                        label: 'Espectro de aniquilación (Emisión)',
+                        data: [],
+                        borderColor: '#00bcd4',
+                        backgroundColor: 'rgba(0, 188, 212, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        pointRadius: 0
+                    }, {
+                        label: 'Espectro observado (Doppler)',
+                        data: [],
+                        borderColor: '#ff9800',
+                        backgroundColor: 'rgba(255, 152, 0, 0.1)',
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        fill: true,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Energía (MeV)',
+                                color: '#e0e0e0'
+                            },
+                            grid: {
+                                color: 'rgba(92, 107, 192, 0.2)'
+                            },
+                            ticks: {
+                                color: '#e0e0e0'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Intensidad (u.arb.)',
+                                color: '#e0e0e0'
+                            },
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(92, 107, 192, 0.2)'
+                            },
+                            ticks: {
+                                color: '#e0e0e0'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#e0e0e0'
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Espectro de aniquilación materia-antimateria',
+                            color: '#e0e0e0',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false
+                        }
+                    }
+                }
+            });
+            
+            // Storage Chart
+            const storageCtx = document.getElementById('storageChart').getContext('2d');
+            const storageChart = new Chart(storageCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Antimateria (12.4%)', 'Estructura (25%)', 'Escudo (15%)', 'Sistemas (17.6%)', 'Carga útil (30%)'],
+                    datasets: [{
+                        data: [12.4, 25, 15, 17.6, 30],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.8)',
+                            'rgba(54, 162, 235, 0.8)',
+                            'rgba(255, 206, 86, 0.8)',
+                            'rgba(75, 192, 192, 0.8)',
+                            'rgba(153, 102, 255, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                color: '#e0e0e0',
+                                padding: 20
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Distribución de masa de la nave',
+                            color: '#e0e0e0',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.label}: ${context.parsed}%`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Shield Chart
+            const shieldCtx = document.getElementById('shieldChart').getContext('2d');
+            const shieldChart = new Chart(shieldCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Hielo', 'Grafeno', 'Carburo de boro', 'Material exótico'],
+                    datasets: [{
+                        label: 'Tasa de ablación (kg/s)',
+                        data: [150, 45, 28, 5],
+                        backgroundColor: 'rgba(0, 188, 212, 0.6)',
+                        borderColor: 'rgba(0, 188, 212, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Tasa de ablación (kg/s)',
+                                color: '#e0e0e0'
+                            },
+                            grid: {
+                                color: 'rgba(92, 107, 192, 0.2)'
+                            },
+                            ticks: {
+                                color: '#e0e0e0'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Material del escudo',
+                                color: '#e0e0e0'
+                            },
+                            grid: {
+                                color: 'rgba(92, 107, 192, 0.2)'
+                            },
+                            ticks: {
+                                color: '#e0e0e0'
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Tasa de ablación comparativa',
+                            color: '#e0e0e0',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+            
+            // Timeline Chart
+            const timelineCtx = document.getElementById('timelineChart').getContext('2d');
+            const timelineChart = new Chart(timelineCtx, {
+                type: 'line',
+                data: {
+                    labels: ['5 años', '4 años', '3 años', '2 años', '1 año', '6 meses', '1 mes'],
+                    datasets: [{
+                        label: 'Brillo observado (magnitud aparente)',
+                        data: [22, 20, 18, 16, 14, 12, 10],
+                        borderColor: '#00bcd4',
+                        backgroundColor: 'rgba(0, 188, 212, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.3,
+                        pointRadius: 6,
+                        pointBackgroundColor: '#00bcd4'
+                    }, {
+                        label: 'Desplazamiento Doppler (km/s)',
+                        data: [149896, 149896, 119917, 89938, 59958, 29979, 9993],
+                        borderColor: '#ff9800',
+                        backgroundColor: 'rgba(255, 152, 0, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.3,
+                        pointRadius: 6,
+                        pointBackgroundColor: '#ff9800',
+                        yAxisID: 'y1'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'Magnitud aparente',
+                                color: '#e0e0e0'
+                            },
+                            min: 24,
+                            max: 8,
+                            reverse: true,
+                            grid: {
+                                color: 'rgba(92, 107, 192, 0.2)'
+                            },
+                            ticks: {
+                                color: '#e0e0e0'
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: 'Desplazamiento Doppler (km/s)',
+                                color: '#e0e0e0'
+                            },
+                            grid: {
+                                drawOnChartArea: false,
+                            },
+                            ticks: {
+                                color: '#e0e0e0'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Tiempo antes de llegada',
+                                color: '#e0e0e0'
+                            },
+                            grid: {
+                                color: 'rgba(92, 107, 192, 0.2)'
+                            },
+                            ticks: {
+                                color: '#e0e0e0'
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Evolución de la detectabilidad',
+                            color: '#e0e0e0',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        legend: {
+                            labels: {
+                                color: '#e0e0e0'
+                            }
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false
+                        }
+                    }
+                }
+            });
+            
+            // Initial spectrum calculation
+            calculateSpectrum(0.5, 2.0);
+            
+            // Event listeners for sliders
+            document.getElementById('velocity').addEventListener('input', function() {
+                const velocity = parseFloat(this.value);
+                document.getElementById('velocity-value').textContent = velocity.toFixed(2);
+                calculateSpectrum(velocity, parseFloat(document.getElementById('distance').value));
+            });
+            
+            document.getElementById('distance').addEventListener('input', function() {
+                const distance = parseFloat(this.value);
+                document.getElementById('distance-value').textContent = distance.toFixed(1);
+                calculateSpectrum(parseFloat(document.getElementById('velocity').value), distance);
+            });
+            
+            document.getElementById('thickness').addEventListener('input', function() {
+                const thickness = parseFloat(this.value);
+                document.getElementById('thickness-value').textContent = thickness.toFixed(1);
+            });
+            
+            // Function to calculate spectrum
+            function calculateSpectrum(velocity, distance) {
+                const beta = velocity;
+                const dopplerFactor = Math.sqrt((1 - beta) / (1 + beta));
+                const distanceFactor = 1 / Math.pow(distance, 2);
+                
+                const emittedData = [];
+                const observedData = [];
+                
+                // Generate spectrum data
+                for (let i = 0; i <= 140; i++) {
+                    const energy = i / 10; // in MeV
+                    
+                    // Emission spectrum model
+                    let intensity = 0;
+                    
+                    // 511 keV peak
+                    if (Math.abs(energy - 0.511) < 0.1) {
+                        intensity += 0.8 * Math.exp(-Math.pow(energy - 0.511, 2) / 0.0005);
+                    }
+                    
+                    // 67.5 MeV peak
+                    if (Math.abs(energy - 67.5) < 2) {
+                        intensity += 1.0 * Math.exp(-Math.pow(energy - 67.5, 2) / 0.8);
+                    }
+                    
+                    // Continuum (bremsstrahlung)
+                    if (energy > 1 && energy < 100) {
+                        intensity += 0.4 * Math.exp(-energy / 20) * (1 - Math.exp(-energy / 5));
+                    }
+                    
+                    // Low energy background
+                    if (energy < 0.5) {
+                        intensity += 0.1 * Math.exp(-energy / 0.05);
+                    }
+                    
+                    emittedData.push(intensity);
+                    
+                    // Observed spectrum (Doppler shifted and distance attenuated)
+                    const observedEnergy = energy / dopplerFactor;
+                    const observedIntensity = intensity * Math.pow(dopplerFactor, 3) * distanceFactor;
+                    observedData.push(observedIntensity);
+                }
+                
+                // Update chart
+                spectrumChart.data.datasets[0].data = emittedData;
+                spectrumChart.data.datasets[1].data = observedData;
+                spectrumChart.update();
+            }
+        });
+    </script>
+</body>
+</html>
