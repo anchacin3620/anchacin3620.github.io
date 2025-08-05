@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Asistencia y Permisos - Fundación del Niño Zulia</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👶</text></svg>">
+    <style>
+        :root {
+            --primary: #0072BB; /* Azul institucional */
+            --secondary: #FFD700; /* Amarillo (niñez) */
+            --accent: #E63946; /* Rojo (alerta) */
+            --success: #28a745; /* Verde (aprobado) */
+            --warning: #ffc107; /* Amarillo (pendiente) */
+            --light: #F1FAEE;
+            --dark: #1D3557;
+            --gray: #6c757d;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9f2fb 100%);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: var(--secondary);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .logo {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+            flex: 1;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            padding: 25px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+        }
+        
+        .card-title {
+            color: var(--primary);
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 12px;
+            margin-top: 0;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-title i {
+            background: var(--secondary);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark);
+            font-size: 18px;
+        }
+        
+        .grid-layout {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border 0.3s, box-shadow 0.3s;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 114, 187, 0.2);
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 25px;
+        }
+        
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: var(--secondary);
+            color: var(--dark);
+        }
+        
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .btn-warning {
+            background: var(--warning);
+            color: var(--dark);
+        }
+        
+        .btn-danger {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        button:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background-color: rgba(0, 114, 187, 0.05);
+        }
+        
+        .error {
+            color: var(--accent);
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .success {
+            color: var(--success);
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .chart-container {
+            height: 300px;
+            margin-top: 20px;
+            position: relative;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .section-badge {
+            display: inline-block;
+            background: rgba(0, 114, 187, 0.1);
+            color: var(--primary);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        .stats-card {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            background: rgba(0, 114, 187, 0.05);
+        }
+        
+        .stats-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 10px 0;
+        }
+        
+        .stats-label {
+            color: var(--dark);
+            font-size: 1rem;
+        }
+        
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .status-pending {
+            background-color: rgba(255, 193, 7, 0.2);
+            color: #856404;
+        }
+        
+        .status-approved {
+            background-color: rgba(40, 167, 69, 0.2);
+            color: #155724;
+        }
+        
+        .status-rejected {
+            background-color: rgba(220, 53, 69, 0.2);
+            color: #721c24;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #dee2e6;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: 1px solid transparent;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            margin-right: 5px;
+            font-weight: 600;
+        }
+        
+        .tab.active {
+            background: white;
+            border-color: #dee2e6 #dee2e6 white;
+            border-bottom: none;
+            color: var(--primary);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .permission-card {
+            border-left: 4px solid var(--warning);
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .permission-card.approved {
+            border-left-color: var(--success);
+        }
+        
+        .permission-card.rejected {
+            border-left-color: var(--accent);
+        }
+        
+        footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 25px 20px;
+            margin-top: 40px;
+            font-size: 14px;
+            border-top: 4px solid var(--secondary);
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .child-icon {
+            font-size: 24px;
+            margin: 0 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .grid-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab {
+                border-radius: 0;
+                margin-right: 0;
+                border-bottom: 1px solid #dee2e6;
+            }
+            
+            .tab.active {
+                border-bottom: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <div class="logo">👶</div>
+            <h1>Sistema de Control de Asistencia y Permisos<br>Fundación del Niño Zulia</h1>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Sección de Autenticación -->
+        <div class="card" id="authSection">
+            <h2 class="card-title"><i>🔒</i> Autenticación</h2>
+            <div class="form-group">
+                <label for="username"><i>👤</i> Usuario:</label>
+                <input type="text" id="username" placeholder="Ingrese su usuario" required>
+            </div>
+            <div class="form-group">
+                <label for="password"><i>🔑</i> Contraseña:</label>
+                <input type="password" id="password" placeholder="Ingrese su contraseña" required>
+            </div>
+            <p id="authError" class="error"></p>
+            <div class="btn-group">
+                <button class="btn-primary" onclick="login()">
+                    <i>→</i> Iniciar Sesión
+                </button>
+            </div>
+        </div>
+
+        <!-- Panel Principal (Oculto inicialmente) -->
+        <div id="mainPanel" class="hidden">
+            <!-- Estadísticas Rápidas -->
+            <div class="grid-layout">
+                <div class="card stats-card">
+                    <h3><i>👥</i> Personal Registrado</h3>
+                    <div class="stats-value" id="totalStaff">0</div>
+                    <div class="stats-label">Miembros del equipo</div>
+                </div>
+                <div class="card stats-card">
+                    <h3><i>✅</i> Asistencias Hoy</h3>
+                    <div class="stats-value" id="todayAttendance">0</div>
+                    <div class="stats-label">Registros de hoy</div>
+                </div>
+                <div class="card stats-card">
+                    <h3><i>📋</i> Permisos Pendientes</h3>
+                    <div class="stats-value" id="pendingPermissions">0</div>
+                    <div class="stats-label">Por revisar</div>
+                </div>
+            </div>
+
+            <div class="grid-layout">
+                <!-- Sección de Registro -->
+                <div class="card">
+                    <h2 class="card-title"><i>📝</i> Registro de Asistencia</h2>
+                    <div class="form-group">
+                        <label for="section"><i>🏢</i> Departamento/Proyecto:</label>
+                        <select id="section" required>
+                            <option value="">Seleccione un departamento</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="name"><i>👤</i> Nombre completo:</label>
+                        <input type="text" id="name" placeholder="Ej: María Rodríguez" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cedula"><i>🆔</i> Cédula de Identidad:</label>
+                        <input type="text" id="cedula" placeholder="V-12345678" required>
+                        <span id="cedulaError" class="error">Formato inválido. Use V- seguido de 8 dígitos.</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="role"><i>👔</i> Cargo:</label>
+                        <select id="role" required>
+                            <option value="Directivo">Directivo</option>
+                            <option value="Coordinador">Coordinador de Proyecto</option>
+                            <option value="Docente">Docente</option>
+                            <option value="Psicólogo">Psicólogo</option>
+                            <option value="Trabajador Social">Trabajador Social</option>
+                            <option value="Administrativo">Personal Administrativo</option>
+                            <option value="Voluntario">Voluntario</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="date"><i>📅</i> Fecha:</label>
+                        <input type="date" id="date" required>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn-primary" onclick="registerEntry()">
+                            <i>⬇️</i> Registrar Entrada
+                        </button>
+                        <button class="btn-secondary" onclick="registerExit()">
+                            <i>⬆️</i> Registrar Salida
+                        </button>
+                    </div>
+                    <p id="formError" class="error"></p>
+                </div>
+
+                <!-- Gestión de Departamentos -->
+                <div class="card">
+                    <h2 class="card-title"><i>🏛️</i> Gestión de Departamentos</h2>
+                    <div class="form-group">
+                        <label for="newSection"><i>➕</i> Nuevo Departamento:</label>
+                        <input type="text" id="newSection" placeholder="Ej: Proyecto Niñez Migrante">
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn-primary" onclick="addSection()">
+                            <i>✔️</i> Agregar Departamento
+                        </button>
+                        <button class="btn-danger" onclick="removeSection()">
+                            <i>🗑️</i> Eliminar Seleccionado
+                        </button>
+                    </div>
+                    <div class="form-group">
+                        <label><i>📋</i> Departamentos Existentes:</label>
+                        <div id="sectionsList" class="section-badge">Cargando...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Módulo de Gestión de Permisos -->
+            <div class="card">
+                <h2 class="card-title"><i>📋</i> Gestión de Permisos del Personal</h2>
+                
+                <div class="tabs">
+                    <div class="tab active" data-tab="request">Solicitar Permiso</div>
+                    <div class="tab" data-tab="pending">Permisos Pendientes</div>
+                    <div class="tab" data-tab="history">Historial de Permisos</div>
+                </div>
+                
+                <!-- Solcitar Permiso -->
+                <div class="tab-content active" id="requestTab">
+                    <div class="form-group">
+                        <label for="permissionCedula"><i>🆔</i> Cédula del Funcionario:</label>
+                        <input type="text" id="permissionCedula" placeholder="V-12345678" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="permissionType"><i>📋</i> Tipo de Permiso:</label>
+                        <select id="permissionType" required>
+                            <option value="">Seleccione un tipo</option>
+                            <option value="Personal">Personal</option>
+                            <option value="Médico">Médico</option>
+                            <option value="Familiar">Familiar</option>
+                            <option value="Formación">Formación</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                    
+                    <div class="grid-layout">
+                        <div class="form-group">
+                            <label for="permissionStartDate"><i>📅</i> Fecha de Inicio:</label>
+                            <input type="date" id="permissionStartDate" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="permissionEndDate"><i>📅</i> Fecha de Fin:</label>
+                            <input type="date" id="permissionEndDate" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="permissionReason"><i>📝</i> Motivo del Permiso:</label>
+                        <textarea id="permissionReason" placeholder="Detalle el motivo del permiso..." required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="permissionEvidence"><i>📎</i> Evidencia (Opcional):</label>
+                        <input type="file" id="permissionEvidence">
+                    </div>
+                    
+                    <div class="btn-group">
+                        <button class="btn-primary" onclick="requestPermission()">
+                            <i>📤</i> Enviar Solicitud
+                        </button>
+                    </div>
+                    
+                    <p id="permissionError" class="error"></p>
+                    <p id="permissionSuccess" class="success"></p>
+                </div>
+                
+                <!-- Permisos Pendientes -->
+                <div class="tab-content" id="pendingTab">
+                    <div class="form-group">
+                        <label for="filterPermissionStatus"><i>🔍</i> Filtrar por Estado:</label>
+                        <select id="filterPermissionStatus" onchange="filterPermissions()">
+                            <option value="Pendiente">Pendientes</option>
+                            <option value="Aprobado">Aprobados</option>
+                            <option value="Rechazado">Rechazados</option>
+                            <option value="Todos">Todos</option>
+                        </select>
+                    </div>
+                    
+                    <div id="permissionsList">
+                        <p>No hay permisos pendientes de revisión</p>
+                    </div>
+                </div>
+                
+                <!-- Historial de Permisos -->
+                <div class="tab-content" id="historyTab">
+                    <div class="form-group">
+                        <label for="searchPermissionCedula"><i>🔍</i> Buscar por Cédula:</label>
+                        <input type="text" id="searchPermissionCedula" placeholder="V-12345678" oninput="searchPermissions()">
+                    </div>
+                    
+                    <table id="permissionsTable">
+                        <thead>
+                            <tr>
+                                <th>Funcionario</th>
+                                <th>Cédula</th>
+                                <th>Tipo</th>
+                                <th>Fechas</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="permissionsBody">
+                            <tr>
+                                <td colspan="6">No se encontraron registros de permisos</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Sección de Consulta y Reportes -->
+            <div class="card">
+                <h2 class="card-title"><i>🔍</i> Consulta y Reportes</h2>
+                <div class="grid-layout">
+                    <div class="form-group">
+                        <label for="filterSection"><i>🏢</i> Filtrar por Departamento:</label>
+                        <select id="filterSection">
+                            <option value="">Todos los departamentos</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="searchDate"><i>📅</i> Filtrar por Fecha:</label>
+                        <input type="date" id="searchDate">
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button class="btn-primary" onclick="searchAttendance()">
+                        <i>🔍</i> Buscar Registros
+                    </button>
+                    <button class="btn-secondary" onclick="generateIndividualReport()">
+                        <i>📄</i> Reporte Individual
+                    </button>
+                    <button class="btn-secondary" onclick="generateCollectiveReport()">
+                        <i>📊</i> Reporte General
+                    </button>
+                    <button class="btn-danger" onclick="clearAllRecords()">
+                        <i>🧹</i> Limpiar Registros
+                    </button>
+                </div>
+                
+                <div style="overflow-x: auto; margin-top: 20px;">
+                    <table id="attendanceTable">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Cédula</th>
+                                <th>Cargo</th>
+                                <th>Departamento</th>
+                                <th>Fecha</th>
+                                <th>Entrada</th>
+                                <th>Salida</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="attendanceBody">
+                            <tr>
+                                <td colspan="8" style="text-align: center;">No hay registros disponibles</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Gráficos de Asistencia -->
+            <div class="card">
+                <h2 class="card-title"><i>📈</i> Estadísticas de Asistencia</h2>
+                <div class="chart-container">
+                    <canvas id="attendanceChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p>Elaborado por Ángel Chacín Ávila, Licenciado en Física, Especialista en Ciencias Computacionales</p>
+            <p>Copyright © 2025 - Todos los derechos reservados</p>
+            <div style="margin-top: 10px;">
+                <span class="child-icon">👶</span>
+                <span class="child-icon">🧒</span>
+                <span class="child-icon">👧</span>
+                <span class="child-icon">🧸</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Dependencias externas -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        const { jsPDF } = window.jspdf;
+        let chartInstance = null;
+        let currentUser = null;
+        let isAuthenticated = false;
+
+        // =====================
+        // DATOS Y CONFIGURACIÓN
+        // =====================
+        const users = [
+            { username: "admin", password: "fundacion2025", role: "Administrador" },
+            { username: "coordinador", password: "ninozulia", role: "Coordinador" },
+            { username: "docente", password: "educacion2025", role: "Docente" }
+        ];
+
+        let attendanceData = JSON.parse(localStorage.getItem('fnz_attendance')) || [];
+        let permissionsData = JSON.parse(localStorage.getItem('fnz_permissions')) || [];
+        let sections = new Set(JSON.parse(localStorage.getItem('fnz_sections')) || [
+            "Dirección General",
+            "Protección Integral",
+            "Proyectos Educativos",
+            "Salud Infantil",
+            "Voluntariado"
+        ];
+
+        // =====================
+        // FUNCIONES PRINCIPALES (CORREGIDAS)
+        // =====================
+        function initApp() {
+            // Configurar fecha actual
+            document.getElementById('date').valueAsDate = new Date();
+            document.getElementById('permissionStartDate').valueAsDate = new Date();
+            
+            // Configurar fin de permiso (mañana por defecto)
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            document.getElementById('permissionEndDate').valueAsDate = tomorrow;
+            
+            // Cargar secciones
+            updateSectionDropdowns();
+            renderSectionsList();
+            
+            // Configurar pestañas
+            setupTabs();
+        }
+
+        function setupTabs() {
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Remover clase activa de todas las pestañas
+                    tabs.forEach(t => t.classList.remove('active'));
+                    
+                    // Agregar clase activa a la pestaña clickeada
+                    tab.classList.add('active');
+                    
+                    // Ocultar todos los contenidos
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // Mostrar contenido correspondiente
+                    const tabId = tab.getAttribute('data-tab');
+                    document.getElementById(`${tabId}Tab`).classList.add('active');
+                    
+                    // Si es la pestaña de pendientes, actualizar lista
+                    if (tabId === 'pending') {
+                        renderPermissions();
+                    }
+                });
+            });
+        }
+
+        function login() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const authError = document.getElementById('authError');
+            
+            // Resetear mensaje de error
+            authError.textContent = '';
+            authError.style.display = 'none';
+            
+            const user = users.find(u => u.username === username && u.password === password);
+            
+            if (user) {
+                currentUser = user;
+                isAuthenticated = true;
+                
+                // Ocultar sección de autenticación y mostrar panel principal
+                document.getElementById('authSection').classList.add('hidden');
+                document.getElementById('mainPanel').classList.remove('hidden');
+                
+                // CORRECCIÓN: Inicializar componentes directamente
+                updateSectionDropdowns();
+                updateAttendanceTable();
+                updateChart();
+                renderPermissions();
+                updateStats();
+                
+                // Mensaje de bienvenida
+                showError(`¡Bienvenido ${currentUser.username}!`, 'success');
+            } else {
+                authError.textContent = 'Credenciales incorrectas. Intente nuevamente.';
+                authError.style.display = 'block';
+            }
+        }
+
+        function validateCedula(cedula) {
+            const regex = /^V-\d{8}$/;
+            return regex.test(cedula);
+        }
+
+        function registerEntry() {
+            if (!isAuthenticated) return showError('Por favor inicie sesión');
+            
+            const name = document.getElementById('name').value.trim();
+            const cedula = document.getElementById('cedula').value.trim();
+            const role = document.getElementById('role').value;
+            const section = document.getElementById('section').value;
+            const date = document.getElementById('date').value;
+            
+            // Validaciones
+            if (!name || !cedula || !role || !section || !date) {
+                return showError('Todos los campos son obligatorios');
+            }
+            
+            if (!validateCedula(cedula)) {
+                return showError('Formato de cédula inválido. Use V- seguido de 8 dígitos.');
+            }
+            
+            // Verificar si ya tiene entrada sin salida
+            const hasOpenEntry = attendanceData.some(record => 
+                record.cedula === cedula && 
+                record.date === date && 
+                record.entryTime && 
+                !record.exitTime
+            );
+            
+            if (hasOpenEntry) {
+                return showError('Ya tiene una entrada registrada sin salida para hoy');
+            }
+            
+            // Crear registro
+            const now = new Date();
+            const record = {
+                id: Date.now(),
+                name,
+                cedula,
+                role,
+                section,
+                date,
+                entryTime: now.toLocaleTimeString('es-VE', { hour: '2-digit', minute: '2-digit' }),
+                exitTime: null
+            };
+            
+            attendanceData.push(record);
+            saveData();
+            updateAttendanceTable();
+            updateChart();
+            updateStats();
+            
+            showError(`Entrada registrada para ${name} a las ${record.entryTime}`, 'success');
+            document.getElementById('name').value = '';
+            document.getElementById('cedula').value = '';
+        }
+
+        function registerExit() {
+            if (!isAuthenticated) return showError('Por favor inicie sesión');
+            
+            const cedula = document.getElementById('cedula').value.trim();
+            const date = document.getElementById('date').value;
+            
+            if (!cedula || !date) return showError('Cédula y fecha son obligatorios');
+            if (!validateCedula(cedula)) return showError('Cédula inválida');
+            
+            // Buscar registro abierto
+            const openRecord = attendanceData.find(record => 
+                record.cedula === cedula && 
+                record.date === date && 
+                record.entryTime && 
+                !record.exitTime
+            );
+            
+            if (!openRecord) return showError('No se encontró entrada pendiente de salida');
+            
+            // Registrar salida
+            const now = new Date();
+            openRecord.exitTime = now.toLocaleTimeString('es-VE', { hour: '2-digit', minute: '2-digit' });
+            saveData();
+            updateAttendanceTable();
+            updateChart();
+            updateStats();
+            
+            showError(`Salida registrada para ${openRecord.name} a las ${openRecord.exitTime}`, 'success');
+            document.getElementById('name').value = '';
+            document.getElementById('cedula').value = '';
+        }
+
+        function addSection() {
+            const newSection = document.getElementById('newSection').value.trim();
+            if (!newSection) return showError('Ingrese un nombre para el departamento');
+            
+            if (sections.has(newSection)) {
+                return showError('Este departamento ya existe');
+            }
+            
+            sections.add(newSection);
+            saveData();
+            updateSectionDropdowns();
+            renderSectionsList();
+            document.getElementById('newSection').value = '';
+        }
+
+        function removeSection() {
+            const sectionToRemove = document.getElementById('section').value;
+            if (!sectionToRemove) return showError('Seleccione un departamento');
+            
+            // Verificar si hay registros asociados
+            const hasRecords = attendanceData.some(record => record.section === sectionToRemove);
+            
+            if (hasRecords) {
+                return showError('No se puede eliminar, tiene registros asociados');
+            }
+            
+            sections.delete(sectionToRemove);
+            saveData();
+            updateSectionDropdowns();
+            renderSectionsList();
+            document.getElementById('section').selectedIndex = 0;
+        }
+
+        function requestPermission() {
+            if (!isAuthenticated) return showError('Por favor inicie sesión');
+            
+            const cedula = document.getElementById('permissionCedula').value.trim();
+            const type = document.getElementById('permissionType').value;
+            const startDate = document.getElementById('permissionStartDate').value;
+            const endDate = document.getElementById('permissionEndDate').value;
+            const reason = document.getElementById('permissionReason').value.trim();
+            
+            // Validaciones
+            if (!cedula || !type || !startDate || !endDate || !reason) {
+                return showPermissionError('Todos los campos son obligatorios');
+            }
+            
+            if (!validateCedula(cedula)) {
+                return showPermissionError('Formato de cédula inválido. Use V- seguido de 8 dígitos.');
+            }
+            
+            // Verificar si las fechas son válidas
+            if (new Date(startDate) > new Date(endDate)) {
+                return showPermissionError('La fecha de fin no puede ser anterior a la fecha de inicio');
+            }
+            
+            // Crear permiso
+            const permission = {
+                id: Date.now(),
+                cedula,
+                type,
+                startDate,
+                endDate,
+                reason,
+                status: 'Pendiente',
+                requestedBy: currentUser.username,
+                requestedDate: new Date().toISOString().split('T')[0],
+                reviewedBy: '',
+                reviewDate: '',
+                comments: ''
+            };
+            
+            permissionsData.push(permission);
+            saveData();
+            showPermissionSuccess('Solicitud de permiso enviada correctamente');
+            renderPermissions();
+            updateStats();
+            
+            // Limpiar formulario
+            document.getElementById('permissionCedula').value = '';
+            document.getElementById('permissionReason').value = '';
+        }
+
+        function renderPermissions() {
+            const container = document.getElementById('permissionsList');
+            const statusFilter = document.getElementById('filterPermissionStatus').value;
+            
+            // Filtrar permisos según estado
+            let filteredPermissions = permissionsData;
+            if (statusFilter !== 'Todos') {
+                filteredPermissions = permissionsData.filter(p => p.status === statusFilter);
+            }
+            
+            // Ordenar por fecha de solicitud (más reciente primero)
+            filteredPermissions.sort((a, b) => new Date(b.requestedDate) - new Date(a.requestedDate));
+            
+            container.innerHTML = '';
+            
+            if (filteredPermissions.length === 0) {
+                container.innerHTML = '<p>No se encontraron permisos</p>';
+                return;
+            }
+            
+            filteredPermissions.forEach(permission => {
+                const card = document.createElement('div');
+                card.className = `permission-card ${permission.status === 'Aprobado' ? 'approved' : permission.status === 'Rechazado' ? 'rejected' : ''}`;
+                
+                card.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <h3 style="margin: 0;">${permission.cedula}</h3>
+                        <span class="status-badge status-${permission.status.toLowerCase()}">${permission.status}</span>
+                    </div>
+                    <p><strong>Tipo:</strong> ${permission.type}</p>
+                    <p><strong>Fechas:</strong> ${permission.startDate} al ${permission.endDate}</p>
+                    <p><strong>Motivo:</strong> ${permission.reason}</p>
+                    <p><strong>Solicitado por:</strong> ${permission.requestedBy} el ${permission.requestedDate}</p>
+                    
+                    ${permission.status !== 'Pendiente' ? `
+                        <p><strong>Revisado por:</strong> ${permission.reviewedBy} el ${permission.reviewDate}</p>
+                        <p><strong>Comentarios:</strong> ${permission.comments || 'Ninguno'}</p>
+                    ` : ''}
+                    
+                    <div class="btn-group" style="margin-top: 15px;">
+                        ${permission.status === 'Pendiente' && (currentUser.role === 'Administrador' || currentUser.role === 'Coordinador') ? `
+                            <button class="btn-success" onclick="reviewPermission(${permission.id}, 'Aprobado')">
+                                <i>✓</i> Aprobar
+                            </button>
+                            <button class="btn-danger" onclick="reviewPermission(${permission.id}, 'Rechazado')">
+                                <i>✗</i> Rechazar
+                            </button>
+                        ` : ''}
+                        <button class="btn-outline" onclick="editPermission(${permission.id})">
+                            <i>✏️</i> Editar
+                        </button>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+
+        function reviewPermission(id, status) {
+            const permission = permissionsData.find(p => p.id === id);
+            if (!permission) return;
+            
+            const comments = prompt(status === 'Aprobado' 
+                ? 'Ingrese comentarios (opcional):' 
+                : 'Indique el motivo del rechazo:');
+            
+            permission.status = status;
+            permission.reviewedBy = currentUser.username;
+            permission.reviewDate = new Date().toISOString().split('T')[0];
+            permission.comments = comments || '';
+            
+            saveData();
+            renderPermissions();
+            updateStats();
+            showPermissionSuccess(`Permiso ${status.toLowerCase()} correctamente`);
+        }
+
+        function editPermission(id) {
+            const permission = permissionsData.find(p => p.id === id);
+            if (!permission) return;
+            
+            // Llenar formulario con datos del permiso
+            document.getElementById('permissionCedula').value = permission.cedula;
+            document.getElementById('permissionType').value = permission.type;
+            document.getElementById('permissionStartDate').value = permission.startDate;
+            document.getElementById('permissionEndDate').value = permission.endDate;
+            document.getElementById('permissionReason').value = permission.reason;
+            
+            // Cambiar a la pestaña de solicitud
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelector('.tab[data-tab="request"]').classList.add('active');
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById('requestTab').classList.add('active');
+            
+            // Mostrar mensaje
+            showPermissionSuccess('Permiso cargado para edición. Modifique los datos necesarios y envíe nuevamente.');
+        }
+
+        function saveData() {
+            localStorage.setItem('fnz_attendance', JSON.stringify(attendanceData));
+            localStorage.setItem('fnz_permissions', JSON.stringify(permissionsData));
+            localStorage.setItem('fnz_sections', JSON.stringify([...sections]));
+        }
+
+        function updateSectionDropdowns() {
+            const sectionSelect = document.getElementById('section');
+            const filterSelect = document.getElementById('filterSection');
+            
+            // Limpiar selects
+            sectionSelect.innerHTML = '<option value="">Seleccione un departamento</option>';
+            filterSelect.innerHTML = '<option value="">Todos los departamentos</option>';
+            
+            // Agregar opciones
+            sections.forEach(section => {
+                const option1 = document.createElement('option');
+                option1.value = section;
+                option1.textContent = section;
+                sectionSelect.appendChild(option1);
+                
+                const option2 = document.createElement('option');
+                option2.value = section;
+                option2.textContent = section;
+                filterSelect.appendChild(option2);
+            });
+        }
+
+        function renderSectionsList() {
+            const container = document.getElementById('sectionsList');
+            container.innerHTML = '';
+            
+            if (sections.size === 0) {
+                container.textContent = 'No hay departamentos registrados';
+                return;
+            }
+            
+            sections.forEach(section => {
+                const badge = document.createElement('span');
+                badge.className = 'section-badge';
+                badge.textContent = section;
+                badge.style.marginRight = '8px';
+                badge.style.marginBottom = '8px';
+                container.appendChild(badge);
+            });
+        }
+
+        function updateAttendanceTable() {
+            renderAttendanceTable(attendanceData);
+        }
+
+        function renderAttendanceTable(data) {
+            const tbody = document.getElementById('attendanceBody');
+            tbody.innerHTML = '';
+            
+            if (data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align: center;">No se encontraron registros</td></tr>`;
+                return;
+            }
+            
+            // Ordenar por fecha (más reciente primero)
+            const sortedData = [...data].sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            sortedData.forEach(record => {
+                const tr = document.createElement('tr');
+                
+                tr.innerHTML = `
+                    <td>${record.name}</td>
+                    <td>${record.cedula}</td>
+                    <td>${record.role}</td>
+                    <td>${record.section}</td>
+                    <td>${record.date}</td>
+                    <td>${record.entryTime}</td>
+                    <td>${record.exitTime || '<span style="color: var(--accent);">Pendiente</span>'}</td>
+                    <td>
+                        <button class="btn-danger" style="padding: 5px 10px; font-size: 14px;" 
+                                onclick="deleteRecord(${record.id})">
+                            <i>🗑️</i>
+                        </button>
+                    </td>
+                `;
+                
+                tbody.appendChild(tr);
+            });
+        }
+
+        function deleteRecord(id) {
+            if (!confirm('¿Eliminar este registro permanentemente?')) return;
+            
+            attendanceData = attendanceData.filter(record => record.id !== id);
+            saveData();
+            updateAttendanceTable();
+            updateChart();
+            updateStats();
+            showError('Registro eliminado correctamente', 'success');
+        }
+
+        function updateStats() {
+            document.getElementById('totalStaff').textContent = 
+                new Set(attendanceData.map(r => r.cedula)).size;
+                
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('todayAttendance').textContent = 
+                attendanceData.filter(r => r.date === today).length;
+                
+            document.getElementById('pendingPermissions').textContent = 
+                permissionsData.filter(p => p.status === 'Pendiente').length;
+        }
+
+        function updateChart() {
+            const ctx = document.getElementById('attendanceChart').getContext('2d');
+            
+            // Agrupar por fecha
+            const recordsByDate = {};
+            attendanceData.forEach(record => {
+                if (!recordsByDate[record.date]) {
+                    recordsByDate[record.date] = 0;
+                }
+                recordsByDate[record.date]++;
+            });
+            
+            const dates = Object.keys(recordsByDate).sort();
+            const counts = dates.map(date => recordsByDate[date]);
+            
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+            
+            chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: dates,
+                    datasets: [{
+                        label: 'Asistencias por Fecha',
+                        data: counts,
+                        backgroundColor: '#0072BB',
+                        borderColor: '#0056A3',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Número de Asistencias'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Fecha'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function showError(message, type = 'error') {
+            const errorEl = document.getElementById('formError');
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
+            errorEl.style.color = type === 'success' ? '#28a745' : '#dc3545';
+            
+            setTimeout(() => {
+                errorEl.style.display = 'none';
+            }, 5000);
+        }
+        
+        function showPermissionError(message) {
+            const errorEl = document.getElementById('permissionError');
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
+            
+            setTimeout(() => {
+                errorEl.style.display = 'none';
+            }, 5000);
+        }
+        
+        function showPermissionSuccess(message) {
+            const successEl = document.getElementById('permissionSuccess');
+            successEl.textContent = message;
+            successEl.style.display = 'block';
+            
+            setTimeout(() => {
+                successEl.style.display = 'none';
+            }, 5000);
+        }
+
+        // Inicializar aplicación
+        window.onload = initApp;
+    </script>
+</body>
+</html>
