@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informe Técnico: Submarinos Nucleares de EE.UU.</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0a2e5c;
+            --secondary: #1c4b82;
+            --accent: #4a90e2;
+            --light: #e6f0ff;
+            --dark: #061a38;
+            --highlight: #ff6b6b;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0a192f 0%, #172a45 100%);
+            color: #f0f8ff;
+            line-height: 1.6;
+            padding: 0;
+            margin: 0;
+            overflow-x: hidden;
+            background-attachment: fixed;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 2rem 0;
+            text-align: center;
+            border-bottom: 3px solid var(--accent);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 Q50,10 100,0 L100,100 Q50,90 0,100 Z" fill="rgba(10, 46, 92, 0.8)"/></svg>');
+            background-size: 100% 100%;
+            opacity: 0.3;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+        
+        .subtitle {
+            font-size: 1.4rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .tabs {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 2rem 0;
+            gap: 10px;
+        }
+        
+        .tab-btn {
+            background: rgba(26, 65, 119, 0.7);
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            min-width: 180px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .tab-btn:hover {
+            background: rgba(42, 95, 168, 0.9);
+            transform: translateY(-3px);
+        }
+        
+        .tab-btn.active {
+            background: var(--accent);
+            font-weight: bold;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.8s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .card {
+            background: rgba(12, 36, 71, 0.8);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(74, 144, 226, 0.3);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        .card h2 {
+            color: var(--accent);
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 10px;
+        }
+        
+        .card h2 i {
+            font-size: 1.5rem;
+        }
+        
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 15px;
+        }
+        
+        .spec-item {
+            background: rgba(28, 75, 130, 0.4);
+            border-radius: 10px;
+            padding: 15px;
+            border-left: 4px solid var(--accent);
+        }
+        
+        .spec-item h3 {
+            color: var(--accent);
+            margin-bottom: 8px;
+            font-size: 1.2rem;
+        }
+        
+        .comparison-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .comparison-card {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(12, 36, 71, 0.8);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(74, 144, 226, 0.3);
+        }
+        
+        .comparison-card h3 {
+            text-align: center;
+            color: var(--accent);
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .comparison-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .comparison-item:last-child {
+            border-bottom: none;
+        }
+        
+        .value {
+            font-weight: bold;
+            color: var(--accent);
+        }
+        
+        .diagram-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            height: 300px;
+            gap: 30px;
+            margin: 40px 0;
+            padding: 20px;
+            background: rgba(12, 36, 71, 0.5);
+            border-radius: 15px;
+        }
+        
+        .diagram-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 120px;
+        }
+        
+        .diagram-bar {
+            width: 80px;
+            background: linear-gradient(0deg, var(--primary) 0%, var(--accent) 100%);
+            border-radius: 8px 8px 0 0;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .diagram-label {
+            margin-top: 15px;
+            text-align: center;
+            font-weight: bold;
+            color: var(--accent);
+        }
+        
+        .diagram-value {
+            position: absolute;
+            top: -30px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .footer {
+            background: linear-gradient(90deg, var(--primary) 0%, var(--dark) 100%);
+            padding: 2rem;
+            text-align: center;
+            margin-top: 3rem;
+            border-top: 2px solid var(--accent);
+            font-size: 1.1rem;
+        }
+        
+        .footer p {
+            margin: 5px 0;
+        }
+        
+        .footer-title {
+            font-weight: bold;
+            color: var(--accent);
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .highlight {
+            color: var(--highlight);
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .tab-btn {
+                width: 90%;
+            }
+            
+            .specs-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .diagram-container {
+                flex-direction: column;
+                align-items: center;
+                height: auto;
+            }
+            
+            .diagram-item {
+                margin: 20px 0;
+            }
+        }
+        
+        .info-note {
+            background: rgba(255, 107, 107, 0.15);
+            border-left: 4px solid var(--highlight);
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+        
+        .badge {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-right: 8px;
+            font-weight: bold;
+        }
+        
+        .weapon-system {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: rgba(28, 75, 130, 0.3);
+            border-radius: 8px;
+            margin: 10px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .weapon-system:hover {
+            background: rgba(28, 75, 130, 0.5);
+            transform: translateX(5px);
+        }
+        
+        .weapon-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+            color: var(--accent);
+        }
+        
+        .weapon-details h4 {
+            color: var(--accent);
+            margin-bottom: 5px;
+        }
+        
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 40px auto;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--accent);
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 40px;
+            width: calc(50% - 40px);
+        }
+        
+        .timeline-item:nth-child(odd) {
+            left: 0;
+        }
+        
+        .timeline-item:nth-child(even) {
+            left: calc(50% + 40px);
+        }
+        
+        .timeline-content {
+            background: rgba(12, 36, 71, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            position: relative;
+            border: 1px solid rgba(74, 144, 226, 0.3);
+        }
+        
+        .timeline-content::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            right: -15px;
+            border-width: 8px 0 8px 16px;
+            border-style: solid;
+            border-color: transparent transparent transparent rgba(12, 36, 71, 0.8);
+        }
+        
+        .timeline-item:nth-child(even) .timeline-content::before {
+            right: auto;
+            left: -15px;
+            border-width: 8px 16px 8px 0;
+            border-color: transparent rgba(12, 36, 71, 0.8) transparent transparent;
+        }
+        
+        .timeline-year {
+            position: absolute;
+            top: 10px;
+            width: 80px;
+            height: 30px;
+            background: var(--accent);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-year {
+            right: -100px;
+        }
+        
+        .timeline-item:nth-child(even) .timeline-year {
+            left: -100px;
+        }
+        
+        .submarine-icon {
+            text-align: center;
+            font-size: 3rem;
+            margin: 20px 0;
+            color: var(--accent);
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><i class="fas fa-submarine"></i> Informe Técnico: Submarinos Nucleares de EE.UU.</h1>
+            <p class="subtitle">Análisis técnico de la clase Ohio, Los Ángeles, Virginia y Columbia</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="openTab('ohio')">Clase Ohio</button>
+            <button class="tab-btn" onclick="openTab('comparison')">Comparación</button>
+            <button class="tab-btn" onclick="openTab('columbia')">Clase Columbia</button>
+            <button class="tab-btn" onclick="openTab('virginia')">Clase Virginia</button>
+        </div>
+
+        <!-- Ohio Class Tab -->
+        <div id="ohio" class="tab-content active">
+            <div class="card">
+                <h2><i class="fas fa-info-circle"></i> Clase Ohio: Visión General</h2>
+                <p>Los submarinos nucleares de la clase Ohio son la piedra angular de la tríada nuclear de Estados Unidos. Diseñados principalmente como submarinos de misiles balísticos (SSBN), algunos han sido reconvertidos a submarinos de misiles de crucero (SSGN).</p>
+                
+                <div class="info-note">
+                    <p><i class="fas fa-exclamation-circle"></i> <span class="highlight">Dato estratégico:</span> Los submarinos Ohio representan cerca del 50% del inventario nuclear activo de EE.UU. y son elementos clave en la disuasión nuclear.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2><i class="fas fa-ruler-combined"></i> Características Técnicas</h2>
+                <div class="specs-grid">
+                    <div class="spec-item">
+                        <h3>Dimensiones</h3>
+                        <p><span class="badge">Eslora</span> 170.7 metros</p>
+                        <p><span class="badge">Manga</span> 12.8 metros</p>
+                        <p><span class="badge">Calado</span> 11.1 metros</p>
+                        <p><span class="badge">Desplazamiento</span> 18,750 toneladas</p>
+                    </div>
+                    
+                    <div class="spec-item">
+                        <h3>Propulsión y Rendimiento</h3>
+                        <p><span class="badge">Reactor</span> S8G de agua a presión</p>
+                        <p><span class="badge">Potencia</span> 60,000 shp</p>
+                        <p><span class="badge">Vel. Superficie</span> 12 nudos</p>
+                        <p><span class="badge">Vel. Inmersión</span> >20 nudos</p>
+                    </div>
+                    
+                    <div class="spec-item">
+                        <h3>Capacidades Operativas</h3>
+                        <p><span class="badge">Autonomía</span> Ilimitada (limitada por víveres)</p>
+                        <p><span class="badge">Tripulación</span> 153 personas</p>
+                        <p><span class="badge">Profundidad</span> >243 metros</p>
+                        <p><span class="badge">Tiempo patrulla</span> 77 días</p>
+                    </div>
+                    
+                    <div class="spec-item">
+                        <h3>Unidades en Servicio</h3>
+                        <p><span class="badge">Total</span> 18 submarinos</p>
+                        <p><span class="badge">SSBN</span> 14 (Misiles balísticos)</p>
+                        <p><span class="badge">SSGN</span> 4 (Misiles crucero)</p>
+                        <p><span class="badge">Reemplazo</span> Clase Columbia (2031)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2><i class="fas fa-fighter-jet"></i> Sistemas de Armamento</h2>
+                
+                <div class="weapon-system">
+                    <div class="weapon-icon">
+                        <i class="fas fa-missile"></i>
+                    </div>
+                    <div class="weapon-details">
+                        <h4>Misiles Balísticos Trident II D5 (SSBN)</h4>
+                        <p>20 misiles por submarino | Alcance: 7,400-12,000 km | Velocidad: Mach 24</p>
+                        <p>Capacidad: Hasta 12 ojivas MIRV (W76 o W88) por misil</p>
+                    </div>
+                </div>
+                
+                <div class="weapon-system">
+                    <div class="weapon-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <div class="weapon-details">
+                        <h4>Misiles de Crucero Tomahawk (SSGN)</h4>
+                        <p>154 misiles por submarino | Alcance: 1,600 km</p>
+                        <p>Precisión: CEP < 10 metros | Cabeza de guerra: 450 kg</p>
+                    </div>
+                </div>
+                
+                <div class="weapon-system">
+                    <div class="weapon-icon">
+                        <i class="fas fa-torpedo"></i>
+                    </div>
+                    <div class="weapon-details">
+                        <h4>Torpedos Mk 48</h4>
+                        <p>4 tubos lanzatorpedos de 533 mm | Alcance: >50 km</p>
+                        <p>Cabeza explosiva: 290 kg | Velocidad: 55 nudos</p>
+                    </div>
+                </div>
+                
+                <div class="weapon-system">
+                    <div class="weapon-icon">
+                        <i class="fas fa-user-ninja"></i>
+                    </div>
+                    <div class="weapon-details">
+                        <h4>Operaciones Especiales (SSGN)</h4>
+                        <p>Capacidad para 66 operadores (SEALs o MARSOC)</p>
+                        <p>Cámaras estancas para buzos y vehículos submarinos</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparison Tab -->
+        <div id="comparison" class="tab-content">
+            <div class="card">
+                <h2><i class="fas fa-balance-scale"></i> Comparación Técnica de Clases</h2>
+                <p>Análisis comparativo de las principales características de las clases de submarinos nucleares estadounidenses.</p>
+            </div>
+            
+            <div class="diagram-container">
+                <div class="diagram-item">
+                    <div class="diagram-bar" style="height: 250px;">
+                        <div class="diagram-value">18,750 t</div>
+                    </div>
+                    <div class="diagram-label">Ohio</div>
+                </div>
+                
+                <div class="diagram-item">
+                    <div class="diagram-bar" style="height: 100px;">
+                        <div class="diagram-value">7,000 t</div>
+                    </div>
+                    <div class="diagram-label">Los Ángeles</div>
+                </div>
+                
+                <div class="diagram-item">
+                    <div class="diagram-bar" style="height: 260px;">
+                        <div class="diagram-value">20,810 t</div>
+                    </div>
+                    <div class="diagram-label">Columbia</div>
+                </div>
+                
+                <div class="diagram-item">
+                    <div class="diagram-bar" style="height: 120px;">
+                        <div class="diagram-value">7,900 t</div>
+                    </div>
+                    <div class="diagram-label">Virginia</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="comparison-container">
+                    <div class="comparison-card">
+                        <h3><i class="fas fa-submarine"></i> Clase Ohio</h3>
+                        <div class="comparison-item">
+                            <span>Rol principal:</span>
+                            <span class="value">Disuasión nuclear</span>
+                        </div>
+                        <div class="comparison-item">
+                            <span>Armamento nuclear:</span>
+                            <span class="value">20 misiles Trident II</span>
+                        </div>
+                        <div class="comparison-item">
+                            <span>Velocidad (inmersión):</span>
+                            <span class="value">>20 nudos</span>
+                        </div>
+                        <div class="comparison-item">
+                            <span>Profundidad operativa:</span>
+                            <span class="value">>243 metros</span>
+                        </div>
+                        <div class="comparison-item">
+                            <span>Tripulación:</span>
+                            <span class="value">153 personas</span>
+                        </div>
+                        <div class="comparison-item">
+                            <span>Autonomía:</span>
+                            <span class="value">Ilimitada</span>
+                        </div>
+                    </div>
+                    
+                    <div class="comparison-card">
+                        <h3><i class="fas fa-submarine"></i> Clase Los Ángeles</h3>
+                        <div class="comparison-item">
+                            <span>Rol principal:</span>
+                            <span class="value">Ataque convencional</span>
+                        </div>
+                        <div class="comparison-item">
+                            <span>Armamento nuclear:</span>
+                            <span class="value">No</span>
+                        </div>
+                        <div class="comparison-item">
+                            <span>Velocidad (inmersión):</span>
+                            <span class="value">32 nudos</span>
+                        </div>
+                        <div class="comparison-item">
+                            <span>Profundidad operativa:</span>
+                            <span class="value">~450 metros</span>
+                        </div>
+                        <div class="comparison-item">
+                            <span>Tripulación:</span>
+                            <span class="value">129 personas</span>
+                        </div>
+                        <div class="comparison-item">
+                            <span>Autonomía:</span>
+                            <span class="value">Ilimitada</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2><i class="fas fa-chart-bar"></i> Capacidades Comparativas</h2>
+                <div class="specs-grid">
+                    <div class="spec-item">
+                        <h3>Potencia de Fuego</h3>
+                        <p><span class="highlight">Ohio SSBN:</span> 240 ojivas nucleares</p>
+                        <p><span class="highlight">Ohio SSGN:</span> 154 misiles Tomahawk</p>
+                        <p><span class="highlight">Los Ángeles:</span> 12-28 Tomahawk</p>
+                    </div>
+                    
+                    <div class="spec-item">
+                        <h3>Sigilo Operativo</h3>
+                        <p><span class="highlight">Ohio:</span> Muy silencioso a 20 nudos</p>
+                        <p><span class="highlight">Los Ángeles:</span> Silencioso en misiones de caza</p>
+                        <p><span class="highlight">Virginia:</span> Tecnología de sigilo avanzada</p>
+                    </div>
+                    
+                    <div class="spec-item">
+                        <h3>Vida Útil del Reactor</h3>
+                        <p><span class="highlight">Ohio:</span> ~15 años</p>
+                        <p><span class="highlight">Los Ángeles:</span> ~15 años</p>
+                        <p><span class="highlight">Columbia:</span> 42 años</p>
+                        <p><span class="highlight">Virginia:</span> 33 años</p>
+                    </div>
+                    
+                    <div class="spec-item">
+                        <h3>Unidades en Servicio</h3>
+                        <p><span class="highlight">Ohio:</span> 18 unidades</p>
+                        <p><span class="highlight">Los Ángeles:</span> 32 unidades</p>
+                        <p><span class="highlight">Columbia:</span> 12 planeadas</p>
+                        <p><span class="highlight">Virginia:</span> 21+ (66 planeados)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Columbia Class Tab -->
+        <div id="columbia" class="tab-content">
+            <div class="card">
+                <h2><i class="fas fa-ship"></i> Clase Columbia: El Futuro de la Disuasión</h2>
+                <p>Diseñados para reemplazar a los submarinos clase Ohio a partir de 2031, los Columbia representarán la próxima generación de submarinos de misiles balísticos nucleares (SSBN) de EE.UU.</p>
+                
+                <div class="submarine-icon">
+                    <i class="fas fa-submarine"></i>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2><i class="fas fa-cogs"></i> Características Técnicas</h2>
+                <div class="specs-grid">
+                    <div class="spec-item">
+                        <h3>Dimensiones</h3>
+                        <p><span class="badge">Eslora</span> 171 metros</p>
+                        <p><span class="badge">Manga</span> 13 metros</p>
+                        <p><span class="badge">Desplazamiento</span> 20,810 toneladas</p>
+                    </div>
+                    
+                    <div class="spec-item">
+                        <h3>Propulsión</h3>
+                        <p><span class="badge">Reactor</span> S1B PWR</p>
+                        <p><span class="badge">Potencia</span> ~44,000 shp</p>
+                        <p><span class="badge">Vida reactor</span> 42 años</p>
+                    </div>
+                    
+                    <div class="spec-item">
+                        <h3>Armamento</h3>
+                        <p><span class="badge">Misiles</span> 16 Trident II D5LE/D5LE2</p>
+                        <p><span class="badge">Tubos torpedo</span> 4 (533 mm)</p>
+                        <p><span class="badge">Torpedos</span> Mk 48 ADCAP</p>
+                    </div>
+                    
+                    <div class="spec-item">
+                        <h3>Capacidades</h3>
+                        <p><span class="badge">Tripulación</span> 155 personas</p>
+                        <p><span class="badge">Sigilo</span> Tecnología avanzada</p>
+                        <p><span class="badge">Costo unitario</span> ~$9.1 mil millones</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2><i class="fas fa-star"></i> Innovaciones Clave</h2>
+                <div class="specs-grid">
+                    <div class="spec-item">
+                        <h3>Motor Eléctrico de Propulsión</h3>
+                        <p>Eliminación de engranajes reductores para mayor silencio</p>
+                    </div>
+                    
+                    <div class="spec-item">
+                        <h3>Sistema de Lanzamiento</h3>
+                        <p>16 tubos en lugar de 20 para reducir costos y peso</p>
+                    </div>
+                    
+                    <div class="spec-item">
+                        <h3>Tecnología de Sigilo</h3>
+                        <p>Mejoras en el recubrimiento anecoico y diseño hidrodinámico</p>
+                    </div>
+                    
+                    <div class="spec-item">
+                        <h3>Automatización</h3>
+                        <p>Reducción de tripulación mediante sistemas automatizados</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2><i class="fas fa-history"></i> Cronograma de Desarrollo</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-year">2017</div>
+                        <div class="timeline-content">
+                            <h3>Inicio del Programa</h3>
+                            <p>Contrato inicial para el diseño y desarrollo</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-year">2021</div>
+                        <div class="timeline-content">
+                            <h3>Fase de Construcción</h3>
+                            <p>Inicio de la fabricación del primer submarino</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-year">2027</div>
+                        <div class="timeline-content">
+                            <h3>Botadura</h3>
+                            <p>Lanzamiento del USS Columbia (SSBN-826)</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-year">2031</div>
+                        <div class="timeline-content">
+                            <h3>Entrada en Servicio</h3>
+                            <p>Primera patrulla operativa del USS Columbia</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-year">2042</div>
+                        <div class="timeline-content">
+                            <h3>Completo Reemplazo</h3>
+                            <p>Todos los Ohio SSBN reemplazados por Columbia</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Virginia Class Tab -->
+        <div id="virginia" class="tab-content">
+            <div class="card">
+                <h2><i class="fas fa-water"></i> Clase Virginia: Submarinos de Ataque</h2>
+                <p>Diseñados para reemplazar a los submarinos clase Los Ángeles, los Virginia son submarinos de ataque nuclear (SSN) de última generación para múltiples misiones.</p>
+                
+                <div class="submarine-icon">
+                    <i class="fas fa-submarine"></i>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2><i class="fas fa-cogs"></i> Características Técnicas</h2>
+                <div class="specs-grid">
+                    <div class="spec-item">
+                        <h3>Dimensiones</h3>
+                        <p><span class="badge">Eslora</span> 115 metros (Bloque I-IV)</p>
+                        <p><span class="badge">Manga</span> 10.4 metros</p>
+                        <p><span class="badge">Desplazamiento</span> 7,900 toneladas</p>
+                    </div>
+                    
+                    <div class="spec-item">
+                        <h3>Propulsión</h3>
+                        <p><span class="badge">Reactor</span> S9G PWR</p>
+                        <p><span class="badge">Potencia</span> 40,000 shp</p>
+                        <p><span class="badge">Vida reactor</span> 33 años</p>
+                    </div>
+                    
+                    <div class="spec-item">
+                        <h3>Armamento</h3>
+                        <p><span class="badge">Tubos torpedo</span> 4 (533 mm)</p>
+                        <p><span class="badge">VLS</span> 12 (Bloque I-III) / 40 (Bloque V)</p>
+                        <p><span class="badge">Capacidad</span> 37 armas</p>
+                    </div>
+                    
+                    <div class="spec-item">
+                        <h3>Capacidades</h3>
+                        <p><span class="badge">Tripulación</span> 135 personas</p>
+                        <p><span class="badge">Velocidad</span> >25 nudos</p>
+                        <p><span class="badge">Costo unitario</span> ~$3.4 mil millones</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2><i class="fas fa-tasks"></i> Bloques y Evolución</h2>
+                <div class="specs-grid">
+                    <div class="spec-item">
+                        <h3>Bloque I-IV</h3>
+                        <p><span class="badge">Unidades</span> 21 en servicio</p>
+                        <p><span class="badge">VLS</span> 12 celdas</p>
+                        <p><span class="badge">Característica</span> Sonar de matriz grande</p>
+                    </div>
+                    
+                    <div class="spec-item">
+                        <h3>Bloque V</h3>
+                        <p><span class="badge">Unidades</span> 10 en construcción</p>
+                        <p><span class="badge">VLS</span> 28 celdas adicionales</p>
+                        <p><span class="badge">Característica</span> Módulo de misiles</p>
+                    </div>
+                    
+                    <div class="spec-item">
+                        <h3>Bloque VI</h3>
+                        <p><span class="badge">Unidades</span> Planeadas</p>
+                        <p><span class="badge">Mejoras</span> Mayor automatización</p>
+                        <p><span class="badge">Característica</span> Nuevos sistemas de combate</p>
+                    </div>
+                    
+                    <div class="spec-item">
+                        <h3>Capacidades Futuras</h3>
+                        <p>Vehículos submarinos no tripulados</p>
+                        <p>Armas hipersónicas</p>
+                        <p>Mayor integración con drones</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2><i class="fas fa-crosshairs"></i> Roles y Misiones</h2>
+                <div class="specs-grid">
+                    <div class="spec-item">
+                        <h3>Guerra Antisubmarina</h3>
+                        <p>Detección y neutralización de submarinos enemigos</p>
+                    </div>
+                    
+                    <div class="spec-item">
+                        <h3>Ataque a Superficie</h3>
+                        <p>Empleo de misiles Tomahawk contra objetivos terrestres</p>
+                    </div>
+                    
+                    <div class="spec-item">
+                        <h3>Operaciones Especiales</h3>
+                        <p>Transporte e inserción de fuerzas especiales</p>
+                    </div>
+                    
+                    <div class="spec-item">
+                        <h3>Vigilancia e Inteligencia</h3>
+                        <p>Recolección de inteligencia y misiones de reconocimiento</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p class="footer-title">Elaborado por</p>
+            <p>Profesor Ángel Chacín Ávila</p>
+            <p>Licenciado en Física, Especialista en Ciencias Computacionales</p>
+            <p>UNES Núcleo Zulia</p>
+        </div>
+    </footer>
+
+    <script>
+        function openTab(tabName) {
+            // Ocultar todas las pestañas
+            const tabContents = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove("active");
+            }
+            
+            // Desactivar todos los botones
+            const tabButtons = document.getElementsByClassName("tab-btn");
+            for (let i = 0; i < tabButtons.length; i++) {
+                tabButtons[i].classList.remove("active");
+            }
+            
+            // Mostrar la pestaña seleccionada
+            document.getElementById(tabName).classList.add("active");
+            
+            // Activar el botón seleccionado
+            event.currentTarget.classList.add("active");
+            
+            // Scroll suave al principio del contenido
+            document.querySelector('.container').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Animación de diagrama
+        document.addEventListener('DOMContentLoaded', function() {
+            const diagramItems = document.querySelectorAll('.diagram-bar');
+            diagramItems.forEach(item => {
+                const height = item.style.height;
+                item.style.height = '0';
+                setTimeout(() => {
+                    item.style.transition = 'height 1.5s ease-out';
+                    item.style.height = height;
+                }, 500);
+            });
+        });
+    </script>
+</body>
+</html>
