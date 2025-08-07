@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis de Fuerzas Estratégicas: USA-OTAN vs Rusia-China y Aliados</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f1a30, #1c2c46);
+            color: #f0f8ff;
+            line-height: 1.6;
+        }
+        
+        header {
+            background: rgba(8, 15, 30, 0.95);
+            padding: 1.5rem 0;
+            text-align: center;
+            border-bottom: 3px solid #3a7bd5;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 0.5rem;
+            color: #fff;
+            text-shadow: 0 0 15px rgba(58, 123, 213, 0.8);
+            background: linear-gradient(to right, #4a90e2, #3a7bd5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            padding: 0.5rem 0;
+        }
+        
+        .subtitle {
+            font-size: 1.3rem;
+            color: #a0d2ff;
+            max-width: 900px;
+            margin: 0.5rem auto;
+            font-weight: 300;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .card {
+            background: rgba(20, 35, 60, 0.85);
+            border-radius: 15px;
+            padding: 2.5rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(58, 123, 213, 0.4);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .card-title {
+            font-size: 2rem;
+            margin-bottom: 1.8rem;
+            color: #3a7bd5;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 3px solid #3a7bd5;
+            padding-bottom: 0.8rem;
+        }
+        
+        .card-title i {
+            background: rgba(58, 123, 213, 0.2);
+            padding: 10px;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            margin-top: 2rem;
+        }
+        
+        .country-card {
+            background: rgba(25, 45, 75, 0.8);
+            border-radius: 12px;
+            padding: 1.8rem;
+            text-align: center;
+            border: 3px solid;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .country-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: currentColor;
+        }
+        
+        .usa-card { border-color: #3a7bd5; color: #3a7bd5; }
+        .nato-card { border-color: #5d8aa8; color: #5d8aa8; }
+        .russia-card { border-color: #d32f2f; color: #d32f2f; }
+        .china-card { border-color: #ff9800; color: #ff9800; }
+        .northkorea-card { border-color: #8b0000; color: #8b0000; }
+        .belarus-card { border-color: #ffd700; color: #ffd700; }
+        .iran-card { border-color: #008000; color: #008000; }
+        
+        .country-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px currentColor;
+        }
+        
+        .country-title {
+            font-size: 1.6rem;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        
+        .country-title i {
+            font-size: 1.8rem;
+        }
+        
+        .simulation-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+        }
+        
+        .phase {
+            background: rgba(30, 50, 85, 0.8);
+            border-radius: 12px;
+            padding: 1.8rem;
+            margin-bottom: 1.8rem;
+            border-left: 6px solid;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .phase::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.05), transparent);
+            pointer-events: none;
+        }
+        
+        .phase:hover {
+            transform: translateX(5px);
+        }
+        
+        .phase-1 { border-color: #3a7bd5; }
+        .phase-2 { border-color: #d32f2f; }
+        .phase-3 { border-color: #ff9800; }
+        .phase-4 { border-color: #9c27b0; }
+        .phase-5 { border-color: #8b0000; }
+        
+        .phase-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #fff;
+        }
+        
+        .phase-title i {
+            background: rgba(255,255,255,0.1);
+            padding: 8px;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .chart-container {
+            background: rgba(15, 30, 55, 0.8);
+            border-radius: 12px;
+            padding: 1.8rem;
+            margin-top: 1.8rem;
+            height: 450px;
+            border: 1px solid rgba(58, 123, 213, 0.3);
+        }
+        
+        .conclusion-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.8rem;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .conclusion-table th, .conclusion-table td {
+            padding: 15px 20px;
+            text-align: center;
+            border: 1px solid rgba(58, 123, 213, 0.3);
+        }
+        
+        .conclusion-table th {
+            background: rgba(40, 70, 120, 0.8);
+            color: #4a90e2;
+            font-size: 1.1rem;
+        }
+        
+        .conclusion-table tr:nth-child(even) {
+            background: rgba(25, 45, 75, 0.6);
+        }
+        
+        .conclusion-table tr:hover {
+            background: rgba(35, 65, 110, 0.7);
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background: linear-gradient(45deg, #3a7bd5, #2a52a0);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.4s ease;
+            text-decoration: none;
+            margin-top: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn:hover {
+            background: linear-gradient(45deg, #2a52a0, #3a7bd5);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        .footer {
+            background: rgba(8, 15, 30, 0.95);
+            padding: 2.5rem;
+            text-align: center;
+            border-top: 3px solid #3a7bd5;
+            margin-top: 3rem;
+            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .author {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+            color: #4a90e2;
+            font-weight: bold;
+        }
+        
+        .credentials {
+            font-style: italic;
+            color: #a0d2ff;
+            margin-bottom: 1.2rem;
+            font-size: 1.1rem;
+        }
+        
+        .disclaimer {
+            font-size: 0.95rem;
+            color: #a0a0a0;
+            margin-top: 1.2rem;
+            line-height: 1.6;
+        }
+        
+        .alliance-container {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .alliance {
+            text-align: center;
+            padding: 1.5rem;
+            border-radius: 10px;
+            width: 45%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .alliance-1 {
+            background: linear-gradient(135deg, rgba(58, 123, 213, 0.2), rgba(93, 138, 168, 0.2));
+            border: 1px solid #3a7bd5;
+        }
+        
+        .alliance-2 {
+            background: linear-gradient(135deg, rgba(211, 47, 47, 0.2), rgba(255, 152, 0, 0.2));
+            border: 1px solid #d32f2f;
+        }
+        
+        .alliance-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: #fff;
+        }
+        
+        .alliance-members {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .member-tag {
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .usa-tag { background: rgba(58, 123, 213, 0.3); }
+        .nato-tag { background: rgba(93, 138, 168, 0.3); }
+        .russia-tag { background: rgba(211, 47, 47, 0.3); }
+        .china-tag { background: rgba(255, 152, 0, 0.3); }
+        .northkorea-tag { background: rgba(139, 0, 0, 0.3); }
+        .belarus-tag { background: rgba(255, 215, 0, 0.3); }
+        .iran-tag { background: rgba(0, 128, 0, 0.3); }
+        
+        @media (max-width: 992px) {
+            .simulation-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .alliance-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .alliance {
+                width: 90%;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .card {
+                padding: 1.8rem;
+            }
+            
+            .card-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1><i class="fas fa-shield-alt"></i> Análisis de Fuerzas Estratégicas</h1>
+            <p class="subtitle">Comparación de capacidades militares y simulación de confrontación entre USA-OTAN y Rusia-China con aliados (Bielorrusia, Irán, Corea del Norte)</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="alliance-container">
+            <div class="alliance alliance-1">
+                <h2 class="alliance-title">Alianza USA-OTAN</h2>
+                <div class="alliance-members">
+                    <div class="member-tag usa-tag">Estados Unidos</div>
+                    <div class="member-tag nato-tag">OTAN</div>
+                </div>
+            </div>
+            
+            <div class="alliance alliance-2">
+                <h2 class="alliance-title">Alianza Rusia-China</h2>
+                <div class="alliance-members">
+                    <div class="member-tag russia-tag">Rusia</div>
+                    <div class="member-tag china-tag">China</div>
+                    <div class="member-tag northkorea-tag">Corea del Norte</div>
+                    <div class="member-tag belarus-tag">Bielorrusia</div>
+                    <div class="member-tag iran-tag">Irán</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-bomb"></i> Capacidades Estratégicas Nucleares</h2>
+            <div class="comparison-grid">
+                <div class="country-card usa-card">
+                    <h3 class="country-title"><i class="fas fa-star-spangled"></i> Estados Unidos</h3>
+                    <p><strong>Arsenal:</strong> ~5,428 ojivas nucleares</p>
+                    <p><strong>Sistemas clave:</strong> Minuteman III, Trident II, B-2 Spirit</p>
+                    <p><strong>Doctrina:</strong> "Flexible Response"</p>
+                </div>
+                
+                <div class="country-card nato-card">
+                    <h3 class="country-title"><i class="fas fa-flag"></i> OTAN</h3>
+                    <p><strong>Disuasión compartida</strong> con EE.UU.</p>
+                    <p><strong>Arsenales independientes:</strong></p>
+                    <p>Reino Unido (225 ojivas), Francia (290 ojivas)</p>
+                </div>
+                
+                <div class="country-card russia-card">
+                    <h3 class="country-title"><i class="fas fa-flag"></i> Rusia</h3>
+                    <p><strong>Arsenal:</strong> ~5,977 ojivas (mayor del mundo)</p>
+                    <p><strong>Sistemas clave:</strong> RS-28 Sarmat, Avangard, Bulava</p>
+                    <p><strong>Doctrina:</strong> "Escalada para de-escalar"</p>
+                </div>
+                
+                <div class="country-card china-card">
+                    <h3 class="country-title"><i class="fas fa-flag"></i> China</h3>
+                    <p><strong>Arsenal:</strong> ~410 ojivas (crecimiento acelerado)</p>
+                    <p><strong>Sistemas clave:</strong> DF-41, JL-3, DF-17</p>
+                    <p><strong>Doctrina:</strong> "No primer uso" (con ambigüedad)</p>
+                </div>
+                
+                <div class="country-card northkorea-card">
+                    <h3 class="country-title"><i class="fas fa-flag"></i> Corea del Norte</h3>
+                    <p><strong>Arsenal:</strong> ~40-50 ojivas nucleares</p>
+                    <p><strong>Sistemas clave:</strong> Misiles Hwasong-15 (alcance 13,000 km), tácticos KN-23</p>
+                    <p><strong>Doctrina:</strong> Disuasión asimétrica, primer uso declarado</p>
+                </div>
+                
+                <div class="country-card belarus-card">
+                    <h3 class="country-title"><i class="fas fa-flag"></i> Bielorrusia</h3>
+                    <p><strong>Arsenal:</strong> 0 ojivas propias, pero alberga armas tácticas rusas</p>
+                    <p><strong>Sistemas clave:</strong> Misiles Iskander transferidos por Rusia (2023)</p>
+                    <p><strong>Doctrina:</strong> Disuasión extendida de Rusia</p>
+                </div>
+                
+                <div class="country-card iran-card">
+                    <h3 class="country-title"><i class="fas fa-flag"></i> Irán</h3>
+                    <p><strong>Arsenal:</strong> Sin armas nucleares (programa en desarrollo)</p>
+                    <p><strong>Sistemas clave:</strong> Misiles Shahab-3 (1,300 km), Ghadr (1,600 km)</p>
+                    <p><strong>Doctrina:</strong> Disuasión convencional, capacidades de ataque asimétrico</p>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="nuclearChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-fighter-jet"></i> Capacidades Convencionales</h2>
+            <div class="comparison-grid">
+                <div class="country-card usa-card">
+                    <h3 class="country-title"><i class="fas fa-star-spangled"></i> USA/OTAN</h3>
+                    <p><strong>Aire:</strong> 2,200+ cazas 5ª generación</p>
+                    <p><strong>Marina:</strong> 11 portaaviones, 92 destructores</p>
+                    <p><strong>Ejército:</strong> 1.3M efectivos, 6,000 tanques</p>
+                    <p><strong>Tecnología:</strong> Superioridad en guerra electrónica y drones</p>
+                </div>
+                
+                <div class="country-card russia-card">
+                    <h3 class="country-title"><i class="fas fa-flag"></i> Rusia</h3>
+                    <p><strong>Aire:</strong> ~1,500 aviones (60% obsoleto)</p>
+                    <p><strong>Marina:</strong> 1 portaaviones, 70 submarinos</p>
+                    <p><strong>Ejército:</strong> 900,000 efectivos, 12,000 tanques</p>
+                    <p><strong>Defensas:</strong> Sistemas S-400/S-500, guerra electrónica</p>
+                </div>
+                
+                <div class="country-card china-card">
+                    <h3 class="country-title"><i class="fas fa-flag"></i> China</h3>
+                    <p><strong>Aire:</strong> 1,200+ aviones de combate</p>
+                    <p><strong>Marina:</strong> 355+ buques (mayor flota mundial)</p>
+                    <p><strong>Ejército:</strong> 2M+ efectivos, 5,000 tanques</p>
+                    <p><strong>Misiles:</strong> DF-21D/DF-26 ("asesinos de portaaviones")</p>
+                </div>
+                
+                <div class="country-card northkorea-card">
+                    <h3 class="country-title"><i class="fas fa-flag"></i> Corea del Norte</h3>
+                    <p><strong>Aire:</strong> 600+ aviones obsoletos (MiG-21, MiG-29)</p>
+                    <p><strong>Marina:</strong> 70+ submarinos (clase Romeo), lanchas rápidas</p>
+                    <p><strong>Ejército:</strong> 1.1M efectivos, 4,000 tanques T-55/T-62</p>
+                    <p><strong>Artillería:</strong> 13,000 sistemas desplegados en ZDC</p>
+                </div>
+                
+                <div class="country-card belarus-card">
+                    <h3 class="country-title"><i class="fas fa-flag"></i> Bielorrusia</h3>
+                    <p><strong>Aire:</strong> 100 aviones (Su-25, MiG-29)</p>
+                    <p><strong>Marina:</strong> Sin salida al mar</p>
+                    <p><strong>Ejército:</strong> 45,000 efectivos, 500 tanques T-72</p>
+                    <p><strong>Movilización:</strong> Capacidad para movilizar 500,000 reservistas</p>
+                </div>
+                
+                <div class="country-card iran-card">
+                    <h3 class="country-title"><i class="fas fa-flag"></i> Irán</h3>
+                    <p><strong>Aire:</strong> 300 aviones (F-14, MiG-29, drones Shahed)</p>
+                    <p><strong>Marina:</strong> 100+ buques (incl. 20 submarinos), doctrina de "enjambre"</p>
+                    <p><strong>Ejército:</strong> 600,000 efectivos, 1,500 tanques (Zulfiqar)</p>
+                    <p><strong>Misiles:</strong> Mayor arsenal de Medio Oriente (~3,000)</p>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="conventionalChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-chess-board"></i> Modelo Simulado: Confrontación Global</h2>
+            <p><strong>Escenario:</strong> Crisis en Europa Oriental + conflicto en Taiwán + tensiones en Corea/Golfo Pérsico</p>
+            <p><strong>Supuestos clave:</strong> Participación limitada de aliados secundarios, activación de tratados de defensa mutua</p>
+            
+            <div class="simulation-container">
+                <div>
+                    <div class="phase phase-1">
+                        <h3 class="phase-title"><i class="fas fa-1"></i> Fase 1: Teatro Europeo</h3>
+                        <p><strong>Rusia y Bielorrusia:</strong> Ofensiva conjunta en flanco norte (Báltico)</p>
+                        <p><strong>OTAN:</strong> Refuerzo del flanco este con fuerzas de EE.UU.</p>
+                        <p><strong>Irán:</strong> Aumenta tensión en Medio Oriente con pruebas de misiles</p>
+                        <p><strong>Resultado:</strong> Avance inicial ruso-bielorruso, contención OTAN</p>
+                    </div>
+                    
+                    <div class="phase phase-2">
+                        <h3 class="phase-title"><i class="fas fa-2"></i> Fase 2: Teatro Indo-Pacífico</h3>
+                        <p><strong>China y Corea del Norte:</strong> Presión simultánea en Taiwán y Corea del Sur</p>
+                        <p><strong>EE.UU. y aliados:</strong> Respuesta en dos frentes (Japón, Corea del Sur)</p>
+                        <p><strong>Resultado:</strong> Estancamiento en Taiwán, alta tensión en Península Coreana</p>
+                    </div>
+                    
+                    <div class="phase phase-3">
+                        <h3 class="phase-title"><i class="fas fa-3"></i> Fase 3: Frentes Secundarios</h3>
+                        <p><strong>Irán:</strong> Cierre del Estrecho de Ormuz, ataques con drones/misiles</p>
+                        <p><strong>Corea del Norte:</strong> Bombardeos de artillería en ZDC, lanzamiento de misiles</p>
+                        <p><strong>Bielorrusia:</strong> Ataques con misiles tácticos a Polonia</p>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="phase phase-4">
+                        <h3 class="phase-title"><i class="fas fa-4"></i> Fase 4: Guerra Global</h3>
+                        <p><strong>Ciberguerra:</strong> Ataques coordinados a infraestructura crítica</p>
+                        <p><strong>Guerra económica:</strong> Sanciones paralizan economías, crisis energética</p>
+                        <p><strong>Espacio:</strong> Destrucción de satélites GPS y comunicaciones</p>
+                    </div>
+                    
+                    <div class="phase phase-5">
+                        <h3 class="phase-title"><i class="fas fa-5"></i> Fase 5: Punto de Inflexión Nuclear</h3>
+                        <p><strong>Escalada:</strong> Rusia usa arma nuclear táctica en Europa</p>
+                        <p><strong>Respuesta:</strong> EE.UU. responde con arma nuclear táctica</p>
+                        <p><strong>Corea del Norte:</strong> Amenaza con uso nuclear en Península Coreana</p>
+                        <p><strong>Resultados:</strong> 60% negociación, 40% escalada total (MAD)</p>
+                    </div>
+                    
+                    <div class="phase" style="border-color: #4CAF50;">
+                        <h3 class="phase-title"><i class="fas fa-balance-scale"></i> Rol de Aliados Secundarios</h3>
+                        <p><strong>Bielorrusia:</strong> Plataforma de lanzamiento para Rusia, amenaza al flanco norte OTAN</p>
+                        <p><strong>Irán:</strong> Distrae recursos occidentales en Medio Oriente</p>
+                        <p><strong>Corea del Norte:</strong> Fuerza disuasoria contra Corea del Sur/Japón, abre segundo frente</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="simulationChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-balance-scale"></i> Conclusión del Modelo</h2>
+            
+            <table class="conclusion-table">
+                <thead>
+                    <tr>
+                        <th>Factor</th>
+                        <th>USA/OTAN</th>
+                        <th>Rusia/China y Aliados</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Ventajas</strong></td>
+                        <td>Tecnología superior, logística global, aliados cohesivos</td>
+                        <td>Defensa territorial profunda, misiles hipersónicos, guerra híbrida, aliados regionales (presión en múltiples frentes)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Desventajas</strong></td>
+                        <td>Vulnerabilidad de portaaviones, dependencia de satélites, múltiples frentes simultáneos</td>
+                        <td>Economías frágiles, escasez de fuerzas de precisión, aliados con capacidades limitadas (Bielorrusia, Irán, Corea del Norte)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Contribución aliados</strong></td>
+                        <td>---</td>
+                        <td>Bielorrusia: Plataforma estratégica · Corea del Norte: Disuasión nuclear regional · Irán: Capacidad de cerrar rutas energéticas</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Resultado Final</strong></td>
+                        <td colspan="2"><strong>Empate costoso con escalada regional:</strong> Ningún bando gana dominio total, pero conflictos regionales se intensifican</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Corto plazo</strong></td>
+                        <td colspan="2">Estancamiento en Europa, dominio chino regional, crisis en Corea y Golfo Pérsico</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Largo plazo</strong></td>
+                        <td colspan="2">Colapso económico ruso, China fortalece posición, Corea del Norte e Irán aumentan influencia regional</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Riesgo Nuclear</strong></td>
+                        <td colspan="2">Alta probabilidad de uso táctico (Rusia y Corea del Norte), MAD disuade escalada total entre potencias principales</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn" id="simulateBtn"><i class="fas fa-play"></i> Ejecutar Simulación Completa</button>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="footer">
+        <div class="footer-content">
+            <p class="author">Profesor Ángel Chacín Ávila</p>
+            <p class="credentials">Licenciado en Física, Especialista en Ciencias Computacionales</p>
+            <p class="credentials">UNES Núcleo Zulia</p>
+            <p class="disclaimer">Este análisis se basa en datos públicos disponibles hasta agosto de 2025. Es un modelo teórico para fines académicos y no representa pronósticos reales de eventos futuros. La participación de aliados secundarios se evalúa en términos de valor estratégico regional más que de capacidad militar absoluta.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Configuración de gráficos
+        document.addEventListener('DOMContentLoaded', function() {
+            // Gráfico de arsenal nuclear
+            const nuclearCtx = document.getElementById('nuclearChart').getContext('2d');
+            new Chart(nuclearCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['EE.UU.', 'OTAN (UK+FR)', 'Rusia', 'China', 'Corea del Norte'],
+                    datasets: [{
+                        label: 'Ojivas nucleares estimadas',
+                        data: [5428, 515, 5977, 410, 45],
+                        backgroundColor: [
+                            'rgba(58, 123, 213, 0.7)',
+                            'rgba(93, 138, 168, 0.7)',
+                            'rgba(211, 47, 47, 0.7)',
+                            'rgba(255, 152, 0, 0.7)',
+                            'rgba(139, 0, 0, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(58, 123, 213, 1)',
+                            'rgba(93, 138, 168, 1)',
+                            'rgba(211, 47, 47, 1)',
+                            'rgba(255, 152, 0, 1)',
+                            'rgba(139, 0, 0, 1)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Comparación de Arsenales Nucleares',
+                            color: '#f0f8ff',
+                            font: { size: 18, weight: 'bold' }
+                        },
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.parsed.y} ojivas nucleares`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { 
+                                color: '#a0d2ff',
+                                font: { size: 12 }
+                            },
+                            grid: { 
+                                color: 'rgba(100, 100, 100, 0.2)',
+                                drawBorder: false
+                            },
+                            title: {
+                                display: true,
+                                text: 'Ojivas nucleares',
+                                color: '#a0d2ff'
+                            }
+                        },
+                        x: {
+                            ticks: { 
+                                color: '#a0d2ff',
+                                font: { size: 12 }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Gráfico de capacidades convencionales
+            const conventionalCtx = document.getElementById('conventionalChart').getContext('2d');
+            new Chart(conventionalCtx, {
+                type: 'radar',
+                data: {
+                    labels: ['Fuerza Aérea', 'Marina', 'Ejército', 'Tecnología', 'Movilización', 'Artillería/Misiles'],
+                    datasets: [
+                        {
+                            label: 'USA/OTAN',
+                            data: [95, 98, 85, 97, 75, 80],
+                            fill: true,
+                            backgroundColor: 'rgba(58, 123, 213, 0.2)',
+                            borderColor: 'rgba(58, 123, 213, 1)',
+                            pointBackgroundColor: 'rgba(58, 123, 213, 1)',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: 'rgba(58, 123, 213, 1)'
+                        },
+                        {
+                            label: 'Rusia',
+                            data: [65, 70, 90, 75, 85, 92],
+                            fill: true,
+                            backgroundColor: 'rgba(211, 47, 47, 0.2)',
+                            borderColor: 'rgba(211, 47, 47, 1)',
+                            pointBackgroundColor: 'rgba(211, 47, 47, 1)',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: 'rgba(211, 47, 47, 1)'
+                        },
+                        {
+                            label: 'China',
+                            data: [85, 92, 95, 88, 98, 90],
+                            fill: true,
+                            backgroundColor: 'rgba(255, 152, 0, 0.2)',
+                            borderColor: 'rgba(255, 152, 0, 1)',
+                            pointBackgroundColor: 'rgba(255, 152, 0, 1)',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: 'rgba(255, 152, 0, 1)'
+                        },
+                        {
+                            label: 'Aliados Secundarios',
+                            data: [40, 35, 80, 30, 85, 75],
+                            fill: true,
+                            backgroundColor: 'rgba(100, 100, 100, 0.2)',
+                            borderColor: 'rgba(150, 150, 150, 1)',
+                            pointBackgroundColor: 'rgba(150, 150, 150, 1)',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: 'rgba(150, 150, 150, 1)'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Capacidades Convencionales Comparadas',
+                            color: '#f0f8ff',
+                            font: { size: 18, weight: 'bold' }
+                        },
+                        legend: {
+                            labels: { 
+                                color: '#a0d2ff',
+                                font: { size: 12 }
+                            }
+                        }
+                    },
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(200, 200, 200, 0.2)' },
+                            grid: { color: 'rgba(200, 200, 200, 0.2)' },
+                            pointLabels: { 
+                                color: '#a0d2ff',
+                                font: { size: 11 }
+                            },
+                            ticks: {
+                                display: false,
+                                stepSize: 20
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 100
+                        }
+                    }
+                }
+            });
+            
+            // Gráfico de simulación
+            const simulationCtx = document.getElementById('simulationChart').getContext('2d');
+            new Chart(simulationCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Fase 1', 'Fase 2', 'Fase 3', 'Fase 4', 'Fase 5'],
+                    datasets: [
+                        {
+                            label: 'USA/OTAN',
+                            data: [40, 45, 52, 48, 55],
+                            borderColor: 'rgba(58, 123, 213, 1)',
+                            backgroundColor: 'rgba(58, 123, 213, 0.1)',
+                            tension: 0.3,
+                            fill: false,
+                            borderWidth: 3,
+                            pointRadius: 6,
+                            pointHoverRadius: 8
+                        },
+                        {
+                            label: 'Rusia/China',
+                            data: [60, 55, 48, 52, 45],
+                            borderColor: 'rgba(211, 47, 47, 1)',
+                            backgroundColor: 'rgba(211, 47, 47, 0.1)',
+                            tension: 0.3,
+                            fill: false,
+                            borderWidth: 3,
+                            pointRadius: 6,
+                            pointHoverRadius: 8
+                        },
+                        {
+                            label: 'Aliados Secundarios',
+                            data: [20, 35, 45, 40, 30],
+                            borderColor: 'rgba(255, 152, 0, 1)',
+                            backgroundColor: 'rgba(255, 152, 0, 0.1)',
+                            tension: 0.3,
+                            fill: false,
+                            borderWidth: 3,
+                            borderDash: [10, 5],
+                            pointRadius: 6,
+                            pointHoverRadius: 8
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Evolución de Ventaja Estratégica por Fase',
+                            color: '#f0f8ff',
+                            font: { size: 18, weight: 'bold' }
+                        },
+                        legend: {
+                            labels: { 
+                                color: '#a0d2ff',
+                                font: { size: 12 }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            min: 0,
+                            max: 100,
+                            ticks: { 
+                                color: '#a0d2ff',
+                                callback: function(value) {
+                                    return value + '%';
+                                },
+                                font: { size: 12 }
+                            },
+                            grid: { 
+                                color: 'rgba(100, 100, 100, 0.2)',
+                                drawBorder: false
+                            },
+                            title: {
+                                display: true,
+                                text: 'Ventaja Estratégica',
+                                color: '#a0d2ff'
+                            }
+                        },
+                        x: {
+                            ticks: { 
+                                color: '#a0d2ff',
+                                font: { size: 12 }
+                            },
+                            grid: { 
+                                color: 'rgba(100, 100, 100, 0.2)',
+                                drawBorder: false
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Simulación interactiva
+            document.getElementById('simulateBtn').addEventListener('click', function() {
+                const phases = document.querySelectorAll('.phase');
+                const btn = this;
+                
+                btn.innerHTML = '<i class="fas fa-sync fa-spin"></i> Simulando...';
+                btn.disabled = true;
+                
+                let delay = 0;
+                
+                phases.forEach((phase, index) => {
+                    setTimeout(() => {
+                        phase.style.transform = 'scale(1.03)';
+                        phase.style.boxShadow = '0 0 25px currentColor';
+                        
+                        setTimeout(() => {
+                            phase.style.transform = '';
+                            phase.style.boxShadow = '';
+                        }, 800);
+                    }, delay);
+                    
+                    delay += 1200;
+                });
+                
+                // Mostrar resultado final
+                setTimeout(() => {
+                    btn.innerHTML = '<i class="fas fa-play"></i> Simulación Completada';
+                    btn.style.background = 'linear-gradient(45deg, #4CAF50, #2E7D32)';
+                    
+                    alert('Simulación completada:\n\nResultado: Empate costoso con alto riesgo de escalada nuclear\n\nLección clave: Los aliados secundarios (Corea del Norte, Bielorrusia, Irán) multiplican los frentes de conflicto, dificultando la estrategia occidental pero sin alterar el equilibrio fundamental de poder.');
+                    
+                    setTimeout(() => {
+                        btn.innerHTML = '<i class="fas fa-play"></i> Ejecutar Nueva Simulación';
+                        btn.style.background = 'linear-gradient(45deg, #3a7bd5, #2a52a0)';
+                        btn.disabled = false;
+                    }, 3000);
+                }, 7000);
+            });
+        });
+    </script>
+</body>
+</html>
