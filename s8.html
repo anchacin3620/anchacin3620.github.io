@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Simulación Monte Carlo de Procesos de Deposición</title>
+<style>
+  body {
+    font-family: sans-serif;
+    margin: 2em;
+    line-height: 1.6;
+  }
+  h1, h2, h3 {
+    color: #333;
+  }
+  .chapter {
+    margin-bottom: 2em;
+  }
+  .section {
+    margin-bottom: 1em;
+  }
+  .subsection {
+    margin-left: 2em;
+  }
+  ul {
+    list-style-type: disc;
+    margin-left: 2em;
+  }
+  li {
+    margin-bottom: 0.5em;
+  }
+  .citation {
+    color: #888;
+    font-size: 0.8em;
+  }
+</style>
+</head>
+<body>
+
+<h1>SIMULACIÓN MONTE CARLO DE LOS PROCESOS DE DEPOSICION EN PELICULAS DELGADAS DE Cr y Fe SOBRE UN SUSTRATO SOLIDO DE Mg (001)</h1>
+<p>Proyecto de Investigación para optar al título de Licenciado en Física</p>
+<p>Presentado por: Br. [span_0](start_span)Ángel A Chacin Ávila[span_0](end_span)</p>
+<p>Tutor: MSc. [span_1](start_span)Emily Chávez[span_1](end_span)</p>
+[span_2](start_span)<p>Cotutor: Dr. José Fermín[span_2](end_span)</p>
+[span_3](start_span)<p>Maracaibo, Octubre de 2023[span_3](end_span)</p>
+
+<div class="chapter">
+  <h2>ÍNDICE GENERAL</h2>
+  <ul>
+    [span_4](start_span)<li>1.-CAPITULO I: EL PROBLEMA DE LA INVESTIGACIÓN[span_4](end_span)
+      <ul>
+        <li>1.1. [span_5](start_span)Planteamiento del Problema[span_5](end_span)</li>
+        <li>1.2. [span_6](start_span)Formulación del Problema[span_6](end_span)</li>
+        <li>1.3. [span_7](start_span)Objetivos de la Investigación[span_7](end_span)
+          <ul>
+            <li>1.3.1. [span_8](start_span)Objetivo General[span_8](end_span)</li>
+            <li>1.3.2. [span_9](start_span)Objetivos Específicos[span_9](end_span)</li>
+          </ul>
+        </li>
+        <li>1.4. [span_10](start_span)Justificación de la Investigación[span_10](end_span)</li>
+        <li>1.5. [span_11](start_span)Delimitación de la Investigación[span_11](end_span)</li>
+      </ul>
+    </li>
+    [span_12](start_span)<li>2.-CAPITULO II: MARCO TEÓRICO DE LA INVESTIGACIÓN[span_12](end_span)
+      <ul>
+        <li>2.1. [span_13](start_span)Antecedentes de la Investigación[span_13](end_span)</li>
+        <li>2.2. [span_14](start_span)Modelo de Deposición Balística[span_14](end_span)</li>
+        <li>2.3. [span_15](start_span)Difusión Superficial[span_15](end_span)</li>
+        <li>2.4. [span_16](start_span)Aproximación de Orden Estadístico[span_16](end_span)</li>
+        <li>2.5. [span_17](start_span)Aplicaciones al Modelo de Deposición Balística[span_17](end_span)</li>
+      </ul>
+    </li>
+    [span_18](start_span)<li>3.- CAPITULO III: MARCO METODOLÓGICO[span_18](end_span)
+      <ul>
+        <li>3.1. [span_19](start_span)Revisión bibliográfica[span_19](end_span)</li>
+        <li>3.2. [span_20](start_span)Método analítico[span_20](end_span)</li>
+        <li>3.3. [span_21](start_span)Método computacional[span_21](end_span)</li>
+      </ul>
+    </li>
+    [span_22](start_span)<li>4.- CAPITULO IV: MARCO ADMINISTRATIVO[span_22](end_span)
+      <ul>
+        <li>4.1. [span_23](start_span)Viabilidad de la Investigación[span_23](end_span)
+          <ul>
+            <li>4.1.1. [span_24](start_span)Recursos Humanos[span_24](end_span)</li>
+            <li>4.1.2. [span_25](start_span)Recursos Materiales[span_25](end_span)</li>
+            <li>4.1.3. [span_26](start_span)Recursos Financieros[span_26](end_span)</li>
+          </ul>
+        </li>
+        [span_27](start_span)<li>4.2.- Resultados que se Esperan Lograr[span_27](end_span)</li>
+        <li>4.3. [span_28](start_span)Cronograma de Actividades[span_28](end_span)</li>
+      </ul>
+    </li>
+    [span_29](start_span)<li>BIBLIOGRAFÍA[span_29](end_span)</li>
+  </ul>
+</div>
+
+<div class="chapter">
+  <h2>CAPITULO I. EL PROBLEMA</h2>
+  <div class="section">
+    <h3>1.1.- Planteamiento del Problema</h3>
+    [span_30](start_span)<p>Aunque conocidas por más de 100 años, las películas delgadas solo se convirtieron en objeto de estudio intensivo a finales de la década de 1950, debido al descubrimiento de nuevos fenómenos magnéticos que las hicieron candidatas potenciales para aplicaciones tecnológicas[span_30](end_span). [span_31](start_span)Los mecanismos que rigen los procesos de crecimiento de películas delgadas aún no están bien estudiados[span_31](end_span). [span_32](start_span)Las películas delgadas son sistemas con dos dimensiones macroscópicas y una tercera microscópica[span_32](end_span). [span_33](start_span)Los modelos de red se utilizan a menudo para describir las propiedades de las superficies de los cristales y los procesos dinámicos como la difusión, absorción y evaporación superficial se simulan con métodos estocásticos[span_33](end_span).</p>
+    [span_34](start_span)<p>El método de Dinámica Molecular (DM) también existe[span_34](end_span)[span_35](start_span), y resuelve la ecuación de movimiento de Newton generando trayectorias deterministas[span_35](end_span). [span_36](start_span)La simulación con el Método de Monte Carlo (MC) se aplica donde hay un crecimiento cristalino que define un sistema de red natural, y unidades de crecimiento no cristalinas como átomos o moléculas entrantes se integran en esta red[span_36](end_span). [span_37](start_span)El nombre del método fue acuñado por Nicolás Metrópolis durante el proyecto Manhattan en la Segunda Guerra Mundial, inspirado en su interés por los juegos de cartas y la similitud de la simulación estocástica con los juegos de azar[span_37](end_span).</p>
+    [span_38](start_span)<p>El Método de Monte Carlo se usa rutinariamente en muchos campos, desde la simulación del transporte de radiación en la atmósfera hasta la simulación de procesos subnucleares en física de altas energías[span_38](end_span). [span_39](start_span)A diferencia de los métodos numéricos convencionales que aplican a ecuaciones diferenciales, el Método de Monte Carlo simula directamente el proceso físico[span_39](end_span). [span_40](start_span)Se aplica a un sistema físico arbitrario (en este caso, el proceso de deposición en películas), asumiendo que su evolución puede ser descrita por funciones de densidad de probabilidad que se muestrean[span_40](end_span). [span_41](start_span)La característica esencial del método es el uso de técnicas de muestreo aleatorio para llegar a la solución de un problema físico[span_41](end_span). [span_42](start_span)El método no solo es aplicable a procesos estocásticos, sino también a la evaluación de integrales, tratando el sistema como un proceso estocástico para fines de simulación[span_42](end_span).</p>
+    [span_43](start_span)<p>Desde el punto de vista computacional, el número de partículas en la simulación está determinado por la memoria del computador[span_43](end_span). [span_44](start_span)La simulación consiste en elegir una partícula al azar y desplazarla una distancia aleatoria, lo que cambia sus coordenadas en la memoria[span_44](end_span). [span_45](start_span)La energía potencial de interacción de las partículas se calcula al principio y se recalcula después de cada desplazamiento[span_45](end_span). [span_46](start_span)Las probabilidades de desplazamiento de las partículas se eligen de acuerdo con la energía potencial, de modo que el sistema de simulación experimente lo mismo que el sistema real en promedio[span_46](end_span).</p>
+  </div>
+
+  <div class="section">
+    <h3>1.2.- Formulación del Problema</h3>
+    [span_47](start_span)<p>¿Será posible realizar una simulación con el Método de Monte Carlo de los procesos de deposición en películas delgadas de Cr y Fe sobre un sustrato sólido de Mg(001), utilizando el modelo balístico que permita determinar con un alto grado de precisión la caracterización de los mecanismos de deposición, los parámetros que controlan el crecimiento de las películas y el efecto que el modo de deposición en las propiedades físicas de las mismas?[span_47](end_span)</p>
+  </div>
+
+  <div class="section">
+    <h3>1.3.- Objetivos de La Investigación</h3>
+    <div class="subsection">
+      <h4>1.3.1 Objetivo General</h4>
+      [span_48](start_span)<p>Simular el proceso de deposición de películas delgadas de Cr y Fe mediante el método de Monte Carlo Balístico[span_48](end_span).</p>
+    </div>
+    <div class="subsection">
+      <h4>1.3.2. Objetivos Específicos</h4>
+      <p>1. [span_49](start_span)Caracterizar de los mecanismos de deposición en películas delgadas de Cr y Fe sobre un sustrato sólido de Mg (001) mediante el método Monte Carlo Cinético[span_49](end_span).</p>
+      <p>2. [span_50](start_span)Determinar los efectos de Difusión Superficial en el proceso de deposición de Cr y Fe sobre un sustrato sólido de Mg (001) mediante el método Monte Carlo Cinético[span_50](end_span).</p>
+      <p>3. [span_51](start_span)Delimitar el efecto del modo de deposición en las propiedades físicas de las películas delgadas de Cr y Fe en un sustrato sólido de Mg (001)[span_51](end_span).</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>1.4.- Justificación de la Investigación</h3>
+    [span_52](start_span)<p>Los problemas en el estudio de estructuras delgadas y ultra-delgadas comienzan antes de su producción[span_52](end_span). [span_53](start_span)La estructura y propiedades de estos sistemas dependen del estado de la superficie en la que se depositan, es decir, los sustratos[span_53](end_span). [span_54](start_span)Se debe conocer la estructura cristalina, la orientación de la superficie, la densidad de imperfecciones y dislocaciones, los coeficientes de interdifusión en la interfase y la densidad de carga electrónica del sustrato, entre otros factores[span_54](end_span).</p>
+  </div>
+
+  <div class="section">
+    <h3>1.5.- Delimitación de la Investigación</h3>
+    [span_55](start_span)<p>Delimitación Geográfica: El trabajo se desarrollará en la Universidad Nacional Experimental de la Seguridad, Centro de Formación Zulia, Sierra Maestra, Municipio San Francisco, Estado Zulia, Venezuela[span_55](end_span).</p>
+    [span_56](start_span)<p>Delimitación Temporal: La elaboración del trabajo de investigación requerirá aproximadamente 6 meses[span_56](end_span).</p>
+    [span_57](start_span)<p>Delimitación Temática: Las bases teóricas del proyecto son: Películas Delgadas, Simulación, Método Monte Carlo, Método Balístico y Proceso de Deposición[span_57](end_span).</p>
+  </div>
+</div>
+
+<div class="chapter">
+  <h2>CAPITULO II. MARCO TEÓRICO</h2>
+  <div class="section">
+    <h3>2.1 Antecedentes de la Investigación</h3>
+    [span_58](start_span)<p>En el modelado de películas delgadas, a menudo se hacen suposiciones como que la estructura cristalina y el parámetro de red de la película son iguales a los del material masivo y del sustrato, y que la película es continua[span_58](end_span). [span_59](start_span)La comprensión limitada de estos sistemas se debe a que la mayoría de los métodos de modelado no pueden acceder y muestrear las escalas de tiempo necesarias (nanosegundos a segundos) para simular la deposición atómica y la reorganización de superficies[span_59](end_span). [span_60](start_span)Para abordar esta brecha, se han realizado trabajos combinando dinámica molecular y simulaciones con el Método de Monte Carlo Cinético (MCC)[span_60](end_span).</p>
+    [span_61](start_span)<p>John A. Purton et al. han modelado el crecimiento de películas delgadas de óxido binario sobre sustratos de óxido utilizando el MCC[span_61](end_span). [span_62](start_span)Su objetivo es estudiar el crecimiento de películas de óxido formadas en experimentos como la deposición por láser pulsado (PLD)[span_62](end_span). [span_63](start_span)En PLD, un láser vaporiza un material objetivo y los átomos/iones se depositan en un sustrato[span_63](end_span). [span_64](start_span)El crecimiento de la película se puede dividir en dos etapas: la deposición rápida de iones y la reorganización lenta de estos átomos/iones en la superficie[span_64](end_span). [span_65](start_span)La primera fase se puede modelar con técnicas de MC y DM, mientras que la segunda, al ser lenta, requiere una técnica alternativa como el MCC[span_65](end_span).</p>
+    [span_66](start_span)<p>Vernon L. et al. también utilizaron el MCC para simular mecanismos de crecimiento para TiO2 en un sustrato de rutilo (110)[span_66](end_span). [span_67](start_span)Sus cálculos se basaron en una combinación de Dinámica Molecular clásica de carga variable y MCC[span_67](end_span). [span_68](start_span)Investigaron las interacciones de baja energía de pequeñas moléculas con el sustrato de rutilo (110) para determinar la influencia de varios parámetros en el crecimiento de la superficie y la formación de defectos[span_68](end_span).</p>
+    <p>M. [span_69](start_span)Yu et al. han realizado simulaciones atomísticas para modelar el crecimiento de películas delgadas de telururo de cadmio (CdTe)[span_69](end_span). [span_70](start_span)El CdTe es un material para células solares de película delgada de bajo costo y alta eficiencia, por lo que es importante investigar cómo se forman los defectos durante el crecimiento[span_70](end_span). [span_71](start_span)Usaron una simulación computacional probabilística para predecir el crecimiento de una película de CdTe depositada por pulverización catódica[span_71](end_span). [span_72](start_span)Los resultados mostraron que los mecanismos de crecimiento en superficies terminadas en Cd o Te son diferentes[span_72](end_span).</p>
+    [span_73](start_span)<p>Salvat F. ha desarrollado el sistema de códigos informáticos Penelope (versión 2018) para la simulación con el Método Monte Carlo del transporte acoplado de electrones y fotones en materiales, que puede adaptarse a simulaciones atomistas de crecimiento de películas delgadas[span_73](end_span).</p>
+  </div>
+
+  <div class="section">
+    <h3>2.2 Modelo de Deposición Balística</h3>
+    [span_74](start_span)<p>La simulación es bidimensional y cada partícula depositada se asume como una esfera dura de diámetro D[span_74](end_span). [span_75](start_span)Se aplican condiciones de borde periódico para simular un sistema infinito[span_75](end_span). [span_76](start_span)El fondo se cubre con una capa inicial de n átomos[span_76](end_span). [span_77](start_span)La red se define como hexagonal, típica de materiales ferromagnéticos metálicos[span_77](end_span). [span_78](start_span)Los átomos entrantes caen de manera aleatoria, viajan en línea recta con un ángulo inclinado desde la normal y paralela al plano xz[span_78](end_span). [span_79](start_span)Una vez que un átomo entrante hace contacto, se le permite descansar en el hueco más cercano donde gane al menos dos vecinos adicionales, permaneciendo en contacto con el átomo que golpeó primero[span_79](end_span).</p>
+  </div>
+
+  <div class="section">
+    <h3>2.3 Difusión Superficial</h3>
+    [span_80](start_span)<p>La descripción de los fenómenos de difusión superficial en películas delgadas no es trivial debido a la dificultad de determinar qué elementos componentes se están moviendo[span_80](end_span). [span_81](start_span)Las anisotropías de la energía superficial y los mecanismos de condensación-evaporación complican aún más la descripción[span_81](end_span). [span_82](start_span)El modelo de un solo componente para la difusión superficial se justifica porque el proceso de difusión es una adición al sombreado geométrico, y la temperatura superficial está en el rango de 1/2 T[span_82](end_span).</p>
+  </div>
+
+  <div class="section">
+    <h3>2.4 Aproximación de Orden Estadístico</h3>
+    [span_83](start_span)<p>El período de una vibración para los átomos superficiales (aproximadamente $10^{-12}s$) define un intervalo de tiempo físicamente significativo[span_83](end_span). [span_84](start_span)Sin embargo, no es factible usar este tiempo como tiempo de muestreo debido a las limitaciones computacionales[span_84](end_span). [span_85](start_span)El método de ondas estadísticas puede ser utilizado para calcular la Función de Densidad de Probabilidad (FDP) para órdenes estadísticos de Boltzman[span_85](end_span). [span_86](start_span)La probabilidad para el enésimo orden estadístico que está por debajo de un cierto límite de barrera de energía $\epsilon_0$ puede ser descrita por $P(\epsilon < \epsilon_0) = (1 - exp(-\beta\epsilon_0))^n$[span_86](end_span)[span_87](start_span), donde $\beta = 1/KT$ y T es la temperatura[span_87](end_span).</p>
+    [span_88](start_span)<p>El promedio mínimo de tiempo de permanencia $\tau$ de los átomos en el sistema es un tiempo de muestreo relevante $\tau_s$[span_88](end_span). [span_89](start_span)La frecuencia $\nu$ puede ser descrita por $\nu = 2KT/h$, donde k es la constante de Boltzman y h la constante de Planck[span_89](end_span). [span_90](start_span)El número de muestras n para un tiempo de muestreo $\tau_s$ puede ser calculado como $n = \tau_s/\tau$[span_90](end_span).</p>
+  </div>
+
+  <div class="section">
+    <h3>2.5 Aplicaciones al Modelo de Deposición Balística</h3>
+    [span_91](start_span)<p>La estructura de red hexagonal del modelo bidimensional define un máximo de seis vecinos cercanos por cada átomo[span_91](end_span). [span_92](start_span)Se supone que la migración se realiza "saltando" a un sitio vacío cercano, despreciando los efectos de evaporación[span_92](end_span). [span_93](start_span)Esta aproximación se justifica cuando se observan moléculas y conglomerados de ellas en lugar de difusión atómica[span_93](end_span). [span_94](start_span)Para simplificar los cálculos, se considera que cada átomo se enlaza solo con su vecino más cercano[span_94](end_span).</p>
+    [span_95](start_span)<p>La barrera de energía de activación para la difusión superficial es el límite que un átomo debe vencer para saltar a un sitio vecino[span_95](end_span). [span_96](start_span)Si hay más de una posición alcanzable con el mismo número de coordinación, la decisión de a dónde saltar se toma aleatoriamente[span_96](end_span). [span_97](start_span)La barrera de energía de activación se considera independiente de la configuración atómica circundante[span_97](end_span). [span_98](start_span)El intervalo de tiempo de muestreo $\tau_s$ se espera que esté en el rango de milisegundos[span_98](end_span). [span_99](start_span)La escala de tiempo para la deposición $\tau_{dep}$ es el tiempo entre la llegada de dos átomos y puede ser determinada en relación a la tasa de deposición[span_99](end_span). [span_100](start_span)La relación $\tau_{dep}/\tau_s$ proporciona el número de veces que un salto puede ocurrir con cierta probabilidad[span_100](end_span).</p>
+  </div>
+</div>
+
+<div class="chapter">
+  <h2>CAPITULO III. MARCO METODOLÓGICO</h2>
+  <div class="section">
+    <p>La elaboración del trabajo se dividirá en tres fases:</p>
+    [span_101](start_span)<p>Fase 1: Revisión bibliográfica[span_101](end_span)</p>
+    <ul>
+      [span_102](start_span)<li>Se revisarán trabajos relacionados con el tema[span_102](end_span).</li>
+      [span_103](start_span)<li>Se tomarán notas de los resultados obtenidos[span_103](end_span).</li>
+    </ul>
+    [span_104](start_span)<p>Fase 2: Método analítico[span_104](end_span)</p>
+    <ul>
+      [span_105](start_span)<li>A partir de la ecuación maestra probabilística, se realizará una simulación con el Método de Monte Carlo cinético basado en el modelo de deposición balística[span_105](end_span).</li>
+      [span_106](start_span)<li>Los parámetros de la simulación se basarán en un modelo de crecimiento que considera vacío ultra alto, flujo de material, frecuencia vibracional atómica, energía de activación de difusión superficial, fuerza de enlace del metálico, con un arreglo superficial de sitios atómicos de 300x300[span_106](end_span).</li>
+    </ul>
+    [span_107](start_span)<p>Fase 3: Método computacional[span_107](end_span)</p>
+    <ul>
+      [span_108](start_span)<li>Se desarrollará un programa de simulación basado en GNU/Fortran 95[span_108](end_span).</li>
+      [span_109](start_span)<li>Se realizará la simulación y el análisis de las curvas resultantes[span_109](end_span).</li>
+    </ul>
+  </div>
+</div>
+
+<div class="chapter">
+  <h2>CAPITULO IV. MARCO ADMINISTRATIVO</h2>
+  <div class="section">
+    <h3>4.1. Viabilidad de la Investigación</h3>
+    [span_110](start_span)<p>El proyecto es viable porque cuenta con los recursos humanos, administrativos y financieros necesarios para cumplir los objetivos[span_110](end_span).</p>
+    <div class="subsection">
+      <h4>4.1.1. Recursos Humanos</h4>
+      [span_111](start_span)<p>MSc Emily Chávez (Tutora) y Dr. José Fermín (Co-Tutor)[span_111](end_span).</p>
+    </div>
+    <div class="subsection">
+      <h4>4.1.2. Recursos Materiales</h4>
+      [span_112](start_span)<p>Disponibilidad de laboratorios de computación de la Universidad Nacional Experimental de la Seguridad, Centro de Formación Zulia, y materiales como bolígrafos, calculadora, cuadernos, libros, computador, CD y conexión a internet[span_112](end_span).</p>
+    </div>
+    <div class="subsection">
+      <h4>4.1.3. Recursos Financieros</h4>
+      [span_113](start_span)<p>Disponibles por financiamiento propio para gastos de transporte, impresión, reproducción, material bibliográfico y equipos de computación[span_113](end_span).</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>4.2. Resultados Que Se Esperan Lograr</h3>
+    [span_114](start_span)<p>Se espera desarrollar un programa de simulación con el Método Monte Carlo que reproduzca el proceso de deposición en películas delgadas metálicas[span_114](end_span). [span_115](start_span)Esto permitirá obtener información teórica sobre los parámetros de control del crecimiento, como la presión base, la temperatura del sustrato, la difusión superficial, la energía de las partículas y la presión de trabajo[span_115](end_span).</p>
+  </div>
+
+  <div class="section">
+    <h3>4.3. Cronograma de Actividades</h3>
+    <p>El cronograma de actividades para 2023-2024 incluye:</p>
+    <ul>
+      [span_116](start_span)<li>A: Revisión Bibliográfica (Octubre)[span_116](end_span)</li>
+      [span_117](start_span)<li>B: Redacción Proyecto de Investigación (Noviembre)[span_117](end_span)</li>
+      [span_118](start_span)<li>C: desarrollo de los cálculos (Diciembre-Enero)[span_118](end_span)</li>
+      [span_119](start_span)<li>D: Presentación del Proyecto de Investigación (Noviembre)[span_119](end_span)</li>
+      [span_120](start_span)<li>E: Análisis de los resultados y redacción del Trabajo del Investigación (Febrero)[span_120](end_span)</li>
+      [span_121](start_span)<li>F: Revisión de Trabajo de Investigación por la comisión (Marzo)[span_121](end_span)</li>
+      [span_122](start_span)<li>G: Presentación Trabajo de Investigación (Marzo)[span_122](end_span)</li>
+    </ul>
+  </div>
+</div>
+
+<div class="chapter">
+  <h2>BIBLIOGRAFÍA</h2>
+  <ul>
+    [span_123](start_span)<li>[1] Cohen M, 1970, en Handbook of the Thin Film Technology, Cap.17, eds Maissel L.I and Glang R, McGraw-Hill, New York[span_123](end_span).</li>
+    <li>[2] Gilmer G.H . Bennema.P 1972, “Simulation of Crystal Growth with surface diffusion, Journal of Applied Physics.13:1347-1360.</li>
+    <li>[3] Nieminen R.M, 2002,”From Atomocist Simulation toward multiscale modeling of material”, Journal of Physic 14: 2859-2876.</li>
+    <li>[4] Purton John A , Alin M. Elena y Teobald Gilberto, 2022, "Kinetic Monte Carlo modeling of oxide thin growth", The Journal of Chemical Physics Vol 156,: 1-6.</li>
+    <li>[5] Lam Pui-Man, Liu S.J and Woo C.H, 2002. "Monte Carlo Simulation of Pulsed Laser Deposition". Physical Review B66,: 1-3.</li>
+    [span_124](start_span)<li>[6] Vernon L, Kenny S.D, Smith Roger, and Sanville.E, 2011, "Growth mechanisms for TiO2 at its rutile (110) surface". Physical Review B83: 1-5[span_124](end_span).</li>
+    <li>[7] Yu y Kenny Steven D, 2011, "Using atomistic simulation to model cadmium telluride thin film growth". Journal of Physic:Condensed Matter. [span_125](start_span)28:1-2[span_125](end_span).</li>
+    <li>[8] Salvat Francesc, 2019, "Penelope-2018: A Code System for Monte Carlo Simulation of Electron and Photon Transportation". [span_126](start_span)Workshop Preceedings, Barcelona, España, Data Bank NEA/MBDAV/R(2019)1. www.oecd-nea.org[span_126](end_span).</li>
+  </ul>
+</div>
+
+</body>
+</html>
