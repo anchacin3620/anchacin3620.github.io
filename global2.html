@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informe Técnico Académico - Fuerzas Estratégicas y Convencionales</title>
+    <!-- Tailwind CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafb;
+            color: #1f2937;
+        }
+        .navbar {
+            background-color: #1e40af;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .navbar a {
+            color: #ffffff;
+            transition: color 0.3s;
+        }
+        .navbar a:hover {
+            color: #60a5fa;
+        }
+        .content-section {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        .toc {
+            background-color: #f3f4f6;
+            border-radius: 8px;
+            padding: 1.5rem;
+            position: sticky;
+            top: 80px;
+        }
+        .toc a {
+            color: #1e40af;
+            text-decoration: none;
+            display: block;
+            padding: 0.5rem 0;
+        }
+        .toc a:hover {
+            color: #60a5fa;
+        }
+        .tooltip {
+            position: relative;
+            cursor: pointer;
+        }
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            width: 200px;
+            background-color: #1e40af;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+        footer {
+            background-color: #1e40af;
+            color: #ffffff;
+            padding: 1.5rem;
+            text-align: center;
+            border-radius: 8px;
+            margin-top: 2rem;
+        }
+        @media (max-width: 768px) {
+            .toc {
+                position: static;
+                margin-bottom: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar fixed top-0 left-0 w-full z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <h1 class="text-xl font-bold text-white">Informe Técnico Académico</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="#resumen" class="text-sm">Resumen</a>
+                    <a href="#introduccion" class="text-sm">Introducción</a>
+                    <a href="#metodologia" class="text-sm">Metodología</a>
+                    <a href="#estrategicas" class="text-sm">Fuerzas Estratégicas</a>
+                    <a href="#convencionales" class="text-sm">Fuerzas Convencionales</a>
+                    <a href="#geopoliticas" class="text-sm">Geopolítica</a>
+                    <a href="#simulacion" class="text-sm">Simulación</a>
+                    <a href="#conclusiones" class="text-sm">Conclusiones</a>
+                    <a href="#recomendaciones" class="text-sm">Recomendaciones</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-8">
+        <div class="flex flex-col lg:flex-row gap-6">
+            <!-- Table of Contents -->
+            <div class="lg:w-1/4">
+                <div class="toc">
+                    <h3 class="text-lg font-semibold mb-4">Índice</h3>
+                    <a href="#resumen"><i class="fas fa-book mr-2"></i>Resumen Ejecutivo</a>
+                    <a href="#introduccion"><i class="fas fa-file-alt mr-2"></i>1. Introducción</a>
+                    <a href="#metodologia"><i class="fas fa-cogs mr-2"></i>2. Metodología</a>
+                    <a href="#estrategicas"><i class="fas fa-rocket mr-2"></i>3. Análisis de Fuerzas Estratégicas</a>
+                    <a href="#convencionales"><i class="fas fa-fighter-jet mr-2"></i>4. Análisis de Fuerzas Convencionales</a>
+                    <a href="#geopoliticas"><i class="fas fa-globe mr-2"></i>5. Dinámicas Geopolíticas</a>
+                    <a href="#simulacion"><i class="fas fa-gamepad mr-2"></i>6. Modelo Simulado</a>
+                    <a href="#conclusiones"><i class="fas fa-check-circle mr-2"></i>7. Conclusiones</a>
+                    <a href="#recomendaciones"><i class="fas fa-lightbulb mr-2"></i>8. Recomendaciones</a>
+                    <a href="#referencias"><i class="fas fa-book-open mr-2"></i>9. Referencias</a>
+                </div>
+            </div>
+
+            <!-- Content Sections -->
+            <div class="lg:w-3/4">
+                <!-- Header -->
+                <div class="content-section mb-6 text-center">
+                    <h1 class="text-3xl font-bold mb-2">Informe Técnico Académico</h1>
+                    <h3 class="text-xl mb-4">Análisis Comparativo de las Fuerzas Estratégicas y Convencionales de Estados Unidos, OTAN, Rusia y China, y Simulación de una Confrontación EE.UU.-OTAN vs. Rusia-China en 2025</h3>
+                    <p><strong>Autor:</strong> Prof. Ángel Chacín Ávila, Licenciado en Física, Especialista en Ciencias Computacionales<br>
+                    <strong>Institución:</strong> Universidad Nacional Experimental de la Seguridad (UNES), Núcleo Zulia<br>
+                    <strong>Fecha:</strong> 7 de agosto de 2025</p>
+                </div>
+
+                <!-- Resumen Ejecutivo -->
+                <div class="content-section" id="resumen">
+                    <h2 class="text-2xl font-semibold mb-4">Resumen Ejecutivo</h2>
+                    <p>Este informe presenta un análisis exhaustivo de las capacidades estratégicas (nucleares) y convencionales de Estados Unidos, la Organización del Tratado del Atlántico Norte (OTAN), Rusia y China, con el propósito de evaluar su potencial militar en un contexto geopolítico global al año 2025. Se incluye un modelo simulado de confrontación entre el bloque EE.UU.-OTAN y la alianza Rusia-China, considerando escenarios en Europa del Este y el Indo-Pacífico. El análisis se basa en datos públicos disponibles hasta octubre de 2023, proyecciones razonables para 2025, y un enfoque técnico-científico que integra variables estratégicas, tecnológicas, económicas y geopolíticas. Los resultados destacan la superioridad tecnológica y de cohesión de EE.UU.-OTAN, las ventajas asimétricas de Rusia-China, y los riesgos de escalada nuclear en un conflicto prolongado. Se concluye con recomendaciones para la desescalada y el fortalecimiento de mecanismos de control de armas.</p>
+                </div>
+
+                <!-- Introducción -->
+                <div class="content-section" id="introduccion">
+                    <h2 class="text-2xl font-semibold mb-4">1. Introducción</h2>
+                    <p>El panorama geopolítico global en 2025 está marcado por tensiones crecientes entre grandes potencias, particularmente entre el bloque liderado por Estados Unidos y la OTAN, y la asociación estratégica entre Rusia y China. La evolución de las capacidades militares, tanto estratégicas (<span class="tooltip">nucleares<span class="tooltip-text">Armas nucleares capaces de alcanzar objetivos a nivel global, usadas como disuasión estratégica.</span></span>) como convencionales, determina el equilibrio de poder y la probabilidad de conflictos directos o indirectos. Este informe tiene como objetivos:</p>
+                    <ul class="list-disc pl-6">
+                        <li>Analizar las fuerzas estratégicas y convencionales de EE.UU., OTAN, Rusia y China.</li>
+                        <li>Evaluar las dinámicas geopolíticas y las alianzas que influyen en su capacidad militar.</li>
+                        <li>Simular un escenario de confrontación entre EE.UU.-OTAN y Rusia-China, identificando resultados probables y riesgos asociados.</li>
+                    </ul>
+                    <p>El análisis utiliza un enfoque interdisciplinario que combina datos cuantitativos (arsenal militar, presupuestos, efectivos) con modelado cualitativo de dinámicas estratégicas, fundamentado en principios de ciencias computacionales para la simulación de escenarios.</p>
+                </div>
+
+                <!-- Metodología -->
+                <div class="content-section" id="metodologia">
+                    <h2 class="text-2xl font-semibold mb-4">2. Metodología</h2>
+                    <ul class="list-disc pl-6">
+                        <li><strong>Fuentes de datos</strong>: Informes de instituciones como el <span class="tooltip">Stockholm International Peace Research Institute (SIPRI)<span class="tooltip-text">Instituto internacional que investiga el gasto militar y conflictos globales.</span></span>, Federation of American Scientists (FAS), y documentos oficiales de defensa de EE.UU., OTAN, Rusia y China (hasta octubre de 2023).</li>
+                        <li><strong>Proyecciones</strong>: Estimaciones para 2025 basadas en tendencias de modernización militar, gastos de defensa y desarrollos tecnológicos.</li>
+                        <li><strong>Modelo de simulación</strong>: Un modelo cualitativo-cuantitativo que considera tres fases de conflicto (cibernético/naval, convencional, estratégico) y evalúa variables clave como capacidad militar, cohesión aliada, recursos económicos y riesgos de escalada.</li>
+                        <li><strong>Limitaciones</strong>: La simulación no incorpora eventos imprevistos post-2023 (e.g., cambios políticos en EE.UU. o avances tecnológicos no documentados) y asume continuidad en las tendencias actuales.</li>
+                    </ul>
+                </div>
+
+                <!-- Análisis de Fuerzas Estratégicas -->
+                <div class="content-section" id="estrategicas">
+                    <h2 class="text-2xl font-semibold mb-4">3. Análisis de Fuerzas Estratégicas (Nucleares)</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <h3 class="text-xl font-semibold">3.1. Estados Unidos</h3>
+                            <ul class="list-disc pl-6">
+                                <li><strong>Arsenal nuclear</strong>: Aproximadamente 5,244 ojivas nucleares (activas e inactivas) en 2023 (FAS, 2023).</li>
+                                <li><strong>Tríada nuclear</strong>:
+                                    <ul class="list-circle pl-6">
+                                        <li>Misiles balísticos intercontinentales (ICBM): ~400 Minuteman III.</li>
+                                        <li>Submarinos: 14 de clase Ohio con ~240 misiles Trident II.</li>
+                                        <li>Bombarderos: ~60 B-2 Spirit y B-52 Stratofortress.</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Modernización</strong>: Programa de $400 mil millones hasta 2030, incluyendo ICBM LGM-35 Sentinel, submarinos de clase Columbia y bombas B61-12.</li>
+                                <li><strong>Doctrina</strong>: Uso de armas nucleares en respuesta a ataques nucleares o amenazas existenciales, con énfasis en disuasión y segundo golpe.</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold">3.2. OTAN</h3>
+                            <ul class="list-disc pl-6">
+                                <li><strong>Capacidades nucleares</strong>: Depende de EE.UU. (~100 armas tácticas en Europa), Reino Unido (~225 ojivas) y Francia (~290 ojivas).</li>
+                                <li><strong>Despliegue</strong>: Armas tácticas en bases de Bélgica, Alemania, Italia y Países Bajos; sistemas antimisiles <span class="tooltip">Aegis Ashore<span class="tooltip-text">Sistema de defensa antimisiles basado en tierra.</span></span> en Polonia y Rumania.</li>
+                                <li><strong>Doctrina</strong>: Disuasión extendida, activada bajo el Artículo 5, con respuesta nuclear proporcional a amenazas.</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold">3.3. Rusia</h3>
+                            <ul class="list-disc pl-6">
+                                <li><strong>Arsenal nuclear</strong>: ~5,889 ojivas, el mayor del mundo (FAS, 2023).</li>
+                                <li><strong>Tríada nuclear</strong>:
+                                    <ul class="list-circle pl-6">
+                                        <li>ICBM: RS-24 Yars, Sarmat.</li>
+                                        <li>Submarinos: Clase Borei con misiles Bulava.</li>
+                                        <li>Bombarderos: Tu-160, Tu-95.</li>
+                                        <li>Armas avanzadas: Misil hipersónico Avangard, torpedo nuclear Poseidon.</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Modernización</strong>: Prioridad desde 2008, con énfasis en capacidades de escalada controlada.</li>
+                                <li><strong>Doctrina</strong>: Uso nuclear ante amenazas existenciales o para desescalar conflictos convencionales.</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold">3.4. China</h3>
+                            <ul class="list-disc pl-6">
+                                <li><strong>Arsenal nuclear</strong>: ~410 ojivas, con proyecciones de ~1,000 para 2030 (SIPRI, 2023).</li>
+                                <li><strong>Tríada nuclear</strong>:
+                                    <ul class="list-circle pl-6">
+                                        <li>ICBM: DF-41.</li>
+                                        <li>Submarinos: Type 094 con misiles JL-2.</li>
+                                        <li>Bombarderos: H-6, con desarrollos en curso.</li>
+                                        <li>Armas avanzadas: Misil hipersónico DF-ZF, submarinos Type 096.</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Modernización</strong>: XIV Plan Quinquenal (2021-2025) prioriza la paridad estratégica con EE.UU. para 2035.</li>
+                                <li><strong>Doctrina</strong>: Política de "no primer uso", pero con mayor flexibilidad ante conflictos regionales (e.g., Taiwán).</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Análisis de Fuerzas Convencionales -->
+                <div class="content-section" id="convencionales">
+                    <h2 class="text-2xl font-semibold mb-4">4. Análisis de Fuerzas Convencionales</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <h3 class="text-xl font-semibold">4.1. Estados Unidos</h3>
+                            <ul class="list-disc pl-6">
+                                <li><strong>Fuerzas terrestres</strong>: ~485,000 efectivos activos (Ejército); tanques M1 Abrams, vehículos Stryker, artillería M777.</li>
+                                <li><strong>Fuerza aérea</strong>: ~5,000 aeronaves, incluyendo F-35, F-22 y drones MQ-9 Reaper; superioridad aérea global.</li>
+                                <li><strong>Armada</strong>: 11 portaaviones (Nimitz, Ford), ~70 submarinos, ~290 buques.</li>
+                                <li><strong>Capacidades cibernéticas/espaciales</strong>: Comando Cibernético y Fuerza Espacial; vulnerabilidad a ataques <span class="tooltip">antisatélites (ASAT)<span class="tooltip-text">Armas diseñadas para destruir o inutilizar satélites.</span></span>.</li>
+                                <li><strong>Presupuesto militar</strong>: $877 mil millones (2023), ~36% del gasto global (SIPRI, 2023).</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold">4.2. OTAN</h3>
+                            <ul class="list-disc pl-6">
+                                <li><strong>Fuerzas terrestres</strong>: ~3.5 millones de efectivos combinados; interoperabilidad limitada por disparidades nacionales.</li>
+                                <li><strong>Fuerza aérea</strong>: Cazas F-35, Eurofighter Typhoon; dependencia de EE.UU. para inteligencia y mando/control.</li>
+                                <li><strong>Armada</strong>: Contribuciones de EE.UU., Reino Unido y Francia; menor en número que China.</li>
+                                <li><strong>Presupuesto militar</strong>: ~$1.2 billones (2024), 55% del gasto global; objetivo de 5% del PIB por país para 2032.</li>
+                                <li><strong>Despliegue</strong>: ~40,000 tropas en el flanco este (Polonia, Países Bálticos, Rumania) desde 2022.</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold">4.3. Rusia</h3>
+                            <ul class="list-disc pl-6">
+                                <li><strong>Fuerzas terrestres</strong>: ~700,000 efectivos activos; experiencia en Ucrania, pero ~400,000 bajas acumuladas (2022-2025).</li>
+                                <li><strong>Fuerza aérea</strong>: ~4,000 aeronaves (Su-57, Su-35); limitaciones por sanciones.</li>
+                                <li><strong>Armada</strong>: ~150 buques; submarinos Yasen y misiles Kalibr como activos clave.</li>
+                                <li><strong>Capacidades cibernéticas/espaciales</strong>: Guerra electrónica y ASAT avanzados (prueba de 2021).</li>
+                                <li><strong>Presupuesto militar</strong>: $84 mil millones (2023), ~5.7% del gasto global.</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold">4.4. China</h3>
+                            <ul class="list-disc pl-6">
+                                <li><strong>Fuerzas terrestres</strong>: ~2 millones de efectivos; mayor ejército del mundo, pero con poca experiencia en combate.</li>
+                                <li><strong>Fuerza aérea</strong>: ~3,000 aeronaves (J-20, drones); cierre de brecha tecnológica con EE.UU.</li>
+                                <li><strong>Armada</strong>: ~370 buques, incluyendo destructores Type 055 y portaaviones Type 003; enfoque en <span class="tooltip">A2/AD<span class="tooltip-text">Estrategia de negación de acceso/área para limitar movimientos enemigos.</span></span>.</li>
+                                <li><strong>Capacidades cibernéticas/espaciales</strong>: Guerra cibernética y ASAT avanzados; liderazgo en IA militar.</li>
+                                <li><strong>Presupuesto militar</strong>: $292 mil millones (2023), ~12% del gasto global.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dinámicas Geopolíticas -->
+                <div class="content-section" id="geopoliticas">
+                    <h2 class="text-2xl font-semibold mb-4">5. Dinámicas Geopolíticas y Alianzas</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <h3 class="text-xl font-semibold">5.1. EE.UU.-OTAN</h3>
+                            <ul class="list-disc pl-6">
+                                <li><strong>Fortalezas</strong>: Economía combinada de ~$50 billones (2023); superioridad tecnológica y cohesión aliada.</li>
+                                <li><strong>Debilidades</strong>: Disparidades en gasto militar (e.g., España <1.5% del PIB); posible reducción del compromiso de EE.UU. bajo liderazgos aislacionistas (e.g., Trump en 2025).</li>
+                                <li><strong>Aliados clave</strong>: Japón, Australia, Corea del Sur (Indo-Pacífico); India (neutral, pero alineada contra China).</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold">5.2. Rusia-China</h3>
+                            <ul class="list-disc pl-6">
+                                <li><strong>Fortalezas</strong>: Asociación estratégica desde 2014; combinación de experiencia militar rusa y poder económico chino.</li>
+                                <li><strong>Debilidades</strong>: Falta de alianza formal; dependencia rusa de tecnología y financiación china.</li>
+                                <li><strong>Aliados clave</strong>: Irán, Corea del Norte, países BRICS (India, Brasil, Sudáfrica).</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modelo Simulado -->
+                <div class="content-section" id="simulacion">
+                    <h2 class="text-2xl font-semibold mb-4">6. Modelo Simulado de Confrontación: EE.UU.-OTAN vs. Rusia-China (2025)</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <h3 class="text-xl font-semibold">6.1. Escenario</h3>
+                            <p><strong>Contexto</strong>: En 2025, una crisis en Taiwán (intento chino de reunificación) y una escalada en Ucrania (avance ruso en el Donbás) desencadenan un conflicto simultáneo. EE.UU.-OTAN y Rusia-China coordinan acciones en dos frentes.</p>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold">6.2. Fases del Conflicto</h3>
+                            <ol class="list-decimal pl-6">
+                                <li><strong>Fase 1: Escalada Inicial (Cibernética y Naval)</strong>
+                                    <ul class="list-disc pl-6">
+                                        <li><strong>Rusia</strong>: Ciberataques contra infraestructura de la OTAN; despliegue de submarinos Yasen en el Atlántico.</li>
+                                        <li><strong>China</strong>: Bloqueo naval de Taiwán con A2/AD; ciberataques contra bases de EE.UU. en Japón y Guam.</li>
+                                        <li><strong>EE.UU.-OTAN</strong>: Contramedidas cibernéticas; despliegue de portaaviones en el Indo-Pacífico; refuerzo de 100,000 tropas en Europa del Este.</li>
+                                        <li><strong>Resultado</strong>: Estancamiento; disrupciones económicas por ciberataques.</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Fase 2: Conflicto Convencional</strong>
+                                    <ul class="list-disc pl-6">
+                                        <li><strong>Europa del Este</strong>: Rusia captura partes del Donbás; la OTAN responde con apoyo aéreo y tropas polacas/alemanas, evitando escalada directa.</li>
+                                        <li><strong>Indo-Pacífico</strong>: China bloquea parcialmente Taiwán con misiles DF-21D; EE.UU. y aliados contrarrestan, pero sufren pérdidas por misiles hipersónicos.</li>
+                                        <li><strong>Resultado</strong>: Avances rusos limitados; estancamiento en Taiwán.</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Fase 3: Escalada Estratégica (Nuclear)</strong>
+                                    <ul class="list-disc pl-6">
+                                        <li><strong>Rusia</strong>: Amenaza con armas nucleares tácticas en Ucrania.</li>
+                                        <li><strong>China</strong>: Evita escalada nuclear, pero realiza pruebas de misiles DF-41.</li>
+                                        <li><strong>EE.UU.-OTAN</strong>: Refuerza disuasión nuclear con submarinos Ohio; declara respuesta proporcional a cualquier uso nuclear.</li>
+                                        <li><strong>Resultado</strong>: Negociaciones lideradas por actores neutrales (e.g., India) logran un alto al fuego parcial.</li>
+                                    </ul>
+                                </li>
+                            </ol>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold">6.3. Factores Clave</h3>
+                            <ul class="list-disc pl-6">
+                                <li><strong>Ventajas EE.UU.-OTAN</strong>: Superioridad tecnológica, naval y aérea; cohesión aliada.</li>
+                                <li><strong>Ventajas Rusia-China</strong>: Guerra asimétrica (ciberataques, misiles hipersónicos); proximidad a teatros de conflicto.</li>
+                                <li><strong>Limitaciones</strong>: Logística de la OTAN en conflictos simultáneos; debilidad económica de Rusia-China ante sanciones.</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold">6.4. Resultado Probable</h3>
+                            <p>El conflicto termina en un punto muerto tras negociaciones, con acuerdos parciales (alto al fuego en Ucrania, statu quo en Taiwán). La disuasión nuclear mutua evita una escalada total, pero las tensiones persisten, consolidando la lógica de bloques.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Conclusiones -->
+                <div class="content-section" id="conclusiones">
+                    <h2 class="text-2xl font-semibold mb-4">7. Conclusiones</h2>
+                    <ul class="list-disc pl-6">
+                        <li><strong>EE.UU.-OTAN</strong>: Su superioridad tecnológica y cohesión aliada son ventajas clave, pero las disparidades internas y la posible reducción del compromiso estadounidense (e.g., elecciones de 2024) representan riesgos.</li>
+                        <li><strong>Rusia-China</strong>: Su alianza combina fortalezas complementarias, pero la falta de cohesión formal y la vulnerabilidad económica limitan su capacidad para conflictos prolongados.</li>
+                        <li><strong>Riesgos globales</strong>: Un error de cálculo nuclear o la interrupción de cadenas de suministro globales podrían tener consecuencias catastróficas.</li>
+                    </ul>
+                </div>
+
+                <!-- Recomendaciones -->
+                <div class="content-section" id="recomendaciones">
+                    <h2 class="text-2xl font-semibold mb-4">8. Recomendaciones</h2>
+                    <ol class="list-decimal pl-6">
+                        <li><strong>EE.UU.-OTAN</strong>: Invertir en capacidades cibernéticas y espaciales para contrarrestar ventajas asimétricas de Rusia y China; fortalecer la interoperabilidad de la OTAN.</li>
+                        <li><strong>Rusia-China</strong>: Priorizar la diplomacia para evitar sanciones económicas devastadoras; diversificar alianzas con países BRICS.</li>
+                        <li><strong>Global</strong>: Reforzar tratados de control de armas nucleares (e.g., New START) y establecer canales de comunicación para prevenir escaladas.</li>
+                    </ol>
+                </div>
+
+                <!-- Referencias -->
+                <div class="content-section" id="referencias">
+                    <h2 class="text-2xl font-semibold mb-4">9. Referencias</h2>
+                    <ul class="list-disc pl-6">
+                        <li>Federation of American Scientists (FAS). (2023). <i>Status of World Nuclear Forces</i>.</li>
+                        <li>Stockholm International Peace Research Institute (SIPRI). (2023). <i>SIPRI Military Expenditure Database</i>.</li>
+                        <li>OTAN. (2022). <i>Concepto Estratégico 2022</i>.</li>
+                        <li>Departamento de Defensa de EE.UU. (2023). <i>Nuclear Posture Review</i>.</li>
+                        <li>Ministerio de Defensa de China. (2021). <i>XIV Plan Quinquenal</i>.</li>
+                        <li>Ministerio de Defensa de Rusia. (2020). <i>Doctrina Militar de la Federación Rusa</i>.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p><strong>Autor:</strong> Prof. Ángel Chacín Ávila<br>
+        <strong>Licenciado en Física, Especialista en Ciencias Computacionales</strong><br>
+        <strong>Universidad Nacional Experimental de la Seguridad (UNES), Núcleo Zulia</strong><br>
+        <strong>Contacto:</strong> <a href="mailto:lordchacinavila@gmail.com" class="underline text-blue-200 hover:text-blue-400">lordchacinavila@gmail.com</a></p>
+        <p><strong>Nota:</strong> Este informe se elaboró con fines académicos y de análisis estratégico, utilizando datos públicos y proyecciones razonables. No refleja posiciones oficiales de ninguna institución.</p>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Custom JavaScript -->
+    <script>
+        $(document).ready(function() {
+            // Smooth scrolling for navigation links
+            $('a[href*="#"]').on('click', function(e) {
+                e.preventDefault();
+                const target = $(this.hash);
+                if (target.length) {
+                    $('html, body').animate({
+                        scrollTop: target.offset().top - 80
+                    }, 500);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
