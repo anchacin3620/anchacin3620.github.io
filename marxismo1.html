@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Marxismo-Leninismo y Marxismo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f2f2f2;
+            margin: 40px;
+            color: #333;
+        }
+
+        .contenido {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #1e1e1e;
+        }
+
+        h2, h3 {
+            color: #2a2a2a;
+        }
+
+        ul {
+            margin-left: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #e0e0e0;
+        }
+
+        .footer {
+            margin-top: 40px;
+            font-size: 0.9em;
+            color: #555;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Marxismo-Leninismo y su Diferencia con el Marxismo</h1>
+
+    <div class="contenido" id="info"></div>
+
+    <div class="footer" id="autor"></div>
+
+    <script>
+        const contenidoHTML = `
+            <h2>¿Qué es el Marxismo-Leninismo?</h2>
+            <p>El <strong>marxismo-leninismo</strong> es una ideología política y filosófica que surge de la síntesis entre el pensamiento original de Karl Marx y Friedrich Engels (marxismo), y las aportaciones teóricas y prácticas de Vladimir Lenin, líder de la Revolución Rusa de 1917.</p>
+            <ul>
+                <li>Combina el análisis marxista de la lucha de clases, el materialismo dialéctico y la economía política.</li>
+                <li>Defiende la necesidad de un <strong>partido comunista de vanguardia</strong> fuerte y centralizado.</li>
+                <li>Responde a las condiciones históricas del siglo XX, especialmente el imperialismo y el desarrollo desigual del capitalismo.</li>
+                <li>Propone una <strong>dictadura del proletariado</strong> como etapa transitoria para construir el socialismo.</li>
+            </ul>
+
+            <h2>Diferencias con el Marxismo Puro</h2>
+            <p>El <strong>marxismo puro</strong> se refiere a la teoría original de Marx y Engels, que es principalmente crítica, filosófica y económica, mientras que el marxismo-leninismo adapta esta teoría para guiar revoluciones prácticas en países no industrializados.</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Aspecto</th>
+                        <th>Marxismo Puro</th>
+                        <th>Marxismo-Leninismo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Enfoque</td>
+                        <td>Teórico y crítico sobre el capitalismo</td>
+                        <td>Aplicación práctica para la toma del poder y el socialismo</td>
+                    </tr>
+                    <tr>
+                        <td>Partido</td>
+                        <td>No enfatiza partido único</td>
+                        <td>Defiende el partido de vanguardia</td>
+                    </tr>
+                    <tr>
+                        <td>Revolución</td>
+                        <td>Surge de condiciones objetivas</td>
+                        <td>Debe ser dirigida por el partido, incluso en países menos desarrollados</td>
+                    </tr>
+                    <tr>
+                        <td>Dictadura del proletariado</td>
+                        <td>Mencionada como transición, sin mecanismos claros</td>
+                        <td>Central para el control estatal en el proceso revolucionario</td>
+                    </tr>
+                    <tr>
+                        <td>Imperialismo</td>
+                        <td>Apenas tratado</td>
+                        <td>Analizado como fase superior del capitalismo que debe combatirse</td>
+                    </tr>
+                    <tr>
+                        <td>Teoría vs. Práctica</td>
+                        <td>Es la teoría crítica del capitalismo</td>
+                        <td>Adaptación práctica de esa teoría para la revolución</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>En resumen, el <strong>marxismo-leninismo</strong> es la aplicación revolucionaria y organizativa del marxismo, centrada en la dirección por parte de un partido comunista, el papel del Estado y la lucha contra el imperialismo.</p>
+        `;
+
+        const autor = "Elaborado por el Profesor Ángel Chacín Ávila, Licenciado en Física, Especialista en Ciencias Computacionales, UNES Núcleo Zulia";
+
+        // Inyección del contenido y autor en el HTML
+        document.getElementById("info").innerHTML = contenidoHTML;
+        document.getElementById("autor").textContent = autor;
+    </script>
+</body>
+</html>
