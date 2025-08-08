@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ecuaciones de Maxwell Explicadas</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2em; background: #f8f8fa; color: #222; }
+        h1 { text-align: center; }
+        .ecuacion { background: #eef; margin: 1em 0; padding: 1em; border-radius: 8px; }
+        .ecuacion span { font-family: 'Times New Roman', Times, serif; font-size: 1.4em; }
+        .explicacion { margin-left: 1em; }
+        .campo { font-weight: bold; color: #1a4; }
+        .boton { margin: 1em auto; display: block; padding: 0.6em 1em; font-size: 1em;}
+    </style>
+    <script>
+        function mostrarDetalles(num) {
+            var detalles = [
+                "La ley de Gauss para el campo eléctrico dice que el flujo eléctrico a través de una superficie cerrada es proporcional a la carga encerrada. Describe cómo las cargas eléctricas crean campos eléctricos.",
+                "La ley de Gauss para el magnetismo establece que no existen monopolos magnéticos; las líneas de campo magnético siempre forman lazos cerrados.",
+                "La ley de Faraday indica que un campo magnético variable en el tiempo genera un campo eléctrico. Este fenómeno es la base de los generadores eléctricos.",
+                "La ley de Ampère-Maxwell dice que tanto la corriente eléctrica como el cambio en el campo eléctrico pueden generar un campo magnético. Unifica la electricidad y el magnetismo."
+            ];
+            document.getElementById('detalles').innerHTML = detalles[num];
+        }
+    </script>
+</head>
+<body>
+    <h1>Ecuaciones de Maxwell</h1>
+    <p>Las ecuaciones de Maxwell son cuatro ecuaciones fundamentales que describen cómo se comportan los campos eléctricos y magnéticos y cómo interactúan con la materia.</p>
+    
+    <div class="ecuacion">
+        <span>∮<sub>S</sub> <b>E</b> · d<b>A</b> = (1/ε₀) Q<sub>int</sub></span>
+        <button class="boton" onclick="mostrarDetalles(0)">Explicación</button>
+    </div>
+    <div class="ecuacion">
+        <span>∮<sub>S</sub> <b>B</b> · d<b>A</b> = 0</span>
+        <button class="boton" onclick="mostrarDetalles(1)">Explicación</button>
+    </div>
+    <div class="ecuacion">
+        <span>∮<sub>C</sub> <b>E</b> · d<b>l</b> = - dΦ<sub>B</sub>/dt</span>
+        <button class="boton" onclick="mostrarDetalles(2)">Explicación</button>
+    </div>
+    <div class="ecuacion">
+        <span>∮<sub>C</sub> <b>B</b> · d<b>l</b> = μ₀ I<sub>enc</sub> + μ₀ε₀ dΦ<sub>E</sub>/dt</span>
+        <button class="boton" onclick="mostrarDetalles(3)">Explicación</button>
+    </div>
+    <div id="detalles" class="explicacion"></div>
+    <hr>
+    <p><b>Campos:</b></p>
+    <ul>
+        <li><span class="campo">E</span>: Campo eléctrico</li>
+        <li><span class="campo">B</span>: Campo magnético</li>
+        <li><span class="campo">Q<sub>int</sub></span>: Carga encerrada</li>
+        <li><span class="campo">Φ<sub>B</sub></span>: Flujo magnético</li>
+        <li><span class="campo">Φ<sub>E</sub></span>: Flujo eléctrico</li>
+        <li><span class="campo">I<sub>enc</sub></span>: Corriente encerrada</li>
+        <li><span class="campo">ε₀</span>: Permitividad eléctrica del vacío</li>
+        <li><span class="campo">μ₀</span>: Permeabilidad magnética del vacío</li>
+    </ul>
+    <p>Estas ecuaciones unifican la electricidad y el magnetismo en una teoría elegante y poderosa.</p>
+</body>
+</html>
