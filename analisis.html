@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis comparativo entre la Criminalística y Criminología</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #34495e;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --text: #333;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background-color: #f8f9fa;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            font-weight: 300;
+            opacity: 0.9;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-title {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--accent);
+            display: flex;
+            align-items: center;
+        }
+        
+        .card-title i {
+            margin-right: 10px;
+            color: var(--accent);
+        }
+        
+        .section-intro {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+        
+        .questions-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .question-card {
+            background: #f8f9fa;
+            border-left: 4px solid var(--accent);
+            padding: 1.2rem;
+            border-radius: 0 8px 8px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .question-card:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+        
+        .question-card h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .branches-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .branch-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .branch-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--accent);
+        }
+        
+        .branch-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .branch-card h4 {
+            color: var(--primary);
+            margin-bottom: 0.8rem;
+            font-size: 1.2rem;
+        }
+        
+        .branch-card p {
+            color: #555;
+            font-size: 0.95rem;
+        }
+        
+        .branch-icon {
+            background: var(--primary);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+            box-shadow: var(--shadow);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .comparison-table th {
+            background: var(--primary);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+        }
+        
+        .comparison-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .comparison-table tr:hover {
+            background-color: #e9ecef;
+        }
+        
+        .comparison-table .crim-title {
+            background: #3498db;
+            font-weight: 600;
+        }
+        
+        .comparison-table .crimi-title {
+            background: #e74c3c;
+            font-weight: 600;
+        }
+        
+        .diagram-container {
+            display: flex;
+            justify-content: center;
+            margin: 3rem 0;
+        }
+        
+        .diagram {
+            display: flex;
+            max-width: 800px;
+            height: 300px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        
+        .crim-section, .crimi-section {
+            flex: 1;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .crim-section {
+            background: #3498db;
+            color: white;
+        }
+        
+        .crimi-section {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .diagram-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .diagram-list {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .diagram-list li {
+            margin-bottom: 0.5rem;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+        
+        .diagram-list li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            font-size: 1.2rem;
+        }
+        
+        .diagram-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            color: var(--dark);
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            text-align: center;
+            box-shadow: var(--shadow);
+            font-size: 1.1rem;
+            z-index: 10;
+        }
+        
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 3rem 0 2rem;
+            text-align: center;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .professor-info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+        
+        .professor-name {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--accent);
+        }
+        
+        .professor-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .copyright {
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .diagram {
+                flex-direction: column;
+                height: auto;
+            }
+            
+            .diagram-center {
+                position: relative;
+                top: auto;
+                left: auto;
+                transform: none;
+                margin: -20px auto;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>Análisis comparativo entre la Criminalística y Criminología</h1>
+            <p class="subtitle">Un estudio técnico-académico de dos disciplinas complementarias en el estudio del delito</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-microscope"></i> La Criminalística: Ciencia de la Evidencia</h2>
+            <p class="section-intro">
+                La criminalística es una disciplina científica que se encarga de la investigación de hechos delictivos. Su objetivo principal es aplicar métodos y técnicas de diversas ciencias naturales para recolectar, analizar y presentar evidencias físicas de un delito. Como ciencia aplicada, se fundamenta en el método científico para establecer los hechos de manera objetiva y verificable.
+            </p>
+            
+            <h3>Objetivos Fundamentales de la Criminalística</h3>
+            <p>En esencia, la criminalística busca responder las preguntas esenciales de una investigación criminal:</p>
+            
+            <div class="questions-container">
+                <div class="question-card">
+                    <h4>¿Qué sucedió?</h4>
+                    <p>Determinar la naturaleza del evento delictivo y reconstruir los hechos</p>
+                </div>
+                <div class="question-card">
+                    <h4>¿Cómo se cometió?</h4>
+                    <p>Identificar el modus operandi, herramientas y métodos utilizados</p>
+                </div>
+                <div class="question-card">
+                    <h4>¿Cuándo ocurrió?</h4>
+                    <p>Establecer la línea temporal y cronología de los eventos</p>
+                </div>
+                <div class="question-card">
+                    <h4>¿Quién lo hizo?</h4>
+                    <p>Identificar a los presuntos responsables mediante evidencia</p>
+                </div>
+                <div class="question-card">
+                    <h4>¿Dónde ocurrió?</h4>
+                    <p>Localizar y analizar la escena del crimen y lugares relacionados</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-fingerprint"></i> Ramas y Especialidades de la Criminalística</h2>
+            <p class="section-intro">
+                Para lograr sus objetivos, la criminalística se apoya en una amplia variedad de ciencias forenses y técnicas especializadas. Cada rama aporta conocimientos específicos que permiten un análisis integral de la evidencia. Estas especialidades trabajan de manera interdisciplinaria para construir un caso sólido basado en pruebas científicas.
+            </p>
+            
+            <div class="branches-container">
+                <div class="branch-card">
+                    <div class="branch-icon">
+                        <i class="fas fa-crosshairs"></i>
+                    </div>
+                    <h4>Balística Forense</h4>
+                    <p>Estudio de armas de fuego, proyectiles, trayectoria de disparos y efectos de los mismos. Permite determinar el tipo de arma utilizada, distancia del disparo y relación entre armas y proyectiles.</p>
+                </div>
+                
+                <div class="branch-card">
+                    <div class="branch-icon">
+                        <i class="fas fa-hand-paper"></i>
+                    </div>
+                    <h4>Dactiloscopia</h4>
+                    <p>Identificación de personas a través del análisis de huellas dactilares. Basada en el principio de que las crestas papilares son únicas e inmutables en cada individuo.</p>
+                </div>
+                
+                <div class="branch-card">
+                    <div class="branch-icon">
+                        <i class="fas fa-file-signature"></i>
+                    </div>
+                    <h4>Documentoscopia</h4>
+                    <p>Análisis de documentos para determinar su autenticidad o falsedad (firmas, escrituras, etc.). Examina tintas, papeles, alteraciones y mecanismos de impresión.</p>
+                </div>
+                
+                <div class="branch-card">
+                    <div class="branch-icon">
+                        <i class="fas fa-dna"></i>
+                    </div>
+                    <h4>Genética Forense</h4>
+                    <p>Análisis de ADN para identificar a personas involucradas en un delito. Permite establecer relaciones biológicas e identificar individuos con gran precisión.</p>
+                </div>
+                
+                <div class="branch-card">
+                    <div class="branch-icon">
+                        <i class="fas fa-flask"></i>
+                    </div>
+                    <h4>Toxicología Forense</h4>
+                    <p>Estudio de sustancias tóxicas, drogas y venenos en el cuerpo humano. Determina presencia de toxinas, su concentración y efectos en el organismo.</p>
+                </div>
+                
+                <div class="branch-card">
+                    <div class="branch-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h4>Criminalística de Campo</h4>
+                    <p>Trabajo en la escena del crimen para la observación, fijación, recolección y preservación de evidencias. Es la primera etapa de la investigación criminal.</p>
+                </div>
+                
+                <div class="branch-card">
+                    <div class="branch-icon">
+                        <i class="fas fa-laptop"></i>
+                    </div>
+                    <h4>Informática Forense</h4>
+                    <p>Investigación de datos digitales y electrónicos en dispositivos como computadoras y teléfonos móviles. Recupera información borrada y rastrea actividades digitales.</p>
+                </div>
+                
+                <div class="branch-card">
+                    <div class="branch-icon">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <h4>Fotografía Forense</h4>
+                    <p>Documentación visual de la escena del crimen y de las evidencias. Proporciona registro objetivo y perdurable de las condiciones iniciales de la escena.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="diagram-container">
+            <div class="diagram">
+                <div class="crim-section">
+                    <h3 class="diagram-title">Criminología</h3>
+                    <ul class="diagram-list">
+                        <li>Estudio del fenómeno criminal</li>
+                        <li>Análisis de causas del delito</li>
+                        <li>Perfil del delincuente</li>
+                        <li>Impacto social</li>
+                        <li>Políticas preventivas</li>
+                    </ul>
+                </div>
+                
+                <div class="diagram-center">Estudio<br>del<br>Delito</div>
+                
+                <div class="crimi-section">
+                    <h3 class="diagram-title">Criminalística</h3>
+                    <ul class="diagram-list">
+                        <li>Investigación técnica</li>
+                        <li>Análisis de evidencias</li>
+                        <li>Reconstrucción de hechos</li>
+                        <li>Identificación de autores</li>
+                        <li>Pruebas científicas</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-balance-scale"></i> Diferencias entre Criminalística y Criminología</h2>
+            <p class="section-intro">
+                Aunque ambas disciplinas se relacionan con el delito, tienen enfoques, objetivos y metodologías diferentes. Mientras la criminalística se centra en el hecho delictivo concreto y su investigación técnica, la criminología estudia el fenómeno criminal en su contexto social, analizando causas y prevención.
+            </p>
+            
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Característica</th>
+                        <th>Criminalística</th>
+                        <th>Criminología</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="crim-title">Objeto de estudio</td>
+                        <td>El hecho delictivo y las evidencias físicas</td>
+                        <td>El delito como fenómeno social, sus causas, el delincuente, la víctima y la prevención</td>
+                    </tr>
+                    <tr>
+                        <td class="crim-title">Enfoque principal</td>
+                        <td>Práctico y técnico. Busca resolver un caso específico</td>
+                        <td>Teórico y social. Busca comprender y prevenir el delito en general</td>
+                    </tr>
+                    <tr>
+                        <td class="crim-title">Métodos utilizados</td>
+                        <td>Científicos, forenses y de laboratorio (análisis de ADN, huellas, balística, etc.)</td>
+                        <td>Cualitativos y cuantitativos (encuestas, estadísticas, estudios sociológicos, análisis psicológicos)</td>
+                    </tr>
+                    <tr>
+                        <td class="crim-title">Pregunta clave</td>
+                        <td>¿Cómo se cometió el crimen y quién lo hizo?</td>
+                        <td>¿Por qué se cometen los crímenes?</td>
+                    </tr>
+                    <tr>
+                        <td class="crim-title">Ámbito de aplicación</td>
+                        <td>Investigación criminal concreta, peritajes judiciales</td>
+                        <td>Políticas públicas, prevención del delito, reforma penal</td>
+                    </tr>
+                    <tr>
+                        <td class="crim-title">Profesionales</td>
+                        <td>Peritos forenses, técnicos de laboratorio, investigadores de escena del crimen</td>
+                        <td>Criminólogos, sociólogos, psicólogos, legisladores</td>
+                    </tr>
+                    <tr>
+                        <td class="crim-title">Relación con el derecho</td>
+                        <td>Aporta pruebas para procesos judiciales</td>
+                        <td>Fundamenta reformas legales y políticas criminales</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-lightbulb"></i> Integración Disciplinar</h2>
+            <p class="section-intro">
+                En la práctica, criminalística y criminología trabajan de manera complementaria. Mientras la criminología proporciona el marco teórico para comprender las causas y dinámicas del delito, la criminalística aporta las herramientas técnicas para su investigación concreta. Esta sinergia permite un abordaje integral del fenómeno criminal, desde la prevención hasta la resolución de casos específicos.
+            </p>
+            <p>
+                La interacción entre ambas disciplinas es fundamental para el desarrollo de sistemas de justicia eficaces. Los hallazgos criminológicos informan las prácticas criminalísticas, y a su vez, los datos obtenidos en investigaciones criminalísticas alimentan los estudios criminológicos, creando un ciclo virtuoso de conocimiento aplicado.
+            </p>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="footer-content">
+            <div class="professor-info">
+                <div class="professor-name">Profesor Ángel Chacín Ávila</div>
+                <div class="professor-title">Licenciado en Física</div>
+                <div class="professor-title">Especialista en Ciencias Computacionales</div>
+                <div class="professor-title">UNES Núcleo Zulia</div>
+            </div>
+            <div class="copyright">
+                © 2025 - Material Didáctico para Ciencias Forenses - Todos los derechos reservados
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Efecto de aparición suave al hacer scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card, .diagram, .branch-card');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            cards.forEach(card => {
+                card.style.opacity = 0;
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>
