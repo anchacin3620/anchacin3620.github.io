@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Trabajo y Energía - Conceptos Básicos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            margin: 0; 
+            background: #f8f9fa; 
+            color: #222;
+        }
+        main {
+            max-width: 800px;
+            margin: 40px auto 60px auto;
+            background: #fff;
+            padding: 32px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        }
+        h1, h2 {
+            color: #1a57a5;
+        }
+        .concepto {
+            margin-bottom: 32px;
+        }
+        label {
+            font-weight: 500;
+        }
+        .simulador {
+            background: #e3f2fd;
+            border-radius: 8px;
+            padding: 18px;
+            margin: 30px 0;
+        }
+        .resultado {
+            font-size: 1.2em;
+            margin-top: 10px;
+            color: #0d6efd;
+        }
+        footer {
+            width: 100%;
+            background: #1a57a5;
+            color: #fff;
+            text-align: center;
+            padding: 18px 0 12px 0;
+            font-size: 1em;
+            position: fixed;
+            left: 0;
+            bottom: 0;
+        }
+        @media (max-width: 700px) {
+            main { padding: 12px; margin: 10px 0 70px 0; }
+            h1 { font-size: 1.7em; }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>Trabajo y Energía: Conceptos Básicos</h1>
+        
+        <section class="concepto">
+            <h2>¿Qué es el trabajo en Física?</h2>
+            <p>
+                En física, el <strong>trabajo</strong> se realiza cuando una fuerza <em>desplaza</em> un objeto en la dirección de dicha fuerza. 
+                Su fórmula es:
+            </p>
+            <p style="text-align:center; font-size:1.3em; margin: 16px 0;">
+                <strong>W = F &times; d &times; cos(θ)</strong>
+            </p>
+            <ul>
+                <li><span style="color: #1a57a5"><b>W</b></span>: Trabajo (en Joules, J)</li>
+                <li><span style="color: #1a57a5"><b>F</b></span>: Magnitud de la fuerza (en Newtons, N)</li>
+                <li><span style="color: #1a57a5"><b>d</b></span>: Desplazamiento (en metros, m)</li>
+                <li><span style="color: #1a57a5"><b>θ</b></span>: Ángulo entre fuerza y desplazamiento (en grados)</li>
+            </ul>
+        </section>
+
+        <section class="simulador">
+            <h2>Simulador de Trabajo</h2>
+            <form id="formTrabajo">
+                <label>Fuerza (F) [N]: 
+                    <input type="number" id="fuerza" min="0" step="any" required>
+                </label>
+                <br><br>
+                <label>Desplazamiento (d) [m]: 
+                    <input type="number" id="desplazamiento" min="0" step="any" required>
+                </label>
+                <br><br>
+                <label>Ángulo (θ) [grados]: 
+                    <input type="number" id="angulo" min="0" max="180" step="any" value="0" required>
+                </label>
+                <br><br>
+                <button type="submit">Calcular Trabajo</button>
+            </form>
+            <div class="resultado" id="resultadoTrabajo"></div>
+        </section>
+
+        <section class="concepto">
+            <h2>¿Qué es la energía?</h2>
+            <p>
+                La <strong>energía</strong> es la capacidad de un cuerpo o sistema para realizar trabajo. 
+                Existen diversas formas de energía, como la cinética, potencial, térmica, etc.
+            </p>
+            <ul>
+                <li><b>Energía cinética (EC):</b> Energía debida al movimiento.</li>
+                <li><b>Energía potencial (EP):</b> Energía almacenada por la posición o condición.</li>
+            </ul>
+            <p>
+                <b>Energía cinética:</b> 
+                <span style="display:block; text-align:center; font-size:1.15em; margin:8px 0;">
+                    <strong>EC = ½ m v²</strong>
+                </span>
+            </p>
+            <p>
+                <b>Energía potencial gravitatoria:</b>
+                <span style="display:block; text-align:center; font-size:1.15em; margin:8px 0;">
+                    <strong>EP = m g h</strong>
+                </span>
+            </p>
+        </section>
+
+        <section class="simulador">
+            <h2>Simulador de Energía Cinética y Potencial</h2>
+            <form id="formEnergia">
+                <label>Masa (m) [kg]: 
+                    <input type="number" id="masa" min="0" step="any" required>
+                </label>
+                <br><br>
+                <label>Velocidad (v) [m/s]: 
+                    <input type="number" id="velocidad" min="0" step="any" required>
+                </label>
+                <br><br>
+                <label>Altura (h) [m]: 
+                    <input type="number" id="altura" min="0" step="any" required>
+                </label>
+                <br><br>
+                <button type="submit">Calcular Energías</button>
+            </form>
+            <div class="resultado" id="resultadoEnergia"></div>
+        </section>
+    </main>
+    <footer>
+        Elaborado por el Profesor Ángel Chacín Ávila, Licenciado en Física, Especialista en Ciencias Computacionales, UNES Núcleo Zulia
+    </footer>
+    <script>
+        // Trabajo
+        document.getElementById('formTrabajo').addEventListener('submit', function(event){
+            event.preventDefault();
+            const F = parseFloat(document.getElementById('fuerza').value);
+            const d = parseFloat(document.getElementById('desplazamiento').value);
+            const theta = parseFloat(document.getElementById('angulo').value);
+            if(isNaN(F) || isNaN(d) || isNaN(theta)) {
+                document.getElementById('resultadoTrabajo').textContent = "Por favor, ingrese valores válidos.";
+                return;
+            }
+            const rad = theta * Math.PI / 180;
+            const trabajo = F * d * Math.cos(rad);
+            document.getElementById('resultadoTrabajo').innerHTML =
+                `Trabajo realizado: <b>${trabajo.toFixed(2)} J</b>`;
+        });
+
+        // Energía
+        document.getElementById('formEnergia').addEventListener('submit', function(event){
+            event.preventDefault();
+            const m = parseFloat(document.getElementById('masa').value);
+            const v = parseFloat(document.getElementById('velocidad').value);
+            const h = parseFloat(document.getElementById('altura').value);
+            const g = 9.81;
+            if(isNaN(m) || isNaN(v) || isNaN(h)) {
+                document.getElementById('resultadoEnergia').textContent = "Por favor, ingrese valores válidos.";
+                return;
+            }
+            const Ec = 0.5 * m * v * v;
+            const Ep = m * g * h;
+            document.getElementById('resultadoEnergia').innerHTML =
+                `Energía cinética: <b>${Ec.toFixed(2)} J</b><br>` +
+                `Energía potencial gravitatoria: <b>${Ep.toFixed(2)} J</b>`;
+        });
+    </script>
+</body>
+</html>
