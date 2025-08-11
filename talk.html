@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat P2P Estático con Encriptación</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        #chat { border: 1px solid #ccc; height: 300px; overflow-y: scroll; padding: 10px; }
+        #message { width: 70%; }
+        #send { width: 25%; }
+        #signaling { margin-top: 20px; }
+        #offer, #answer { width: 100%; height: 100px; }
+        #status { color: green; }
+        #error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>Chat P2P Simple con Encriptación (Solo HTML/JS)</h1>
+    <p>Este es un chat peer-to-peer (P2P) básico usando WebRTC para canales de datos. No requiere backend, pero los usuarios deben intercambiar manualmente la "oferta" y "respuesta" (signaling) a través de otro medio (email, mensaje de texto, etc.). Soporta dos usuarios principalmente. Para más, repite el proceso.</p>
+    <p>Seguridad: Los mensajes se encriptan con AES-GCM usando una clave compartida que los usuarios deben acordar previamente. Usa la API Web Crypto de JavaScript.</p>
+    <p>Instrucciones:</p>
+    <ol>
+        <li>Acuerda una clave secreta con el otro usuario (e.g., una contraseña fuerte).</li>
+        <li>Uno crea la "oferta" y la envía al otro.</li>
+        <li>El otro ingresa la oferta, genera la "respuesta" y la envía de vuelta.</li>
+        <li>El primero ingresa la respuesta para conectar.</li>
+        <li>Chatea. Mensajes se encriptan/desencriptan automáticamente.</li>
+    </ol>
+
+    <div id="chat"></div>
+    <input type="text" id="message" placeholder="Escribe un mensaje...">
+    <button id="send">Enviar</button>
+
+    <div id="signaling">
+        <h2>Signaling Manual</h2>
+        <button id="createOffer">Crear Oferta (Iniciador)</button>
+        <textarea id="offer" placeholder="Pega la oferta recibida aquí"></textarea>
+        <button id="setOffer">Establecer Oferta y Crear Respuesta</button>
+        <textarea id="answer" placeholder="Pega la respuesta recibida aquí"></textarea>
+        <button id="setAnswer">Establecer Respuesta</button>
+    </div>
+
+    <div id="status"></div>
+    <div id="error"></div>
+
+    <script>
+        // Variables globales
+        let peerConnection;
+        let dataChannel;
+        const chat = document.getElementById('chat');
+        const messageInput = document.getElementById('message');
+        const sendButton = document.getElementById('send');
+        const createOfferButton = document.getElementById('createOffer');
+        const setOfferButton = document.getElementById('setOffer');
+        const setAnswerButton = document.getElementById('setAnswer');
+        const offerTextarea = document.getElementById('offer');
+        const answerTextarea = document.getElementById('answer');
+        const statusDiv = document.getElementById('status');
+        const errorDiv = document.getElementById('error');
+
+        // Clave secreta compartida (debe ser acordada manualmente)
+        let sharedKey; // Se generará a partir de una contraseña
+        const password = prompt('Ingresa la clave secreta compartida (debe ser la misma para ambos usuarios):');
+        if (!password) {
+            alert('Clave requerida para encriptación.');
+            throw new Error('No key provided');
+        }
+
+        // Subrutina para derivar clave de la contraseña usando PBKDF2
+        async function deriveKey(password) {
+            const encoder = new TextEncoder();
+            const keyMaterial = await crypto.subtle.importKey(
+                'raw',
+                encoder.encode(password),
+                'PBKDF2',
+                false,
+                ['deriveBits', 'deriveKey']
+            );
+            return await crypto.subtle.deriveKey(
+                {
+                    name: 'PBKDF2',
+                    salt: encoder.encode('salt-for-chat'), // Sal fija para simplicidad
+                    iterations: 100000,
+                    hash: 'SHA-256'
+                },
+                keyMaterial,
+                { name: 'AES-GCM', length: 256 },
+                true,
+                ['encrypt', 'decrypt']
+            );
+        }
+
+        // Subrutina para encriptar mensaje
+        async function encryptMessage(message) {
+            const encoder = new TextEncoder();
+            const iv = crypto.getRandomValues(new Uint8Array(12)); // IV aleatorio
+            const encrypted = await crypto.subtle.encrypt(
+                {
+                    name: 'AES-GCM',
+                    iv: iv
+                },
+                sharedKey,
+                encoder.encode(message)
+            );
+            // Combinar IV y ciphertext para envío
+            const combined = new Uint8Array(iv.byteLength + encrypted.byteLength);
+            combined.set(iv, 0);
+            combined.set(new Uint8Array(encrypted), iv.byteLength);
+            return combined;
+        }
+
+        // Subrutina para desencriptar mensaje
+        async function decryptMessage(combined) {
+            const iv = combined.slice(0, 12);
+            const ciphertext = combined.slice(12);
+            const decoder = new TextDecoder();
+            try {
+                const decrypted = await crypto.subtle.decrypt(
+                    {
+                        name: 'AES-GCM',
+                        iv: iv
+                    },
+                    sharedKey,
+                    ciphertext
+                );
+                return decoder.decode(decrypted);
+            } catch (e) {
+                return '[Error al desencriptar]';
+            }
+        }
+
+        // Inicializar clave
+        (async () => {
+            sharedKey = await deriveKey(password);
+        })();
+
+        // Configuración de WebRTC
+        const config = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] }; // STUN público para NAT traversal
+
+        // Función para mostrar mensajes en el chat
+        function addMessage(msg) {
+            const div = document.createElement('div');
+            div.textContent = msg;
+            chat.appendChild(div);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        // Crear conexión peer
+        function createPeerConnection() {
+            peerConnection = new RTCPeerConnection(config);
+
+            // Manejar ICE candidates (los candidatos se incluyen en offer/answer para simplicidad manual)
+            peerConnection.onicecandidate = (event) => {
+                if (event.candidate) {
+                    // En signaling manual, los candidates se manejan en offer/answer
+                }
+            };
+
+            peerConnection.oniceconnectionstatechange = () => {
+                statusDiv.textContent = `Estado ICE: ${peerConnection.iceConnectionState}`;
+                if (peerConnection.iceConnectionState === 'disconnected') {
+                    addMessage('Conexión perdida.');
+                }
+            };
+
+            return peerConnection;
+        }
+
+        // Crear data channel (para el iniciador)
+        function createDataChannel() {
+            dataChannel = peerConnection.createDataChannel('chat');
+            dataChannel.onopen = () => {
+                addMessage('Canal de datos abierto. Puedes chatear.');
+                sendButton.disabled = false;
+            };
+            dataChannel.onmessage = async (event) => {
+                const receivedData = new Uint8Array(event.data);
+                const decrypted = await decryptMessage(receivedData);
+                addMessage(`Otro: ${decrypted}`);
+            };
+            dataChannel.onclose = () => addMessage('Canal cerrado.');
+        }
+
+        // Listener para data channel (para el receptor)
+        peerConnection.ondatachannel = (event) => {
+            dataChannel = event.channel;
+            dataChannel.onopen = () => {
+                addMessage('Canal de datos abierto. Puedes chatear.');
+                sendButton.disabled = false;
+            };
+            dataChannel.onmessage = async (event) => {
+                const receivedData = new Uint8Array(event.data);
+                const decrypted = await decryptMessage(receivedData);
+                addMessage(`Otro: ${decrypted}`);
+            };
+            dataChannel.onclose = () => addMessage('Canal cerrado.');
+        };
+
+        // Botón para crear oferta (iniciador)
+        createOfferButton.onclick = async () => {
+            try {
+                createPeerConnection();
+                createDataChannel();
+                const offer = await peerConnection.createOffer();
+                await peerConnection.setLocalDescription(offer);
+                offerTextarea.value = JSON.stringify(peerConnection.localDescription);
+                addMessage('Oferta creada. Copia y envía al otro usuario.');
+            } catch (err) {
+                errorDiv.textContent = `Error: ${err.message}`;
+            }
+        };
+
+        // Botón para establecer oferta y crear respuesta (receptor)
+        setOfferButton.onclick = async () => {
+            try {
+                createPeerConnection();
+                const offer = JSON.parse(offerTextarea.value);
+                await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+                const answer = await peerConnection.createAnswer();
+                await peerConnection.setLocalDescription(answer);
+                answerTextarea.value = JSON.stringify(peerConnection.localDescription);
+                addMessage('Respuesta creada. Copia y envía al iniciador.');
+            } catch (err) {
+                errorDiv.textContent = `Error: ${err.message}`;
+            }
+        };
+
+        // Botón para establecer respuesta (iniciador)
+        setAnswerButton.onclick = async () => {
+            try {
+                const answer = JSON.parse(answerTextarea.value);
+                await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+                addMessage('Respuesta establecida. Esperando conexión...');
+            } catch (err) {
+                errorDiv.textContent = `Error: ${err.message}`;
+            }
+        };
+
+        // Enviar mensaje encriptado
+        sendButton.onclick = async () => {
+            if (dataChannel && dataChannel.readyState === 'open') {
+                const msg = messageInput.value;
+                if (msg) {
+                    const encrypted = await encryptMessage(msg);
+                    dataChannel.send(encrypted);
+                    addMessage(`Tú: ${msg}`);
+                    messageInput.value = '';
+                }
+            } else {
+                addMessage('No conectado aún.');
+            }
+        };
+
+        // Deshabilitar envío inicialmente
+        sendButton.disabled = true;
+    </script>
+</body>
+</html>
