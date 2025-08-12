@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Escala Kardashev - Explorando el Futuro de las Civilizaciones</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #0a0f1d;
+            color: #e0e7ff;
+            line-height: 1.6;
+            background-image: radial-gradient(circle at 10% 20%, rgba(30, 58, 138, 0.15) 0%, rgba(11, 15, 31, 0.9) 90%);
+        }
+        
+        header {
+            background: linear-gradient(90deg, #1e3a8a, #3b82f6);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.2)"/><circle cx="80" cy="30" r="1" fill="rgba(255,255,255,0.2)"/><circle cx="40" cy="70" r="1" fill="rgba(255,255,255,0.2)"/></svg>');
+            background-size: 100% 100%;
+            opacity: 0.3;
+        }
+        
+        header h1 {
+            margin: 0;
+            font-size: 2.8rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+        
+        nav {
+            background-color: #1e3a8a;
+            padding: 1rem;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 1rem;
+            font-weight: bold;
+            transition: color 0.3s;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+        }
+        
+        nav a:hover {
+            color: #dbeafe;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+        
+        .section {
+            background: rgba(30, 41, 59, 0.7);
+            padding: 2.5rem;
+            margin-bottom: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+        }
+        
+        .section h2 {
+            color: #93c5fd;
+            border-bottom: 2px solid #3b82f6;
+            padding-bottom: 0.7rem;
+            margin-top: 0;
+            font-size: 2.2rem;
+        }
+        
+        .section h3 {
+            color: #60a5fa;
+            margin-top: 1.8rem;
+            font-size: 1.6rem;
+        }
+        
+        .section p, .section ul {
+            margin: 1.2rem 0;
+            font-size: 1.1rem;
+        }
+        
+        .section ul {
+            padding-left: 1.5rem;
+        }
+        
+        .section li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .counter {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #93c5fd;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 8px;
+        }
+        
+        .image-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .image-card {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .image-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 25px rgba(59, 130, 246, 0.3);
+        }
+        
+        .image-card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            display: block;
+            border-bottom: 3px solid #3b82f6;
+        }
+        
+        .image-card .caption {
+            padding: 1.2rem;
+            text-align: center;
+            font-style: italic;
+            color: #c7d2fe;
+        }
+        
+        footer {
+            background: linear-gradient(90deg, #1e3a8a, #3b82f6);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            position: relative;
+            margin-top: 3rem;
+        }
+        
+        footer::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #8b5cf6, #3b82f6);
+        }
+        
+        footer p {
+            margin: 0;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            animation: twinkle var(--duration) infinite ease-in-out;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+        
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+            
+            nav a {
+                display: block;
+                margin: 0.8rem 0;
+            }
+            
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .section {
+                padding: 1.5rem;
+            }
+            
+            .image-card {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Fondo de estrellas -->
+    <div class="stars" id="stars"></div>
+    
+    <header>
+        <h1>La Escala Kardashev</h1>
+        <p>Explorando el Futuro de las Civilizaciones</p>
+    </header>
+    
+    <nav>
+        <a href="#introduccion">Introducción</a>
+        <a href="#tipos">Tipos</a>
+        <a href="#extensiones">Extensiones</a>
+        <a href="#implicaciones">Implicaciones</a>
+        <a href="#humanidad">Humanidad</a>
+    </nav>
+    
+    <div class="container">
+        <div class="counter">
+            <p>Visitas a esta página: <span id="visitCount">0</span></p>
+        </div>
+        
+        <div class="section" id="introduccion">
+            <h2>¿Qué es la Escala Kardashev?</h2>
+            <p>La Escala Kardashev es un sistema creado en 1964 por el astrónomo Nikolai Kardashev para clasificar civilizaciones según su capacidad para usar energía. Este método mide el nivel tecnológico de una civilización basándose en cuánta energía puede aprovechar, desde los recursos de un planeta hasta los de una galaxia entera. Fue diseñada para ayudar en la búsqueda de vida extraterrestre (SETI) al identificar señales de civilizaciones avanzadas.</p>
+        </div>
+        
+        <div class="section" id="tipos">
+            <h2>Tipos de Civilizaciones</h2>
+            
+            <h3>Tipo I: Civilización Planetaria</h3>
+            <p>Una civilización de Tipo I utiliza toda la energía disponible en su planeta, como la luz solar que llega a la superficie o recursos como el viento y el calor interno del planeta.</p>
+            <ul>
+                <li><strong>Energía</strong>: Aproximadamente 10^16 vatios.</li>
+                <li><strong>Características</strong>: Control del clima, prevención de desastres naturales, y colonias en otros cuerpos celestes cercanos.</li>
+                <li><strong>Ejemplo</strong>: Paneles solares orbitales o bases en la Luna.</li>
+            </ul>
+            
+            <div class="image-container">
+                <div class="image-card">
+                    <img src="data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='250' viewBox='0 0 400 250'%3E%3Cdefs%3E%3CradialGradient id='a' cx='50%25' cy='50%25' r='50%25' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0%25' stop-color='%23256bb1'/%3E%3Cstop offset='100%25' stop-color='%23124a7d'/%3E%3C/radialGradient%3E%3Cfilter id='b' x='-20%25' y='-20%25' width='140%25' height='140%25'%3E%3CfeGaussianBlur stdDeviation='8' in='SourceGraphic'/%3E%3C/filter%3E%3C/defs%3E%3Crect width='400' height='250' fill='%23000'/%3E%3Ccircle cx='200' cy='125' r='70' fill='url(%23a)'/%3E%3Ccircle cx='220' cy='105' r='10' fill='%23f5f5f5' filter='url(%23b)'/%3E%3Ccircle cx='180' cy='90' r='5' fill='%23f5f5f5' filter='url(%23b)'/%3E%3Ccircle cx='240' cy='150' r='7' fill='%23f5f5f5' filter='url(%23b)'/%3E%3Ccircle cx='160' cy='140' r='6' fill='%23f5f5f5' filter='url(%23b)'/%3E%3Cpath d='M200 195 Q230 170 260 195 T320 180' stroke='%23f5f5f5' stroke-width='2' fill='none'/%3E%3C/svg%3E" alt="Planeta Tierra">
+                    <div class="caption">Tierra - Hogar de una civilización Tipo I</div>
+                </div>
+            </div>
+            
+            <h3>Tipo II: Civilización Estelar</h3>
+            <p>Una civilización de Tipo II captura toda la energía de su estrella, posiblemente mediante una "esfera de Dyson", una estructura que rodea la estrella para recolectar su energía.</p>
+            <ul>
+                <li><strong>Energía</strong>: Alrededor de 10^26 vatios.</li>
+                <li><strong>Características</strong>: Colonización de todo el sistema estelar, terraformación de planetas y manipulación de la estrella.</li>
+                <li><strong>Ejemplo</strong>: Enjambres de satélites recolectando energía estelar.</li>
+            </ul>
+            
+            <div class="image-container">
+                <div class="image-card">
+                    <img src="data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='250' viewBox='0 0 400 250'%3E%3Cdefs%3E%3CradialGradient id='a' cx='50%25' cy='50%25' r='50%25' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0%25' stop-color='%23ffd700'/%3E%3Cstop offset='100%25' stop-color='%23ff8c00'/%3E%3C/radialGradient%3E%3Cfilter id='b' x='-20%25' y='-20%25' width='140%25' height='140%25'%3E%3CfeGaussianBlur stdDeviation='15' in='SourceGraphic'/%3E%3C/filter%3E%3C/defs%3E%3Crect width='400' height='250' fill='%23000'/%3E%3Ccircle cx='200' cy='125' r='40' fill='url(%23a)' filter='url(%23b)'/%3E%3Cg stroke='%23666' stroke-width='1' fill='none'%3E%3Ccircle cx='200' cy='125' r='60'/%3E%3Ccircle cx='200' cy='125' r='90'/%3E%3Ccircle cx='200' cy='125' r='120'/%3E%3C/g%3E%3Ccircle cx='140' cy='125' r='8' fill='%23555'/%3E%3Ccircle cx='180' cy='85' r='6' fill='%23555'/%3E%3Ccircle cx='220' cy='165' r='7' fill='%23555'/%3E%3Ccircle cx='260' cy='105' r='5' fill='%23555'/%3E%3Ccircle cx='240' cy='155' r='4' fill='%23555'/%3E%3Ccircle cx='160' cy='65' r='5' fill='%23555'/%3E%3C/svg%3E" alt="Esfera de Dyson">
+                    <div class="caption">Esfera de Dyson - Megaestructura de una civilización Tipo II</div>
+                </div>
+            </div>
+            
+            <h3>Tipo III: Civilización Galáctica</h3>
+            <p>Una civilización de Tipo III controla la energía de una galaxia completa, incluyendo miles de millones de estrellas y recursos como agujeros negros.</p>
+            <ul>
+                <li><strong>Energía</strong>: Cerca de 10^36 vatios.</li>
+                <li><strong>Características</strong>: Colonización galáctica, megaestructuras y manipulación de fenómenos cósmicos.</li>
+                <li><strong>Ejemplo</strong>: Redes de esferas de Dyson o hábitats galácticos.</li>
+            </ul>
+            
+            <div class="image-container">
+                <div class="image-card">
+                    <img src="data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='250' viewBox='0 0 400 250'%3E%3Cdefs%3E%3ClinearGradient id='a' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23000b30'/%3E%3Cstop offset='100%25' stop-color='%23001a4d'/%3E%3C/linearGradient%3E%3Cfilter id='b'%3E%3CfeGaussianBlur stdDeviation='1.5'/%3E%3C/filter%3E%3C/defs%3E%3Crect width='400' height='250' fill='url(%23a)'/%3E%3Ccircle cx='150' cy='100' r='2' fill='%23fff' filter='url(%23b)'/%3E%3Ccircle cx='250' cy='80' r='1' fill='%23fff' filter='url(%23b)'/%3E%3Ccircle cx='100' cy='150' r='1' fill='%23fff' filter='url(%23b)'/%3E%3Ccircle cx='300' cy='120' r='1' fill='%23fff' filter='url(%23b)'/%3E%3Ccircle cx='180' cy='180' r='1' fill='%23fff' filter='url(%23b)'/%3E%3Ccircle cx='220' cy='50' r='1' fill='%23fff' filter='url(%23b)'/%3E%3Ccircle cx='50' cy='80' r='1' fill='%23fff' filter='url(%23b)'/%3E%3Ccircle cx='350' cy='180' r='1' fill='%23fff' filter='url(%23b)'/%3E%3Cpath d='M200,125 L280,100 L320,150 L260,190 L180,180 Z' fill='none' stroke='%2340e0d0' stroke-width='2' stroke-dasharray='5,3'/%3E%3Cpath d='M200,125 L200,70 L250,50 L300,70 L320,120 L300,170 L250,190 L200,180 Z' fill='none' stroke='%2340e0d0' stroke-width='2'/%3E%3Ccircle cx='200' cy='125' r='5' fill='%2340e0d0'/%3E%3Ccircle cx='280' cy='100' r='3' fill='%2340e0d0'/%3E%3Ccircle cx='320' cy='150' r='3' fill='%2340e0d0'/%3E%3C/svg%3E" alt="Nave interestelar">
+                    <div class="caption">Nave interestelar - Tecnología de una civilización Tipo III</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section" id="extensiones">
+            <h2>Extensiones de la Escala</h2>
+            <h3>Tipo 0: Civilización Preplanetaria</h3>
+            <p>Describe civilizaciones que no controlan todos los recursos de su planeta, como la humanidad actual, que usa combustibles fósiles y energías limitadas.</p>
+            
+            <h3>Tipo IV: Civilización Universal</h3>
+            <p>Una civilización de Tipo IV aprovecharía la energía de todo el universo, incluyendo galaxias y energía oscura.</p>
+            
+            <h3>Tipo V: Civilización Multiversal</h3>
+            <p>Una categoría especulativa que controlaría múltiples universos, manipulando dimensiones o creando universos artificiales.</p>
+            
+            <p><strong>Fórmula de Carl Sagan</strong>: El astrónomo Carl Sagan propuso una escala logarítmica para medir el nivel exacto: <code>K = (log₁₀(P) - 6) / 10</code>, donde <code>P</code> es la energía en vatios. La humanidad está en aproximadamente 0.73.</p>
+        </div>
+        
+        <div class="section" id="implicaciones">
+            <h2>Implicaciones de la Escala</h2>
+            <ul>
+                <li><strong>Tecnológicas</strong>: Cada nivel requiere avances enormes, como megaestructuras o viajes interestelares.</li>
+                <li><strong>Filosóficas</strong>: ¿Qué significa ser avanzado? ¿Es inevitable alcanzar niveles superiores?</li>
+                <li><strong>SETI</strong>: La escala ayuda a buscar señales de civilizaciones avanzadas, como emisiones de energía o estructuras cósmicas.</li>
+            </ul>
+            <p><strong>Críticas</strong>: La escala se centra solo en energía, ignorando eficiencia, ética o límites físicos como la velocidad de la luz.</p>
+        </div>
+        
+        <div class="section" id="humanidad">
+            <h2>La Humanidad y el Camino al Tipo I</h2>
+            <p>Actualmente, la humanidad consume unos 10^13 vatios, lo que nos sitúa en el nivel 0.73. Para alcanzar el Tipo I, necesitamos:</p>
+            <ul>
+                <li>Energías renovables avanzadas, como la fusión nuclear.</li>
+                <li>Cooperación global para gestionar recursos.</li>
+                <li>Colonias espaciales en la Luna o Marte.</li>
+                <li>Superar riesgos como el cambio climático o conflictos.</li>
+            </ul>
+            <p>Expertos como Michio Kaku estiman que podríamos alcanzar el Tipo I en 100-200 años, pero los desafíos son enormes.</p>
+        </div>
+    </div>
+    
+    <footer>
+        <p>Elaborado por el Profesor Ángel Chacín Ávila, Licenciado en Física, Especialista en Ciencias Computacionales, UNES Núcleo Zulia</p>
+    </footer>
+    
+    <script>
+        // Contador de visitas
+        let visitCount = localStorage.getItem('visitCount') || 0;
+        visitCount++;
+        localStorage.setItem('visitCount', visitCount);
+        document.getElementById('visitCount').textContent = visitCount;
+        
+        // Crear fondo de estrellas
+        const starsContainer = document.getElementById('stars');
+        for (let i = 0; i < 150; i++) {
+            const star = document.createElement('div');
+            star.classList.add('star');
+            star.style.left = `${Math.random() * 100}%`;
+            star.style.top = `${Math.random() * 100}%`;
+            star.style.width = `${Math.random() * 3}px`;
+            star.style.height = star.style.width;
+            star.style.setProperty('--duration', `${2 + Math.random() * 3}s`);
+            star.style.animationDelay = `${Math.random() * 5}s`;
+            starsContainer.appendChild(star);
+        }
+        
+        // Efecto de desplazamiento suave para los enlaces
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                window.scrollTo({
+                    top: targetElement.offsetTop - 60,
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
