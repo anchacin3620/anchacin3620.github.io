@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Física de Películas Delgadas - Prof. Ángel Chacín Ávila</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --transition: all 0.3s ease;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background-attachment: fixed;
+        }
+
+        header {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            font-size: 2.5rem;
+            color: var(--light);
+        }
+
+        .logo-text {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            padding: 8px 15px;
+            border-radius: var(--radius);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        nav a:hover, nav a.active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 3px;
+            background: var(--light);
+            transition: var(--transition);
+            transform: translateX(-50%);
+        }
+
+        nav a:hover::after {
+            width: 80%;
+        }
+
+        .hero {
+            background: linear-gradient(rgba(44, 62, 80, 0.8), rgba(44, 62, 80, 0.9)), url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3') no-repeat center center/cover;
+            color: white;
+            text-align: center;
+            padding: 5rem 1rem;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero p {
+            font-size: 1.4rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            margin: 0 10px;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 20px;
+        }
+
+        .section-title {
+            font-family: 'Montserrat', sans-serif;
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+            font-size: 2.5rem;
+            color: var(--primary);
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--accent);
+            margin: 15px auto 0;
+            border-radius: 2px;
+        }
+
+        .content-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 2.5rem;
+            margin-bottom: 2.5rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .content-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-title {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--secondary);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-title i {
+            color: var(--accent);
+        }
+
+        .content-card h3 {
+            color: var(--primary);
+            margin: 1.5rem 0 1rem;
+            font-size: 1.4rem;
+            border-left: 4px solid var(--secondary);
+            padding-left: 12px;
+        }
+
+        .content-card p {
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        .content-card ul {
+            padding-left: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .content-card li {
+            margin-bottom: 0.8rem;
+            position: relative;
+        }
+
+        .content-card li::before {
+            content: '•';
+            color: var(--accent);
+            font-weight: bold;
+            position: absolute;
+            left: -15px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 3rem 0;
+        }
+
+        .process-card {
+            background: white;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .process-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .process-header {
+            background: var(--secondary);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.4rem;
+        }
+
+        .process-body {
+            padding: 1.5rem;
+        }
+
+        .simulation-chart {
+            background: white;
+            border-radius: var(--radius);
+            padding: 2rem;
+            margin: 3rem 0;
+            box-shadow: var(--shadow);
+        }
+
+        .chart-container {
+            height: 400px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .applications-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .app-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 1.8rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .app-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .app-icon {
+            font-size: 3rem;
+            color: var(--secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .app-card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+            gap: 10px;
+        }
+
+        .tab {
+            padding: 12px 25px;
+            background: #e0e7ff;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .tab.active, .tab:hover {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .search-box {
+            display: flex;
+            margin-bottom: 2rem;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 2px solid #ddd;
+            border-radius: 50px 0 0 50px;
+            font-size: 1rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .search-box input:focus {
+            border-color: var(--secondary);
+        }
+
+        .search-box button {
+            padding: 0 25px;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 0 50px 50px 0;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .search-box button:hover {
+            background: #2980b9;
+        }
+
+        .video-container {
+            margin: 3rem 0;
+            text-align: center;
+        }
+
+        .video-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: var(--radius);
+            margin-top: 1.5rem;
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .references {
+            background: white;
+            border-radius: var(--radius);
+            padding: 2.5rem;
+            margin: 3rem 0;
+            box-shadow: var(--shadow);
+        }
+
+        .reference-list {
+            columns: 2;
+            column-gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .reference-list li {
+            margin-bottom: 0.8rem;
+            break-inside: avoid;
+        }
+
+        .counter-card {
+            background: var(--primary);
+            color: white;
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            text-align: center;
+            max-width: 300px;
+            margin: 0 auto 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .counter-number {
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 10px 0;
+            color: var(--accent);
+        }
+
+        .counter-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .footer {
+            background: linear-gradient(to right, var(--primary), var(--dark));
+            color: white;
+            padding: 4rem 0 2rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .footer p {
+            font-size: 1.2rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: #ddd;
+            text-decoration: none;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer-link:hover {
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .credits {
+            margin-top: 3rem;
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+
+        .credits strong {
+            color: var(--accent);
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .reference-list {
+                columns: 1;
+            }
+            
+            .btn {
+                display: block;
+                margin: 10px auto;
+                width: 80%;
+            }
+        }
+
+        /* Animación de partículas para fondo científico */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(52, 152, 219, 0.3);
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animación de partículas -->
+    <div class="particles" id="particles"></div>
+
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <i class="fas fa-atom logo-icon"></i>
+                <div class="logo-text">Física de Películas Delgadas</div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#fisica" class="active">Física</a></li>
+                    <li><a href="#fabricacion">Fabricación</a></li>
+                    <li><a href="#simulacion">Simulación</a></li>
+                    <li><a href="#aplicaciones">Aplicaciones</a></li>
+                    <li><a href="#referencias">Referencias</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Física de Películas Delgadas</h1>
+            <p>Explorando el fascinante mundo de las nanoestructuras y sus aplicaciones tecnológicas</p>
+            <div class="hero-buttons">
+                <a href="#fisica" class="btn">Comenzar Exploración</a>
+                <a href="#video" class="btn btn-secondary">
+                    <i class="fab fa-youtube"></i> Ver Video Explicativo
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+        <!-- Contador de visitas -->
+        <div class="counter-card">
+            <div class="counter-label">Visitas a esta página</div>
+            <div class="counter-number" id="visit-counter">0</div>
+            <div class="counter-label">Conocimiento compartido</div>
+        </div>
+
+        <!-- Sección de Física -->
+        <section id="fisica">
+            <h2 class="section-title">Física de Películas Delgadas</h2>
+            
+            <div class="content-card">
+                <h2 class="card-title"><i class="fas fa-microscope"></i> Fundamentos Físicos</h2>
+                <p>Las películas delgadas son capas de material con espesores desde unos pocos nanómetros hasta varios micrómetros, cuyas propiedades difieren significativamente de las del material a granel debido a efectos de tamaño, interfaces y microestructura.</p>
+                
+                <h3>Fenómenos Físicos Clave</h3>
+                <ul>
+                    <li><strong>Efectos de Tamaño:</strong> Confinamiento cuántico en semiconductores y efecto de capa límite en metales</li>
+                    <li><strong>Tensión Superficial y Energía de Interfase:</strong> Gobernadas por la ecuación de Young-Laplace</li>
+                    <li><strong>Mecanismos de Crecimiento:</strong> Modelos de Volmer-Weber, Frank-van der Merwe, Stranski-Krastanov</li>
+                    <li><strong>Difusión Superficial y de Volumen:</strong> Controlan nucleación, coalescencia y rugosidad</li>
+                    <li><strong>Estrés Intrínseco:</strong> Originado por diferencias térmicas, defectos puntuales o desajustes cristalográficos</li>
+                </ul>
+                
+                <h3>Propiedades Críticas</h3>
+                <ul>
+                    <li><strong>Ópticas:</strong> Interferencia (Ecuaciones de Fresnel) y absorción</li>
+                    <li><strong>Eléctricas:</strong> Efecto túnel, magnetorresistencia gigante (GMR)</li>
+                    <li><strong>Mecánicas:</strong> Dureza mejorada (efecto Hall-Petch)</li>
+                    <li><strong>Magnéticas:</strong> Anisotropía magnética inducida por interfase</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Sección de Fabricación -->
+        <section id="fabricacion">
+            <h2 class="section-title">Procesos de Fabricación</h2>
+            
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="Buscar técnicas de fabricación...">
+                <button id="search-btn"><i class="fas fa-search"></i></button>
+            </div>
+            
+            <div class="grid">
+                <div class="process-card">
+                    <div class="process-header">Deposición Física (PVD)</div>
+                    <div class="process-body">
+                        <h3>Evaporación Térmica</h3>
+                        <p>Material fuente calentado (resistivo, haz de electrones) se vaporiza en vacío (10⁻⁵ a 10⁻⁷ Torr). Alta pureza, bajo daño por energía.</p>
+                        
+                        <h3>Pulverización Catódica</h3>
+                        <p>Plasma de Ar⁺ impacta un blanco, liberando átomos que se depositan. Tipos: DC, RF, magnetrón.</p>
+                        
+                        <h3>Deposición por Láser Pulsado</h3>
+                        <p>Láser pulsado vaporiza un blanco en vacío o atmósfera reactiva. Ideal para materiales complejos.</p>
+                    </div>
+                </div>
+                
+                <div class="process-card">
+                    <div class="process-header">Deposición Química (CVD)</div>
+                    <div class="process-body">
+                        <h3>CVD Convencional</h3>
+                        <p>Precursores gaseosos reaccionan en superficie caliente (500-1200°C). Ejemplo: SiH₄ → Si + 2H₂ para silicio.</p>
+                        
+                        <h3>CVD de Baja Presión (LPCVD)</h3>
+                        <p>Permite mejor uniformidad y control de composición a menores presiones.</p>
+                        
+                        <h3>CVD Mejorado con Plasma (PECVD)</h3>
+                        <p>Permite bajas temperaturas usando plasma para activar reacciones.</p>
+                        
+                        <h3>CVD de Capa Atómica (ALD)</h3>
+                        <p>Depósito capa por capa mediante pulsos secuenciales de precursores.</p>
+                    </div>
+                </div>
+                
+                <div class="process-card">
+                    <div class="process-header">Otras Técnicas</div>
+                    <div class="process-body">
+                        <h3>Sol-Gel</h3>
+                        <p>Precursores líquidos hidrolizados formando un gel que se calcina. Usado en óptica.</p>
+                        
+                        <h3>Electrodeposición</h3>
+                        <p>Deposición iónica en sustrato conductor mediante potencial eléctrico. Ideal para metales.</p>
+                        
+                        <h3>Deposición por Haz Molecular</h3>
+                        <p>Permite crecimiento epitaxial de alta calidad para materiales semiconductores.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección de Video -->
+        <section id="video">
+            <h2 class="section-title">Video Explicativo</h2>
+            
+            <div class="video-container">
+                <div class="video-card">
+                    <h2 class="card-title"><i class="fab fa-youtube"></i> Introducción a las Películas Delgadas</h2>
+                    <p>En este video encontrarás una explicación detallada sobre los fundamentos y aplicaciones de las películas delgadas en la tecnología moderna.</p>
+                    
+                    <div class="video-wrapper">
+                        <iframe src="https://www.youtube.com/embed/MMHTSQG0Lqs?si=Su8bexf5k73c4qnj" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    </div>
+                    
+                    <p style="margin-top: 1.5rem;">Este recurso educativo complementa los conceptos teóricos con demostraciones prácticas de los procesos de fabricación.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección de Simulación -->
+        <section id="simulacion">
+            <h2 class="section-title">Métodos Numéricos de Simulación</h2>
+            
+            <div class="tabs">
+                <div class="tab active" data-tab="continuos">Modelos Continuos</div>
+                <div class="tab" data-tab="discretos">Modelos Discretos</div>
+                <div class="tab" data-tab="software">Software</div>
+            </div>
+            
+            <div class="tab-content active" id="continuos">
+                <div class="content-card">
+                    <h3>Ecuación de Evolución de Superficie</h3>
+                    <p>Basada en la teoría de Mullins: ∂h/∂t = -M ∇² γ κ + términos de ruido. Simula rugosidad y patrones como inestabilidades de Asaro-Tiller-Grinfeld.</p>
+                    
+                    <h3>Método de Elementos Finitos (FEM)</h3>
+                    <p>Utilizado para simular tensiones mecánicas y deformaciones en multicapas.</p>
+                    
+                    <h3>Modelos de Difusión-Reacción</h3>
+                    <p>Para simular procesos de deposición química y crecimiento de capas.</p>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="discretos">
+                <div class="content-card">
+                    <h3>Modelos de Monte Carlo Cinético (KMC)</h3>
+                    <p>Simula eventos estocásticos (difusión, nucleación) con tasas dependientes de energía. Eficiente para escalas de tiempo largas.</p>
+                    
+                    <h3>Dinámica Molecular (MD)</h3>
+                    <p>Resuelve ecuaciones de Newton para átomos individuales. Limitado a escalas pequeñas (&lt;100 nm) y tiempos cortos (ns).</p>
+                    
+                    <h3>Autómatas Celulares (CA)</h3>
+                    <p>Reglas locales para crecimiento; útil para microestructuras columnares.</p>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="software">
+                <div class="content-card">
+                    <h3>SRIM/TRIM</h3>
+                    <p>Simula interacción iones-materia (para sputtering).</p>
+                    
+                    <h3>COMSOL Multiphysics</h3>
+                    <p>Modela transporte de masa, calor y reacciones en CVD.</p>
+                    
+                    <h3>VASP, LAMMPS</h3>
+                    <p>Para simulación atomística (ab initio o MD clásica).</p>
+                    
+                    <h3>SENTAURUS</h3>
+                    <p>Simulación de procesos de fabricación de dispositivos semiconductores.</p>
+                </div>
+            </div>
+            
+            <div class="simulation-chart">
+                <h3 class="card-title"><i class="fas fa-chart-line"></i> Comparación de Métodos de Simulación</h3>
+                <div class="chart-container">
+                    <canvas id="simulationChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección de Aplicaciones -->
+        <section id="aplicaciones">
+            <h2 class="section-title">Aplicaciones de Películas Delgadas</h2>
+            
+            <div class="applications-grid">
+                <div class="app-card">
+                    <i class="fas fa-microchip app-icon"></i>
+                    <h3>Microelectrónica</h3>
+                    <p>Dieléctricos en transistores, barreras de difusión en interconexiones, memorias MRAM y PCRAM.</p>
+                </div>
+                
+                <div class="app-card">
+                    <i class="fas fa-sun app-icon"></i>
+                    <h3>Energía</h3>
+                    <p>Celdas solares de película delgada (Si amorfo, CIGS, perovskitas), electrodos en baterías.</p>
+                </div>
+                
+                <div class="app-card">
+                    <i class="fas fa-eye app-icon"></i>
+                    <h3>Óptica y Fotónica</h3>
+                    <p>Recubrimientos antirreflectantes, espejos multicapa, fibras ópticas funcionales.</p>
+                </div>
+                
+                <div class="app-card">
+                    <i class="fas fa-sensor app-icon"></i>
+                    <h3>Sensores</h3>
+                    <p>Sensores químicos (óxidos metálicos para detección de gases), sensores biológicos.</p>
+                </div>
+                
+                <div class="app-card">
+                    <i class="fas fa-hard-hat app-icon"></i>
+                    <h3>Recubrimientos</h3>
+                    <p>Recubrimientos duros (TiN, Al₂O₃), autolimpiantes (TiO₂), biocompatibles.</p>
+                </div>
+                
+                <div class="app-card">
+                    <i class="fas fa-cogs app-icon"></i>
+                    <h3>MEMS/NEMS</h3>
+                    <p>Películas piezoeléctricas (ZnO, AlN) para actuadores y sensores en microsistemas.</p>
+                </div>
+            </div>
+            
+            <div class="content-card">
+                <h2 class="card-title"><i class="fas fa-tasks"></i> Desafíos Actuales</h2>
+                <ul>
+                    <li><strong>Control de Defectos:</strong> Vacancias, dislocaciones e impurezas que afectan rendimiento</li>
+                    <li><strong>Escalabilidad:</strong> Deposición homogénea en grandes áreas (ej: vidrio arquitectónico)</li>
+                    <li><strong>Interfaces:</strong> Optimización de adhesión y reducción de difusión interfacial</li>
+                    <li><strong>Materiales 2D:</strong> Grafeno, MoS₂ con propiedades únicas para electrónica flexible</li>
+                    <li><strong>Integración de Materiales:</strong> Compatibilidad entre diferentes materiales en dispositivos complejos</li>
+                    <li><strong>Caracterización:</strong> Desarrollo de técnicas avanzadas para análisis in situ</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Sección de Referencias -->
+        <section id="referencias">
+            <h2 class="section-title">Referencias Clave</h2>
+            
+            <div class="references">
+                <h2 class="card-title"><i class="fas fa-book"></i> Bibliografía Especializada</h2>
+                
+                <ul class="reference-list">
+                    <li><strong>Ohring, M.</strong> (2001). <em>Materials Science of Thin Films</em>. Academic Press.</li>
+                    <li><strong>Smith, D. L.</strong> (1995). <em>Thin-Film Deposition: Principles and Practice</em>. McGraw-Hill.</li>
+                    <li><strong>Wasa, K., Kitabatake, M., & Adachi, H.</strong> (2004). <em>Thin Film Materials Technology</em>. William Andrew.</li>
+                    <li><strong>Mahan, J. E.</strong> (2000). <em>Physical Vapor Deposition of Thin Films</em>. Wiley.</li>
+                    <li><strong>Pierson, H. O.</strong> (1999). <em>Handbook of Chemical Vapor Deposition</em>. William Andrew.</li>
+                    <li><strong>Chopra, K. L., & Kaur, I.</strong> (1983). <em>Thin Film Device Applications</em>. Springer.</li>
+                    <li><strong>Pulker, H. K.</strong> (1999). <em>Coatings on Glass</em>. Elsevier.</li>
+                    <li><strong>Mattox, D. M.</strong> (2010). <em>Handbook of Physical Vapor Deposition Processing</em>. Elsevier.</li>
+                    <li><strong>Bunshah, R. F.</strong> (2001). <em>Handbook of Deposition Technologies for Films and Coatings</em>. Noyes Publications.</li>
+                    <li><strong>Frey, H., & Khan, H. R.</strong> (2003). <em>Handbook of Thin-Film Technology</em>. Springer.</li>
+                    <li><strong>Pagni, P. J., & Mattox, D. M.</strong> (2012). <em>Introduction to Surface Engineering</em>. Cambridge University Press.</li>
+                    <li><strong>Feldman, L. C., & Mayer, J. W.</strong> (1986). <em>Fundamentals of Surface and Thin Film Analysis</em>. North-Holland.</li>
+                </ul>
+                
+                <h3 style="margin-top: 2rem;">Revistas Científicas</h3>
+                <ul class="reference-list">
+                    <li><strong>Thin Solid Films</strong> - Elsevier</li>
+                    <li><strong>Journal of Vacuum Science & Technology</strong> - AVS</li>
+                    <li><strong>Surface and Coatings Technology</strong> - Elsevier</li>
+                    <li><strong>Applied Surface Science</strong> - Elsevier</li>
+                    <li><strong>Journal of Applied Physics</strong> - AIP Publishing</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="logo">
+                <i class="fas fa-flask logo-icon"></i>
+                <div class="logo-text">Ciencia de Materiales</div>
+            </div>
+            
+            <div class="footer-links">
+                <a href="#" class="footer-link"><i class="fas fa-book"></i> Referencias</a>
+                <a href="#" class="footer-link"><i class="fas fa-graduation-cap"></i> Cursos</a>
+                <a href="#" class="footer-link"><i class="fas fa-newspaper"></i> Publicaciones</a>
+                <a href="mailto:lordchacinavila@gmail.com" class="footer-link"><i class="fas fa-envelope"></i> Contacto</a>
+            </div>
+            
+            <div class="credits">
+                <p><strong>Elaborado por el Profesor Ángel Chacín Ávila</strong></p>
+                <p>Licenciado en Física, Especialista en Ciencias Computacionales</p>
+                <p>UNES Núcleo Zulia</p>
+                <p>Email: <a href="mailto:lordchacinavila@gmail.com" style="color: var(--accent);">lordchacinavila@gmail.com</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Crear animación de partículas
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Tamaño aleatorio
+                const size = Math.random() * 20 + 5;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Posición inicial aleatoria
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.bottom = `-${size}px`;
+                
+                // Retraso de animación
+                particle.style.animationDelay = `${Math.random() * 15}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Sistema de pestañas
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remover clase activa de todas las pestañas
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                // Añadir clase activa a la pestaña clickeada
+                tab.classList.add('active');
+                
+                // Ocultar todos los contenidos
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                // Mostrar el contenido correspondiente
+                const tabId = tab.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // Gráfico de comparación de métodos de simulación
+        function createSimulationChart() {
+            const ctx = document.getElementById('simulationChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Escala Temporal', 'Escala Espacial', 'Precisión', 'Costo Computacional', 'Complejidad'],
+                    datasets: [
+                        {
+                            label: 'Dinámica Molecular',
+                            data: [2, 10, 9, 10, 9],
+                            fill: true,
+                            backgroundColor: 'rgba(52, 152, 219, 0.2)',
+                            borderColor: 'rgb(52, 152, 219)',
+                            pointBackgroundColor: 'rgb(52, 152, 219)'
+                        },
+                        {
+                            label: 'Monte Carlo Cinético',
+                            data: [8, 7, 7, 6, 7],
+                            fill: true,
+                            backgroundColor: 'rgba(46, 204, 113, 0.2)',
+                            borderColor: 'rgb(46, 204, 113)',
+                            pointBackgroundColor: 'rgb(46, 204, 113)'
+                        },
+                        {
+                            label: 'Modelos Continuos',
+                            data: [9, 8, 6, 4, 5],
+                            fill: true,
+                            backgroundColor: 'rgba(231, 76, 60, 0.2)',
+                            borderColor: 'rgb(231, 76, 60)',
+                            pointBackgroundColor: 'rgb(231, 76, 60)'
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        r: {
+                            angleLines: {
+                                display: true
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 10
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Comparación de Métodos de Simulación (1-10)'
+                        }
+                    },
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+        
+        // Navegación suave
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Actualizar enlace activo
+                document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+                this.classList.add('active');
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                window.scrollTo({
+                    top: targetElement.offsetTop - 80,
+                    behavior: 'smooth'
+                });
+            });
+        });
+        
+        // Simulación de búsqueda
+        document.getElementById('search-btn').addEventListener('click', function() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            if (searchTerm) {
+                alert(`Buscando técnicas relacionadas con: "${searchTerm}". Esta es una simulación de búsqueda.`);
+            }
+        });
+        
+        // Contador de visitas (simulado con localStorage)
+        function updateVisitCounter() {
+            let visits = localStorage.getItem('pageVisits');
+            visits = visits ? parseInt(visits) + 1 : 1;
+            localStorage.setItem('pageVisits', visits);
+            document.getElementById('visit-counter').textContent = visits;
+        }
+        
+        // Inicializar elementos cuando se carga la página
+        window.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            createSimulationChart();
+            updateVisitCounter();
+        });
+    </script>
+</body>
+</html>
