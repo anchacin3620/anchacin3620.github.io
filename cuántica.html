@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ecuación de Schrödinger</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        header {
+            background: linear-gradient(to right, #2c3e50, #3498db);
+            color: white;
+            text-align: center;
+            padding: 2em;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        nav {
+            background-color: #34495e;
+            padding: 1em;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 1em;
+            font-weight: bold;
+        }
+        nav a:hover {
+            color: #3498db;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2em;
+        }
+        section {
+            background: white;
+            padding: 2em;
+            margin-bottom: 2em;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 0.5em;
+        }
+        pre {
+            background-color: #f8f8f8;
+            padding: 1em;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+        }
+        #clock {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: #3498db;
+            color: white;
+            padding: 0.5em 1em;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        canvas {
+            display: block;
+            margin: 1em auto;
+            border: 1px solid #ccc;
+        }
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 1em;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+        .math {
+            font-style: italic;
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Ecuación de Schrödinger: Fundamentos y Aplicaciones</h1>
+        <div id="clock"></div>
+    </header>
+    <nav>
+        <a href="#introduccion">Introducción</a>
+        <a href="#funcion-onda">Función de Onda</a>
+        <a href="#formas">Formas de la Ecuación</a>
+        <a href="#tipos">Tipos</a>
+        <a href="#metodos">Métodos de Resolución</a>
+        <a href="#calculo">Cálculo Numérico</a>
+        <a href="#monte-carlo">Método de Monte Carlo</a>
+        <a href="#ejemplos">Ejemplos de Programación</a>
+        <a href="#aplicaciones">Aplicaciones</a>
+    </nav>
+    <div class="container">
+        <section id="introduccion">
+            <h2>1. Introducción</h2>
+            <p>La ecuación de Schrödinger es un pilar fundamental de la mecánica cuántica, propuesta por Erwin Schrödinger en 1925. Describe cómo evoluciona el estado cuántico de un sistema físico en el tiempo, análoga a las ecuaciones de Newton en la mecánica clásica, pero para sistemas a escalas atómicas y subatómicas. Se inspira en la dualidad onda-partícula de Louis de Broglie y combina conceptos de energía clásica con el comportamiento ondulatorio de las partículas.</p>
+        </section>
+
+        <section id="funcion-onda">
+            <h2>2. La Función de Onda</h2>
+            <p>La ecuación describe la evolución de la <span class="math">función de onda</span> \(\psi(\mathbf{r}, t)\), que depende de las coordenadas espaciales \(\mathbf{r} = (x, y, z)\) y el tiempo \(t\). Según la interpretación de Copenhague, \(|\psi(\mathbf{r}, t)|^2\) representa la densidad de probabilidad de encontrar una partícula en un volumen infinitesimal \(dV\). Para que sea válida, la función debe estar normalizada:</p>
+            <p class="math">\[\int |\psi(\mathbf{r}, t)|^2 \, dV = 1\]</p>
+        </section>
+
+        <section id="formas">
+            <h2>3. Formas de la Ecuación de Schrödinger</h2>
+            <h3>3.1. Dependiente del Tiempo</h3>
+            <p>Describe la evolución temporal de \(\psi(\mathbf{r}, t)\):</p>
+            <p class="math">\[i \hbar \frac{\partial \psi(\mathbf{r}, t)}{\partial t} = -\frac{\hbar^2}{2m} \nabla^2 \psi(\mathbf{r}, t) + V(\mathbf{r}, t) \psi(\mathbf{r}, t)\]</p>
+            <p>Donde \(\hbar\) es la constante de Planck reducida, \(m\) la masa, \(\nabla^2\) el laplaciano, y \(V(\mathbf{r}, t)\) el potencial. El hamiltoniano es \(\hat{H} = -\frac{\hbar^2}{2m} \nabla^2 + V(\mathbf{r}, t)\).</p>
+
+            <h3>3.2. Independiente del Tiempo</h3>
+            <p>Para sistemas estacionarios (\(V(\mathbf{r})\) no depende del tiempo), se usa:</p>
+            <p class="math">\[-\frac{\hbar^2}{2m} \nabla^2 \phi(\mathbf{r}) + V(\mathbf{r}) \phi(\mathbf{r}) = E \phi(\mathbf{r})\]</p>
+            <p>Donde \(E\) es la energía y \(\phi(\mathbf{r})\) la función de onda espacial.</p>
+        </section>
+
+        <section id="tipos">
+            <h2>4. Tipos de Ecuaciones</h2>
+            <ul>
+                <li><b>Partícula Libre (\(V = 0\))</b>: Soluciones de ondas planas \(\phi(\mathbf{r}) = A e^{i \mathbf{k} \cdot \mathbf{r}}\).</li>
+                <li><b>Pozo Infinito</b>: Energías cuantizadas \(E_n = \frac{n^2 \pi^2 \hbar^2}{2m L^2}\).</li>
+                <li><b>Átomo de Hidrógeno</b>: Potencial coulombiano, energías \(E_n = -\frac{13.6 \, \text{eV}}{n^2}\).</li>
+                <li><b>Relativista</b>: Ecuaciones de Klein-Gordon y Dirac para partículas de alta energía.</li>
+            </ul>
+        </section>
+
+        <section id="metodos">
+            <h2>5. Métodos de Resolución</h2>
+            <p>Incluyen separación de variables, teoría de perturbaciones, método variacional y métodos numéricos como diferencias finitas y Monte Carlo cuántico.</p>
+        </section>
+
+        <section id="calculo">
+            <h2>6. Cálculo Numérico</h2>
+            <p>Un método común es el de <b>diferencias finitas</b>, que discretiza el espacio y convierte la ecuación en un sistema matricial. Para la ecuación dependiente del tiempo, se usa el método de Crank-Nicolson.</p>
+            <h3>Simulación Gráfica: Función de Onda en un Pozo</h3>
+            <canvas id="waveFunction" width="600" height="200"></canvas>
+            <p>La gráfica muestra \(|\phi_n(x)|^2\) para un pozo infinito unidimensional, con \(n=1, 2, 3\).</p>
+        </section>
+
+        <section id="monte-carlo">
+            <h2>7. Método de Monte Carlo Cuántico</h2>
+            <p>El Método de Monte Carlo Cuántico (QMC) es una técnica numérica para resolver la ecuación de Schrödinger en sistemas complejos, como átomos con muchos electrones o moléculas. Utiliza muestreo aleatorio para estimar propiedades del sistema, como la energía del estado fundamental. Existen dos enfoques principales:</p>
+            <ul>
+                <li><b>Monte Carlo Variacional (VMC)</b>: Se propone una función de onda de prueba con parámetros ajustables y se calcula la energía promedio mediante muestreo aleatorio de configuraciones electrónicas. La energía se minimiza ajustando los parámetros.</li>
+                <li><b>Monte Carlo de Difusión (DMC)</b>: Simula la evolución de la función de onda como un proceso de difusión, proyectando el estado fundamental al propagar partículas imaginarias en el espacio de configuraciones.</li>
+            </ul>
+            <p><b>Ventajas</b>: Puede manejar sistemas con muchos grados de libertad, donde los métodos analíticos fallan. <b>Limitaciones</b>: Es computacionalmente intensivo y puede sufrir problemas de convergencia en sistemas con nodos complejos.</p>
+            <p><b>Ejemplo de Aplicación</b>: Cálculo de la energía del estado fundamental del átomo de helio o de moléculas pequeñas, donde las interacciones electrón-electrón son significativas.</p>
+            <p>El algoritmo básico de VMC implica:</p>
+            <ol>
+                <li>Definir una función de onda de prueba \(\psi_T(\mathbf{r}, \alpha)\), donde \(\alpha\) son parámetros variacionales.</li>
+                <li>Generar configuraciones aleatorias de partículas usando un algoritmo como Metropolis.</li>
+                <li>Calcular la energía local \(E_L = \frac{\hat{H} \psi_T}{\psi_T}\) para cada configuración.</li>
+                <li>Promediar \(E_L\) sobre muchas configuraciones para estimar la energía.</li>
+                <li>Ajustar \(\alpha\) para minimizar la energía.</li>
+            </ol>
+        </section>
+
+        <section id="ejemplos">
+            <h2>8. Ejemplos de Programación</h2>
+            <h3>8.1. Fortran: Resolución de un Pozo Infinito (Diferencias Finitas)</h3>
+            <pre><code>
+program schrodinger_1d
+  implicit none
+  integer :: i, n
+  real(8) :: x, dx, hbar, m, L, pi
+  real(8), allocatable :: psi(:), V(:), H(:,:), E(:)
+  n = 1000
+  L = 1.0d0
+  dx = L / (n - 1)
+  hbar = 1.0545718d-34
+  m = 9.1093837d-31
+  pi = acos(-1.0d0)
+  allocate(psi(n), V(n), H(n,n), E(n))
+  ! Potencial (pozo infinito)
+  V = 0.0d0
+  ! Construir matriz hamiltoniana
+  H = 0.0d0
+  do i = 1, n
+    H(i,i) = -hbar**2 / (2.0d0 * m * dx**2) * (-2.0d0) + V(i)
+    if (i < n) H(i,i+1) = -hbar**2 / (2.0d0 * m * dx**2)
+    if (i > 1) H(i,i-1) = -hbar**2 / (2.0d0 * m * dx**2)
+  end do
+  ! Aquí se diagonalizaría H para obtener E y psi (usando LAPACK)
+  print *, "Energías calculadas (primeros niveles):"
+  do i = 1, 3
+    E(i) = (i**2 * pi**2 * hbar**2) / (2.0d0 * m * L**2)
+    print *, "n =", i, "E =", E(i)
+  end do
+  deallocate(psi, V, H, E)
+end program schrodinger_1d
+            </code></pre>
+
+            <h3>8.2. Python: Propagación de una Onda en el Tiempo</h3>
+            <pre><code>
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.sparse import diags
+from scipy.linalg import expm
+
+# Parámetros
+N = 1000
+L = 1.0
+dx = L / (N - 1)
+dt = 0.0001
+hbar = 1.0545718e-34
+m = 9.1093837e-31
+x = np.linspace(0, L, N)
+
+# Hamiltoniano (pozo infinito, V=0)
+diagonals = [[-2] * N, [1] * (N-1), [1] * (N-1)]
+H = -hbar**2 / (2 * m * dx**2) * diags(diagonals, [0, 1, -1]).toarray()
+
+# Función de onda inicial (gaussiana)
+psi = np.exp(-(x - L/2)**2 / (2 * 0.1**2)) * np.exp(1j * 10 * x)
+psi[0] = psi[-1] = 0  # Condiciones de contorno
+
+# Propagación en el tiempo
+U = expm(-1j * H * dt / hbar)  # Operador de evolución
+for t in range(100):
+    psi = U @ psi
+    if t % 20 == 0:
+        plt.plot(x, np.abs(psi)**2, label=f"t={t*dt:.4f}")
+plt.xlabel("x")
+plt.ylabel("|ψ(x)|^2")
+plt.legend()
+plt.show()
+            </code></pre>
+        </section>
+
+        <section id="aplicaciones">
+            <h2>9. Aplicaciones</h2>
+            <p>La ecuación de Schrödinger se usa en química cuántica, física del estado sólido, óptica cuántica, nanotecnología y física nuclear, entre otros.</p>
+        </section>
+    </div>
+
+    <footer>
+        <p>Elaborado por el Profesor Ángel Chacín Ávila, Licenciado en Física, Especialista en Ciencias Computacionales, UNES Núcleo Zulia</p>
+    </footer>
+
+    <script>
+        // Reloj en tiempo real
+        function updateClock() {
+            const now = new Date();
+            const options = { timeZone: 'America/Chicago', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+            document.getElementById('clock').textContent = now.toLocaleTimeString('en-US', options);
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Simulación gráfica de función de onda
+        const canvas = document.getElementById('waveFunction');
+        const ctx = canvas.getContext('2d');
+        const width = canvas.width;
+        const height = canvas.height;
+
+        function plotWaveFunction(n, color) {
+            ctx.beginPath();
+            ctx.strokeStyle = color;
+            const L = 1.0;
+            const dx = L / width;
+            for (let x = 0; x < width; x++) {
+                const pos = x * dx;
+                const psi = Math.sqrt(2/L) * Math.sin(n * Math.PI * pos / L);
+                const y = height / 2 - 50 * psi * psi;
+                if (x === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            }
+            ctx.stroke();
+        }
+
+        ctx.clearRect(0, 0, width, height);
+        plotWaveFunction(1, 'blue');
+        plotWaveFunction(2, 'red');
+        plotWaveFunction(3, 'green');
+    </script>
+</body>
+</html>
