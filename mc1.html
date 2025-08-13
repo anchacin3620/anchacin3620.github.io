@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ecuación de Schrödinger</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #f4f4f9;
+            --dark: #1a252f;
+            --gray: #7f8c8d;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.8;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+            color: #333;
+            background-attachment: fixed;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            text-align: center;
+            padding: 2.5em 0;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 20%),
+                radial-gradient(circle at 90% 80%, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 20%);
+        }
+        
+        header h1 {
+            margin: 0;
+            font-size: 2.8em;
+            font-weight: 700;
+            position: relative;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            letter-spacing: -0.5px;
+        }
+        
+        nav {
+            background-color: var(--dark);
+            padding: 1.2em;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.5em;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 0.8em;
+            font-weight: 500;
+            padding: 0.5em 1em;
+            border-radius: 4px;
+            transition: var(--transition);
+            font-size: 1.05em;
+        }
+        
+        nav a:hover {
+            background-color: rgba(255,255,255,0.15);
+            transform: translateY(-2px);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2em auto;
+            padding: 0 2em;
+        }
+        
+        section {
+            background: white;
+            padding: 2.5em;
+            margin-bottom: 2.5em;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        section:hover {
+            box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+            transform: translateY(-5px);
+        }
+        
+        section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--secondary), var(--accent));
+        }
+        
+        h2 {
+            color: var(--primary);
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 0.7em;
+            margin-top: 0;
+            font-size: 1.8em;
+            position: relative;
+            padding-left: 1.2rem;
+        }
+        
+        h2::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -2px;
+            width: 40px;
+            height: 4px;
+            background-color: var(--accent);
+            border-radius: 2px;
+        }
+        
+        h3 {
+            color: var(--secondary);
+            font-size: 1.4em;
+            margin-top: 1.8em;
+            position: relative;
+            padding-left: 15px;
+        }
+        
+        h3::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+        }
+        
+        p {
+            margin: 1.2em 0;
+            font-size: 1.1em;
+            color: #444;
+            line-height: 1.8;
+        }
+        
+        ul, ol {
+            margin: 1.5em 0;
+            padding-left: 1.5em;
+        }
+        
+        li {
+            margin-bottom: 0.8em;
+            position: relative;
+            padding-left: 1.5em;
+        }
+        
+        li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--secondary);
+            font-weight: bold;
+        }
+        
+        pre {
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            padding: 1.5em;
+            border-radius: 8px;
+            overflow-x: auto;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+            border-left: 4px solid var(--accent);
+            margin: 1.8em 0;
+            position: relative;
+        }
+        
+        pre::before {
+            content: "CÓDIGO";
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--accent);
+            color: white;
+            padding: 0.3em 1em;
+            font-size: 0.8em;
+            border-bottom-left-radius: 8px;
+        }
+        
+        code {
+            font-family: 'Source Code Pro', monospace;
+            color: #e0e0e0;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+        
+        .math-container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.5em;
+            margin: 1.8em 0;
+            border-left: 4px solid var(--secondary);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            text-align: center;
+            overflow-x: auto;
+        }
+        
+        .math {
+            font-size: 1.2em;
+            margin: 0.5em 0;
+            display: block;
+        }
+        
+        .equation-label {
+            display: block;
+            text-align: center;
+            font-style: italic;
+            color: var(--gray);
+            margin-top: 0.5em;
+            font-size: 0.9em;
+        }
+        
+        canvas {
+            display: block;
+            margin: 2em auto;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            background: white;
+            max-width: 100%;
+        }
+        
+        footer {
+            background: linear-gradient(135deg, var(--dark) 0%, var(--primary) 100%);
+            color: white;
+            text-align: center;
+            padding: 2em;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        footer::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 30%);
+        }
+        
+        footer p {
+            color: rgba(255,255,255,0.9);
+            max-width: 800px;
+            margin: 0 auto 1em;
+            font-size: 1.1em;
+            line-height: 1.6;
+            position: relative;
+        }
+        
+        .contact-link {
+            color: #3498db;
+            text-decoration: none;
+            transition: var(--transition);
+            background: rgba(255,255,255,0.1);
+            padding: 0.5em 1em;
+            border-radius: 30px;
+            display: inline-block;
+            margin-top: 0.5em;
+            font-weight: 500;
+        }
+        
+        .contact-link:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            margin-top: 1.5em;
+            font-size: 0.9em;
+            color: rgba(255,255,255,0.6);
+            position: relative;
+        }
+        
+        .simulation-title {
+            text-align: center;
+            font-weight: 500;
+            color: var(--secondary);
+            margin-bottom: 1em;
+            font-size: 1.2em;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 1em;
+            margin: 1em 0;
+        }
+        
+        .control-btn {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 0.5em 1.2em;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+        
+        .control-btn:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+        }
+        
+        .quantum-animation {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 150px;
+            height: 150px;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+        
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2em;
+            }
+            
+            .container {
+                padding: 0 1em;
+            }
+            
+            section {
+                padding: 1.5em;
+            }
+            
+            .nav-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.3em;
+            }
+            
+            nav a {
+                margin: 0.2em 0;
+                width: 100%;
+                text-align: center;
+            }
+            
+            pre {
+                padding: 1em;
+                font-size: 0.85em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Ecuación de Schrödinger: Fundamentos y Aplicaciones</h1>
+    </header>
+    
+    <nav>
+        <div class="nav-container">
+            <a href="#introduccion">Introducción</a>
+            <a href="#funcion-onda">Función de Onda</a>
+            <a href="#formas">Formas de la Ecuación</a>
+            <a href="#tipos">Tipos</a>
+            <a href="#metodos">Métodos de Resolución</a>
+            <a href="#calculo">Cálculo Numérico</a>
+            <a href="#monte-carlo">Monte Carlo Cuántico</a>
+            <a href="#ejemplos">Ejemplos de Programación</a>
+            <a href="#aplicaciones">Aplicaciones</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <section id="introduccion">
+            <h2>1. Introducción</h2>
+            <p>La ecuación de Schrödinger es un pilar fundamental de la mecánica cuántica, propuesta por Erwin Schrödinger en 1925. Describe cómo evoluciona el estado cuántico de un sistema físico en el tiempo, análoga a las ecuaciones de Newton en la mecánica clásica, pero para sistemas a escalas atómicas y subatómicas. Se inspira en la dualidad onda-partícula de Louis de Broglie y combina conceptos de energía clásica con el comportamiento ondulatorio de las partículas.</p>
+            
+            <div class="math-container">
+                <span class="math">\[i\hbar\frac{\partial}{\partial t}\Psi(\mathbf{r},t) = \hat{H}\Psi(\mathbf{r},t)\]</span>
+                <span class="equation-label">Forma general de la ecuación de Schrödinger dependiente del tiempo</span>
+            </div>
+        </section>
+
+        <section id="funcion-onda">
+            <h2>2. La Función de Onda</h2>
+            <p>La ecuación describe la evolución de la función de onda \(\Psi(\mathbf{r}, t)\), que depende de las coordenadas espaciales \(\mathbf{r} = (x, y, z)\) y el tiempo \(t\). Según la interpretación de Copenhague, \(|\Psi(\mathbf{r}, t)|^2\) representa la densidad de probabilidad de encontrar una partícula en un volumen infinitesimal \(dV\). Para que sea válida, la función debe estar normalizada:</p>
+            
+            <div class="math-container">
+                <span class="math">\[\int_{-\infty}^{\infty} |\Psi(\mathbf{r}, t)|^2 \, dV = 1\]</span>
+                <span class="equation-label">Condición de normalización</span>
+            </div>
+            
+            <p>La función de onda contiene toda la información sobre el sistema cuántico y su evolución temporal está gobernada por la ecuación de Schrödinger.</p>
+        </section>
+
+        <section id="formas">
+            <h2>3. Formas de la Ecuación de Schrödinger</h2>
+            
+            <h3>3.1. Dependiente del Tiempo</h3>
+            <p>Describe la evolución temporal de \(\Psi(\mathbf{r}, t)\):</p>
+            
+            <div class="math-container">
+                <span class="math">\[i\hbar\frac{\partial \Psi}{\partial t} = -\frac{\hbar^2}{2m}\nabla^2\Psi + V(\mathbf{r},t)\Psi\]</span>
+                <span class="equation-label">Ecuación de Schrödinger dependiente del tiempo</span>
+            </div>
+            
+            <p>Donde \(\hbar\) es la constante de Planck reducida, \(m\) la masa, \(\nabla^2\) el operador laplaciano, y \(V(\mathbf{r}, t)\) el potencial. El hamiltoniano es \(\hat{H} = -\frac{\hbar^2}{2m}\nabla^2 + V(\mathbf{r}, t)\).</p>
+
+            <h3>3.2. Independiente del Tiempo</h3>
+            <p>Para sistemas estacionarios (\(V(\mathbf{r})\) no depende del tiempo), se usa:</p>
+            
+            <div class="math-container">
+                <span class="math">\[-\frac{\hbar^2}{2m}\nabla^2\phi(\mathbf{r}) + V(\mathbf{r})\phi(\mathbf{r}) = E\phi(\mathbf{r})\]</span>
+                <span class="equation-label">Ecuación de Schrödinger independiente del tiempo</span>
+            </div>
+            
+            <p>Donde \(E\) es la energía y \(\phi(\mathbf{r})\) la función de onda espacial. Esta ecuación es un problema de valores propios donde \(E\) representa los niveles de energía permitidos.</p>
+        </section>
+
+        <section id="tipos">
+            <h2>4. Tipos de Ecuaciones</h2>
+            <ul>
+                <li><b>Partícula Libre (\(V = 0\))</b>: Soluciones de ondas planas \(\phi(\mathbf{r}) = A e^{i\mathbf{k}\cdot\mathbf{r}}\) con energía \(E = \frac{\hbar^2 k^2}{2m}\).</li>
+                <li><b>Pozo Infinito Unidimensional</b>: Energías cuantizadas \(E_n = \frac{n^2 \pi^2 \hbar^2}{2m L^2}\) y funciones de onda \(\phi_n(x) = \sqrt{\frac{2}{L}} \sin\left(\frac{n\pi x}{L}\right)\).</li>
+                <li><b>Oscilador Armónico Cuántico</b>: Energías \(E_n = \hbar\omega\left(n + \frac{1}{2}\right)\) con \(n = 0,1,2,\ldots\).</li>
+                <li><b>Átomo de Hidrógeno</b>: Potencial coulombiano \(V(r) = -\frac{e^2}{4\pi\epsilon_0 r}\), energías \(E_n = -\frac{13.6\,\text{eV}}{n^2}\).</li>
+                <li><b>Relativista</b>: Ecuaciones de Klein-Gordon y Dirac para partículas de alta energía.</li>
+            </ul>
+            
+            <div class="math-container">
+                <span class="math">\[E_n = -\frac{me^4}{8\epsilon_0^2 h^2 n^2} \quad \text{(Fórmula de Rydberg)}\]</span>
+                <span class="equation-label">Energías del átomo de hidrógeno</span>
+            </div>
+        </section>
+
+        <section id="metodos">
+            <h2>5. Métodos de Resolución</h2>
+            <p>Para resolver la ecuación de Schrödinger se emplean diversos métodos:</p>
+            <ul>
+                <li><b>Separación de variables</b>: Para potenciales independientes del tiempo</li>
+                <li><b>Teoría de perturbaciones</b>: Para sistemas cercanos a soluciones exactas</li>
+                <li><b>Método variacional</b>: Para estimar la energía del estado fundamental</li>
+                <li><b>Métodos numéricos</b>: Diferencias finitas, elementos finitos, métodos espectrales</li>
+                <li><b>Método de Monte Carlo cuántico</b>: Para sistemas de muchos cuerpos</li>
+            </ul>
+        </section>
+
+        <section id="calculo">
+            <h2>6. Cálculo Numérico</h2>
+            <p>Un método común es el de <b>diferencias finitas</b>, que discretiza el espacio y convierte la ecuación en un sistema matricial. Para la ecuación dependiente del tiempo, se usa el método de Crank-Nicolson.</p>
+            
+            <div class="simulation-title">Simulación: Función de Onda en un Pozo Cuántico</div>
+            <canvas id="waveFunction" width="600" height="300"></canvas>
+            
+            <div class="controls">
+                <button class="control-btn" id="n1">n=1</button>
+                <button class="control-btn" id="n2">n=2</button>
+                <button class="control-btn" id="n3">n=3</button>
+                <button class="control-btn" id="superposition">Superposición</button>
+                <button class="control-btn" id="animate">Animar</button>
+            </div>
+            
+            <p>La gráfica muestra \(|\phi_n(x)|^2\) para un pozo infinito unidimensional, con \(n=1, 2, 3\). La superposición muestra un estado no estacionario.</p>
+        </section>
+
+        <section id="monte-carlo">
+            <h2>7. Método de Monte Carlo Cuántico</h2>
+            <p>El Método de Monte Carlo Cuántico (QMC) es una técnica numérica para resolver la ecuación de Schrödinger en sistemas complejos, como átomos con muchos electrones o moléculas. Utiliza muestreo aleatorio para estimar propiedades del sistema, como la energía del estado fundamental.</p>
+            
+            <div class="math-container">
+                <span class="math">\[E_0 \leq \frac{\langle \Psi_T | \hat{H} | \Psi_T \rangle}{\langle \Psi_T | \Psi_T \rangle}\]</span>
+                <span class="equation-label">Principio variacional</span>
+            </div>
+            
+            <p><b>Enfoques principales:</b></p>
+            <ul>
+                <li><b>Monte Carlo Variacional (VMC)</b>: Se propone una función de onda de prueba \(\Psi_T(\mathbf{R})\) con parámetros ajustables y se calcula la energía promedio mediante muestreo aleatorio.</li>
+                <li><b>Monte Carlo de Difusión (DMC)</b>: Simula la evolución de la función de onda como un proceso de difusión, proyectando el estado fundamental.</li>
+            </ul>
+            
+            <p><b>Algoritmo VMC básico:</b></p>
+            <ol>
+                <li>Definir \(\Psi_T(\mathbf{R}, \alpha)\) con parámetros \(\alpha\)</li>
+                <li>Generar configuraciones aleatorias usando Metropolis</li>
+                <li>Calcular energía local \(E_L = \frac{\hat{H}\Psi_T}{\Psi_T}\)</li>
+                <li>Promediar \(E_L\) sobre configuraciones</li>
+                <li>Ajustar \(\alpha\) para minimizar \(\langle E_L \rangle\)</li>
+            </ol>
+            
+            <p><b>Aplicaciones:</b> Átomo de helio, moléculas pequeñas, física del estado sólido.</p>
+        </section>
+
+        <section id="ejemplos">
+            <h2>8. Ejemplos de Programación</h2>
+            
+            <h3>8.1. Python: Solución para el Pozo Infinito</h3>
+            <pre><code>
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Parámetros del pozo cuántico
+L = 1.0e-9  # Ancho del pozo (1 nm)
+m = 9.109e-31  # Masa del electrón
+hbar = 1.0545718e-34  # Constante de Planck reducida
+
+# Función para calcular energía y función de onda
+def infinite_well(n, points=1000):
+    x = np.linspace(0, L, points)
+    k = n * np.pi / L
+    psi = np.sqrt(2/L) * np.sin(k*x)
+    energy = (n**2 * np.pi**2 * hbar**2) / (2 * m * L**2)
+    return x, psi, energy
+
+# Calcular para n=1,2,3
+n_values = [1, 2, 3]
+plt.figure(figsize=(10, 6))
+
+for n in n_values:
+    x, psi, E = infinite_well(n)
+    plt.plot(x, psi, label=f'n={n}, E={E*6.242e18:.2f} eV')
+    plt.fill_between(x, psi, alpha=0.1)
+
+plt.title('Funciones de onda en un pozo infinito')
+plt.xlabel('Posición (m)')
+plt.ylabel('$\psi_n(x)$')
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.show()
+            </code></pre>
+            
+            <h3>8.2. Python: Evolución Temporal</h3>
+            <pre><code>
+import numpy as np
+from scipy.integrate import solve_ivp
+import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
+
+# Parámetros
+L = 1.0  # Ancho del pozo
+N = 500  # Puntos de discretización
+dx = L / (N - 1)
+x = np.linspace(0, L, N)
+
+# Hamiltoniano (matriz tridiagonal)
+h_diag = np.ones(N) * (1/dx**2)
+h_off = np.ones(N-1) * (-0.5/dx**2)
+H = np.diag(h_diag) + np.diag(h_off, k=1) + np.diag(h_off, k=-1)
+
+# Condiciones de frontera
+H[0, :] = 0
+H[-1, :] = 0
+H[0, 0] = 1
+H[-1, -1] = 1
+
+# Función de onda inicial (gaussiana centrada)
+sigma = 0.1
+psi0 = np.exp(-(x - L/2)**2 / (2*sigma**2)) * np.exp(1j*20*x)
+psi0 = psi0 / np.linalg.norm(psi0)
+
+# Ecuación de Schrödinger: dψ/dt = -i H ψ
+def schrodinger_eq(t, psi):
+    return -1j * H.dot(psi)
+
+# Resolver la ecuación
+sol = solve_ivp(schrodinger_eq, [0, 0.1], psi0, t_eval=np.linspace(0, 0.1, 100))
+
+# Animación
+fig, ax = plt.subplots(figsize=(10,6))
+line, = ax.plot(x, np.abs(psi0)**2, lw=2)
+ax.set_xlim(0, L)
+ax.set_ylim(0, 3)
+ax.set_xlabel('Posición')
+ax.set_ylabel('$|\psi(x,t)|^2$')
+ax.grid(alpha=0.3)
+
+def update(frame):
+    psi_t = sol.y[:, frame]
+    line.set_ydata(np.abs(psi_t)**2)
+    ax.set_title(f'Evolución temporal (t={sol.t[frame]:.3f})')
+    return line,
+
+ani = FuncAnimation(fig, update, frames=len(sol.t), interval=50)
+plt.show()
+            </code></pre>
+        </section>
+
+        <section id="aplicaciones">
+            <h2>9. Aplicaciones</h2>
+            <p>La ecuación de Schrödinger tiene aplicaciones en múltiples campos:</p>
+            <ul>
+                <li><b>Química Cuántica</b>: Estructura electrónica de átomos y moléculas</li>
+                <li><b>Física del Estado Sólido</b>: Bandas de energía en cristales, semiconductores</li>
+                <li><b>Óptica Cuántica</b>: Interacción luz-materia, láseres</li>
+                <li><b>Nanotecnología</b>: Puntos cuánticos, pozos cuánticos, alambres cuánticos</li>
+                <li><b>Computación Cuántica</b>: Diseño de qubits y compuertas cuánticas</li>
+                <li><b>Física Nuclear</b>: Modelos de capas nucleares</li>
+            </ul>
+            
+            <p>Su solución para sistemas complejos sigue siendo un área activa de investigación con el desarrollo de nuevos métodos computacionales.</p>
+        </section>
+    </div>
+
+    <footer>
+        <p>Elaborado por el Profesor Ángel Chacín Ávila, Licenciado en Física, Especialista en Ciencias Computacionales, UNES Núcleo Zulia</p>
+        <a href="mailto:lordchacinavila@gmail.com" class="contact-link">lordchacinavila@gmail.com</a>
+        <p class="copyright">© 2023 - Todos los derechos reservados</p>
+    </footer>
+
+    <script>
+        // Simulación gráfica de función de onda
+        const canvas = document.getElementById('waveFunction');
+        const ctx = canvas.getContext('2d');
+        const width = canvas.width;
+        const height = canvas.height;
+        let currentN = 1;
+        let animationId = null;
+        let time = 0;
+        
+        // Colores para diferentes estados
+        const colors = {
+            1: '#3498db',
+            2: '#e74c3c',
+            3: '#27ae60',
+            superposition: '#9b59b6'
+        };
+        
+        function drawWaveFunction(n, t=0) {
+            ctx.clearRect(0, 0, width, height);
+            
+            // Dibujar el pozo
+            ctx.fillStyle = '#f0f0f0';
+            ctx.fillRect(0, 0, width, height);
+            ctx.fillStyle = '#e0e7ff';
+            ctx.fillRect(0, 0, width, height);
+            
+            // Ejes
+            ctx.beginPath();
+            ctx.strokeStyle = '#7f8c8d';
+            ctx.lineWidth = 1;
+            ctx.moveTo(0, height/2);
+            ctx.lineTo(width, height/2);
+            ctx.stroke();
+            
+            // Paredes del pozo
+            ctx.beginPath();
+            ctx.strokeStyle = '#2c3e50';
+            ctx.lineWidth = 3;
+            ctx.moveTo(50, 0);
+            ctx.lineTo(50, height);
+            ctx.moveTo(width-50, 0);
+            ctx.lineTo(width-50, height);
+            ctx.stroke();
+            
+            // Función de onda
+            ctx.beginPath();
+            ctx.strokeStyle = colors[n] || colors.superposition;
+            ctx.lineWidth = 3;
+            
+            const L = width - 100;
+            const dx = L / width;
+            
+            for (let x = 0; x < width; x++) {
+                const pos = (x - 50);
+                if (pos < 0 || pos > L) continue;
+                
+                let y;
+                if (n === 'superposition') {
+                    // Superposición de estados n=1 y n=2
+                    const psi1 = Math.sqrt(2/L) * Math.sin(Math.PI * pos / L);
+                    const psi2 = Math.sqrt(2/L) * Math.sin(2 * Math.PI * pos / L);
+                    const energy1 = (1**2 * Math.PI**2) / (2 * L**2);
+                    const energy2 = (2**2 * Math.PI**2) / (2 * L**2);
+                    const psi = (psi1 * Math.exp(-1j * energy1 * t) + psi2 * Math.exp(-1j * energy2 * t)) / Math.sqrt(2);
+                    y = height/2 - 80 * Math.abs(psi)**2;
+                } else {
+                    const psi = Math.sqrt(2/L) * Math.sin(n * Math.PI * pos / L);
+                    y = height/2 - 80 * psi * psi;
+                }
+                
+                if (x === 50) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            }
+            ctx.stroke();
+            
+            // Etiquetas
+            ctx.fillStyle = '#2c3e50';
+            ctx.font = 'bold 16px Roboto';
+            ctx.fillText('0', 45, height/2 + 20);
+            ctx.fillText('L', width-60, height/2 + 20);
+            
+            // Título del estado
+            ctx.fillStyle = colors[n] || colors.superposition;
+            ctx.font = 'bold 18px Roboto';
+            if (n === 'superposition') {
+                ctx.fillText('Superposición de Estados: |ψ₁〉 + |ψ₂〉', width/2 - 150, 30);
+            } else {
+                ctx.fillText(`Estado n = ${n}`, width/2 - 60, 30);
+            }
+        }
+        
+        // Controladores de botones
+        document.getElementById('n1').addEventListener('click', () => {
+            cancelAnimationFrame(animationId);
+            currentN = 1;
+            time = 0;
+            drawWaveFunction(currentN);
+        });
+        
+        document.getElementById('n2').addEventListener('click', () => {
+            cancelAnimationFrame(animationId);
+            currentN = 2;
+            time = 0;
+            drawWaveFunction(currentN);
+        });
+        
+        document.getElementById('n3').addEventListener('click', () => {
+            cancelAnimationFrame(animationId);
+            currentN = 3;
+            time = 0;
+            drawWaveFunction(currentN);
+        });
+        
+        document.getElementById('superposition').addEventListener('click', () => {
+            cancelAnimationFrame(animationId);
+            currentN = 'superposition';
+            time = 0;
+            drawWaveFunction(currentN, time);
+        });
+        
+        document.getElementById('animate').addEventListener('click', () => {
+            if (currentN === 'superposition') {
+                cancelAnimationFrame(animationId);
+                function animate() {
+                    time += 0.05;
+                    drawWaveFunction(currentN, time);
+                    animationId = requestAnimationFrame(animate);
+                }
+                animate();
+            }
+        });
+        
+        // Dibujar estado inicial
+        drawWaveFunction(currentN);
+    </script>
+</body>
+</html>
