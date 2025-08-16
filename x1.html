@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La Guerra Cognitiva en Venezuela</title>
+  <meta name="description" content="Análisis de la Guerra Cognitiva en Venezuela como herramienta de control político, desde una perspectiva histórica y materialista.">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- Font Awesome para iconos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --secondary: #b91c1c;
+      --accent: #047857;
+      --light: #f8fafc;
+      --dark: #1e293b;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: var(--light);
+      color: var(--dark);
+    }
+    
+    header {
+      background: linear-gradient(135deg, var(--primary), #0c4a6e);
+      color: white;
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+    
+    h1, h2, h3 {
+      color: var(--primary);
+      font-weight: 700;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+    }
+    
+    section {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+    
+    section:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+    
+    canvas {
+      margin: 20px 0;
+      max-width: 100%;
+      background: white;
+      border-radius: 8px;
+      padding: 15px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .highlight {
+      background: linear-gradient(120deg, rgba(30, 58, 138, 0.1), rgba(185, 28, 28, 0.1));
+      border-left: 4px solid var(--secondary);
+      padding: 1rem;
+      margin: 1rem 0;
+      border-radius: 0 8px 8px 0;
+    }
+    
+    footer {
+      background: var(--dark);
+      color: white;
+      text-align: center;
+      padding: 1.5rem;
+      margin-top: 3rem;
+      border-radius: 12px;
+    }
+    
+    .timeline-container {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      margin: 40px 0;
+    }
+    
+    .timeline-item {
+      display: flex;
+      margin-bottom: 20px;
+      position: relative;
+    }
+    
+    .timeline-content {
+      background: white;
+      border-radius: 8px;
+      padding: 15px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      width: calc(50% - 40px);
+      position: relative;
+      z-index: 1;
+    }
+    
+    .timeline-item:nth-child(odd) .timeline-content {
+      margin-left: auto;
+    }
+    
+    .timeline-content:after {
+      content: '';
+      position: absolute;
+      top: 15px;
+      width: 20px;
+      height: 20px;
+      background: var(--secondary);
+      border-radius: 50%;
+    }
+    
+    .timeline-item:nth-child(even) .timeline-content:after {
+      left: -35px;
+    }
+    
+    .timeline-item:nth-child(odd) .timeline-content:after {
+      right: -35px;
+    }
+    
+    .timeline-line {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 4px;
+      background: var(--primary);
+      transform: translateX(-50%);
+      z-index: 0;
+    }
+    
+    .nav-container {
+      position: sticky;
+      top: 0;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      z-index: 100;
+      padding: 1rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .nav-links {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    
+    .nav-link {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 50px;
+      transition: all 0.3s ease;
+    }
+    
+    .nav-link:hover {
+      background: var(--primary);
+      color: white;
+    }
+    
+    .quote {
+      font-style: italic;
+      border-left: 4px solid var(--accent);
+      padding-left: 1rem;
+      margin: 1.5rem 0;
+      color: var(--dark);
+    }
+    
+    @media (max-width: 768px) {
+      .timeline-content {
+        width: calc(100% - 40px);
+      }
+      
+      .timeline-item:nth-child(odd) .timeline-content {
+        margin-left: 0;
+      }
+      
+      .timeline-item:nth-child(even) .timeline-content:after,
+      .timeline-item:nth-child(odd) .timeline-content:after {
+        left: -35px;
+        right: auto;
+      }
+      
+      .timeline-line {
+        left: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container mx-auto">
+    <header>
+      <h1 class="text-3xl md:text-4xl font-bold mb-4 text-center">La Guerra Cognitiva en Venezuela: De una doctrina militar a una narrativa de control político</h1>
+      <p class="text-center text-blue-100 italic">Un análisis histórico y materialista de la evolución del discurso político</p>
+    </header>
+    
+    <div class="nav-container">
+      <div class="nav-links">
+        <a href="#que-es" class="nav-link">¿Qué es?</a>
+        <a href="#narrativa" class="nav-link">Narrativa</a>
+        <a href="#raices" class="nav-link">Raíces históricas</a>
+        <a href="#analisis" class="nav-link">Análisis materialista</a>
+        <a href="#psuv" class="nav-link">El PSUV</a>
+        <a href="#control" class="nav-link">Control político</a>
+        <a href="#conclusion" class="nav-link">Conclusión</a>
+      </div>
+    </div>
+
+    <section class="mb-8">
+      <p class="text-lg mb-4">En Venezuela, el término "Guerra Cognitiva" ha evolucionado de ser una doctrina militar a una poderosa herramienta de control político. El gobierno de Nicolás Maduro utiliza esta narrativa para culpar a enemigos externos de la profunda crisis económica y social, desviando la atención de las fallas internas y consolidando su poder en un contexto de creciente descontento popular. Este artículo analiza cómo esta estrategia, originalmente desarrollada en círculos estratégicos occidentales, ha sido adaptada para moldear la percepción pública y mantener la cohesión de la base chavista.</p>
+      <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mt-4">
+        <h3 class="font-bold text-gray-700 mb-2 flex items-center">
+          <i class="fas fa-info-circle mr-2 text-blue-600"></i> Contexto clave
+        </h3>
+        <p>La hiperinflación en Venezuela alcanzó un pico de 1.300.000% en 2018 según el FMI, y en 2024 ocupó el puesto 177 de 180 en el Índice de Percepción de la Corrupción de Transparencia Internacional.</p>
+      </div>
+    </section>
+
+    <section id="que-es" class="mb-8">
+      <h2 class="text-2xl font-semibold mb-4 flex items-center">
+        <i class="fas fa-brain mr-2 text-purple-600"></i> ¿Qué es la Guerra Cognitiva?
+      </h2>
+      <p class="mb-4">La Guerra Cognitiva, una evolución de las tradicionales Operaciones Psicológicas (PSYOPS), va más allá de influir en el comportamiento: busca moldear cómo las personas perciben, piensan y construyen su realidad. A diferencia de las PSYOPS, que se centran en cambiar lo que la gente piensa, la Guerra Cognitiva apunta a transformar cómo piensa, explotando sesgos cognitivos, desinformación algorítmica y micro-targeting en redes sociales para erosionar la confianza en las instituciones y fracturar la cohesión social.</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+        <div class="bg-blue-50 p-4 rounded-lg">
+          <h3 class="font-bold text-blue-800 mb-2">PSYOPS tradicional</h3>
+          <ul class="list-disc pl-5 space-y-1 text-blue-800">
+            <li>Influencia en el comportamiento</li>
+            <li>Cambio de opinión</li>
+            <li>Propaganda clásica</li>
+            <li>Medios tradicionales</li>
+          </ul>
+        </div>
+        <div class="bg-purple-50 p-4 rounded-lg">
+          <h3 class="font-bold text-purple-800 mb-2">Guerra Cognitiva</h3>
+          <ul class="list-disc pl-5 space-y-1 text-purple-800">
+            <li>Transformación del pensamiento</li>
+            <li>Manipulación de la percepción</li>
+            <li>Micro-targeting digital</li>
+            <li>Explotación de sesgos cognitivos</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="narrativa" class="mb-8">
+      <h2 class="text-2xl font-semibold mb-4 flex items-center">
+        <i class="fas fa-globe-americas mr-2 text-red-600"></i> Externalizando la crisis: La narrativa del enemigo externo
+      </h2>
+      <p class="mb-4">El discurso oficial del gobierno venezolano presenta la crisis económica, social y política como el resultado de una "guerra multifacética" orquestada por Estados Unidos y sus aliados internos. Esta narrativa incluye tres ejes principales:</p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+        <div class="bg-red-50 p-4 rounded-lg border border-red-200">
+          <h3 class="font-bold text-red-800 mb-2 flex items-center">
+            <i class="fas fa-chart-line mr-2"></i> Guerra Económica
+          </h3>
+          <p>Atribuida a sanciones internacionales, el "robo" de activos como Citgo y el supuesto boicot a la producción petrolera.</p>
+        </div>
+        <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+          <h3 class="font-bold text-yellow-800 mb-2 flex items-center">
+            <i class="fas fa-tv mr-2"></i> Guerra Mediática
+          </h3>
+          <p>Una supuesta maquinaria global de desinformación que busca desprestigiar al país, amplificada por medios internacionales y redes sociales.</p>
+        </div>
+        <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+          <h3 class="font-bold text-green-800 mb-2 flex items-center">
+            <i class="fas fa-mind-share mr-2"></i> Guerra Cognitiva
+          </h3>
+          <p>La manipulación de la percepción pública para generar desesperanza, miedo y desconfianza en el gobierno mediante campañas en redes sociales.</p>
+        </div>
+      </div>
+      <div class="highlight mt-4">
+        <p class="mb-0">Por ejemplo, el gobierno ha utilizado hashtags como <span class="font-bold">#GuerraEconómica</span> para amplificar mensajes que culpan a la oposición de sabotajes a la infraestructura eléctrica, mientras ignora que la hiperinflación comenzó antes de las sanciones más severas.</p>
+      </div>
+    </section>
+
+    <section id="raices" class="mb-8">
+      <h2 class="text-2xl font-semibold mb-4 flex items-center">
+        <i class="fas fa-history mr-2 text-amber-600"></i> Raíces históricas: De Chávez a Maduro
+      </h2>
+      <p class="mb-4">La narrativa de la Guerra Cognitiva tiene sus raíces en el discurso antiimperialista de Hugo Chávez, quien desde los años 2000 acusaba a Estados Unidos de conspirar contra la "revolución bolivariana".</p>
+      
+      <div class="timeline-container">
+        <div class="timeline-line"></div>
+        
+        <div class="timeline-item">
+          <div class="timeline-content">
+            <h3 class="font-bold text-amber-700">1999-2013: Era Chávez</h3>
+            <p>Discurso antiimperialista centrado en la defensa de la soberanía. Énfasis en el carisma personal y la conexión emocional con las masas. Acusaciones de conspiraciones externas con menor sofisticación técnica.</p>
+          </div>
+        </div>
+        
+        <div class="timeline-item">
+          <div class="timeline-content">
+            <h3 class="font-bold text-amber-700">2013-Presente: Era Maduro</h3>
+            <p>Adopción del concepto moderno de "Guerra Cognitiva" para explicar el colapso económico. Mayor sofisticación en campañas digitales coordinadas. Control estricto de medios a través de Conatel. Narrativa más técnica y victimizante.</p>
+          </div>
+        </div>
+        
+        <div class="timeline-item">
+          <div class="timeline-content">
+            <h3 class="font-bold text-amber-700">Evolución estratégica</h3>
+            <p>Mientras Chávez utilizaba un carisma personal para unificar a su base, Maduro recurre a un relato más técnico apoyado en estructuras de control mediático y campañas digitales.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="analisis" class="mb-8">
+      <h2 class="text-2xl font-semibold mb-4 flex items-center">
+        <i class="fas fa-chart-bar mr-2 text-emerald-600"></i> Un análisis materialista: Más allá del discurso
+      </h2>
+      <p class="mb-4">Desde la perspectiva del materialismo dialéctico, que analiza los conflictos sociales a partir de las contradicciones materiales (como el control de los recursos y el poder), la Guerra Cognitiva no es la causa de la crisis, sino una superestructura ideológica.</p>
+      <canvas id="inflationChart" class="mb-4"></canvas>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+        <div class="bg-emerald-50 p-4 rounded-lg">
+          <h3 class="font-bold text-emerald-800 mb-2">Causas materiales</h3>
+          <ul class="list-disc pl-5 text-emerald-800">
+            <li>Modelo rentista dependiente del petróleo</li>
+            <li>Corrupción sistémica</li>
+            <li>Deterioro institucional</li>
+            <li>Mala gestión económica</li>
+          </ul>
+        </div>
+        <div class="bg-rose-50 p-4 rounded-lg">
+          <h3 class="font-bold text-rose-800 mb-2">Superestructura ideológica</h3>
+          <ul class="list-disc pl-5 text-rose-800">
+            <li>Narrativa de la Guerra Cognitiva</li>
+            <li>Discursos de victimización</li>
+            <li>Campañas de desinformación</li>
+            <li>Control mediático</li>
+          </ul>
+        </div>
+      </div>
+      <div class="quote mt-4">
+        "El colapso económico venezolano tiene sus raíces en el modelo rentista dependiente del petróleo, la corrupción sistémica y el deterioro institucional. Según el Índice de Percepción de la Corrupción de Transparencia Internacional, Venezuela ocupó el puesto 177 de 180 en 2024, reflejando problemas estructurales que preceden a las sanciones internacionales."
+      </div>
+    </section>
+
+    <section id="psuv" class="mb-8">
+      <h2 class="text-2xl font-semibold mb-4 flex items-center">
+        <i class="fas fa-users mr-2 text-cyan-600"></i> El PSUV y la cohesión de una coalición fracturada
+      </h2>
+      <p class="mb-4">El Partido Socialista Unido de Venezuela (PSUV) es un partido policlasista que busca conciliar los intereses de la clase trabajadora, la nueva "boliburguesía" (élites enriquecidas bajo el chavismo) y la pequeña burguesía.</p>
+      
+      <div class="bg-gray-100 p-4 rounded-lg mt-4">
+        <h3 class="font-bold text-gray-800 mb-3 text-center">Composición del PSUV</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="text-center">
+            <div class="bg-cyan-200 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-2">
+              <i class="fas fa-hard-hat text-cyan-800 text-2xl"></i>
+            </div>
+            <h4 class="font-bold">Clase trabajadora</h4>
+            <p class="text-sm">Base electoral tradicional, afectada por la crisis</p>
+          </div>
+          <div class="text-center">
+            <div class="bg-amber-200 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-2">
+              <i class="fas fa-landmark text-amber-800 text-2xl"></i>
+            </div>
+            <h4 class="font-bold">Boliburguesía</h4>
+            <p class="text-sm">Élites enriquecidas bajo el chavismo</p>
+          </div>
+          <div class="text-center">
+            <div class="bg-emerald-200 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-2">
+              <i class="fas fa-store text-emerald-800 text-2xl"></i>
+            </div>
+            <h4 class="font-bold">Pequeña burguesía</h4>
+            <p class="text-sm">Comerciantes y profesionales</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="highlight mt-4">
+        <p class="mb-0">La narrativa de la Guerra Cognitiva actúa como un "pegamento ideológico", uniendo a estas facciones bajo la bandera del antiimperialismo y desviando la frustración popular hacia un enemigo externo.</p>
+      </div>
+    </section>
+
+    <section id="control" class="mb-8">
+      <h2 class="text-2xl font-semibold mb-4 flex items-center">
+        <i class="fas fa-cogs mr-2 text-indigo-600"></i> La Guerra Cognitiva como herramienta de control
+      </h2>
+      <p class="mb-4">En última instancia, la Guerra Cognitiva en Venezuela es menos una descripción objetiva de una táctica enemiga y más un marco narrativo para consolidar el poder. Sus funciones principales son:</p>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+        <div class="bg-indigo-50 p-4 rounded-lg border-l-4 border-indigo-500">
+          <h3 class="font-bold text-indigo-800 mb-2 flex items-center">
+            <i class="fas fa-ban mr-2"></i> Evitar la rendición de cuentas
+          </h3>
+          <p>La escasez, la inflación y la corrupción son presentadas como daños colaterales de una guerra externa, no como fallas de gestión.</p>
+        </div>
+        <div class="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-500">
+          <h3 class="font-bold text-purple-800 mb-2 flex items-center">
+            <i class="fas fa-shield-alt mr-2"></i> Legitimar el control
+          </h3>
+          <p>La censura en internet, el control de medios y la represión de la disidencia se justifican como medidas de "defensa nacional".</p>
+        </div>
+        <div class="bg-pink-50 p-4 rounded-lg border-l-4 border-pink-500">
+          <h3 class="font-bold text-pink-800 mb-2 flex items-center">
+            <i class="fas fa-people-arrows mr-2"></i> Mantener la cohesión
+          </h3>
+          <p>La narrativa une a la base chavista en torno a la figura de Maduro y la defensa de la patria.</p>
+        </div>
+      </div>
+      
+      <div class="bg-gray-800 text-white p-4 rounded-lg mt-6">
+        <p class="mb-0"><i class="fas fa-exclamation-triangle mr-2 text-yellow-300"></i> <strong>Nota:</strong> La oposición también utiliza tácticas cognitivas, aunque con menos recursos. Por ejemplo, acusaciones de que el gobierno es una "dictadura narcotraficante" buscan movilizar apoyo internacional y deslegitimar al PSUV, mostrando que la Guerra Cognitiva no es exclusiva del gobierno.</p>
+      </div>
+    </section>
+
+    <section id="conclusion" class="mb-8">
+      <h2 class="text-2xl font-semibold mb-4 flex items-center">
+        <i class="fas fa-flag mr-2 text-red-600"></i> Conclusión: ¿Un relato sostenible?
+      </h2>
+      <p class="mb-4">La narrativa de la Guerra Cognitiva ha permitido al gobierno de Nicolás Maduro mantener el control en un contexto de crisis sin precedentes, desviando la atención de las contradicciones internas y proyectando la culpa hacia enemigos externos.</p>
+      
+      <div class="bg-red-50 p-4 rounded-lg mt-4">
+        <h3 class="font-bold text-red-800 mb-3">Desafíos a la sostenibilidad</h3>
+        <div class="space-y-3">
+          <div class="flex items-start">
+            <div class="bg-red-200 p-2 rounded-full mr-3 mt-1">
+              <i class="fas fa-exclamation-circle text-red-700"></i>
+            </div>
+            <p><strong>Malestar social creciente:</strong> La incapacidad de resolver problemas básicos como la hiperinflación, corrupción y deterioro institucional genera frustración en la población.</p>
+          </div>
+          <div class="flex items-start">
+            <div class="bg-red-200 p-2 rounded-full mr-3 mt-1">
+              <i class="fas fa-exclamation-circle text-red-700"></i>
+            </div>
+            <p><strong>Presión internacional:</strong> Sanciones y aislamiento diplomático continúan afectando la economía y legitimidad del gobierno.</p>
+          </div>
+          <div class="flex items-start">
+            <div class="bg-red-200 p-2 rounded-full mr-3 mt-1">
+              <i class="fas fa-exclamation-circle text-red-700"></i>
+            </div>
+            <p><strong>Fracturas internas:</strong> Las tensiones entre los diferentes grupos dentro del PSUV podrían aumentar con el deterioro económico.</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="quote mt-6">
+        "Mientras el relato de la Guerra Cognitiva actúa como un velo que oculta las grietas de un edificio en ruinas, las contradicciones reales de la formación social venezolana siguen sin resolverse."
+      </div>
+    </section>
+
+    <footer>
+      <p class="text-center mb-2">Elaborado por el ratón Perez para la Sala de Lectura Andrés Bello</p>
+      <p class="text-center text-gray-300 italic">Documento generado para su discusión académica</p>
+    </footer>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Configuración del gráfico
+      const ctx = document.getElementById('inflationChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024'],
+          datasets: [{
+            label: 'Tasa de inflación (%)',
+            data: [40.7, 62.2, 121.7, 254.9, 862.6, 130060.2, 9585.5, 2959.1, 686.4, 234.1, 189.8, 150.0],
+            borderColor: '#B91C1C',
+            backgroundColor: 'rgba(185, 28, 28, 0.2)',
+            borderWidth: 3,
+            pointBackgroundColor: '#1E3A8A',
+            pointRadius: 5,
+            pointHoverRadius: 7,
+            fill: true,
+            tension: 0.3
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: false,
+              title: {
+                display: true,
+                text: 'Tasa de inflación (%)',
+                font: {
+                  weight: 'bold'
+                }
+              },
+              grid: {
+                color: 'rgba(0, 0, 0, 0.05)'
+              }
+            },
+            x: {
+              title: {
+                display: true,
+                text: 'Año',
+                font: {
+                  weight: 'bold'
+                }
+              },
+              grid: {
+                display: false
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              position: 'top',
+              labels: {
+                font: {
+                  size: 14,
+                  weight: 'bold'
+                }
+              }
+            },
+            title: {
+              display: true,
+              text: 'Evolución de la inflación en Venezuela (2013-2024)',
+              font: {
+                size: 18,
+                weight: 'bold'
+              },
+              padding: {
+                top: 10,
+                bottom: 20
+              }
+            },
+            tooltip: {
+              backgroundColor: 'rgba(30, 41, 59, 0.9)',
+              titleFont: {
+                size: 14,
+                weight: 'bold'
+              },
+              bodyFont: {
+                size: 13
+              },
+              padding: 12,
+              displayColors: false,
+              callbacks: {
+                label: function(context) {
+                  return `Inflación: ${context.parsed.y.toLocaleString()}%`;
+                }
+              }
+            }
+          },
+          animation: {
+            duration: 2000,
+            easing: 'easeOutQuart'
+          }
+        }
+      });
+      
+      // Navegación suave
+      document.querySelectorAll('.nav-link').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+          e.preventDefault();
+          const targetId = this.getAttribute('href');
+          const targetElement = document.querySelector(targetId);
+          
+          window.scrollTo({
+            top: targetElement.offsetTop - 80,
+            behavior: 'smooth'
+          });
+        });
+      });
+    });
+  </script>
+</body>
+</html>
