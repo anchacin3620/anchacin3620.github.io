@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socialismo vs Comunismo | Ejemplo de Star Trek</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #0b0b2b, #1a1a40);
+            color: #e0e0ff;
+            line-height: 1.6;
+            overflow-x: hidden;
+            background-attachment: fixed;
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        p, ul, ol, li, th, td, h1, h2, h3, h4 {
+            margin: 0 0 0.5em 0;
+        }
+        ul, ol {
+            margin: 1em 0 1.5em 1.5em;
+            padding-left: 1.2em;
+        }
+        li {
+            margin-bottom: 0.5em;
+        }
+        th, td {
+            padding-bottom: 0.5em;
+        }
+
+        .stars {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        .star {
+            position: absolute;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle var(--duration, 5s) infinite ease-in-out;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(10, 10, 35, 0.7);
+            border-bottom: 2px solid #4f46e5;
+            position: relative;
+            overflow: hidden;
+        }
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            color: #fff;
+            text-shadow: 0 0 10px #4f46e5, 0 0 20px #4f46e5;
+            letter-spacing: 2px;
+        }
+        .subtitle {
+            font-size: 1.4rem;
+            color: #a5b4fc;
+            max-width: 800px;
+            margin: 0 auto 20px auto;
+        }
+        .trek-logo {
+            font-size: 2.5rem;
+            color: #ffcc00;
+            margin: 15px 0;
+            display: block;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .content-section {
+            background: rgba(30, 30, 60, 0.8);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid #4f46e5;
+            position: relative;
+            overflow: hidden;
+        }
+        .content-section::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 5px;
+            background: linear-gradient(90deg, #4f46e5, #8b5cf6, #ec4899);
+        }
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: #a5b4fc;
+            margin-bottom: 25px;
+            font-size: 2.2rem;
+            position: relative;
+            display: inline-block;
+        }
+        h2::after {
+            content: "";
+            position: absolute;
+            bottom: -10px; left: 0;
+            width: 60px; height: 3px;
+            background: #4f46e5;
+        }
+
+        .comparison-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin: 40px 0;
+        }
+        .system-card {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(20, 20, 50, 0.7);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+            border: 1px solid #4f46e5;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .system-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(79, 70, 229, 0.4);
+        }
+        .system-card h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: #ffcc00;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .socialism h3 { color: #ff6b6b; }
+        .communism h3 { color: #4dffb8; }
+        .system-card ul {
+            list-style-type: none;
+            padding-left: 0;
+            margin-bottom: 0;
+        }
+        .system-card li {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(165, 180, 252, 0.2);
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 0.5em;
+        }
+        .system-card li:last-child {
+            border-bottom: none;
+        }
+        .system-card li i {
+            color: #4f46e5;
+            margin-right: 10px;
+            margin-top: 5px;
+        }
+
+        .trek-section {
+            background: rgba(10, 30, 60, 0.8);
+            border: 1px solid #ffcc00;
+        }
+        .trek-section h2 {
+            color: #ffcc00;
+        }
+        .trek-section h2::after {
+            background: #ffcc00;
+        }
+        .trek-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        .trek-feature {
+            background: rgba(20, 40, 80, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #4f46e5;
+            margin-bottom: 1em;
+        }
+        .trek-feature h4 {
+            color: #ffcc00;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .trek-feature h4 i {
+            margin-right: 10px;
+        }
+        .quote {
+            font-style: italic;
+            padding: 15px;
+            border-left: 3px solid #ffcc00;
+            margin: 20px 0;
+            background: rgba(255, 204, 0, 0.1);
+            border-radius: 0 8px 8px 0;
+        }
+        .quote-author {
+            text-align: right;
+            font-weight: bold;
+            color: #ffcc00;
+            margin-top: 10px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            background: rgba(20, 20, 50, 0.7);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .comparison-table th {
+            background: #4f46e5;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-family: 'Orbitron', sans-serif;
+        }
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(165, 180, 252, 0.2);
+        }
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+        .comparison-table tr:nth-child(even) {
+            background: rgba(30, 30, 60, 0.5);
+        }
+        .communism-cell {
+            color: #4dffb8;
+        }
+        .socialism-cell {
+            color: #ff6b6b;
+        }
+        .trek-cell {
+            color: #ffcc00;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            background: rgba(10, 10, 35, 0.9);
+            border-top: 2px solid #4f46e5;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            font-size: 1.1rem;
+            color: #a5b4fc;
+        }
+        .professor-info {
+            font-weight: bold;
+            color: #ffcc00;
+            margin-top: 10px;
+            font-size: 1.2rem;
+        }
+        .trek-badge {
+            display: inline-block;
+            background: rgba(255, 204, 0, 0.2);
+            border: 1px solid #ffcc00;
+            border-radius: 20px;
+            padding: 5px 15px;
+            margin: 10px 0;
+            font-size: 0.9rem;
+        }
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            .subtitle { font-size: 1.1rem; }
+            .comparison-container { flex-direction: column; }
+            .content-section { padding: 20px; }
+        }
+        .pulsate {
+            animation: pulsate 2s infinite;
+        }
+        @keyframes pulsate {
+            0% { box-shadow: 0 0 5px rgba(79, 70, 229, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(79, 70, 229, 0.8); }
+            100% { box-shadow: 0 0 5px rgba(79, 70, 229, 0.5); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Fondo estelar -->
+    <div class="stars" id="stars"></div>
+    <header>
+        <h1>Socialismo vs Comunismo</h1>
+        <div class="trek-logo">
+            <i class="fas fa-rocket"></i> STAR TREK <i class="fas fa-rocket"></i>
+        </div>
+        <p class="subtitle">Un análisis comparativo con la Federación Unida de Planetas como ejemplo de sociedad comunista teórica</p>
+    </header>
+    <div class="container">
+        <section class="content-section">
+            <h2><i class="fas fa-balance-scale-left"></i> Diferencias Fundamentales</h2>
+            <p>El socialismo y el comunismo son dos sistemas socioeconómicos que, aunque relacionados, presentan diferencias significativas en su estructura y objetivos finales.</p>
+            <div class="comparison-container">
+                <div class="system-card socialism">
+                    <h3><i class="fas fa-landmark"></i> Socialismo</h3>
+                    <ul>
+                        <li><i class="fas fa-arrow-right"></i> <strong>Fase de transición</strong> entre capitalismo y comunismo</li>
+                        <li><i class="fas fa-arrow-right"></i> El <strong>Estado controla</strong> los medios de producción</li>
+                        <li><i class="fas fa-arrow-right"></i> Existen <strong>diferencias de clase</strong> y salarios</li>
+                        <li><i class="fas fa-arrow-right"></i> Permite <strong>propiedad privada limitada</strong></li>
+                        <li><i class="fas fa-arrow-right"></i> Economía <strong>planificada centralmente</strong></li>
+                        <li><i class="fas fa-arrow-right"></i> Distribución según <strong>contribución laboral</strong></li>
+                        <li><i class="fas fa-arrow-right"></i> Ejemplos históricos: URSS, Cuba, Venezuela</li>
+                    </ul>
+                </div>
+                <div class="system-card communism">
+                    <h3><i class="fas fa-globe-americas"></i> Comunismo</h3>
+                    <ul>
+                        <li><i class="fas fa-arrow-right"></i> <strong>Etapa final</strong> sin clases sociales</li>
+                        <li><i class="fas fa-arrow-right"></i> <strong>Sin Estado</strong> - autogestión comunitaria</li>
+                        <li><i class="fas fa-arrow-right"></i> <strong>Propiedad colectiva</strong> total</li>
+                        <li><i class="fas fa-arrow-right"></i> <strong>Sin dinero</strong> ni mercados</li>
+                        <li><i class="fas fa-arrow-right"></i> Distribución según <strong>necesidades</strong></li>
+                        <li><i class="fas fa-arrow-right"></i> Trabajo por <strong>vocación</strong>, no por necesidad</li>
+                        <li><i class="fas fa-arrow-right"></i> <strong>Nunca implementado</strong> a escala nacional</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <section class="content-section trek-section pulsate">
+            <h2><i class="fas fa-starship"></i> Star Trek: Ejemplo de Comunismo Teórico</h2>
+            <p>La Federación Unida de Planetas en Star Trek representa lo más cercano a una sociedad comunista funcional descrita en la ficción:</p>
+            <div class="trek-features">
+                <div class="trek-feature">
+                    <h4><i class="fas fa-money-bill-wave"></i> Sociedad sin dinero</h4>
+                    <p>La Tierra eliminó el dinero en el siglo XXII. Las réplicas y energía abundante satisfacen todas las necesidades básicas.</p>
+                    <div class="quote">
+                        "El adquirir riqueza ya no es el motor que nos impulsa" 
+                        <div class="quote-author">- Capitán Jean-Luc Picard</div>
+                    </div>
+                </div>
+                <div class="trek-feature">
+                    <h4><i class="fas fa-user-friends"></i> Ausencia de clases</h4>
+                    <p>No existen diferencias socioeconómicas. Todos tienen acceso a educación, salud y recursos básicos.</p>
+                    <div class="quote">
+                        "En el siglo XXIV, no nos dedicamos a acumular 'cosas'"
+                        <div class="quote-author">- Comandante Benjamin Sisko</div>
+                    </div>
+                </div>
+                <div class="trek-feature">
+                    <h4><i class="fas fa-heart"></i> Trabajo por vocación</h4>
+                    <p>Las personas trabajan para superación personal y contribución social, no por necesidad económica.</p>
+                    <div class="quote">
+                        "Nosotros trabajamos para mejorarnos a nosotros mismos y al resto de la humanidad"
+                        <div class="quote-author">- Almirante Kathryn Janeway</div>
+                    </div>
+                </div>
+            </div>
+            <div class="trek-badge">
+                <i class="fas fa-info-circle"></i> La Federación mantiene un gobierno descentralizado pero no coercitivo
+            </div>
+        </section>
+        <section class="content-section">
+            <h2><i class="fas fa-table"></i> Comparación Conceptual</h2>
+            <table class="comparison-table">
+                <tr>
+                    <th>Elemento</th>
+                    <th>Socialismo</th>
+                    <th>Comunismo Teórico</th>
+                    <th>Star Trek (Federación)</th>
+                </tr>
+                <tr>
+                    <td><strong>Propiedad</strong></td>
+                    <td class="socialism-cell">Estatal/cooperativa</td>
+                    <td class="communism-cell">Colectiva sin dueños</td>
+                    <td class="trek-cell">Bienes personales sí, medios de producción no</td>
+                </tr>
+                <tr>
+                    <td><strong>Dinero</strong></td>
+                    <td class="socialism-cell">Moneda controlada por el Estado</td>
+                    <td class="communism-cell">Abolido</td>
+                    <td class="trek-cell">Abolido en la Tierra</td>
+                </tr>
+                <tr>
+                    <td><strong>Estado</strong></td>
+                    <td class="socialism-cell">Fuerte y centralizado</td>
+                    <td class="communism-cell">Inexistente</td>
+                    <td class="trek-cell">Existente pero no coercitivo</td>
+                </tr>
+                <tr>
+                    <td><strong>Clases sociales</strong></td>
+                    <td class="socialism-cell">En eliminación</td>
+                    <td class="communism-cell">Inexistentes</td>
+                    <td class="trek-cell">Inexistentes</td>
+                </tr>
+                <tr>
+                    <td><strong>Distribución</strong></td>
+                    <td class="socialism-cell">"A cada cual según su trabajo"</td>
+                    <td class="communism-cell">"A cada cual según sus necesidades"</td>
+                    <td class="trek-cell">Acceso según necesidades</td>
+                </tr>
+                <tr>
+                    <td><strong>Ejemplo histórico</strong></td>
+                    <td class="socialism-cell">URSS, Cuba, China</td>
+                    <td class="communism-cell">Ninguno</td>
+                    <td class="trek-cell">Ficción (s. XXIV)</td>
+                </tr>
+            </table>
+            <p style="margin-top: 20px;"><strong>Conclusión:</strong> Star Trek muestra una utopía poscapitalista inspirada en ideales comunistas pero con elementos pragmáticos. Como dijo Gene Roddenberry: "Es un futuro donde la humanidad superó la avaricia".</p>
+        </section>
+    </div>
+    <footer>
+        <div>Análisis Comparativo de Sistemas Socioeconómicos</div>
+        <div class="professor-info">
+            Elaborado por el Profesor Ángel Chacín Ávila,<br>
+            Licenciado en Física, Especialista en Ciencias Computacionales,<br>
+            Diplomado en Educación Policial, UNES Zulia
+        </div>
+    </footer>
+    <script>
+        // Crear fondo estelar
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const starsCount = 200;
+            for (let i = 0; i < starsCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                // Posición aleatoria
+                const x = Math.random() * 100;
+                const y = Math.random() * 100;
+                // Tamaño aleatorio
+                const size = Math.random() * 2 + 1;
+                // Duración de animación aleatoria
+                const duration = Math.random() * 10 + 5;
+                star.style.left = `${x}%`;
+                star.style.top = `${y}%`;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.setProperty('--duration', `${duration}s`);
+                starsContainer.appendChild(star);
+            }
+        }
+        document.addEventListener('DOMContentLoaded', createStars);
+        // Efecto de parpadeo para el título
+        const title = document.querySelector('h1');
+        setInterval(() => {
+            title.style.textShadow = `0 0 10px #4f46e5, 0 0 20px #4f46e5, 0 0 30px ${Math.random() > 0.5 ? '#8b5cf6' : '#ec4899'}`;
+        }, 1000);
+    </script>
+</body>
+</html>
