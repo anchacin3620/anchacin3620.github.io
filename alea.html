@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Generador de Números Aleatorios</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 2em; }
+    #progress-container { width: 100%; background: #eee; border-radius: 8px; margin-top: 1em; }
+    #progress-bar { width: 0; height: 24px; background: #4caf50; border-radius: 8px; transition: width 0.2s; }
+    #percent { font-size: 1.2em; margin-top: 0.5em; }
+    button { padding: 0.7em 2em; font-size: 1em; }
+  </style>
+</head>
+<body>
+  <h1>Generador de 10 millones de números aleatorios</h1>
+  <button id="start-btn">Iniciar generación</button>
+  <div id="progress-container">
+    <div id="progress-bar"></div>
+  </div>
+  <div id="percent">0%</div>
+  <script>
+    const TOTAL = 10000000;
+    const BATCH = 100000; // Procesar en lotes para evitar bloquear la UI
+    let randomNumbers = [];
+    let current = 0;
+
+    const startBtn = document.getElementById('start-btn');
+    const progressBar = document.getElementById('progress-bar');
+    const percentText = document.getElementById('percent');
+
+    function updateProgress() {
+      const percent = Math.floor((current / TOTAL) * 100);
+      progressBar.style.width = percent + '%';
+      percentText.textContent = percent + '%';
+    }
+
+    function generateBatch() {
+      const end = Math.min(current + BATCH, TOTAL);
+      for (let i = current; i < end; i++) {
+        randomNumbers.push(Math.random());
+      }
+      current = end;
+      updateProgress();
+      if (current < TOTAL) {
+        setTimeout(generateBatch, 0); // Permite que el navegador actualice la UI
+      } else {
+        percentText.textContent = '¡Completado!';
+        startBtn.disabled = false;
+      }
+    }
+
+    startBtn.addEventListener('click', () => {
+      startBtn.disabled = true;
+      randomNumbers = [];
+      current = 0;
+      progressBar.style.width = '0%';
+      percentText.textContent = '0%';
+      generateBatch();
+    });
+  </script>
+</body>
+</html>
