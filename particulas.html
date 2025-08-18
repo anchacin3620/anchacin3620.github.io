@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modelo Estándar de Física de Partículas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #2c3e50);
+            color: #fff;
+            min-height: 100vh;
+            padding-bottom: 60px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .card {
+            background: rgba(30, 30, 50, 0.7);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
+        }
+        
+        .card h2 {
+            color: #feb47b;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ff7e5f;
+        }
+        
+        .card h3 {
+            color: #ff7e5f;
+            margin: 15px 0 10px;
+        }
+        
+        .particle-model {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .model-container {
+            position: relative;
+            height: 300px;
+            margin: 30px auto;
+            max-width: 800px;
+        }
+        
+        .force {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        
+        .particles {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .particle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            text-align: center;
+            font-size: 0.8rem;
+            position: relative;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .particle:hover {
+            transform: scale(1.1);
+        }
+        
+        .fermion { background: linear-gradient(135deg, #3498db, #8e44ad); }
+        .boson { background: linear-gradient(135deg, #e74c3c, #e67e22); }
+        .higgs { background: linear-gradient(135deg, #2ecc71, #1abc9c); }
+        
+        .particle-name {
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        
+        .interaction-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .line {
+            stroke: rgba(255, 255, 255, 0.4);
+            stroke-width: 2;
+        }
+        
+        .limitations {
+            background: rgba(100, 30, 30, 0.6);
+        }
+        
+        .importance {
+            background: rgba(30, 80, 40, 0.6);
+        }
+        
+        ul {
+            padding-left: 20px;
+            margin: 15px 0;
+        }
+        
+        li {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        
+        .highlight {
+            color: #feb47b;
+            font-weight: bold;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 25px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            margin-top: 20px;
+            font-size: 1.1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .footer-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #feb47b;
+        }
+        
+        .particle-detail {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(30, 30, 50, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            width: 90%;
+            max-width: 600px;
+            z-index: 1000;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.7);
+            border: 2px solid #ff7e5f;
+        }
+        
+        .detail-content {
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+        }
+        
+        .particle-title {
+            color: #ff7e5f;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .diagram {
+            text-align: center;
+            margin: 20px 0;
+            font-family: monospace;
+            line-height: 1.5;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Modelo Estándar de Física de Partículas</h1>
+            <p class="subtitle">La teoría que describe las partículas fundamentales que componen la materia y las fuerzas básicas que gobiernan sus interacciones (excepto la gravedad).</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="card">
+                <h2>Componentes Clave</h2>
+                <h3>Partículas de Materia (Fermiones)</h3>
+                <ul>
+                    <li><span class="highlight">Quarks:</span> Constituyentes de protones y neutrones. Existen 6 tipos: arriba, abajo, encanto, extraño, cima, fondo.</li>
+                    <li><span class="highlight">Leptones:</span> Incluyen el electrón, muón, tau y sus neutrinos asociados.</li>
+                    <li>Juntos, quarks y leptones forman toda la materia visible del universo.</li>
+                </ul>
+                
+                <h3>Partículas Portadoras de Fuerza (Bosones)</h3>
+                <ul>
+                    <li><span class="highlight">Fotón:</span> Portador del electromagnetismo.</li>
+                    <li><span class="highlight">Bosones W y Z:</span> Responsables de la fuerza nuclear débil (radioactividad).</li>
+                    <li><span class="highlight">Gluón:</span> Media la fuerza nuclear fuerte (mantiene unidos los quarks).</li>
+                    <li><span class="highlight">Bosón de Higgs:</span> Otorga masa a las partículas mediante el campo de Higgs (descubierto en el LHC en 2012).</li>
+                </ul>
+            </div>
+            
+            <div class="card limitations">
+                <h2>Limitaciones del Modelo</h2>
+                <ul>
+                    <li><span class="highlight">No incorpora la gravedad:</span> No explica cómo interactúa con la mecánica cuántica.</li>
+                    <li><span class="highlight">No explica la materia oscura ni la energía oscura</span> (≈95% del universo).</li>
+                    <li><span class="highlight">No incluye la masa de los neutrinos</span> (requiere extensiones teóricas).</li>
+                    <li><span class="highlight">Asimetría materia-antimateria:</span> No justifica por qué el universo está dominado por materia.</li>
+                    <li><span class="highlight">No unifica las fuerzas:</span> Las cuatro fuerzas fundamentales no están integradas en un único marco teórico.</li>
+                </ul>
+            </div>
+            
+            <div class="card importance">
+                <h2>Importancia del Modelo</h2>
+                <ul>
+                    <li><span class="highlight">Predicciones exitosas:</span> Ha anticipado partículas como el quark cima (1995), el tau-neutrino (2000) y el bosón de Higgs (2012).</li>
+                    <li><span class="highlight">Precisión experimental:</span> Sus ecuaciones han sido validadas con errores menores a 1 parte en 10 mil millones.</li>
+                    <li><span class="highlight">Base para nuevas físicas:</span> Sus limitaciones guían la búsqueda de teorías más completas (supersimetría, teoría de cuerdas, etc.).</li>
+                    <li><span class="highlight">Tecnología derivada:</span> Ha impulsado desarrollos tecnológicos como la World Wide Web, PET scanners y técnicas de radioterapia.</li>
+                </ul>
+            </div>
+            
+            <div class="card particle-model">
+                <h2>Representación Visual del Modelo Estándar</h2>
+                <div class="model-container">
+                    <svg class="interaction-lines" width="100%" height="100%"></svg>
+                    <div class="force" style="top: 20%;">
+                        <h3>Electromagnetismo</h3>
+                        <div class="particles">
+                            <div class="particle fermion" data-particle="electron">
+                                <div>e⁻</div>
+                                <div class="particle-name">Electrón</div>
+                            </div>
+                            <div class="particle boson" data-particle="photon">
+                                <div>γ</div>
+                                <div class="particle-name">Fotón</div>
+                            </div>
+                            <div class="particle fermion" data-particle="electron">
+                                <div>e⁻</div>
+                                <div class="particle-name">Electrón</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="force" style="top: 50%;">
+                        <h3>Fuerza Nuclear Fuerte</h3>
+                        <div class="particles">
+                            <div class="particle fermion" data-particle="quark">
+                                <div>q</div>
+                                <div class="particle-name">Quark</div>
+                            </div>
+                            <div class="particle boson" data-particle="gluon">
+                                <div>g</div>
+                                <div class="particle-name">Gluón</div>
+                            </div>
+                            <div class="particle fermion" data-particle="quark">
+                                <div>q</div>
+                                <div class="particle-name">Quark</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="force" style="top: 80%;">
+                        <h3>Fuerza Nuclear Débil</h3>
+                        <div class="particles">
+                            <div class="particle fermion" data-particle="neutrino">
+                                <div>ν</div>
+                                <div class="particle-name">Neutrino</div>
+                            </div>
+                            <div class="particle boson" data-particle="zboson">
+                                <div>Z⁰</div>
+                                <div class="particle-name">Bosón Z</div>
+                            </div>
+                            <div class="particle fermion" data-particle="electron">
+                                <div>e⁻</div>
+                                <div class="particle-name">Electrón</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="particle higgs" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);" data-particle="higgs">
+                        <div>H</div>
+                        <div class="particle-name">Bosón de Higgs</div>
+                    </div>
+                </div>
+                
+                <div class="diagram">
+                    <div>MATERIA (Fermiones)           FUERZAS (Bosones)         HIGGS</div>
+                    <div>│                              │                        │</div>
+                    <div>├─ Quarks (6 tipos)            ├─ Fotón (EM)            └─ Bosón de Higgs</div>
+                    <div>├─ Leptones (electrón, muón,    ├─ Gluones (f. fuerte)      (da masa)</div>
+                    <div>   tau, 3 neutrinos)            ├─ Bosones W/Z (f. débil)</div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <div class="footer-title">Elaborado por:</div>
+            <div>Profesor Ángel Chacín Ávila</div>
+            <div>Licenciado en Física, Especialista en Ciencias Computacionales</div>
+            <div>UNES Núcleo Zulia</div>
+        </footer>
+    </div>
+    
+    <div class="overlay" id="overlay"></div>
+    
+    <div class="particle-detail" id="particleDetail">
+        <button class="close-btn" id="closeBtn">×</button>
+        <div class="detail-content" id="detailContent"></div>
+    </div>
+    
+    <script>
+        // Datos de las partículas
+        const particlesData = {
+            electron: {
+                name: "Electrón",
+                symbol: "e⁻",
+                type: "Fermión (Leptón)",
+                mass: "0.511 MeV/c²",
+                charge: "-1 e",
+                spin: "1/2",
+                description: "Partícula elemental estable que forma parte de los átomos. Pertenece a la primera generación de leptones. Juega un papel fundamental en la electricidad, el magnetismo y la química.",
+                interactions: "Electromagnetismo, fuerza débil"
+            },
+            photon: {
+                name: "Fotón",
+                symbol: "γ",
+                type: "Bosón",
+                mass: "0",
+                charge: "0",
+                spin: "1",
+                description: "Partícula portadora de la fuerza electromagnética. No tiene masa y viaja a la velocidad de la luz. Es responsable de todos los fenómenos electromagnéticos, incluida la luz visible.",
+                interactions: "Electromagnetismo"
+            },
+            quark: {
+                name: "Quark",
+                symbol: "q",
+                type: "Fermión",
+                mass: "Varía (de ~2 a 173,000 MeV/c²)",
+                charge: "+2/3 o -1/3 e",
+                spin: "1/2",
+                description: "Partículas fundamentales que se combinan para formar partículas compuestas como protones y neutrones. Existen seis tipos (sabores): arriba, abajo, encanto, extraño, cima y fondo.",
+                interactions: "Fuerza fuerte, electromagnetismo, fuerza débil"
+            },
+            gluon: {
+                name: "Gluón",
+                symbol: "g",
+                type: "Bosón",
+                mass: "0",
+                charge: "0",
+                spin: "1",
+                description: "Partícula portadora de la fuerza nuclear fuerte. Mantiene unidos a los quarks dentro de protones y neutrones, y a estos últimos dentro del núcleo atómico. Existen ocho tipos.",
+                interactions: "Fuerza fuerte"
+            },
+            neutrino: {
+                name: "Neutrino",
+                symbol: "ν",
+                type: "Fermión (Leptón)",
+                mass: "Muy pequeña (< 0.12 eV/c²)",
+                charge: "0",
+                spin: "1/2",
+                description: "Partícula neutra que interactúa muy débilmente con la materia. Existen tres tipos: electrónico, muónico y tauónico. Miles de millones pasan a través de nuestro cuerpo cada segundo.",
+                interactions: "Fuerza débil, gravedad"
+            },
+            zboson: {
+                name: "Bosón Z",
+                symbol: "Z⁰",
+                type: "Bosón",
+                mass: "91,187 MeV/c²",
+                charge: "0",
+                spin: "1",
+                description: "Partícula portadora neutra de la fuerza nuclear débil. Responsable de la desintegración radiactiva beta y procesos similares. Fue descubierto en el CERN en 1983.",
+                interactions: "Fuerza débil"
+            },
+            higgs: {
+                name: "Bosón de Higgs",
+                symbol: "H",
+                type: "Bosón escalar",
+                mass: "125,100 MeV/c²",
+                charge: "0",
+                spin: "0",
+                description: "Partícula asociada al campo de Higgs, que da masa a otras partículas elementales. Fue predicha en 1964 y descubierta en el LHC del CERN en 2012. Es la única partícula elemental sin espín.",
+                interactions: "Autointeracción, interacción con otras partículas"
+            }
+        };
+        
+        // Funcionalidad para mostrar detalles de partículas
+        document.querySelectorAll('.particle').forEach(particle => {
+            particle.addEventListener('click', function() {
+                const particleType = this.getAttribute('data-particle');
+                const particle = particlesData[particleType];
+                
+                if (particle) {
+                    document.getElementById('detailContent').innerHTML = `
+                        <h2 class="particle-title">${particle.name} (${particle.symbol})</h2>
+                        <p><strong>Tipo:</strong> ${particle.type}</p>
+                        <p><strong>Masa:</strong> ${particle.mass}</p>
+                        <p><strong>Carga:</strong> ${particle.charge}</p>
+                        <p><strong>Espín:</strong> ${particle.spin}</p>
+                        <p><strong>Descripción:</strong> ${particle.description}</p>
+                        <p><strong>Interacciones:</strong> ${particle.interactions}</p>
+                    `;
+                    
+                    document.getElementById('overlay').style.display = 'block';
+                    document.getElementById('particleDetail').style.display = 'block';
+                }
+            });
+        });
+        
+        // Funcionalidad para cerrar el detalle
+        document.getElementById('closeBtn').addEventListener('click', function() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('particleDetail').style.display = 'none';
+        });
+        
+        document.getElementById('overlay').addEventListener('click', function() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('particleDetail').style.display = 'none';
+        });
+        
+        // Dibujar líneas de interacción
+        function drawInteractionLines() {
+            const svg = document.querySelector('.interaction-lines');
+            svg.innerHTML = '';
+            
+            // Obtener posiciones de las partículas
+            const particles = document.querySelectorAll('.particle');
+            const positions = [];
+            
+            particles.forEach(particle => {
+                const rect = particle.getBoundingClientRect();
+                const containerRect = document.querySelector('.model-container').getBoundingClientRect();
+                
+                positions.push({
+                    x: rect.left + rect.width/2 - containerRect.left,
+                    y: rect.top + rect.height/2 - containerRect.top,
+                    type: particle.classList.contains('fermion') ? 'fermion' : 
+                          particle.classList.contains('boson') ? 'boson' : 'higgs'
+                });
+            });
+            
+            // Dibujar líneas entre partículas
+            for (let i = 0; i < positions.length; i++) {
+                for (let j = i + 1; j < positions.length; j++) {
+                    // Solo conectar fermiones con bosones o con Higgs
+                    if ((positions[i].type === 'fermion' && positions[j].type === 'boson') ||
+                        (positions[i].type === 'boson' && positions[j].type === 'fermion') ||
+                        (positions[i].type === 'fermion' && positions[j].type === 'higgs') ||
+                        (positions[i].type === 'boson' && positions[j].type === 'higgs')) {
+                        
+                        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                        line.setAttribute('x1', positions[i].x);
+                        line.setAttribute('y1', positions[i].y);
+                        line.setAttribute('x2', positions[j].x);
+                        line.setAttribute('y2', positions[j].y);
+                        line.setAttribute('class', 'line');
+                        line.setAttribute('stroke-dasharray', positions[i].type === 'boson' ? '5,5' : '');
+                        
+                        svg.appendChild(line);
+                    }
+                }
+            }
+        }
+        
+        // Inicializar y redibujar al cambiar tamaño de ventana
+        window.addEventListener('load', drawInteractionLines);
+        window.addEventListener('resize', drawInteractionLines);
+    </script>
+</body>
+</html>
