@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Física de Radares - Documento Académico</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --primary: #1a3a52;
+            --secondary: #2c5f7c;
+            --accent: #4a90e2;
+            --light: #f5f7fa;
+            --dark: #2c3e50;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --bg-light: #ffffff;
+            --text-light: #333333;
+            --card-light: #ffffff;
+            --equation-light: #f8f9fa;
+            --code-light: #2c3e50;
+            --code-text-light: #ecf0f1;
+            --bg-dark: #1a1a2e;
+            --text-dark: #f5f5f5;
+            --card-dark: #16213e;
+            --equation-dark: #0f3460;
+            --code-dark: #0f3460;
+            --code-text-dark: #eaeaea;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--light) 0%, #e4e8f0 100%);
+            color: var(--text-light);
+            line-height: 1.6;
+            padding: 0;
+            margin: 0;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        body.dark-mode {
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #0f1419 100%);
+            color: var(--text-dark);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            animation: pulse 15s infinite linear;
+        }
+
+        @keyframes pulse {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            font-weight: 300;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .author {
+            font-size: 1rem;
+            font-style: italic;
+            position: relative;
+            z-index: 1;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            background: #3a7bc8;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .card {
+            background: var(--card-light);
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        body.dark-mode .card {
+            background: var(--card-dark);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        body.dark-mode h2 {
+            color: var(--accent);
+        }
+
+        h3 {
+            color: var(--secondary);
+            font-size: 1.4rem;
+            margin: 25px 0 15px;
+        }
+
+        body.dark-mode h3 {
+            color: #64b5f6;
+        }
+
+        .equation {
+            background: var(--equation-light);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 1.2rem;
+            border-left: 4px solid var(--accent);
+            overflow-x: auto;
+        }
+
+        body.dark-mode .equation {
+            background: var(--equation-dark);
+        }
+
+        .equation-text {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 1.2rem;
+            text-align: center;
+            padding: 15px;
+            background: var(--equation-light);
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid var(--accent);
+        }
+
+        body.dark-mode .equation-text {
+            background: var(--equation-dark);
+        }
+
+        .code-block {
+            background: var(--code-light);
+            color: var(--code-text-light);
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Consolas', 'Monaco', monospace;
+            line-height: 1.5;
+        }
+
+        body.dark-mode .code-block {
+            background: var(--code-dark);
+            color: var(--code-text-dark);
+        }
+
+        .code-block pre {
+            margin: 0;
+        }
+
+        .highlight {
+            background: rgba(74, 144, 226, 0.1);
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        body.dark-mode .highlight {
+            background: rgba(74, 144, 226, 0.2);
+        }
+
+        .interactive-demo {
+            background: linear-gradient(135deg, var(--light) 0%, #e4e8f0 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        body.dark-mode .interactive-demo {
+            background: linear-gradient(135deg, #0f3460 0%, #16213e 100%);
+        }
+
+        .demo-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .control-group label {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        input[type="range"] {
+            width: 150px;
+        }
+
+        .demo-result {
+            margin-top: 20px;
+            padding: 15px;
+            background: var(--card-light);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        body.dark-mode .demo-result {
+            background: var(--card-dark);
+        }
+
+        .radar-animation {
+            width: 100%;
+            height: 300px;
+            position: relative;
+            background: radial-gradient(circle, #1a3a52 0%, #0d1929 100%);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 30px 0;
+        }
+
+        .radar-sweep {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 50%;
+            height: 2px;
+            background: linear-gradient(to right, rgba(74, 144, 226, 0.8), rgba(74, 144, 226, 0));
+            transform-origin: left center;
+            animation: radar-sweep 4s infinite linear;
+        }
+
+        @keyframes radar-sweep {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .radar-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px),
+                radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 20% 20%, 40% 40%;
+            background-position: center;
+        }
+
+        .radar-target {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: var(--danger);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(231, 76, 60, 0.8);
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid var(--light);
+            margin-bottom: 20px;
+        }
+
+        body.dark-mode .tabs {
+            border-bottom-color: #0f3460;
+        }
+
+        .tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .tab.active {
+            border-bottom-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .feature-card {
+            background: var(--card-light);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .feature-card {
+            background: var(--card-dark);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 15px;
+        }
+
+        footer {
+            background: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 50px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .footer-links a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            background: #3a7bc8;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.2rem; }
+            .content { grid-template-columns: 1fr; }
+            .demo-controls { flex-direction: column; align-items: center; }
+            .radar-animation { height: 200px; }
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" id="theme-toggle"><i class="fas fa-moon"></i></button>
+    
+    <header>
+        <div class="container">
+            <h1>Física de Radares: Principios y Aplicaciones</h1>
+            <p class="subtitle">Documento Académico para Uso Educativo</p>
+            <p class="author">Profesor Ángel Chacín Ávila<br>Licenciado en Física, Especialista en Ciencias Computacionales<br>Docente e Investigador de la Universidad Nacional Experimental de la Seguridad, Núcleo Zulia</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="content">
+            <div class="card">
+                <h2>Introducción a la Física de Radares</h2>
+                <p>El radar (RAdio Detection And Ranging) es un sistema de detección que utiliza ondas electromagnéticas para identificar la presencia, dirección, distancia y velocidad de objetos. Su funcionamiento se basa en los principios fundamentales del electromagnetismo y la propagación de ondas.</p>
+                
+                <div class="radar-animation">
+                    <div class="radar-grid"></div>
+                    <div class="radar-sweep"></div>
+                    <div class="radar-target" style="top: 30%; left: 60%;"></div>
+                    <div class="radar-target" style="top: 70%; left: 40%;"></div>
+                    <div class="radar-target" style="top: 50%; left: 80%;"></div>
+                </div>
+                
+                <p>Los radares operan transmitiendo pulsos de energía electromagnética y analizando las señales reflejadas (eco) por los objetivos. La física subyacente incluye:</p>
+                <ul>
+                    <li>Teoría electromagnética de Maxwell</li>
+                    <li>Propagación de ondas en diferentes medios</li>
+                    <li>Interacción entre ondas y materiales</li>
+                    <li>Efecto Doppler para medición de velocidad</li>
+                    <li>Procesamiento de señales y análisis espectral</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>Ecuación del Radar: Derivación y Análisis</h2>
+                <p>La ecuación del radar es fundamental para entender la relación entre la potencia transmitida y la potencia recibida desde un objetivo. Su derivación se basa en la ley de la inversa del cuadrado y las características de las antenas.</p>
+                
+                <h3>Derivación Paso a Paso</h3>
+                <ol>
+                    <li><strong>Potencia en el objetivo:</strong> La potencia incidente sobre el objetivo a una distancia R es:
+                        <div class="equation-text">
+                            P<sub>inc</sub> = (P<sub>t</sub> · G<sub>t</sub>) / (4π · R<sup>2</sup>)
+                        </div>
+                        donde P<sub>t</sub> es la potencia transmitida y G<sub>t</sub> es la ganancia de la antena transmisora.
+                    </li>
+                    <li><strong>Potencia reflejada:</strong> El objetivo refleja una potencia proporcional a su sección transversal de radar (RCS, σ):
+                        <div class="equation-text">
+                            P<sub>ref</sub> = P<sub>inc</sub> · σ = (P<sub>t</sub> · G<sub>t</sub> · σ) / (4π · R<sup>2</sup>)
+                        </div>
+                    </li>
+                    <li><strong>Potencia recibida:</strong> La potencia reflejada se propaga de vuelta al radar. La densidad de potencia en el receptor es:
+                        <div class="equation-text">
+                            S<sub>r</sub> = P<sub>ref</sub> / (4π · R<sup>2</sup>) = (P<sub>t</sub> · G<sub>t</sub> · σ) / (4π · R<sup>2</sup>)<sup>2</sup>
+                        </div>
+                    </li>
+                    <li><strong>Potencia captada por el receptor:</strong> La potencia recibida por la antena receptora con área efectiva A<sub>e</sub> es:
+                        <div class="equation-text">
+                            P<sub>r</sub> = S<sub>r</sub> · A<sub>e</sub> = (P<sub>t</sub> · G<sub>t</sub> · σ · A<sub>e</sub>) / (4π)<sup>2</sup> · R<sup>4</sup>
+                        </div>
+                    </li>
+                    <li><strong>Relación con ganancia:</strong> Usando la relación entre ganancia y área efectiva A<sub>e</sub> = (G<sub>r</sub> · λ<sup>2</sup>) / (4π):
+                        <div class="equation-text">
+                            P<sub>r</sub> = (P<sub>t</sub> · G<sub>t</sub> · G<sub>r</sub> · λ<sup>2</sup> · σ) / (4π)<sup>3</sup> · R<sup>4</sup>
+                        </div>
+                    </li>
+                </ol>
+                
+                <div class="interactive-demo">
+                    <h3>Simulador de Ecuación del Radar</h3>
+                    <div class="demo-controls">
+                        <div class="control-group">
+                            <label for="distance">Distancia (km)</label>
+                            <input type="range" id="distance" min="1" max="100" value="10">
+                            <span id="distanceValue">10</span>
+                        </div>
+                        <div class="control-group">
+                            <label for="power">Potencia (kW)</label>
+                            <input type="range" id="power" min="10" max="1000" value="100">
+                            <span id="powerValue">100</span>
+                        </div>
+                        <div class="control-group">
+                            <label for="rcs">RCS (m²)</label>
+                            <input type="range" id="rcs" min="0.1" max="100" step="0.1" value="1">
+                            <span id="rcsValue">1</span>
+                        </div>
+                    </div>
+                    <div class="demo-result">
+                        <p>Potencia recibida: <span id="receivedPower">Calculando...</span> W</p>
+                        <p>Atenuación: <span id="attenuation">Calculando...</span> dB</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Efectos Ionosféricos en la Propagación Radar</h2>
+                <p>La ionosfera, capa de la atmósfera ionizada por la radiación solar, afecta significativamente la propagación de las ondas de radar, especialmente en frecuencias bajas (HF y VHF).</p>
+                
+                <h3>Principales Efectos</h3>
+                <ul>
+                    <li><strong>Refracción:</strong> El índice de refracción ionosférico depende de la frecuencia y la densidad electrónica. Causa curvatura de las trayectorias de las ondas.</li>
+                    <li><strong>Dispersión:</strong> Diferentes componentes de frecuencia viajan a diferentes velocidades, distorsionando pulsos anchos.</li>
+                    <li><strong>Absorción:</strong> Las colisiones entre electrones y partículas neutras absorben energía, especialmente en la capa D durante el día.</li>
+                    <li><strong>Rotación de Faraday:</strong> La ionosfera actúa como un medio birrefringente, rotando el plano de polarización de las ondas.</li>
+                    <li><strong>Reflexión:</strong> En frecuencias inferiores a la frecuencia crítica, las ondas son reflejadas hacia la Tierra.</li>
+                </ul>
+                
+                <div class="equation-text">
+                    n = √(1 - (80.8 · N<sub>e</sub>) / f<sup>2</sup>)
+                </div>
+                <p>Donde n es el índice de refracción, N<sub>e</sub> es la densidad electrónica (electrones/m³) y f es la frecuencia (Hz).</p>
+                
+                <h3>Modelado de Efectos Ionosféricos</h3>
+                <p>Para sistemas de radar que operan a través de la ionosfera (como radares de sobrehorizonte), es crucial modelar estos efectos:</p>
+                <div class="code-block">
+                    <pre>! Ejemplo en Fortran: Modelo de refracción ionosférica
+program ionosphere_model
+    implicit none
+    real :: frequency, electron_density, refractive_index
+    
+    ! Parámetros de entrada
+    frequency = 10e6     ! 10 MHz
+    electron_density = 1e11  ! electrones/m³
+    
+    ! Cálculo del índice de refracción
+    refractive_index = sqrt(1.0 - (80.8 * electron_density) / (frequency**2))
+    
+    print *, 'Índice de refracción: ', refractive_index
+    print *, 'Ángulo de refracción: ', acos(refractive_index) * 180.0 / 3.14159, ' grados'
+end program ionosphere_model</pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Diseño de Antenas para Sistemas Radar</h2>
+                <p>Las antenas son componentes críticos en los sistemas radar, determinando su directividad, ganancia y resolución angular. El diseño depende de la aplicación y frecuencia de operación.</p>
+                
+                <h3>Tipos de Antenas Radar</h3>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-broadcast-tower"></i></div>
+                        <h4>Antenas Parabólicas</h4>
+                        <p>Alta ganancia y directividad, ideales para radares de largo alcance.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-satellite-dish"></i></div>
+                        <h4>Antenas de Array</h4>
+                        <p>Permiten conformación de haces electrónicos y escaneo rápido sin partes móviles.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-wave-square"></i></div>
+                        <h4>Antenas de Ranura</h4>
+                        <p>Comunes en radares marítimos, ofrecen bajo perfil y buena resistencia ambiental.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-network-wired"></i></div>
+                        <h4>Antenas Phased Array</h4>
+                        <p>Control electrónico de la dirección del haz, esenciales para sistemas modernos.</p>
+                    </div>
+                </div>
+                
+                <h3>Parámetros Clave de Diseño</h3>
+                <ul>
+                    <li><strong>Ganancia (G):</strong> Relación entre la radiación en la dirección deseada y la de una antena isotrópica.</li>
+                    <li><strong>Ancho de Haz:</strong> Ángulo entre los puntos de media potencia del lóbulo principal.</li>
+                    <li><strong>Relación Lóbulo Principal/Lateral:</strong> Importante para distinguir objetivos de interferencias.</li>
+                    <li><strong>Polarización:</strong> Lineal, circular o elíptica, según la aplicación.</li>
+                </ul>
+                
+                <div class="equation-text">
+                    G = (4π · A<sub>e</sub>) / λ<sup>2</sup> &nbsp;&nbsp;&nbsp; y &nbsp;&nbsp;&nbsp; θ ≈ (70 · λ) / D
+                </div>
+                <p>Donde A<sub>e</sub> es el área efectiva, λ la longitud de onda, θ el ancho de haz en grados y D el diámetro de la antena.</p>
+            </div>
+
+            <div class="card">
+                <h2>Firmas de Radar de Aviones Furtivos</h2>
+                <p>Los aviones furtivos (stealth) están diseñados para minimizar su sección transversal de radar (RCS), dificultando su detección por sistemas radar convencionales.</p>
+                
+                <h3>Técnicas de Reducción de RCS</h3>
+                <ul>
+                    <li><strong>Diseño Geométrico:</strong> Superfacetado que redirige la energía reflejada lejos del radar receptor.</li>
+                    <li><strong>Materiales Absorbentes de Radar (RAM):</strong> Compuestos que convierten la energía EM en calor.</li>
+                    <li><strong>Continuidad de Superficie:</strong> Eliminación de bordes y cavidades que actúan como reflectores.</li>
+                    <li><strong>Tratamiento de Bordes:</strong> Uso de geometrías dentadas en bordes para dispersar la energía.</li>
+                    <li><strong>Reducción de Emisiones:</strong> Minimización de fuentes IR y EM propias.</li>
+                </ul>
+                
+                <h3>Análisis de Firmas Radar</h3>
+                <p>La firma radar de un avión furtivo depende de:</p>
+                <ul>
+                    <li>Frecuencia del radar incidente</li>
+                    <li>Ángulo de incidencia y azimut</li>
+                    <li>Polarización de la onda</li>
+                    <li>Material y geometría de la superficie</li>
+                </ul>
+                
+                <div class="tabs">
+                    <div class="tab active" onclick="openTab(event, 'python-sim')">Simulación Python</div>
+                    <div class="tab" onclick="openTab(event, 'fortran-sim')">Simulación Fortran</div>
+                    <div class="tab" onclick="openTab(event, 'research')">Investigación</div>
+                </div>
+                
+                <div id="python-sim" class="tab-content active">
+                    <h3>Simulación de RCS en Python</h3>
+                    <div class="code-block">
+                        <pre>import numpy as np
+import matplotlib.pyplot as plt
+from scipy.special import jv  # Funciones de Bessel
+
+def calculate_rcs_simple(frequency, angle, size):
+    """
+    Modelo simplificado de RCS para un objeto esférico
+    :param frequency: Frecuencia en Hz
+    :param angle: Ángulo de incidencia en radianes
+    :param size: Radio del objeto en metros
+    :return: RCS en m²
+    """
+    wavelength = 3e8 / frequency
+    k = 2 * np.pi / wavelength  # Número de onda
+    
+    # Modelo de esfera (Rayleigh para objetos pequeños)
+    if k * size < 1:
+        rcs = (9 * np.pi * (k * size)**6 * size**2) / 4
+    else:
+        # Modelo óptico para objetos grandes
+        rcs = np.pi * size**2
+    
+    # Variación angular simplificada
+    rcs *= np.abs(np.cos(angle))**2
+    
+    return rcs
+
+# Parámetros de simulación
+freq = 10e9  # 10 GHz
+angles = np.linspace(0, np.pi/2, 100)
+size = 2.0  # 2 metros de radio
+
+# Cálculo de RCS
+rcs_values = [calculate_rcs_simple(freq, angle, size) for angle in angles]
+
+# Visualización
+plt.figure(figsize=(10, 6))
+plt.plot(np.degrees(angles), 10 * np.log10(rcs_values))
+plt.title('RCS vs Ángulo de Incidencia (Modelo Simplificado)')
+plt.xlabel('Ángulo (grados)')
+plt.ylabel('RCS (dBsm)')
+plt.grid(True)
+plt.show()</pre>
+                    </div>
+                </div>
+                
+                <div id="fortran-sim" class="tab-content">
+                    <h3>Simulación de RCS en Fortran</h3>
+                    <div class="code-block">
+                        <pre>! Simulación numérica de RCS para geometrías complejas
+program rcs_simulation
+    implicit none
+    integer, parameter :: dp = kind(1.0d0)
+    real(dp), parameter :: pi = 3.14159265358979323846_dp
+    real(dp), parameter :: c = 299792458.0_dp  ! Velocidad de la luz
+    
+    ! Parámetros de simulación
+    real(dp) :: frequency, wavelength, k
+    real(dp) :: size, angle, rcs
+    integer :: i, num_angles
+    real(dp), dimension(:), allocatable :: angles, rcs_values
+    
+    ! Inicialización
+    frequency = 10.0e9_dp  ! 10 GHz
+    wavelength = c / frequency
+    k = 2.0_dp * pi / wavelength
+    size = 2.0_dp  ! 2 metros
+    num_angles = 100
+    
+    allocate(angles(num_angles))
+    allocate(rcs_values(num_angles))
+    
+    ! Generación de ángulos
+    do i = 1, num_angles
+        angles(i) = (i-1) * pi / (2.0_dp * (num_angles-1))
+    end do
+    
+    ! Cálculo de RCS (modelo de placa plana)
+    do i = 1, num_angles
+        angle = angles(i)
+        ! Modelo de placa plana (óptico)
+        rcs = (4.0_dp * pi * (size**4) / (wavelength**2)) * (sin(k * size * sin(angle)) / (k * size * sin(angle)))**2
+        rcs_values(i) = rcs
+    end do
+    
+    ! Resultados (en práctica se guardarían en archivo)
+    print *, 'Simulación completada para ', num_angles, ' ángulos'
+    print *, 'RCS máximo: ', maxval(rcs_values), ' m²'
+    print *, 'RCS mínimo: ', minval(rcs_values), ' m²'
+    
+    deallocate(angles)
+    deallocate(rcs_values)
+end program rcs_simulation</pre>
+                    </div>
+                </div>
+                
+                <div id="research" class="tab-content">
+                    <h3>Investigación en Firmas Radar</h3>
+                    <p>La investigación en firmas radar de aeronaves furtivas abarca múltiples disciplinas:</p>
+                    <ol>
+                        <li><strong>Modelado Electromagnético:</strong>
+                            <ul>
+                                <li>Método de los Momentos (MoM) para estructuras complejas</li>
+                                <li>Técnica de Diferencias Finitas en el Dominio del Tiempo (FDTD)</li>
+                                <li>Método de Elementos Finitos (FEM)</li>
+                            </ul>
+                        </li>
+                        <li><strong>Medición Experimental:</strong>
+                            <ul>
+                                <li>Cámaras anecoicas para mediciones controladas</li>
+                                <li>Radares de banda ancha para caracterización completa</li>
+                                <li>Sistemas de polarimetría para análisis de materiales</li>
+                            </ul>
+                        </li>
+                        <li><strong>Análisis de Señales:</strong>
+                            <ul>
+                                <li>Procesamiento de alta resolución (SAR/ISAR)</li>
+                                <li>Técnicas de reconocimiento de patrones</li>
+                                <li>Inteligencia artificial para clasificación de blancos</li>
+                            </ul>
+                        </li>
+                        <li><strong>Contramedidas y Detección:</strong>
+                            <ul>
+                                <li>Radares de baja frecuencia (L-band) para penetrar RAM</li>
+                                <li>Sistemas multistáticos para explotar reflexiones laterales</li>
+                                <li>Redes de sensores distribuidos</li>
+                            </ul>
+                        </li>
+                    </ol>
+                    
+                    <p>Las líneas de investigación actuales incluyen:</p>
+                    <ul>
+                        <li>Desarrollo de metamateriales con propiedades electromagnéticas ajustables</li>
+                        <li>Técnicas de fusión de datos multisensoriales</li>
+                        <li>Algoritmos de aprendizaje profundo para detección de firmas débiles</li>
+                        <li>Sistemas de radar cuántico para mayor sensibilidad</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Simulación Numérica de Firmas Radar</h2>
+                <p>La simulación numérica es esencial para predecir y analizar la firma radar de objetos complejos sin necesidad de construir prototipos físicos.</p>
+                
+                <h3>Métodos Numéricos Comunes</h3>
+                <ul>
+                    <li><strong>Método de los Momentos (MoM):</strong> Ideal para estructuras metálicas y abiertas.</li>
+                    <li><strong>Técnica FDTD:</strong> Excelente para problemas transitorios y materiales complejos.</li>
+                    <li><strong>Método de Elementos Finitos (FEM):</strong> Adecuado para geometrías irregulares y materiales anisotrópicos.</li>
+                    <li><strong>Técnica de Rayos (Ray Tracing):</strong> Eficiente para problemas de alta frecuencia.</li>
+                </ul>
+                
+                <h3>Ejemplo de Simulación en Python</h3>
+                <div class="code-block">
+                    <pre>import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
+def simulate_aircraft_rcs():
+    """
+    Simulación simplificada de RCS para un modelo de aeronave furtiva
+    """
+    # Parámetros de la aeronave (modelo simplificado)
+    length = 20.0  # metros
+    wingspan = 15.0  # metros
+    height = 4.0    # metros
+    
+    # Frecuencia de operación
+    frequency = 3e9  # 3 GHz
+    wavelength = 3e8 / frequency
+    
+    # Ángulos de simulación (azimut y elevación)
+    azimuth = np.linspace(0, 360, 73)
+    elevation = np.linspace(-30, 30, 13)
+    
+    # Inicializar matriz RCS
+    rcs_matrix = np.zeros((len(elevation), len(azimuth)))
+    
+    # Modelo de RCS simplificado (basado en geometría)
+    for i, elev in enumerate(elevation):
+        for j, azim in enumerate(azimuth):
+            # Convertir a radianes
+            az_rad = np.radians(azim)
+            el_rad = np.radians(elev)
+            
+            # Modelo simplificado: RCS mínimo en frente, máximo en laterales
+            if (azim > 315 or azim < 45) and abs(elev) < 10:
+                # Frente de la aeronave (diseño furtivo)
+                rcs = 0.01  # 0.01 m² (-20 dBsm)
+            elif (azim > 135 and azim < 225) and abs(elev) < 10:
+                # Parte trasera
+                rcs = 0.1   # 0.1 m² (-10 dBsm)
+            else:
+                # Laterales y otros ángulos
+                rcs = 1.0   # 1 m² (0 dBsm)
+            
+            # Variación con frecuencia
+            rcs *= (wavelength / 0.1)**2
+            
+            # Variación angular
+            rcs *= np.cos(el_rad)**2
+            
+            rcs_matrix[i, j] = rcs
+    
+    # Visualización
+    fig = plt.figure(figsize=(12, 8))
+    ax = fig.add_subplot(111, projection='3d')
+    
+    # Crear malla para el gráfico
+    Az, El = np.meshgrid(azimuth, elevation)
+    
+    # Gráfico de superficie
+    surf = ax.plot_surface(Az, El, 10*np.log10(rcs_matrix), cmap='viridis', 
+                          linewidth=0, antialiased=True, alpha=0.8)
+    
+    ax.set_xlabel('Azimuth (grados)')
+    ax.set_ylabel('Elevación (grados)')
+    ax.set_zlabel('RCS (dBsm)')
+    ax.set_title('Firma Radar de Aeronave Furtiva (Modelo Simplificado)')
+    
+    # Barra de color
+    fig.colorbar(surf, ax=ax, shrink=0.5, aspect=5)
+    
+    plt.tight_layout()
+    plt.show()
+
+# Ejecutar simulación
+simulate_aircraft_rcs()</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p>Copyright 2025, Ángel Chacín Ávila</p>
+            <p>Documento de divulgación científica</p>
+            <div class="footer-links">
+                <a href="#"><i class="fas fa-university"></i> Universidad Nacional Experimental de la Seguridad</a>
+                <a href="#"><i class="fas fa-envelope"></i> Contacto</a>
+                <a href="#"><i class="fas fa-file-pdf"></i> Descargar PDF</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Configuración de MathJax
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+        
+        // Funcionalidad para pestañas
+        function openTab(evt, tabName) {
+            var i, tabcontent, tabs;
+            
+            // Ocultar todo el contenido de las pestañas
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            
+            // Quitar la clase activa de todos los botones de pestaña
+            tabs = document.getElementsByClassName("tab");
+            for (i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove("active");
+            }
+            
+            // Mostrar la pestaña específica
+            document.getElementById(tabName).classList.add("active");
+            
+            // Añadir la clase activa al botón que abrió la pestaña
+            evt.currentTarget.classList.add("active");
+        }
+
+        // Simulador de ecuación del radar
+        document.addEventListener('DOMContentLoaded', function() {
+            const distanceSlider = document.getElementById('distance');
+            const powerSlider = document.getElementById('power');
+            const rcsSlider = document.getElementById('rcs');
+            
+            const distanceValue = document.getElementById('distanceValue');
+            const powerValue = document.getElementById('powerValue');
+            const rcsValue = document.getElementById('rcsValue');
+            
+            const receivedPower = document.getElementById('receivedPower');
+            const attenuation = document.getElementById('attenuation');
+            
+            // Constantes
+            const Pt = 100000; // 100 kW en vatios
+            const Gt = 35;     // Ganancia antena transmisora (35 dB)
+            const Gr = 35;     // Ganancia antena receptora (35 dB)
+            const lambda = 0.03; // Longitud de onda (3 cm)
+            
+            function updateSimulation() {
+                const R = parseFloat(distanceSlider.value) * 1000; // Convertir a metros
+                const power = parseFloat(powerSlider.value) * 1000; // Convertir a vatios
+                const rcs = parseFloat(rcsSlider.value);
+                
+                // Actualizar valores mostrados
+                distanceValue.textContent = distanceSlider.value;
+                powerValue.textContent = powerSlider.value;
+                rcsValue.textContent = rcsSlider.value;
+                
+                // Calcular potencia recibida usando la ecuación del radar
+                const numerator = power * (10**(Gt/10)) * (10**(Gr/10)) * (lambda**2) * rcs;
+                const denominator = (4 * Math.PI)**3 * (R**4);
+                const Pr = numerator / denominator;
+                
+                // Calcular atenuación en dB
+                const attenuation_db = 10 * Math.log10(Pt / Pr);
+                
+                // Mostrar resultados
+                receivedPower.textContent = Pr.toExponential(2);
+                attenuation.textContent = attenuation_db.toFixed(2);
+            }
+            
+            // Event listeners
+            distanceSlider.addEventListener('input', updateSimulation);
+            powerSlider.addEventListener('input', updateSimulation);
+            rcsSlider.addEventListener('input', updateSimulation);
+            
+            // Inicializar
+            updateSimulation();
+        });
+        
+        // Funcionalidad para modo oscuro/claro
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+        
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            
+            // Cambiar el ícono del botón
+            const icon = themeToggle.querySelector('i');
+            if (body.classList.contains('dark-mode')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            }
+        });
+    </script>
+</body>
+</html>
