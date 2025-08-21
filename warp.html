@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estudio Preliminar: Herramientas Computacionales para Simulaciones de Burbujas Warp</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #1a237e;
+            --secondary-color: #3949ab;
+            --accent-color: #7986cb;
+            --light-color: #e8eaf6;
+            --dark-color: #0d1b2a;
+            --text-color: #333;
+        }
+        
+        body {
+            font-family: 'Georgia', serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 30px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.4rem;
+            margin-bottom: 15px;
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 8px;
+            margin-top: 30px;
+        }
+        
+        h3 {
+            color: var(--secondary-color);
+            margin-top: 25px;
+        }
+        
+        .author-info {
+            font-style: italic;
+            margin: 15px 0;
+        }
+        
+        .abstract {
+            background-color: var(--light-color);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .quote {
+            font-style: italic;
+            border-left: 4px solid var(--accent-color);
+            padding-left: 20px;
+            margin: 25px 0;
+            color: #555;
+        }
+        
+        .code-container {
+            position: relative;
+            margin: 20px 0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .code-header {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 8px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .code-header span {
+            font-weight: bold;
+        }
+        
+        .code-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .code-buttons button {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: background-color 0.3s;
+        }
+        
+        .code-buttons button:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        pre {
+            margin: 0;
+            padding: 15px;
+            background-color: #f5f5f5;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        .references {
+            margin-top: 40px;
+        }
+        
+        .references ol {
+            padding-left: 20px;
+        }
+        
+        .references li {
+            margin-bottom: 10px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 40px 0;
+        }
+        
+        .action-buttons button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+        
+        .action-buttons button:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            border-top: 1px solid #ddd;
+            color: #777;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Estudio Preliminar acerca de herramientas computacionales para simulaciones numéricas de burbujas Warp</h1>
+        <div class="author-info">
+            <p>Profesor Ángel Chacín Ávila</p>
+            <p>Licenciado en Física, Especialista en Ciencias Computacionales</p>
+            <p>Docente e Investigador de la Universidad Nacional Experimental de la Seguridad, Núcleo Zulia</p>
+        </div>
+    </header>
+    
+    <div class="abstract">
+        <h2>Resumen</h2>
+        <p>Este estudio explora las herramientas computacionales disponibles para realizar simulaciones numéricas de burbujas Warp basadas en la métrica de Alcubierre. Se analizan las capacidades de FORTRAN, Python y Scilab para modelar la deformación del espacio-tiempo, cuantificar los requerimientos energéticos y evaluar la estabilidad de estas configuraciones teóricas. El artículo incluye ejemplos de código para cada plataforma y una comparativa exhaustiva de sus ventajas y desventajas en este campo de investigación.</p>
+        <p><strong>Palabras clave:</strong> Burbujas Warp, Métrica de Alcubierre, Simulaciones Numéricas, Relatividad General, Propulsión Warp</p>
+    </div>
+    
+    <div class="quote">
+        <p>"La propulsión por desplazamiento gravimétrico o propulsión Warp será no sólo la puerta a las Estrellas, sino, otro tributo a StarTrek"</p>
+    </div>
+    
+    <h2>Introducción</h2>
+    <p>Las simulaciones numéricas de burbujas Warp representan un campo de investigación interdisciplinario que combina física teórica, relatividad general y computación de alto rendimiento. La métrica de Alcubierre, propuesta en 1994, describe una geometría del espacio-tiempo que permitiría viajar más rápido que la luz sin violar localmente los principios de la relatividad general, mediante la contracción del espacio frente a una nave espacial y la expansión detrás de ella.</p>
+    
+    <p>Este estudio se enfoca en evaluar las herramientas computacionales más adecuadas para implementar estas simulaciones, considerando factores como precisión numérica, eficiencia computacional y facilidad de desarrollo. Se presentan implementaciones prácticas en FORTRAN, Python y Scilab, tres entornos con diferentes ventajas para este tipo de problemas.</p>
+    
+    <h2>Simulaciones con FORTRAN</h2>
+    <p>FORTRAN sigue siendo el lenguaje de referencia en la relatividad numérica debido a su excelente rendimiento en cálculos científicos. Su sintaxis está optimizada para operaciones matriciales y álgebra lineal, esenciales para el cálculo de tensores en la métrica de Alcubierre.</p>
+    
+    <div class="code-container">
+        <div class="code-header">
+            <span>FORTRAN - Implementación de la métrica de Alcubierre</span>
+            <div class="code-buttons">
+                <button onclick="copyCode('fortran-code')">Copiar</button>
+                <button onclick="downloadCode('alcubierre_metric.f90', 'fortran-code')">Descargar</button>
+            </div>
+        </div>
+        <pre id="fortran-code"><code>program alcubierre_metric
+    implicit none
+    integer, parameter :: n = 100 ! puntos de grid
+    real(8) :: x(n), y(n), z(n), t
+    real(8) :: v_s, R, sigma, r_s
+    real(8) :: f(n), df_dx(n), d2f_dx2(n)
+    integer :: i
+
+    ! Parámetros de la burbuja
+    v_s = 1.0d0   ! velocidad
+    R = 10.0d0    ! radio de la burbuja
+    sigma = 0.5d0 ! parámetro de suavizado
+
+    ! Grid en x
+    do i = 1, n
+        x(i) = -50.0d0 + (i-1)*100.0d0/(n-1)
+    end do
+
+    ! Función de forma f(r_s) y sus derivadas
+    do i = 1, n
+        r_s = sqrt(x(i)**2) ! simplificado 1D
+        f(i) = (tanh(sigma*(r_s + R)) - tanh(sigma*(r_s - R))) / (2.0d0*tanh(sigma*R))
+        ! Derivadas numéricas (diferencias centradas)
+        if (i>1 .and. i<n) then
+            df_dx(i) = (f(i+1) - f(i-1)) / (x(i+1)-x(i-1))
+            d2f_dx2(i) = (f(i+1) - 2*f(i) + f(i-1)) / ((x(i)-x(i-1))**2)
+        end if
+    end do
+
+    ! Aquí se calcularían los símbolos de Christoffel y T_{\mu\nu}
+    ! ... (código extenso que implica loops anidados para tensores)
+
+    ! Exportar datos para visualización
+    open(unit=10, file='f_vs_x.dat')
+    do i = 1, n
+        write(10,*) x(i), f(i), df_dx(i), d2f_dx2(i)
+    end do
+    close(10)
+end program alcubierre_metric</code></pre>
+    </div>
+    
+    <h2>Simulaciones con Python</h2>
+    <p>Python ofrece un equilibrio ideal entre rendimiento y productividad del desarrollador. Su ecosistema de bibliotecas científicas (NumPy, SciPy, SymPy) lo convierte en una opción excelente para prototipado rápido y análisis de resultados.</p>
+    
+    <div class="code-container">
+        <div class="code-header">
+            <span>Python - Implementación con cálculo simbólico</span>
+            <div class="code-buttons">
+                <button onclick="copyCode('python-code')">Copiar</button>
+                <button onclick="downloadCode('alcubierre_metric.py', 'python-code')">Descargar</button>
+            </div>
+        </div>
+        <pre id="python-code"><code>import numpy as np
+import sympy as sp
+from sympy import tensor, Function
+from sympy.diffgeom import Manifold, Patch, CoordSystem, TensorProduct
+
+# Definir coordenadas y métrica
+M = Manifold('M', 4)
+P = Patch('P', M)
+coord = CoordSystem('coord', P, ['t', 'x', 'y', 'z'])
+t, x, y, z = coord.coord_functions()
+v_s, R, sigma = sp.symbols('v_s R sigma', real=True)
+
+# Función de forma f(r_s)
+r_s = sp.sqrt(x**2 + y**2 + z**2)
+f = (sp.tanh(sigma*(r_s + R)) - sp.tanh(sigma*(r_s - R))) / (2*sp.tanh(sigma*R))
+
+# Métrica de Alcubierre
+metric = tensor.MetricTensor('g', M)
+metric[0,0] = -1
+metric[0,1] = -v_s * f
+metric[1,0] = -v_s * f
+metric[1,1] = 1 - (v_s*f)**2
+metric[2,2] = 1
+metric[3,3] = 1
+
+# Calcular símbolos de Christoffel
+christoffel = metric.christoffel_symbols()
+
+# Calcular tensor de Einstein (simplificado)
+ricci = metric.ricci_tensor()
+einstein = metric.einstein_tensor()
+
+# Lambdify para evaluación numérica
+f_num = sp.lambdify((x, y, z, R, sigma), f, 'numpy')
+christoffel_num = sp.lambdify((x, y, z, v_s, R, sigma), christoffel, 'numpy')
+
+# Evaluar en una grid numérica
+X, Y, Z = np.mgrid[-50:50:100j, -50:50:100j, -50:50:100j]
+f_vals = f_num(X, Y, Z, R=10.0, sigma=0.5)</code></pre>
+    </div>
+    
+    <h2>Simulaciones con Scilab</h2>
+    <p>Scilab es una alternativa open-source a MATLAB, ideal para modelos numéricos más pequeños y con fines educativos. Su sintaxis sencilla y capacidades de visualización integradas lo hacen accesible para investigadores que inician en este campo.</p>
+    
+    <div class="code-container">
+        <div class="code-header">
+            <span>Scilab - Implementación básica</span>
+            <div class="code-buttons">
+                <button onclick="copyCode('scilab-code')">Copiar</button>
+                <button onclick="downloadCode('alcubierre_metric.sce', 'scilab-code')">Descargar</button>
+            </div>
+        </div>
+        <pre id="scilab-code"><code>// Parámetros
+v_s = 1.0;
+R = 10.0;
+sigma = 0.5;
+n = 100;
+x = linspace(-50, 50, n);
+
+// Función de forma f(r_s)
+r_s = abs(x);
+f = (tanh(sigma*(r_s + R)) - tanh(sigma*(r_s - R))) / (2*tanh(sigma*R));
+
+// Derivadas numéricas
+df_dx = derivative(f, x);
+d2f_dx2 = derivative(df_dx, x);
+
+// Gráfico
+scf(0);
+plot(x, f, 'b-', x, df_dx, 'r--', x, d2f_dx2, 'g-.');
+xlabel('x');
+ylabel('f y derivadas');
+legend(['f'; 'df/dx'; 'd2f/dx2']);
+
+// Exportar datos para uso externo
+csvWrite([x', f', df_dx', d2f_dx2'], 'alcubierre_data.csv');</code></pre>
+    </div>
+    
+    <h2>Comparativa de Herramientas</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Aspecto</th>
+                <th>FORTRAN</th>
+                <th>Python</th>
+                <th>Scilab</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Rendimiento</td>
+                <td>Muy alto</td>
+                <td>Medio (alto con GPU)</td>
+                <td>Medio-bajo</td>
+            </tr>
+            <tr>
+                <td>Facilidad de uso</td>
+                <td>Baja (verbose)</td>
+                <td>Alta</td>
+                <td>Alta</td>
+            </tr>
+            <tr>
+                <td>Visualización</td>
+                <td>Externa (Gnuplot, etc.)</td>
+                <td>Excelente (Matplotlib)</td>
+                <td>Integrada buena</td>
+            </tr>
+            <tr>
+                <td>Cálculo simbólico</td>
+                <td>No</td>
+                <td>Sí (SymPy)</td>
+                <td>No</td>
+            </tr>
+            <tr>
+                <td>Paralelización</td>
+                <td>MPI/OpenMP nativo</td>
+                <td>MPI via mpi4py</td>
+                <td>Limitada</td>
+            </tr>
+            <tr>
+                <td>Uso ideal</td>
+                <td>Simulaciones grandes de producción</td>
+                <td>Prototipado, análisis y visualización</td>
+                <td>Modelos pequeños educativos</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <h2>Conclusiones</h2>
+    <p>Las simulaciones numéricas de burbujas Warp requieren herramientas computacionales especializadas que equilibren rendimiento, precisión y facilidad de desarrollo. FORTRAN sigue siendo la opción óptima para simulaciones a gran escala que requieren máximo rendimiento, especialmente en entornos de supercomputación.</p>
+    
+    <p>Python emerge como la alternativa más versátil, ideal para investigación, prototipado rápido y análisis completo gracias a su rico ecosistema de bibliotecas científicas. Scilab representa una opción válida para modelos simplificados o con fines educativos, donde la facilidad de uso es prioritaria.</p>
+    
+    <p>El desarrollo futuro en este campo debería considerar enfoques híbridos que aprovechen las fortalezas de cada herramienta, como utilizar Python para pre/post-procesamiento y FORTRAN para el núcleo computacional de alto rendimiento.</p>
+    
+    <div class="references">
+        <h2>Referencias</h2>
+        <ol>
+            <li>Alcubierre, M. (1994). "The warp drive: hyper-fast travel within general relativity". Classical and Quantum Gravity.</li>
+            <li>Lentz, E. (2021). "Breaking the warp barrier: hyper-fast solitons in Einstein–Maxwell-plasma theory". Classical and Quantum Gravity.</li>
+            <li>Bobrick, A., & Martire, G. (2021). "Introducing physical warp drives". Classical and Quantum Gravity.</li>
+            <li>White, H. (2013). "Warp Field Mechanics 101". NASA Johnson Space Center.</li>
+            <li>Villatoro, F. R. (2021). "Sobre la supuesta observación de una burbuja de curvatura de Alcubierre–White". Naukas.</li>
+        </ol>
+    </div>
+    
+    <div class="action-buttons">
+        <button onclick="generatePDF()">Descargar como PDF</button>
+        <button onclick="downloadAllCode()">Descargar todos los códigos</button>
+    </div>
+    
+    <footer>
+        <p>© 2023 - Universidad Nacional Experimental de la Seguridad, Núcleo Zulia</p>
+        <p>Este trabajo ha sido posible gracias al apoyo del Departamento de Investigación y Desarrollo de la UNES</p>
+    </footer>
+    
+    <script>
+        // Función para copiar código al portapapeles
+        function copyCode(elementId) {
+            const codeElement = document.getElementById(elementId);
+            const textArea = document.createElement('textarea');
+            textArea.value = codeElement.textContent;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            
+            alert('Código copiado al portapapeles');
+        }
+        
+        // Función para descargar código individual
+        function downloadCode(filename, elementId) {
+            const codeElement = document.getElementById(elementId);
+            const codeContent = codeElement.textContent;
+            const blob = new Blob([codeContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            
+            // Limpiar
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 100);
+        }
+        
+        // Función para descargar todos los códigos
+        function downloadAllCode() {
+            downloadCode('alcubierre_metric.f90', 'fortran-code');
+            setTimeout(() => {
+                downloadCode('alcubierre_metric.py', 'python-code');
+            }, 300);
+            setTimeout(() => {
+                downloadCode('alcubierre_metric.sce', 'scilab-code');
+            }, 600);
+        }
+        
+        // Función para generar PDF
+        function generatePDF() {
+            const element = document.body;
+            const opt = {
+                margin: 10,
+                filename: 'simulaciones_burbujas_warp.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            
+            html2pdf().set(opt).from(element).save();
+        }
+    </script>
+</body>
+</html>
