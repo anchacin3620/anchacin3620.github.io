@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mecanismos de Crecimiento de Películas Delgadas</title>
+    <style>
+        :root {
+            --primary: #3498db;
+            --primary-dark: #2980b9;
+            --bg: #f4f4f4;
+            --text: #333;
+            --header: #2c3e50;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--bg);
+            color: var(--text);
+        }
+        h1, h2, h3 {
+            color: var(--header);
+        }
+        main {
+            max-width: 900px;
+            margin: auto;
+        }
+        .section {
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .toggle-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            width: 100%;
+            text-align: left;
+            transition: background 0.2s;
+        }
+        .toggle-btn[aria-expanded="true"] {
+            background-color: var(--primary-dark);
+        }
+        .toggle-btn:focus {
+            outline: 2px solid var(--primary-dark);
+        }
+        .content {
+            display: none;
+            animation: fadeIn 0.4s;
+        }
+        .content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            overflow-x: auto;
+            display: block;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            min-width: 120px;
+        }
+        th {
+            background-color: var(--primary);
+            color: white;
+        }
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            background-color: var(--header);
+            color: white;
+            border-radius: 8px;
+        }
+        @media (max-width: 600px) {
+            body { padding: 5px; }
+            .section { padding: 10px; }
+            th, td { font-size: 0.95em; }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>Mecanismos de Crecimiento de Películas Delgadas</h1>
+
+        <!-- Ejemplo de sección con mejoras de accesibilidad y visuales -->
+        <section class="section">
+            <button class="toggle-btn" type="button" aria-expanded="false" aria-controls="volmer-weber" onclick="toggleSection('volmer-weber', this)">
+                Volmer-Weber (Crecimiento por Islas o 3D) <span aria-hidden="true">▼</span>
+            </button>
+            <div id="volmer-weber" class="content" role="region" aria-labelledby="volmer-weber-btn">
+                <!-- contenido igual al original -->
+                <h3>Descripción</h3>
+                <p>El modelo de Volmer-Weber describe el crecimiento de películas delgadas en el que los átomos depositados forman <strong>islas tridimensionales</strong> sobre el sustrato...</p>
+                <!-- ... -->
+            </div>
+        </section>
+        <!-- Repite para las demás secciones -->
+
+        <!-- Tabla Comparativa -->
+        <section class="section">
+            <h2>Comparación de Modelos de Crecimiento</h2>
+            <div style="overflow-x:auto;">
+                <table>
+                    <tr>
+                        <th>Característica</th>
+                        <th>Volmer-Weber</th>
+                        <th>Frank-van der Merwe</th>
+                        <th>Stranski-Krastanov</th>
+                    </tr>
+                    <tr>
+                        <td>Tipo de Crecimiento</td>
+                        <td>Islas (3D)</td>
+                        <td>Capas (2D)</td>
+                        <td>Capas + Islas (2D → 3D)</td>
+                    </tr>
+                    <!-- Resto de filas igual -->
+                </table>
+            </div>
+        </section>
+
+        <footer>
+            <p>Elaborado por el Profesor Ángel Chacín Ávila...</p>
+        </footer>
+    </main>
+
+    <script>
+        function toggleSection(sectionId, btn) {
+            const content = document.getElementById(sectionId);
+            const isActive = content.classList.contains('active');
+            // Opcional: cerrar otras secciones
+            document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.toggle-btn').forEach(b => b.setAttribute('aria-expanded', 'false'));
+            if (!isActive) {
+                content.classList.add('active');
+                btn.setAttribute('aria-expanded', 'true');
+            }
+        }
+    </script>
+</body>
+</html>
