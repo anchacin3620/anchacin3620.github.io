@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Dilema del Prisionero - Teoría de Juegos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Georgia', serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9f9;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #8B0000;
+            padding-bottom: 20px;
+        }
+        
+        h1 {
+            font-size: 28px;
+            color: #8B0000;
+            margin-bottom: 15px;
+        }
+        
+        h2 {
+            font-size: 22px;
+            color: #8B0000;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+        }
+        
+        h3 {
+            font-size: 18px;
+            color: #8B0000;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        
+        .author-info {
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+        
+        .abstract {
+            background-color: #f0f0f0;
+            padding: 15px;
+            border-left: 4px solid #8B0000;
+            margin-bottom: 25px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #e8e8e8;
+        }
+        
+        .highlight {
+            background-color: #fff8dc;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .reference {
+            font-size: 14px;
+            margin-top: 30px;
+            padding-top: 10px;
+            border-top: 1px solid #ccc;
+        }
+        
+        .simulation-link {
+            display: block;
+            text-align: center;
+            margin: 25px 0;
+            padding: 10px;
+            background-color: #e8e8e8;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #8B0000;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .simulation-link:hover {
+            background-color: #d0d0d0;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #8B0000;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>El Dilema del Prisionero: Un Análisis desde la Teoría de Juegos</h1>
+        <div class="author-info">
+            <p>Profesor Ángel Chacín Ávila</p>
+            <p>Licenciado en Física, Especialista en Ciencias Computacionales, Diplomado en Educación Policial</p>
+            <p>Docente e Investigador de la Universidad Nacional Experimental de la Seguridad</p>
+        </div>
+    </header>
+    
+    <div class="abstract">
+        <p><strong>Resumen:</strong> Este documento analiza el Dilema del Prisionero, un concepto fundamental de la teoría de juegos que ilustra la tensión entre la cooperación y el interés propio. Se examina la situación, se presenta la matriz de pagos y se explica el concepto de Equilibrio de Nash, así como las aplicaciones de este dilema en diversos campos.</p>
+    </div>
+    
+    <h2>Introducción</h2>
+    <p>El Dilema del Prisionero es un concepto fundamental de la teoría de juegos que ilustra la tensión entre la cooperación y el interés propio. Fue formulado originalmente por los matemáticos Merrill M. Flood y Melvin Dresher.</p>
+    
+    <h2>La Situación</h2>
+    <p>Imagina la siguiente historia:</p>
+    <p>Dos criminales, A y B, son arrestados y encerrados en celdas separadas. La policía no tiene pruebas suficientes para condenarlos por el delito más grave, pero sí por un delito menor. Les ofrecen a cada uno el mismo trato, sin que puedan comunicarse entre sí:</p>
+    <ul>
+        <li>Si A confiesa y B no: A es liberado y B es condenado a 20 años de prisión.</li>
+        <li>Si B confiesa y A no: B es liberado y A es condenado a 20 años de prisión.</li>
+        <li>Si ambos confiesan: Ambos son condenados a 10 años de prisión.</li>
+        <li>Si ninguno confiesa: Ambos son condenados a 5 años de prisión por el delito menor.</li>
+    </ul>
+    
+    <h2>El Análisis desde la Teoría de Juegos</h2>
+    <p>Para entender el dilema, se utiliza una matriz de pagos (o matriz de resultados), que muestra las posibles decisiones y sus consecuencias para cada jugador.</p>
+    
+    <table>
+        <tr>
+            <th></th>
+            <th>B Confiesa</th>
+            <th>B No Confiesa</th>
+        </tr>
+        <tr>
+            <td><strong>A Confiesa</strong></td>
+            <td>A: 10 años, B: 10 años</td>
+            <td>A: 0 años, B: 20 años</td>
+        </tr>
+        <tr>
+            <td><strong>A No Confiesa</strong></td>
+            <td>A: 20 años, B: 0 años</td>
+            <td>A: 5 años, B: 5 años</td>
+        </tr>
+    </table>
+    
+    <h2>El Dilema en Sí</h2>
+    <p>La clave del dilema radica en que, a pesar de que la mejor solución colectiva es que ambos se queden callados (resultando en 5 años de prisión para cada uno), la lógica individual lleva a ambos a confesar.</p>
+    <p>Veamos el razonamiento de cada prisionero:</p>
+    
+    <h3>Análisis de A:</h3>
+    <ul>
+        <li>"Si B confiesa, mi mejor opción es confesar también (10 años en lugar de 20)."</li>
+        <li>"Si B no confiesa, mi mejor opción es confesar (ser liberado en lugar de 5 años)."</li>
+    </ul>
+    <p>En ambos casos, la decisión de "confesar" es la que minimiza el riesgo individual y ofrece la mejor recompensa, sin importar lo que haga el otro. Por lo tanto, "confesar" es la <span class="highlight">estrategia dominante</span> para A.</p>
+    
+    <h3>Análisis de B:</h3>
+    <ul>
+        <li>"Si A confiesa, mi mejor opción es confesar también (10 años en lugar de 20)."</li>
+        <li>"Si A no confiesa, mi mejor opción es confesar (ser liberado en lugar de 5 años)."</li>
+    </ul>
+    <p>La misma lógica se aplica a B. "Confesar" es su <span class="highlight">estrategia dominante</span>.</p>
+    
+    <h2>El Equilibrio de Nash</h2>
+    <p>Cuando ambos prisioneros eligen su estrategia dominante, el resultado es que ambos confiesan y ambos reciben una condena de 10 años. Este resultado se conoce como <span class="highlight">Equilibrio de Nash</span>.</p>
+    <p>El Equilibrio de Nash es una situación en la que ningún jugador puede mejorar su resultado cambiando unilateralmente su estrategia, dadas las estrategias de los otros jugadores. En este caso:</p>
+    <ul>
+        <li>A no puede mejorar su resultado cambiando de confesar a no confesar (pasaría de 10 a 20 años).</li>
+        <li>B tampoco puede mejorar su resultado (pasaría de 10 a 20 años).</li>
+    </ul>
+    <p>El dilema se produce porque el Equilibrio de Nash (ambos confiesan) no es el <span class="highlight">óptimo de Pareto</span> (ambos no confiesan), que es la solución más beneficiosa para el grupo en su conjunto. Es un ejemplo clásico de cómo la búsqueda del interés individual puede llevar a un resultado subóptimo para todos.</p>
+    
+    <h2>Aplicaciones del Dilema del Prisionero</h2>
+    <p>Aunque el ejemplo es de prisioneros, el dilema se aplica a una gran cantidad de situaciones en la vida real:</p>
+    <ul>
+        <li><strong>Economía:</strong> La fijación de precios en un oligopolio, donde las empresas pueden decidir cooperar (mantener precios altos) o competir (bajarlos para ganar cuota de mercado, lo que puede llevar a una guerra de precios).</li>
+        <li><strong>Política Internacional:</strong> La carrera armamentista, donde dos países pueden decidir invertir en armas (para estar a salvo si el otro lo hace) o cooperar (desarmarse).</li>
+        <li><strong>Medio Ambiente:</strong> La contaminación, donde las empresas o los países pueden optar por contaminar (para reducir costes) o cooperar (utilizar tecnologías limpias).</li>
+        <li><strong>Sociología:</strong> La cooperación social, donde las personas pueden decidir contribuir a un bien público o beneficiarse del esfuerzo de los demás sin contribuir (ser un "free-rider").</li>
+    </ul>
+    
+    <a href="https://anchacin3620.github.io/juegos.html" class="simulation-link">Simulación Computacional de Teoría de Juegos</a>
+    
+    <div class="reference">
+        <p><strong>Referencias:</strong></p>
+        <p>Flood, M. M., & Dresher, M. (1950). Some experimental games. Research Memorandum. RAND Corporation.</p>
+        <p>Nash, J. F. (1950). Equilibrium points in n-person games. Proceedings of the National Academy of Sciences, 36(1), 48-49.</p>
+        <p>Axelrod, R. (1984). The Evolution of Cooperation. Basic Books.</p>
+    </div>
+    
+    <footer>
+        <p>© 2025 - Documento de divulgación académica</p>
+        <p>Universidad Nacional Experimental de la Seguridad</p>
+    </footer>
+</body>
+</html>
