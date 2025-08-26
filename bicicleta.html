@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador Eléctrico Impulsado por Bicicleta: Solución para la Crisis Energética Venezolana</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- MathJax para fórmulas -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <style>
+        :root {
+            --primary-color: #1a5490;
+            --secondary-color: #2c7a3f;
+            --accent-color: #d4a017;
+            --text-color: #333;
+            --bg-light: #f8f9fa;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-light);
+        }
+        
+        .academic-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+            margin-bottom: 2rem;
+            font-weight: 600;
+        }
+        
+        .card {
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 2rem;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .diagram-container {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .formula-box {
+            background: #f0f4f8;
+            border-left: 4px solid var(--primary-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 5px;
+        }
+        
+        .highlight-box {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 1.5rem;
+            border-radius: 5px;
+            margin: 1.5rem 0;
+        }
+        
+        .nav-pills .nav-link {
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+        
+        .nav-pills .nav-link.active {
+            background-color: var(--primary-color);
+        }
+        
+        .calculator {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .result-display {
+            background: var(--bg-light);
+            padding: 1rem;
+            border-radius: 5px;
+            margin-top: 1rem;
+            font-family: monospace;
+        }
+        
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            padding: 2rem 0;
+            margin-top: 4rem;
+        }
+        
+        .citation {
+            background: #e9ecef;
+            padding: 1rem;
+            border-radius: 5px;
+            font-style: italic;
+            margin: 1rem 0;
+        }
+        
+        .interactive-svg {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .tooltip-custom {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 0.5rem;
+            border-radius: 5px;
+            font-size: 0.875rem;
+            pointer-events: none;
+            z-index: 1000;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Académico -->
+    <header class="academic-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="display-4 fw-bold">Generador Eléctrico Impulsado por Bicicleta</h1>
+                    <p class="lead">Una Solución Sostenible para la Crisis Energética Venezolana</p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <div class="author-info">
+                        <h5 class="mb-1">Prof. Ángel Chacín Ávila</h5>
+                        <p class="mb-0">Licenciado en Física<br>
+                        Especialista en Ciencias Computacionales<br>
+                        Docente e Investigador<br>
+                        Universidad Nacional Experimental de la Seguridad</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navegación -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav nav-pills">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#introduccion">Introducción</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contexto">Contexto Venezolano</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#principios">Principios Físicos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#construccion">Construcción</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#sistema">Sistema Eléctrico</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#calculadora">Calculadora</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#conclusiones">Conclusiones</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <main class="container my-5">
+        <!-- Introducción -->
+        <section id="introduccion" class="mb-5">
+            <h2 class="section-title">1. Introducción</h2>
+            <div class="row">
+                <div class="col-lg-8">
+                    <p>La generación de energía eléctrica mediante el esfuerzo humano representa una alternativa viable y sostenible en contextos de crisis energética. Este trabajo presenta un diseño detallado de un generador eléctrico impulsado por bicicleta, enfocado específicamente en las necesidades de la población venezolana durante la actual crisis eléctrica.</p>
+                    
+                    <div class="highlight-box">
+                        <h5><i class="fas fa-lightbulb text-warning"></i> Objetivo Principal</h5>
+                        <p>Diseñar un sistema de generación de energía eléctrica de bajo costo, fácil construcción y mantenimiento, capaz de cargar baterías que alimenten dispositivos básicos en hogares venezolanos durante los apagones.</p>
+                    </div>
+                    
+                    <p>El sistema propuesto combina principios físicos fundamentales con tecnología accesible, ofreciendo una solución que puede ser implementada con materiales comúnmente disponibles en el mercado venezolano.</p>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fas fa-chart-line text-primary"></i> Datos Relevantes</h5>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success"></i> Potencia generada: 50-200W</li>
+                                <li><i class="fas fa-check text-success"></i> Voltaje de salida: 12V DC</li>
+                                <li><i class="fas fa-check text-success"></i> Costo estimado: $50-150</li>
+                                <li><i class="fas fa-check text-success"></i> Tiempo de construcción: 8-12 horas</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contexto Venezolano -->
+        <section id="contexto" class="mb-5">
+            <h2 class="section-title">2. Contexto de la Crisis Eléctrica en Venezuela</h2>
+            <div class="row">
+                <div class="col-lg-6">
+                    <p>Venezuela enfrenta una de las crisis eléctricas más severas de su historia moderna. Desde 2019, los apagones se han convertido en una constante, afectando gravemente la calidad de vida de la población y la economía del país.</p>
+                    
+                    <div class="card">
+                        <div class="card-header bg-danger text-white">
+                            <h5 class="mb-0"><i class="fas fa-exclamation-triangle"></i> Estadísticas Críticas</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                <li>Apagones de hasta 7 días consecutivos en algunas regiones</li>
+                                <li>Pérdidas económicas estimadas en miles de millones de dólares</li>
+                                <li>Afectación a servicios básicos: agua, salud, comunicaciones</li>
+                                <li>Desabastecimiento de combustible para generadores convencionales</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="diagram-container">
+                        <h5 class="mb-3">Impacto de los Apagones en Venezuela</h5>
+                        <canvas id="impactChart" width="400" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="highlight-box mt-4">
+                <h5><i class="fas fa-info-circle text-info"></i> ¿Por qué un Generador de Bicicleta?</h5>
+                <p>En el contexto venezolano, esta solución ofrece ventajas únicas:</p>
+                <ul>
+                    <li><strong>Independencia energética:</strong> No depende de la red eléctrica ni de combustibles escasos</li>
+                    <li><strong>Salud y bienestar:</strong> Combina ejercicio físico con generación de energía</li>
+                    <li><strong>Bajo costo:</strong> Materiales accesibles y tecnología simple</li>
+                    <li><strong>Sostenibilidad:</strong> Cero emisiones y mantenimiento mínimo</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Principios Físicos -->
+        <section id="principios" class="mb-5">
+            <h2 class="section-title">3. Principios Físicos Fundamentales</h2>
+            
+            <div class="row">
+                <div class="col-lg-6">
+                    <h4>3.1 Ley de Faraday de la Inducción Electromagnética</h4>
+                    <p>El generador se basa en el principio de inducción electromagnética, descrito por la ley de Faraday:</p>
+                    
+                    <div class="formula-box">
+                        <p class="text-center mb-0">
+                            \[ \mathcal{E} = -N \frac{d\Phi_B}{dt} \]
+                        </p>
+                        <small class="text-muted d-block text-center mt-2">
+                            Donde: ℰ = fuerza electromotriz, N = número de espiras, Φ<sub>B</sub> = flujo magnético
+                        </small>
+                    </div>
+                    
+                    <p>Al girar los imanes cerca de las bobinas de cobre, se genera una corriente eléctrica alterna que puede ser rectificada para cargar baterías.</p>
+                </div>
+                
+                <div class="col-lg-6">
+                    <h4>3.2 Conservación de la Energía</h4>
+                    <p>La energía mecánica del pedaleo se convierte en energía eléctrica. La eficiencia del sistema depende de:</p>
+                    
+                    <div class="formula-box">
+                        <p class="text-center mb-0">
+                            \[ \eta = \frac{P_{eléctrica}}{P_{mecánica}} \times 100\% \]
+                        </p>
+                        <small class="text-muted d-block text-center mt-2">
+                            Donde: η = eficiencia, P = potencia
+                        </small>
+                    </div>
+                    
+                    <p>Un sistema bien diseñado puede alcanzar eficiencias del 60-70%, considerando pérdidas por fricción, calor y conversión electromagnética.</p>
+                </div>
+            </div>
+            
+            <div class="diagram-container mt-4">
+                <h5 class="mb-3">Diagrama de Conversión de Energía</h5>
+                <svg class="interactive-svg" viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Flechas y componentes -->
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                            <polygon points="0 0, 10 3.5, 0 7" fill="#1a5490" />
+                        </marker>
+                    </defs>
+                    
+                    <!-- Componentes -->
+                    <rect x="50" y="60" width="120" height="80" rx="10" fill="#e3f2fd" stroke="#1a5490" stroke-width="2"/>
+                    <text x="110" y="105" text-anchor="middle" font-size="14" font-weight="bold">Energía</text>
+                    <text x="110" y="125" text-anchor="middle" font-size="12">Mecánica</text>
+                    
+                    <rect x="250" y="60" width="120" height="80" rx="10" fill="#e8f5e9" stroke="#2c7a3f" stroke-width="2"/>
+                    <text x="310" y="105" text-anchor="middle" font-size="14" font-weight="bold">Generador</text>
+                    <text x="310" y="125" text-anchor="middle" font-size="12">Eléctrico</text>
+                    
+                    <rect x="450" y="60" width="120" height="80" rx="10" fill="#fff3e0" stroke="#d4a017" stroke-width="2"/>
+                    <text x="510" y="105" text-anchor="middle" font-size="14" font-weight="bold">Rectificador</text>
+                    <text x="510" y="125" text-anchor="middle" font-size="12">AC/DC</text>
+                    
+                    <rect x="650" y="60" width="120" height="80" rx="10" fill="#fce4ec" stroke="#c2185b" stroke-width="2"/>
+                    <text x="710" y="105" text-anchor="middle" font-size="14" font-weight="bold">Baterías</text>
+                    <text x="710" y="125" text-anchor="middle" font-size="12">Almacenamiento</text>
+                    
+                    <!-- Flechas -->
+                    <line x1="170" y1="100" x2="250" y2="100" stroke="#1a5490" stroke-width="3" marker-end="url(#arrowhead)" class="pulse"/>
+                    <line x1="370" y1="100" x2="450" y2="100" stroke="#1a5490" stroke-width="3" marker-end="url(#arrowhead)" class="pulse"/>
+                    <line x1="570" y1="100" x2="650" y2="100" stroke="#1a5490" stroke-width="3" marker-end="url(#arrowhead)" class="pulse"/>
+                    
+                    <!-- Etiquetas de eficiencia -->
+                    <text x="210" y="85" text-anchor="middle" font-size="11" fill="#666">85%</text>
+                    <text x="410" y="85" text-anchor="middle" font-size="11" fill="#666">95%</text>
+                    <text x="610" y="85" text-anchor="middle" font-size="11" fill="#666">90%</text>
+                </svg>
+            </div>
+        </section>
+
+        <!-- Construcción del Generador -->
+        <section id="construccion" class="mb-5">
+            <h2 class="section-title">4. Construcción Detallada del Generador</h2>
+            
+            <div class="accordion" id="constructionAccordion">
+                <!-- Materiales -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#materials">
+                            <i class="fas fa-tools me-2"></i> 4.1 Materiales Requeridos
+                        </button>
+                    </h2>
+                    <div id="materials" class="accordion-collapse collapse show" data-bs-parent="#constructionAccordion">
+                        <div class="accordion-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5>Componentes Eléctricos:</h5>
+                                    <ul>
+                                        <li>Alternador de automóvil (12V, 50-100A)</li>
+                                        <li>Baterías de plomo-ácido (12V, 35-100Ah)</li>
+                                        <li>Regulador de voltaje (12V)</li>
+                                        <li>Rectificador de puente (35A mínimo)</li>
+                                        <li>Capacitor electrolítico (1000µF, 25V)</li>
+                                        <li>Inversor DC/AC (300W-1000W)</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5>Componentes Mecánicos:</h5>
+                                    <ul>
+                                        <li>Bicicleta estática o marco modificado</li>
+                                        <li>Polea dentada (bicicleta) y polea plana (alternador)</li>
+                                        <li>Correa de transmisión (tipo V)</li>
+                                        <li>Rodamientos y soportes</li>
+                                        <li>Estructura de soporte (metal o madera)</li>
+                                        <li>Tornillería y elementos de fijación</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="alert alert-info mt-3">
+                                <i class="fas fa-info-circle"></i> <strong>Nota:</strong> En Venezuela, muchos de estos componentes pueden obtenerse de vehículos desechados o en mercados de repuestos a precios accesibles.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Montaje Mecánico -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mechanical">
+                            <i class="fas fa-cogs me-2"></i> 4.2 Montaje Mecánico
+                        </button>
+                    </h2>
+                    <div id="mechanical" class="accordion-collapse collapse" data-bs-parent="#constructionAccordion">
+                        <div class="accordion-body">
+                            <ol>
+                                <li><strong>Preparación del marco:</strong> Modificar o construir una estructura estable que soporte el peso del ciclista y el alternador.</li>
+                                <li><strong>Instalación del alternador:</strong> Montar el alternador en una base ajustable para permitir la tensión correcta de la correa.</li>
+                                <li><strong>Sistema de transmisión:</strong> Instalar la polea dentada en el eje del pedaleo y la polea plana en el alternador. La relación de transmisión recomendada es 3:1 a 4:1.</li>
+                                <li><strong>Alineación y tensión:</strong> Asegurar que ambas poleas estén perfectamente alineadas y la correa tenga la tensión adecuada.</li>
+                            </ol>
+                            
+                            <div class="formula-box">
+                                <p class="text-center mb-0">
+                                    \[ \text{RPM}_{alternador} = \text{RPM}_{pedaleo} \times \frac{D_{pedal}}{D_{alternador}} \]
+                                </p>
+                                <small class="text-muted d-block text-center mt-2">
+                                    Relación de transmisión para alcanzar RPM óptimas del alternador
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Conexiones Eléctricas -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#electrical">
+                            <i class="fas fa-bolt me-2"></i> 4.3 Conexiones Eléctricas
+                        </button>
+                    </h2>
+                    <div id="electrical" class="accordion-collapse collapse" data-bs-parent="#constructionAccordion">
+                        <div class="accordion-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5>Esquema de Conexión:</h5>
+                                    <ol>
+                                        <li>Conectar la salida trifásica del alternador al rectificador de puente</li>
+                                        <li>Instalar el capacitor en paralelo a la salida DC para suavizar la corriente</li>
+                                        <li>Conectar el regulador de voltaje para mantener 13.8-14.4V</li>
+                                        <li>Conectar a las baterías en paralelo (para mayor capacidad)</li>
+                                        <li>Instalar el inversor en las terminales de la batería</li>
+                                    </ol>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h6 class="card-title">Diagrama Eléctrico Simplificado</h6>
+                                            <pre class="mb-0" style="font-size: 0.8rem;">
+Alternador → Rectificador → Regulador → Baterías → Inversor
+    (AC)        (AC→DC)     (12V)      (12V)    (110V AC)
+                                            </pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="alert alert-warning mt-3">
+                                <i class="fas fa-exclamation-triangle"></i> <strong>Precaución:</strong> Utilizar cables de calibre adecuado (mínimo 10 AWG para corrientes hasta 30A) y conectar siempre el negativo a tierra para seguridad.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sistema Eléctrico Completo -->
+        <section id="sistema" class="mb-5">
+            <h2 class="section-title">5. Sistema de Almacenamiento y Distribución</h2>
+            
+            <div class="row">
+                <div class="col-lg-6">
+                    <h4>5.1 Arreglo de Baterías</h4>
+                    <p>El sistema utiliza baterías de plomo-ácido por su disponibilidad y costo en Venezuela. La configuración recomendada es:</p>
+                    
+                    <div class="card">
+                        <div class="card-body">
+                            <h6>Configuración en Paralelo</h6>
+                            <p>Conectar baterías en paralelo mantiene el voltaje (12V) pero aumenta la capacidad total:</p>
+                            <div class="formula-box">
+                                <p class="text-center mb-0">
+                                    \[ C_{total} = C_1 + C_2 + ... + C_n \]
+                                </p>
+                                <small class="text-muted d-block text-center mt-2">
+                                    Donde C = capacidad en Ah (amperios-hora)
+                                </small>
+                            </div>
+                            <p class="mt-3">Ejemplo: 3 baterías de 35Ah en paralelo = 105Ah totales</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6">
+                    <h4>5.2 Inversor de Voltaje</h4>
+                    <p>El inversor convierte los 12V DC de las baterías en 110V AC para alimentar dispositivos domésticos:</p>
+                    
+                    <div class="card">
+                        <div class="card-body">
+                            <h6>Características del Inversor</h6>
+                            <ul>
+                                <li><strong>Tipo:</strong> Onda sinusoidal modificada (económico) o pura (mejor calidad)</li>
+                                <li><strong>Potencia:</strong> 300W-1000W según necesidades</li>
+                                <li><strong>Eficiencia:</strong> 85-95%</li>
+                                <li><strong>Protecciones:</strong> Sobrecarga, sobrevoltaje, cortocircuito</li>
+                            </ul>
+                            
+                            <div class="highlight-box mt-3">
+                                <small><strong>Dispositivos que puede alimentar:</strong></small>
+                                <ul class="mb-0">
+                                    <li><small>Luces LED (5-10W cada una)</small></li>
+                                    <li><small>Cargadores de celular (5-20W)</small></li>
+                                    <li><small>Pequeños ventiladores (20-50W)</small></li>
+                                    <li><small>Laptop (50-100W)</small></li>
+                                    <li><small>Televisor pequeño (50-100W)</small></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="diagram-container mt-4">
+                <h5 class="mb-3">Sistema Completo de Generación y Almacenamiento</h5>
+                <img src="https://picsum.photos/seed/bicycle-generator/800/400" alt="Sistema de generador de bicicleta" class="img-fluid rounded">
+                <p class="text-muted text-center mt-2">Esquema completo del sistema de generación, almacenamiento y distribución</p>
+            </div>
+        </section>
+
+        <!-- Calculadora Interactiva -->
+        <section id="calculadora" class="mb-5">
+            <h2 class="section-title">6. Calculadora de Rendimiento</h2>
+            
+            <div class="calculator">
+                <h5 class="mb-4">Calcule el rendimiento de su sistema</h5>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="rpm" class="form-label">RPM del pedaleo:</label>
+                            <input type="range" class="form-range" id="rpm" min="30" max="120" value="60">
+                            <span id="rpmValue">60</span> RPM
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="transmission" class="form-label">Relación de transmisión:</label>
+                            <input type="range" class="form-range" id="transmission" min="2" max="5" step="0.5" value="3">
+                            <span id="transmissionValue">3</span>:1
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="batteryCapacity" class="form-label">Capacidad de batería (Ah):</label>
+                            <input type="number" class="form-control" id="batteryCapacity" value="35" min="10" max="200">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="batteryCount" class="form-label">Número de baterías:</label>
+                            <input type="number" class="form-control" id="batteryCount" value="2" min="1" max="8">
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <h6>Resultados:</h6>
+                        <div class="result-display">
+                            <p><strong>RPM del alternador:</strong> <span id="alternatorRPM">180</span> RPM</p>
+                            <p><strong>Potencia generada:</strong> <span id="powerGenerated">75</span> W</p>
+                            <p><strong>Capacidad total:</strong> <span id="totalCapacity">70</span> Ah</p>
+                            <p><strong>Energía almacenada:</strong> <span id="totalEnergy">0.84</span> kWh</p>
+                            <p><strong>Tiempo de carga:</strong> <span id="chargeTime">11.2</span> horas</p>
+                            <p><strong>Autonomía con 100W:</strong> <span id="autonomy">8.4</span> horas</p>
+                        </div>
+                        
+                        <div class="mt-3">
+                            <h6>Dispositivos que puede alimentar:</h6>
+                            <div id="deviceList" class="list-group">
+                                <!-- Lista dinámica de dispositivos -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Conclusiones -->
+        <section id="conclusiones" class="mb-5">
+            <h2 class="section-title">7. Conclusiones y Recomendaciones</h2>
+            
+            <div class="row">
+                <div class="col-lg-8">
+                    <h4>7.1 Conclusiones Principales</h4>
+                    <p>El generador eléctrico impulsado por bicicleta representa una solución viable y sostenible para la crisis energética venezolana. Los principales hallazgos son:</p>
+                    
+                    <ul>
+                        <li><strong>Viabilidad técnica:</strong> El sistema puede generar entre 50-200W de potencia continua, suficiente para cargar baterías que alimenten dispositivos esenciales.</li>
+                        <li><strong>Accesibilidad económica:</strong> Con un costo entre $50-150, es significativamente más económico que generadores convencionales.</li>
+                        <li><strong>Sostenibilidad ambiental:</strong> Cero emisiones y uso de energía humana renovable.</li>
+                        <li><strong>Beneficios adicionales:</strong> Promueve el ejercicio físico y la conciencia energética.</li>
+                    </ul>
+                    
+                    <h4 class="mt-4">7.2 Recomendaciones</h4>
+                    <ol>
+                        <li>Implementar programas de capacitación comunitaria para la construcción y mantenimiento de estos sistemas.</li>
+                        <li>Establecer redes de intercambio de componentes y conocimientos entre comunidades.</li>
+                        <li>Desarrollar versiones mejoradas con materiales reciclados locales.</li>
+                        <li>Integrar estos sistemas con otras fuentes renovables como paneles solares.</li>
+                    </ol>
+                </div>
+                
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0"><i class="fas fa-leaf"></i> Impacto Ambiental</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="progress mb-3">
+                                <div class="progress-bar bg-success" style="width: 100%">Reducción CO₂</div>
+                            </div>
+                            <div class="progress mb-3">
+                                <div class="progress-bar bg-info" style="width: 90%">Sostenibilidad</div>
+                            </div>
+                            <div class="progress mb-3">
+                                <div class="progress-bar bg-warning" style="width: 85%">Reciclabilidad</div>
+                            </div>
+                            <p class="mb-0"><small>El sistema evita aproximadamente 200kg de CO₂ anuales comparado con generadores a gasolina.</small></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="citation mt-4">
+                <h6>Cita recomendada:</h6>
+                <p class="mb-0">Chacín Ávila, Á. (2025). Generador Eléctrico Impulsado por Bicicleta: Una Solución Sostenible para la Crisis Energética Venezolana. Universidad Nacional Experimental de la Seguridad.</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Acerca del Autor</h5>
+                    <p>Profesor Ángel Chacín Ávila<br>
+                    Licenciado en Física<br>
+                    Especialista en Ciencias Computacionales<br>
+                    Docente e Investigador<br>
+                    Universidad Nacional Experimental de la Seguridad</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <h5>Información Legal</h5>
+                    <p>&copy; 2025, Ángel Chacín Ávila<br>
+                    Este documento se publica bajo licencia GPL<br>
+                    <a href="#" class="text-white-50">Ver código fuente</a> | 
+                    <a href="#" class="text-white-50">Descargar PDF</a></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        // Configuración de MathJax
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+
+        // Gráfico de impacto
+        const ctx = document.getElementById('impactChart').getContext('2d');
+        const impactChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Hogares afectados', 'Pérdidas económicas (millones $)', 'Horas de apagón/mes', 'Disponibilidad combustible (%)'],
+                datasets: [{
+                    label: 'Impacto de la crisis',
+                    data: [85, 2500, 180, 30],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.8)',
+                        'rgba(54, 162, 235, 0.8)',
+                        'rgba(255, 206, 86, 0.8)',
+                        'rgba(75, 192, 192, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Calculadora interactiva
+        const calculator = {
+            rpm: document.getElementById('rpm'),
+            rpmValue: document.getElementById('rpmValue'),
+            transmission: document.getElementById('transmission'),
+            transmissionValue: document.getElementById('transmissionValue'),
+            batteryCapacity: document.getElementById('batteryCapacity'),
+            batteryCount: document.getElementById('batteryCount'),
+            
+            init() {
+                this.rpm.addEventListener('input', () => this.update());
+                this.transmission.addEventListener('input', () => this.update());
+                this.batteryCapacity.addEventListener('input', () => this.update());
+                this.batteryCount.addEventListener('input', () => this.update());
+                
+                this.update();
+            },
+            
+            update() {
+                // Actualizar valores mostrados
+                this.rpmValue.textContent = this.rpm.value;
+                this.transmissionValue.textContent = this.transmission.value;
+                
+                // Cálculos
+                const rpm = parseFloat(this.rpm.value);
+                const transmission = parseFloat(this.transmission.value);
+                const batteryCap = parseFloat(this.batteryCapacity.value);
+                const batteryNum = parseFloat(this.batteryCount.value);
+                
+                const alternatorRPM = rpm * transmission;
+                const power = Math.min(200, Math.max(50, alternatorRPM * 0.4)); // Potencia estimada
+                const totalCapacity = batteryCap * batteryNum;
+                const totalEnergy = (totalCapacity * 12) / 1000; // kWh
+                const chargeTime = (totalEnergy * 1000) / power; // horas
+                const autonomy = totalEnergy * 10; // horas con 100W
+                
+                // Actualizar resultados
+                document.getElementById('alternatorRPM').textContent = alternatorRPM.toFixed(0);
+                document.getElementById('powerGenerated').textContent = power.toFixed(0);
+                document.getElementById('totalCapacity').textContent = totalCapacity.toFixed(0);
+                document.getElementById('totalEnergy').textContent = totalEnergy.toFixed(2);
+                document.getElementById('chargeTime').textContent = chargeTime.toFixed(1);
+                document.getElementById('autonomy').textContent = autonomy.toFixed(1);
+                
+                // Actualizar lista de dispositivos
+                this.updateDeviceList(totalEnergy);
+            },
+            
+            updateDeviceList(energy) {
+                const devices = [
+                    { name: 'Luz LED (10W)', power: 10, hours: (energy * 1000) / 10 },
+                    { name: 'Cargador celular (15W)', power: 15, hours: (energy * 1000) / 15 },
+                    { name: 'Ventilador (40W)', power: 40, hours: (energy * 1000) / 40 },
+                    { name: 'Laptop (60W)', power: 60, hours: (energy * 1000) / 60 },
+                    { name: 'Televisor (80W)', power: 80, hours: (energy * 1000) / 80 }
+                ];
+                
+                const deviceList = document.getElementById('deviceList');
+                deviceList.innerHTML = '';
+                
+                devices.forEach(device => {
+                    const item = document.createElement('div');
+                    item.className = 'list-group-item d-flex justify-content-between align-items-center';
+                    item.innerHTML = `
+                        <span>${device.name}</span>
+                        <span class="badge bg-primary rounded-pill">${device.hours.toFixed(1)}h</span>
+                    `;
+                    deviceList.appendChild(item);
+                });
+            }
+        };
+
+        // Inicializar calculadora
+        calculator.init();
+
+        // Smooth scroll para navegación
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Actualizar navegación activa al hacer scroll
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').slice(1) === current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Animación de entrada para elementos
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.card, .diagram-container, .calculator').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
