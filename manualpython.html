@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual de Python para la Seguridad Ciudadana</title>
+    <style>
+        :root {
+            --primary: #003366;
+            --secondary: #005599;
+            --accent: #ff9900;
+            --light-bg: #f5f7fa;
+            --dark-text: #333;
+            --code-bg: #eef5ff;
+            --border-color: #ddd;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.8;
+            margin: 0;
+            padding: 0;
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+        }
+
+        header {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+
+        header p {
+            margin: 0.5rem 0 0;
+            font-size: 1.1rem;
+            font-style: italic;
+        }
+
+        nav {
+            background-color: var(--primary);
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        nav ul li {
+            margin: 0.25rem;
+        }
+
+        nav ul li a {
+            color: white;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            background-color: var(--secondary);
+            border-radius: 5px;
+            display: block;
+            transition: background-color 0.3s;
+        }
+
+        nav ul li a:hover {
+            background-color: var(--accent);
+        }
+
+        main {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        section {
+            padding: 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        section:last-child {
+            border-bottom: none;
+        }
+
+        h2 {
+            color: var(--primary);
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 0.5rem;
+        }
+
+        pre {
+            background-color: var(--code-bg);
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        code {
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .download-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: var(--primary);
+            color: white;
+            margin-top: 2rem;
+        }
+
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
+            nav, .download-btn, footer {
+                display: none;
+            }
+            main {
+                box-shadow: none;
+                margin: 0;
+                max-width: 100%;
+            }
+        }
+
+        .exercise {
+            background-color: #f0f8ff;
+            padding: 1rem;
+            border-left: 4px solid var(--accent);
+            margin: 1rem 0;
+        }
+
+        .exercise input, .exercise button {
+            padding: 0.5rem;
+            margin: 0.25rem;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+
+        .exercise button {
+            background: var(--secondary);
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Manual de Python para la Seguridad Ciudadana</h1>
+        <p>Profesor Ángel Chacín Ávila<br>Licenciado en Física, Especialista en Ciencias Computacionales<br>Docente e Investigador de la Universidad Nacional Experimental de la Seguridad, Núcleo Zulia</p>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#introduccion">Introducción</a></li>
+            <li><a href="#sintaxis">Sintaxis Básica</a></li>
+            <li><a href="#variables">Variables y Tipos</a></li>
+            <li><a href="#condicionales">Condicionales</a></li>
+            <li><a href="#bucles">Bucles</a></li>
+            <li><a href="#funciones">Funciones</a></li>
+            <li><a href="#archivos">Manejo de Archivos</a></li>
+            <li><a href="#pandas">Análisis de Datos con Pandas</a></li>
+            <li><a href="#opencv">Procesamiento de Imágenes con OpenCV</a></li>
+            <li><a href="#ml">Machine Learning para Seguridad</a></li>
+            <li><a href="#ejemplos">Ejemplos Integrados</a></li>
+            <li><a href="#ejercicios">Ejercicios Interactivos</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section id="introduccion">
+            <h2>Introducción</h2>
+            <p>Este manual está diseñado para formar a los futuros profesionales de la seguridad ciudadana en el uso del lenguaje Python como herramienta para el análisis de datos, automatización de procesos y desarrollo de sistemas de información aplicados a la seguridad nacional, policial, penitenciaria, bomberil, protección civil y atención prehospitalaria.</p>
+        </section>
+
+        <section id="sintaxis">
+            <h2>Sintaxis Básica</h2>
+            <p>Python se caracteriza por una sintaxis clara y legible. A continuación, un ejemplo básico:</p>
+            <pre><code id="code1">print("¡Bienvenido al curso de Python para la Seguridad Ciudadana!")</code><button class="download-btn" onclick="downloadCode('code1', 'hola_seguridad.py')">Descargar</button></pre>
+        </section>
+
+        <section id="variables">
+            <h2>Variables y Tipos de Datos</h2>
+            <p>En Python, las variables se crean al asignarles un valor. Ejemplo:</p>
+            <pre><code id="code2">nombre = "Oficial Rodríguez"
+edad = 35
+altura = 1.78
+activo = True</code><button class="download-btn" onclick="downloadCode('code2', 'variables_seguridad.py')">Descargar</button></pre>
+        </section>
+
+        <section id="condicionales">
+            <h2>Condicionales</h2>
+            <p>Los condicionales permiten tomar decisiones en base a condiciones lógicas. Ejemplo:</p>
+            <pre><code id="code3">edad = int(input("Ingrese la edad del ciudadano: "))
+if edad >= 18:
+    print("Mayor de edad. Puede ser registrado en el sistema.")
+else:
+    print("Menor de edad. Requiere autorización.")</code><button class="download-btn" onclick="downloadCode('code3', 'condicional_seguridad.py')">Descargar</button></pre>
+        </section>
+
+        <section id="bucles">
+            <h2>Bucles</h2>
+            <p>Los bucles permiten repetir acciones. Ejemplo con un caso de patrullaje:</p>
+            <pre><code id="code4">for i in range(5):
+    print(f"Patrullando zona {i+1}...")</code><button class="download-btn" onclick="downloadCode('code4', 'bucles_patrullaje.py')">Descargar</button></pre>
+        </section>
+
+        <section id="funciones">
+            <h2>Funciones</h2>
+            <p>Las funciones permiten reutilizar código. Ejemplo:</p>
+            <pre><code id="code5">def verificar_ciudadano(nombre, cedula):
+    print(f"Verificando ciudadano: {nombre}, C.I.: {cedula}")
+
+verificar_ciudadano("María González", "12345678")</code><button class="download-btn" onclick="downloadCode('code5', 'funciones_verificacion.py')">Descargar</button></pre>
+        </section>
+
+        <section id="archivos">
+            <h2>Manejo de Archivos</h2>
+            <p>Python permite leer y escribir archivos, útil para registros de seguridad:</p>
+            <pre><code id="code6">with open("reporte_patrullaje.txt", "w") as archivo:
+    archivo.write("Zulia, Sector Norte, 14:00 - Sin novedad.")</code><button class="download-btn" onclick="downloadCode('code6', 'manejo_archivos.py')">Descargar</button></pre>
+        </section>
+
+        <section id="pandas">
+            <h2>Análisis de Datos con Pandas</h2>
+            <p>Pandas es una librería esencial para el análisis de datos. Ejemplo:</p>
+            <pre><code id="code7">import pandas as pd
+
+datos = {
+    "fecha": ["2024-01-01", "2024-01-02"],
+    "incidente": ["robo", "accidente"],
+    "ubicacion": ["Norte", "Centro"]
+}
+
+df = pd.DataFrame(datos)
+print(df)</code><button class="download-btn" onclick="downloadCode('code7', 'pandas_seguridad.py')">Descargar</button></pre>
+        </section>
+
+        <section id="opencv">
+            <h2>Procesamiento de Imágenes con OpenCV</h2>
+            <p>OpenCV permite procesar imágenes para vigilancia y análisis forense:</p>
+            <pre><code id="code8">import cv2
+
+imagen = cv2.imread("escena.jpg")
+gris = cv2.cvtColor(imagen, cv2.COLOR_BGR2GRAY)
+cv2.imwrite("escena_gris.jpg", gris)</code><button class="download-btn" onclick="downloadCode('code8', 'opencv_seguridad.py')">Descargar</button></pre>
+        </section>
+
+        <section id="ml">
+            <h2>Machine Learning para Seguridad</h2>
+            <p>Python permite implementar modelos de Machine Learning para predecir patrones delictivos:</p>
+            <pre><code id="code9">from sklearn.ensemble import RandomForestClassifier
+
+# Datos de ejemplo
+X = [[1, 20], [2, 30], [3, 25]]
+y = [0, 1, 0]  # 0: sin incidente, 1: con incidente
+
+modelo = RandomForestClassifier()
+modelo.fit(X, y)
+prediccion = modelo.predict([[2, 22]])
+print("Predicción:", "Con incidente" if prediccion[0] else "Sin incidente")</code><button class="download-btn" onclick="downloadCode('code9', 'ml_seguridad.py')">Descargar</button></pre>
+        </section>
+
+        <section id="ejemplos">
+            <h2>Ejemplos Integrados</h2>
+            <pre><code id="code10"># Mensaje de bienvenida
+print("¡Bienvenido al Laboratorio de IA y Seguridad Ciudadana!")
+# Información del caso
+nombre = "Angel"
+edad = 51
+delito = "hurto"
+print(nombre, "tiene", edad, "años y fue víctima de un", delito)</code><button class="download-btn" onclick="downloadCode('code10', 'ejemplo_bienvenida.py')">Descargar</button></pre>
+
+            <pre><code id="code11"># Programa para clasificar un delito según su tipo
+delito = input("¿Qué tipo de delito se reporta? ").lower()  # Convertir a minúsculas para evitar errores
+if delito == "robo":
+    print("Enviar patrulla inmediata.")
+elif delito == "violencia":
+    print("Activar protocolo con defensoría.")
+else:
+    print("Registrar y clasificar para análisis.")</code><button class="download-btn" onclick="downloadCode('code11', 'clasificacion_delito.py')">Descargar</button></pre>
+
+            <pre><code id="code12"># Sistema Integrado de Seguridad Ciudadana con Priorización Ampliada
+print("=== Sistema de Seguridad Ciudadana Avanzado ===")
+incidentes = []  # Lista para tipos de delito
+zonas = []       # Lista para zonas
+alertas = []     # Lista para nivel de alerta
+# Revisión de 3 cámaras
+for i in range(3):
+    print(f"\nRevisando cámara de seguridad número {i+1}")
+    zona = input("Zona (Centro/Periferia/Residencial/Comercial/Transporte): ").capitalize()
+    delito = input("Tipo de delito (robo/violencia/vandalismo/fraude/secuestro): ").lower()
+    
+    # Almacenamiento de datos
+    incidentes.append(delito)
+    zonas.append(zona)
+    
+    # Sistema de priorización ampliado
+    if zona == "Centro" and delito == "secuestro":
+        accion = "¡ALERTA NEGRA! Movilizar BAE y fiscalía."
+        alertas.append("NEGRA")
+    elif zona == "Transporte" and delito == "robo":
+        accion = "¡ALERTA AMARILLA! Bloquear salidas y revisar CCTV."
+        alertas.append("AMARILLA")
+    elif zona == "Residencial" and delito == "violencia":
+        accion = "¡ALERTA MORADA! Protocolo de violencia doméstica."
+        alertas.append("MORADA")
+    elif zona == "Comercial" and delito == "vandalismo":
+        accion = "¡ALERTA VERDE! Patrulla rápida y reporte a seguros."
+        alertas.append("VERDE")
+    elif delito == "fraude":
+        accion = "Derivar a unidad de ciberdelitos."
+        alertas.append("BLANCA")
+    else:
+        accion = "Registrar para análisis posterior."
+        alertas.append("GRIS")
+    
+    print(f"-> {accion}")
+# Reporte consolidado
+print("\n=== Resumen de Incidentes ===")
+print(f"{'Cámara':<7} | {'Zona':<12} | {'Delito':<12} | {'Alerta':<10} | Acción")
+print("-"*60)
+for i in range(len(incidentes)):
+    print(f"{i+1:<7} | {zonas[i]:<12} | {incidentes[i]:<12} | {alertas[i]:<10} | ", end="")
+    if alertas[i] == "NEGRA":
+        print("SWAT + Fiscalía")
+    elif alertas[i] == "AMARILLA":
+        print("Bloqueo salidas")
+    elif alertas[i] == "MORADA":
+        print("Violencia doméstica")
+    elif alertas[i] == "VERDE":
+        print("Patrulla rápida")
+    else:
+        print("Análisis estándar")</code><button class="download-btn" onclick="downloadCode('code12', 'sistema_priorizacion.py')">Descargar</button></pre>
+        </section>
+
+        <section id="ejercicios">
+            <h2>Ejercicios Interactivos</h2>
+            <div class="exercise">
+                <h3>Ejercicio 1: Clasificación de Delitos</h3>
+                <p>Ingresa un tipo de delito y el sistema te dirá qué hacer:</p>
+                <input type="text" id="delitoInput" placeholder="Ej: robo, violencia, etc.">
+                <button onclick="clasificarDelito()">Clasificar</button>
+                <p id="resultadoDelito"></p>
+            </div>
+
+            <div class="exercise">
+                <h3>Ejercicio 2: Simulador de Patrullaje</h3>
+                <p>Simula el patrullaje de 3 zonas:</p>
+                <button onclick="simularPatrullaje()">Iniciar patrullaje</button>
+                <pre id="resultadoPatrullaje"></pre>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2025 Ángel Chacín Ávila. Se publica con licencia GPL.</p>
+    </footer>
+
+    <script>
+        function downloadCode(codeId, filename) {
+            const code = document.getElementById(codeId).innerText;
+            const blob = new Blob([code], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function clasificarDelito() {
+            const delito = document.getElementById('delitoInput').value.toLowerCase();
+            let resultado = '';
+            if (delito === 'robo') {
+                resultado = 'Enviar patrulla inmediata.';
+            } else if (delito === 'violencia') {
+                resultado = 'Activar protocolo con defensoría.';
+            } else {
+                resultado = 'Registrar y clasificar para análisis.';
+            }
+            document.getElementById('resultadoDelito').innerText = resultado;
+        }
+
+        function simularPatrullaje() {
+            let resultado = '=== Simulador de Patrullaje ===\n';
+            for (let i = 1; i <= 3; i++) {
+                resultado += `Patrullando zona ${i}...\n`;
+            }
+            resultado += 'Patrullaje completado.';
+            document.getElementById('resultadoPatrullaje').innerText = resultado;
+        }
+    </script>
+</body>
+</html>
