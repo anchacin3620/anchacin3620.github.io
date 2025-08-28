@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial de Ciberseguridad - Prof. Ángel Chacín Ávila</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --primary: #1a5276;
+            --secondary: #2874a6;
+            --accent: #3498db;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --header-bg: #c0392b; /* Rojo para el header */
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--header-bg) 0%, #e74c3c 100%);
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            border-bottom: 5px solid var(--accent);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .author-info {
+            margin-top: 15px;
+            font-size: 1.1rem;
+            font-weight: 300;
+        }
+        
+        .author-info .title {
+            font-weight: 600;
+            color: var(--light);
+        }
+        
+        .content {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin: 30px 0;
+        }
+        
+        h1, h2, h3, h4 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+        }
+        
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+        
+        h2 {
+            font-size: 2rem;
+            border-left: 5px solid var(--accent);
+            padding-left: 15px;
+            margin-top: 40px;
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            margin-top: 25px;
+        }
+        
+        h4 {
+            font-size: 1.2rem;
+            color: var(--dark);
+            margin-top: 20px;
+        }
+        
+        .level {
+            margin-bottom: 50px;
+            padding: 25px;
+            border-radius: 8px;
+            background: linear-gradient(to right, rgba(52, 152, 219, 0.05), rgba(41, 128, 185, 0.1));
+            border-left: 4px solid var(--accent);
+        }
+        
+        .level-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .level-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+            color: var(--accent);
+        }
+        
+        .section {
+            margin-bottom: 30px;
+        }
+        
+        .sub-section {
+            margin-left: 25px;
+            margin-bottom: 20px;
+            padding-left: 15px;
+            border-left: 2px dashed var(--light);
+        }
+        
+        .concept {
+            background: var(--light);
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            border-left: 3px solid var(--accent);
+        }
+        
+        .concept strong {
+            color: var(--secondary);
+        }
+        
+        .tools {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .tool {
+            background: var(--primary);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .tool:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tool i {
+            margin-right: 8px;
+        }
+        
+        /* Tooltip para las herramientas */
+        .tool::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px 12px;
+            width: 250px;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 100;
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+        
+        .tool::before {
+            content: "";
+            position: absolute;
+            bottom: 115%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 5px;
+            border-style: solid;
+            border-color: rgba(0, 0, 0, 0.8) transparent transparent transparent;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .tool:hover::after {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        .tool:hover::before {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        .tip {
+            background: rgba(241, 196, 15, 0.1);
+            border-left: 4px solid var(--warning);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .tip strong {
+            color: var(--warning);
+        }
+        
+        footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 50px;
+        }
+        
+        .license {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #bdc3c7;
+        }
+        
+        .license a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        
+        .license a:hover {
+            text-decoration: underline;
+        }
+        
+        .pdf-download {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .pdf-download:hover {
+            background: #229954;
+            transform: scale(1.1);
+        }
+        
+        .gpl-info {
+            background: rgba(46, 204, 113, 0.1);
+            border: 1px solid rgba(46, 204, 113, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 30px 0;
+        }
+        
+        .gpl-info h4 {
+            color: var(--success);
+            margin-bottom: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            h2 {
+                font-size: 1.7rem;
+            }
+            
+            .level {
+                padding: 15px;
+            }
+            
+            .pdf-download {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+                bottom: 20px;
+                right: 20px;
+            }
+            
+            .tool::after {
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Ciberseguridad: Teoría Básica</h1>
+            <div class="author-info">
+                <span class="title">Prof. Ángel Chacín Ávila</span><br>
+                Licenciado en Física, Especialista en Ciencias Computacionales<br>
+                Docente e Investigador de la Universidad Nacional Experimental de la Seguridad Núcleo Zulia
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="content" id="content-to-pdf">
+            <div class="gpl-info">
+                <h4><i class="fas fa-info-circle"></i> ¿Qué es la Licencia GPL?</h4>
+                <p>La Licencia Pública General de GNU (GPL) es una licencia de software libre que garantiza a los usuarios la libertad para ejecutar, estudiar, modificar y distribuir el software. Bajo esta licencia, cualquier trabajo derivado también debe ser distribuido bajo los mismos términos, asegurando que el software permanezca libre para todos. La GPL fue creada por Richard Stallman en 1989 y es mantenida por la Free Software Foundation.</p>
+            </div>
+            
+            <div class="level">
+                <div class="level-header">
+                    <div class="level-icon"><i class="fas fa-shield-alt"></i></div>
+                    <h2>Nivel 1: Fundamentos (Para principiantes)</h2>
+                </div>
+                
+                <div class="section">
+                    <h3>1. Introducción a la ciberseguridad</h3>
+                    
+                    <div class="sub-section">
+                        <h4>¿Qué es la ciberseguridad y por qué es importante?</h4>
+                        <p>La ciberseguridad es el conjunto de prácticas, tecnologías y procesos diseñados para proteger sistemas informáticos, redes, programas y datos de ataques, accesos no autorizados o daños. En esencia, es la defensa del espacio digital (ciberespacio) contra diversas amenazas.</p>
+                        
+                        <div class="concept">
+                            <strong>Importancia:</strong> 
+                            <ul>
+                                <li><strong>Protección de datos personales:</strong> En la era digital, almacenamos información sensible (datos bancarios, documentos de identidad, fotos) en línea. La ciberseguridad protege esta información contra el robo o uso indebido.</li>
+                                <li><strong>Seguridad nacional:</strong> Las infraestructuras críticas (redes eléctricas, sistemas de transporte, comunicaciones gubernamentales) dependen de sistemas digitales. Un ataque podría tener consecuencias catastróficas.</li>
+                                <li><strong>Protección económica:</strong> Empresas y organizaciones dependen cada vez más de sistemas digitales. Los ciberataques pueden causar pérdidas financieras significativas e interrupción de operaciones.</li>
+                                <li><strong>Privacidad:</strong> Garantiza que nuestras comunicaciones y actividades en línea permanezcan privadas, protegidas contra vigilancia no autorizada.</li>
+                                <li><strong>Prevención del cibercrimen:</strong> Los ciberdelitos como el fraude, robo de identidad y extorsión digital están en aumento. La ciberseguridad es la principal defensa contra estas actividades.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="sub-section">
+                        <h4>Tipos de amenazas</h4>
+                        <ul>
+                            <li><strong>Malware:</strong> Software malicioso diseñado para infiltrarse y dañar sistemas sin consentimiento.
+                                <ul>
+                                    <li><strong>Virus:</strong> Programas que se replican insertando su código en otros archivos.</li>
+                                    <li><strong>Gusanos (Worms):</strong> Malware que se reproduce automáticamente para extenderse a otros sistemas.</li>
+                                    <li><strong>Troyanos:</strong> Programas que parecen legítimos pero contienen código malicioso.</li>
+                                    <li><strong>Spyware:</strong> Software que recopila información sobre actividades del usuario sin su conocimiento.</li>
+                                </ul>
+                            </li>
+                            <li><strong>Phishing:</strong> Técnica de ingeniería social que engaña a usuarios para que revelen información sensible (contraseñas, datos bancarios) mediante correos o sitios fraudulentos.</li>
+                            <li><strong>Ransomware:</strong> Tipo de malware que cifra los archivos de la víctima y exige un rescate para restaurar el acceso.</li>
+                            <li><strong>Ataques de denegación de servicio (DDoS):</strong> Intentos de hacer inaccesible un servicio sobrecargándolo con tráfico falso.</li>
+                            <li><strong>Ingeniería social:</strong> Manipulación psicológica para engañar a personas y hacer que realicen acciones o divulguen información confidencial.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="sub-section">
+                        <h4>Conceptos básicos: Tríada CIA</h4>
+                        <div class="concept">
+                            <strong>Confidencialidad:</strong> Garantiza que la información sea accesible solo para personas autorizadas. Se logra mediante cifrado de datos, controles de acceso y autenticación fuerte. Ejemplo: El mensaje de WhatsApp solo puede ser leído por el remitente y el destinatario.
+                        </div>
+                        <div class="concept">
+                            <strong>Integridad:</strong> Asegura que la información no sea modificada o destruida de forma no autorizada. Se mantiene mediante controles de acceso, hashes y firmas digitales. Ejemplo: Cuando descargas un archivo, puedes verificar su integridad comparando su hash con el proporcionado por la fuente.
+                        </div>
+                        <div class="concept">
+                            <strong>Disponibilidad:</strong> Garantiza que los sistemas y datos estén accesibles cuando los usuarios autorizados los necesiten. Se asegura mediante redundancia de sistemas, copias de seguridad y protección contra ataques DDoS. Ejemplo: Los sitios web de banca suelen tener servidores redundantes para garantizar que estén siempre disponibles.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h3>2. Protección personal en línea</h3>
+                    
+                    <div class="sub-section">
+                        <h4>Contraseñas seguras y gestores</h4>
+                        <p>Una contraseña segura es la primera línea de defensa para proteger cuentas digitales. Características de una contraseña segura: longitud (12-16 caracteres), complejidad, unicidad e impredecibilidad.</p>
+                        <p>Los gestores de contraseñas son herramientas que generan, almacenan y administran contraseñas de forma segura:</p>
+                        <ul>
+                            <li><strong>Ventajas:</strong>
+                                <ul>
+                                    <li>Generación de contraseñas fuertes</li>
+                                    <li>Almacenamiento cifrado</li>
+                                    <li>Autocompletado</li>
+                                    <li>Sincronización entre dispositivos</li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <div class="tools">
+                            <span class="tool" data-tooltip="Gestor de contraseñas en la nube con versión gratuita y premium. Permite almacenar contraseñas, tarjetas de crédito, notas seguras y más."><i class="fas fa-key"></i> LastPass</span>
+                            <span class="tool" data-tooltip="Gestor de contraseñas de código abierto y gratuito. Ofrece cifrado de extremo a extremo y sincronización entre dispositivos."><i class="fas fa-key"></i> Bitwarden</span>
+                        </div>
+                    </div>
+                    
+                    <div class="sub-section">
+                        <h4>Autenticación de dos factores (2FA)</h4>
+                        <p>La autenticación de dos factores (2FA) es un método de seguridad que requiere dos formas diferentes de verificación antes de conceder acceso a una cuenta:</p>
+                        <ul>
+                            <li><strong>Tipos comunes de 2FA:</strong>
+                                <ul>
+                                    <li>Aplicaciones de autenticación: Generan códigos temporales que cambian cada 30 segundos</li>
+                                    <li>SMS: Envía un código por mensaje de texto al teléfono registrado (menos seguro)</li>
+                                    <li>Tokens físicos: Dispositivos físicos que generan códigos o se conectan mediante USB</li>
+                                    <li>Biometría: Huellas dactilares, reconocimiento facial o de voz</li>
+                                </ul>
+                            </li>
+                            <li><strong>Beneficios del 2FA:</strong>
+                                <ul>
+                                    <li>Protección adicional: Incluso si alguien roba tu contraseña, no podrá acceder a tu cuenta sin el segundo factor</li>
+                                    <li>Disuasión de atacantes: Muchos atacantes desisten cuando encuentran que una cuenta tiene 2FA activado</li>
+                                    <li>Flexibilidad: Ofrece múltiples opciones para adaptarse a diferentes necesidades y dispositivos</li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <div class="tools">
+                            <span class="tool" data-tooltip="Aplicación de Google que genera códigos de verificación en dos pasos para tus cuentas. Funciona sin conexión a internet."><i class="fas fa-mobile-alt"></i> Google Authenticator</span>
+                            <span class="tool" data-tooltip="Aplicación de autenticación multifactor que permite respaldar tus cuentas en la nube y sincronizarlas entre dispositivos."><i class="fas fa-mobile-alt"></i> Authy</span>
+                            <span class="tool" data-tooltip="Dispositivo físico de autenticación que se conecta mediante USB, NFC o Bluetooth. Ofrece protección contra phishing."><i class="fas fa-usb"></i> YubiKey</span>
+                        </div>
+                    </div>
+                    
+                    <div class="sub-section">
+                        <h4>Reconocimiento de phishing</h4>
+                        <div class="tip">
+                            <strong>Señales de alerta:</strong> 
+                            <ul>
+                                <li>Remitente sospechoso: Direcciones que imitan a empresas legítimas pero con pequeñas variaciones</li>
+                                <li>Saludos genéricos: "Estimado cliente" en lugar de usar tu nombre</li>
+                                <li>Urgencia o amenaza: Mensajes que crean sensación de urgencia ("Tu cuenta será suspendida")</li>
+                                <li>Errores gramaticales y ortográficos: Errores evidentes en el texto</li>
+                                <li>Enlaces sospechosos: URLs que no coinciden con el sitio legítimo al pasar el cursor sobre ellos</li>
+                                <li>Solicitudes de información sensible: Piden contraseñas, datos bancarios o información personal</li>
+                            </ul>
+                        </div>
+                        <p><strong>Técnicas de verificación:</strong></p>
+                        <ul>
+                            <li>Contactar directamente a la empresa: Si sospechas, contacta a la empresa por canales oficiales</li>
+                            <li>No hacer clic en enlaces sospechosos: En su lugar, escribe manualmente la URL en el navegador</li>
+                            <li>Usar herramientas de verificación: Algunos navegadores y extensiones pueden ayudarte a detectar sitios de phishing</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h3>3. Seguridad en redes sociales y dispositivos</h3>
+                    
+                    <div class="sub-section">
+                        <h4>Configuración de privacidad en redes sociales</h4>
+                        <p>Las redes sociales recopilan gran cantidad de información personal. Configurar adecuadamente la privacidad es esencial:</p>
+                        <p><strong>Configuraciones clave en redes sociales:</strong></p>
+                        <ul>
+                            <li>Perfil privado vs. público: Limitar quién puede ver tus publicaciones y tu perfil</li>
+                            <li>Control de etiquetas: Requerir aprobación antes de ser etiquetado en publicaciones o fotos</li>
+                            <li>Visibilidad de información personal: Limitar quién puede ver tu número de teléfono, correo electrónico o dirección</li>
+                            <li>Ubicación: Desactivar geolocalización en publicaciones y evitar compartir ubicación en tiempo real</li>
+                            <li>Listas de amigos: Mantener privadas tus conexiones para evitar que sean utilizadas para ingeniería social</li>
+                        </ul>
+                        <p><strong>Buenas prácticas:</strong></p>
+                        <ul>
+                            <li>No compartir información sensible: Números de documentos, datos financieros, contraseñas</li>
+                            <li>Cuidado con los detalles personales: Información que pueda usarse para responder preguntas de seguridad</li>
+                            <li>Usar autenticación de dos factores: Protege tu cuenta contra accesos no autorizados</li>
+                            <li>Revisar permisos de aplicaciones: Limitar qué información pueden acceder las aplicaciones de terceros</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="sub-section">
+                        <h4>Seguridad en smartphones</h4>
+                        <p>Los smartphones contienen información sensible y protegerlos es fundamental:</p>
+                        <p><strong>Actualizaciones de seguridad:</strong></p>
+                        <ul>
+                            <li><strong>Importancia:</strong> Las actualizaciones corrigen vulnerabilidades que podrían ser explotadas por atacantes</li>
+                            <li><strong>Cómo actualizar:</strong> Activar actualizaciones automáticas o verificar manualmente periódicamente</li>
+                            <li><strong>Aplicaciones y sistema operativo:</strong> Mantener ambos actualizados</li>
+                        </ul>
+                        <p><strong>Protección contra aplicaciones sospechosas:</strong></p>
+                        <ul>
+                            <li><strong>Fuentes oficiales:</strong> Descargar aplicaciones solo de tiendas oficiales (Google Play Store, Apple App Store)</li>
+                            <li><strong>Revisar permisos:</strong> Verificar los permisos que solicita una aplicación antes de instalarla</li>
+                            <li><strong>Reputación del desarrollador:</strong> Investigar al desarrollador y leer reseñas antes de instalar</li>
+                            <li><strong>Desinstalar aplicaciones no utilizadas:</strong> Reducir la superficie de ataque eliminando apps que no usas</li>
+                        </ul>
+                        <div class="tip">
+                            <strong>Medidas esenciales:</strong> Mantener actualizado el sistema operativo, descargar apps solo de fuentes oficiales, revisar permisos, usar bloqueo de pantalla y cifrado de datos.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="level">
+                <div class="level-header">
+                    <div class="level-icon"><i class="fas fa-network-wired"></i></div>
+                    <h2>Nivel 2: Intermedio (Para usuarios con conocimientos básicos)</h2>
+                </div>
+                
+                <div class="section">
+                    <h3>1. Redes y conexiones seguras</h3>
+                    
+                    <div class="sub-section">
+                        <h4>VPNs: qué son y cómo usarlas</h4>
+                        <p>Una Red Privada Virtual (VPN) es una tecnología que crea una conexión segura y cifrada entre tu dispositivo y un servidor remoto.</p>
+                        <p><strong>Funcionamiento de las VPN:</strong></p>
+                        <ul>
+                            <li><strong>Cifrado:</strong> Los datos se cifran antes de salir de tu dispositivo y solo se descifran al llegar al servidor VPN</li>
+                            <li><strong>Enmascaramiento de IP:</strong> Tu dirección IP real se reemplaza por la del servidor VPN, ocultando tu ubicación e identidad</li>
+                            <li><strong>Túnel seguro:</strong> Todos los datos pasan a través de este túnel protegido, incluso si estás usando una red Wi-Fi pública</li>
+                        </ul>
+                        <div class="concept">
+                            <strong>Beneficios:</strong> 
+                            <ul>
+                                <li><strong>Privacidad:</strong> Protege tu actividad de la vigilancia de ISPs, gobiernos y terceros</li>
+                                <li><strong>Seguridad en redes públicas:</strong> Protege tus datos cuando usas Wi-Fi en lugares públicos</li>
+                                <li><strong>Acceso a contenido restringido:</strong> Permite acceder a servicios con restricciones geográficas</li>
+                                <li><strong>Evitar la censura:</strong> Facilita el acceso a sitios web bloqueados en ciertas regiones</li>
+                            </ul>
+                        </div>
+                        <p><strong>Cómo usar una VPN:</strong></p>
+                        <ol>
+                            <li>Elegir un proveedor: Investigar y seleccionar un servicio VPN confiable</li>
+                            <li>Instalar la aplicación: Descargar e instalar el software oficial en tus dispositivos</li>
+                            <li>Crear una cuenta: Registrarse con un correo electrónico</li>
+                            <li>Conectarse: Abrir la aplicación, elegir un servidor y conectarse</li>
+                            <li>Verificar la conexión: Confirmar que tu IP ha cambiado usando sitios como whatismyip.com</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="sub-section">
+                        <h4>Wi-Fi seguro</h4>
+                        <p>Las redes Wi-Fi públicas, aunque convenientes, presentan riesgos significativos:</p>
+                        <p><strong>Riesgos de las redes Wi-Fi públicas:</strong></p>
+                        <ul>
+                            <li><strong>Ataques Man-in-the-Middle (MitM):</strong> Atacantes interceptan la comunicación entre tu dispositivo y el punto de acceso</li>
+                            <li><strong>Redes falsas (Evil Twin):</strong> Atacantes crean redes Wi-Fi con nombres similares a los legítimos</li>
+                            <li><strong>Sniffing de paquetes:</strong> Captura de datos no cifrados que se transmiten por la red</li>
+                            <li><strong>Malware distribuido:</strong> Inyección de malware en dispositivos conectados a la red</li>
+                        </ul>
+                        <p><strong>Cómo protegerse en redes Wi-Fi públicas:</strong></p>
+                        <ul>
+                            <li><strong>Usar VPN:</strong> La medida más efectiva para proteger tus datos en redes públicas</li>
+                            <li><strong>Verificar la red:</strong> Confirmar el nombre exacto de la red con el establecimiento</li>
+                            <li><strong>Desactivar la conexión automática:</strong> Evitar que tu dispositivo se conecte automáticamente a redes disponibles</li>
+                            <li><strong>Usar HTTPS:</strong> Asegurarte de que los sitios web visitados usen HTTPS (mostrado con un candado en la barra de direcciones)</li>
+                            <li><strong>Evitar transacciones sensibles:</strong> No realizar operaciones bancarias o introducir contraseñas importantes en redes públicas</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="sub-section">
+                        <h4>Firewalls y protección de red doméstica</h4>
+                        <p>Un firewall es un sistema de seguridad que monitorea y controla el tráfico de red entrante y saliente:</p>
+                        <p><strong>Tipos de firewalls:</strong></p>
+                        <ul>
+                            <li><strong>Firewalls de software:</strong> Programas instalados en dispositivos individuales</li>
+                            <li><strong>Firewalls de hardware:</strong> Dispositivos físicos que protegen toda la red</li>
+                            <li><strong>Firewalls de próxima generación (NGFW):</strong> Combinan funciones tradicionales con sistemas de prevención de intrusiones</li>
+                        </ul>
+                        <p><strong>Configuración de un firewall doméstico:</strong></p>
+                        <ul>
+                            <li><strong>Activar el firewall del router:</strong> La mayoría de los routers domésticos tienen un firewall incorporado que debe estar activado</li>
+                            <li><strong>Configurar reglas básicas:</strong> Permitir solo el tráfico necesario y bloquear el resto por defecto</li>
+                            <li><strong>Segmentación de red:</strong> Crear redes separadas para dispositivos principales y dispositivos IoT</li>
+                            <li><strong>Actualizaciones de firmware:</strong> Mantener el firmware del router actualizado para proteger contra vulnerabilidades conocidas</li>
+                        </ul>
+                        <p><strong>Protección de red doméstica avanzada:</strong></p>
+                        <ul>
+                            <li><strong>Sistemas de detección de intrusos (IDS):</strong> Como Snort o Suricata, para monitorear el tráfico en busca de actividades sospechosas</li>
+                            <li><strong>Servidores DNS seguros:</strong> Usar servidores DNS como Cloudflare (1.1.1.1) o Quad9 (9.9.9.9) que bloquean dominios maliciosos</li>
+                            <li><strong>Monitoreo de red:</strong> Herramientas como Wireshark o Fing para analizar dispositivos conectados y tráfico de red</li>
+                        </ul>
+                        <div class="tools">
+                            <span class="tool" data-tooltip="Firewall incorporado en la mayoría de los routers domésticos. Filtra el tráfico entrante y saliente basado en reglas predefinidas."><i class="fas fa-shield-alt"></i> Firewall de router</span>
+                            <span class="tool" data-tooltip="Sistema de Detección/Prevención de Intrusos que monitorea el tráfico de red en busca de actividades sospechosas o maliciosas."><i class="fas fa-shield-alt"></i> IDS/IPS</span>
+                            <span class="tool" data-tooltip="Servidores DNS que bloquean el acceso a sitios maliciosos y mejoran la privacidad al no registrar las consultas de los usuarios."><i class="fas fa-server"></i> DNS seguro</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h3>2. Protección de datos y privacidad</h3>
+                    
+                    <div class="sub-section">
+                        <h4>Cifrado de archivos y comunicaciones</h4>
+                        <p>El cifrado es el proceso de convertir información en un formato ilegible para quienes no poseen la clave de descifrado:</p>
+                        <p><strong>Cifrado de archivos con Veracrypt:</strong></p>
+                        <ul>
+                            <li><strong>Descripción:</strong> Software gratuito de cifrado de disco de código abierto</li>
+                            <li><strong>Características principales:</strong>
+                                <ul>
+                                    <li>Cifrado fuerte con algoritmos como AES, Serpent y Twofish</li>
+                                    <li>Cifrado oculto que permite negar la existencia de datos cifrados</li>
+                                    <li>Creación de volúmenes dentro de archivos o en particiones/discos completos</li>
+                                </ul>
+                            </li>
+                            <li><strong>Cómo usar Veracrypt:</strong>
+                                <ol>
+                                    <li>Descargar e instalar Veracrypt desde el sitio oficial</li>
+                                    <li>Crear un nuevo volumen cifrado (archivo o partición)</li>
+                                    <li>Elegir algoritmos de cifrado y hash</li>
+                                    <li>Establecer una contraseña fuerte</li>
+                                    <li>Montar el volumen introduciendo la contraseña cuando se necesite acceder a los archivos</li>
+                                </ol>
+                            </li>
+                        </ul>
+                        <p><strong>Cifrado de comunicaciones con Signal:</strong></p>
+                        <ul>
+                            <li><strong>Descripción:</strong> Aplicación de mensajería instantánea enfocada en la privacidad y el cifrado</li>
+                            <li><strong>Características de seguridad:</strong>
+                                <ul>
+                                    <li>Cifrado de extremo a extremo para todos los mensajes, llamadas y videollamadas</li>
+                                    <li>Protocolo de cifrado de código abierto auditado</li>
+                                    <li>No almacena metadatos sensibles</li>
+                                    <li>Funciones de autodestrucción de mensajes</li>
+                                </ul>
+                            </li>
+                            <li><strong>Cómo usar Signal de forma segura:</strong>
+                                <ol>
+                                    <li>Descargar e instalar Signal desde fuentes oficiales</li>
+                                    <li>Registrar el número de teléfono</li>
+                                    <li>Habilitar el bloqueo con pantalla de bloqueo o PIN</li>
+                                    <li>Activar la autenticación de dos factores para el registro</li>
+                                    <li>Usar la función de "Notas de seguridad" para verificar contactos</li>
+                                </ol>
+                            </li>
+                        </ul>
+                        <div class="tools">
+                            <span class="tool" data-tooltip="Software de cifrado de disco de código abierto que permite crear volúmenes cifrados para proteger archivos y carpetas sensibles."><i class="fas fa-lock"></i> Veracrypt</span>
+                            <span class="tool" data-tooltip="Aplicación de mensajería con cifrado de extremo a extremo para todas las comunicaciones. No recopila metadatos sensibles de los usuarios."><i class="fas fa-comments"></i> Signal</span>
+                        </div>
+                    </div>
+                    
+                    <div class="sub-section">
+                        <h4>Eliminación segura de datos</h4>
+                        <p>La eliminación segura de datos es el proceso de borrar información de manera irreversible:</p>
+                        <p><strong>Por qué es necesaria la eliminación segura:</strong></p>
+                        <ul>
+                            <li>Cuando se borra un archivo convencional, solo se elimina la referencia a él, pero los datos permanecen en el dispositivo</li>
+                            <li>Herramientas de recuperación pueden restaurar fácilmente estos archivos "borrados"</li>
+                            <li>Para proteger información sensible, es necesario eliminar los datos de forma permanente</li>
+                        </ul>
+                        <p><strong>Métodos de eliminación segura:</strong></p>
+                        <ol>
+                            <li><strong>Sobrescritura de datos:</strong>
+                                <ul>
+                                    <li>Consiste en escribir datos aleatorios sobre el espacio ocupado por los archivos a eliminar</li>
+                                    <li>Estándares comunes: DoD 5220.22-M (tres pasadas), Gutmann (35 pasadas)</li>
+                                    <li>Herramientas: DBAN (para discos completos), Eraser (para Windows), BleachBit (multiplataforma)</li>
+                                </ul>
+                            </li>
+                            <li><strong>Degradación física:</strong>
+                                <ul>
+                                    <li><strong>Deshaciéndose de discos duros:</strong> Destructores de discos, desmagnetización, incineración</li>
+                                    <li><strong>Para SSDs:</strong> Comando "Secure Erase" o herramientas específicas como Parted Magic</li>
+                                </ul>
+                            </li>
+                            <li><strong>Criptoborrado (Cryptoerase):</strong>
+                                <ul>
+                                    <li>Técnica que elimina la clave de cifrado de un dispositivo previamente cifrado</li>
+                                    <li>Es rápido y efectivo para unidades con cifrado de hardware</li>
+                                </ul>
+                            </li>
+                        </ol>
+                    </div>
+                    
+                    <div class="sub-section">
+                        <h4>Navegación anónima</h4>
+                        <p>La navegación anónima busca ocultar la identidad y actividad del usuario en internet:</p>
+                        <p><strong>Tor (The Onion Router):</strong></p>
+                        <ul>
+                            <li><strong>Qué es Tor:</strong> Una red global descentralizada que dirige el tráfico de internet a través de servidores voluntarios</li>
+                            <li><strong>Cómo funciona:</strong>
+                                <ul>
+                                    <li>El tráfico se encripta múltiples veces (como las capas de una cebolla)</li>
+                                    <li>Se enruta a través de al menos tres servidores seleccionados aleatoriamente</li>
+                                    <li>Cada nodo descifra solo la capa necesaria para saber a dónde enviar los datos</li>
+                                </ul>
+                            </li>
+                            <li><strong>Navegador Tor:</strong> Navegador basado en Firefox configurado para conectarse a la red Tor
+                                <ul>
+                                    <li><strong>Características de privacidad:</strong>
+                                        <ul>
+                                            <li>Bloquea rastreadores por defecto</li>
+                                            <li>Aisla cada sitio web para evitar la correlación de identidad</li>
+                                            <li>Hace que todos los usuarios parezcan iguales para dificultar la identificación</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li><strong>Limitaciones de Tor:</strong>
+                                <ul>
+                                    <li>Velocidad más lenta debido al enrutamiento múltiple</li>
+                                    <li>Algunos sitios web bloquean el acceso desde la red Tor</li>
+                                    <li>No protege contra malware o phishing</li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <p><strong>Navegadores privados:</strong></p>
+                        <ul>
+                            <li><strong>Modo de navegación privada/incógnito:</strong>
+                                <ul>
+                                    <li><strong>Qué hace:</strong> No guarda historial de navegación, cookies ni datos temporales</li>
+                                    <li><strong>Qué no hace:</strong> No oculta tu IP ni tu actividad de tu ISP o sitios web visitados</li>
+                                </ul>
+                            </li>
+                            <li><strong>Navegadores enfocados en la privacidad:</strong>
+                                <ul>
+                                    <li><strong>Brave:</strong> Bloquea anuncios y rastreadores por defecto</li>
+                                    <li><strong>Firefox:</strong> Amplias opciones de configuración de privacidad</li>
+                                    <li><strong>DuckDuckGo Privacy Browser</strong> (móvil): Bloquea rastreadores y fuerza cifrado</li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <div class="tools">
+                            <span class="tool" data-tooltip="Navegador que utiliza la red Tor para anonimizar el tráfico de internet. Protege la privacidad al enrutar las conexiones a través de múltiples nodos."><i class="fas fa-user-secret"></i> Tor</span>
+                            <span class="tool" data-tooltip="Navegador web centrado en la privacidad que bloquea anuncios y rastreadores por defecto. Ofrece opciones avanzadas de privacidad."><i class="fas fa-globe"></i> Brave</span>
+                            <span class="tool" data-tooltip="Navegador de código abierto desarrollado por Mozilla con numerosas opciones de configuración de privacidad y protección contra rastreo."><i class="fas fa-globe"></i> Firefox</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h3>3. Seguridad en sistemas operativos</h3>
+                    
+                    <div class="sub-section">
+                        <h4>Hardening de sistemas</h4>
+                        <p>El hardening (endurecimiento) de sistemas operativos es el proceso de reducir la superficie de ataque:</p>
+                        <p><strong>Hardening de Windows:</strong></p>
+                        <ol>
+                            <li><strong>Actualizaciones y parches:</strong> Mantener el sistema actualizado con las últimas actualizaciones de seguridad</li>
+                            <li><strong>Configuración de cuentas:</strong> Usar una cuenta estándar para tareas diarias, no de administrador</li>
+                            <li><strong>Configuración de políticas:</strong> Usar el Editor de políticas de seguridad local (secpol.msc) para configurar políticas seguras</li>
+                            <li><strong>Servicios innecesarios:</strong> Desactivar servicios no utilizados a través de services.msc</li>
+                            <li><strong>Configuración de red:</strong> Habilitar el firewall de Windows Defender y configurar adecuadamente las opciones de Wi-Fi</li>
+                            <li><strong>Seguridad de aplicaciones:</strong> Instalar software solo de fuentes confiables y usar Windows Defender o soluciones antivirus</li>
+                        </ol>
+                        <p><strong>Hardening de Linux:</strong></p>
+                        <ol>
+                            <li><strong>Actualizaciones:</strong> Mantener el sistema actualizado con los comandos adecuados (apt update && apt upgrade en Debian/Ubuntu)</li>
+                            <li><strong>Configuración de cuentas:</strong> Usar sudo en lugar de root y crear usuarios con privilegios mínimos</li>
+                            <li><strong>Configuración de servicios:</strong> Desactivar servicios innecesarios y revisar los que se inician automáticamente</li>
+                            <li><strong>Configuración de red:</strong> Configurar iptables o nftables como firewall y desactivar servicios de red no utilizados</li>
+                            <li><strong>Seguridad del kernel:</strong> Usar módulos como SELinux o AppArmor y configurar adecuadamente los permisos de archivos</li>
+                            <li><strong>Auditoría:</strong> Configurar el sistema de auditoría (auditd) y revisar regularmente los registros del sistema</li>
+                        </ol>
+                        <p><strong>Hardening de macOS:</strong></p>
+                        <ol>
+                            <li><strong>Actualizaciones:</strong> Mantener el sistema actualizado a través de la App Store</li>
+                            <li><strong>Configuración de cuentas:</strong> Usar una cuenta estándar para actividades diarias y habilitar FileVault para cifrar el disco</li>
+                            <li><strong>Configuración de privacidad:</strong> Revisar y ajustar las preferencias de Privacidad y Seguridad</li>
+                            <li><strong>Configuración de red:</strong> Habilitar el firewall y desactivar servicios de compartición innecesarios</li>
+                            <li><strong>Servicios innecesarios:</strong> Desactivar Bluetooth, Wi-Fi y otros servicios cuando no se usen</li>
+                            <li><strong>Seguridad de aplicaciones:</strong> Instalar software solo de fuentes confiables (preferiblemente la App Store)</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="sub-section">
+                        <h4>Herramientas antimalware y análisis</h4>
+                        <p>Las herramientas antimalware y de análisis son esenciales para detectar y eliminar amenazas:</p>
+                        <p><strong>Malwarebytes:</strong></p>
+                        <ul>
+                            <li><strong>Descripción:</strong> Software antimalware conocido por su eficacia contra malware, ransomware y otras amenazas</li>
+                            <li><strong>Características principales:</strong>
+                                <ul>
+                                    <li>Detección y eliminación de malware en tiempo real</li>
+                                    <li>Protección contra ransomware y exploits</li>
+                                    <li>Protección web contra sitios maliciosos y phishing</li>
+                                    <li>Compatibilidad con otros programas antivirus</li>
+                                </ul>
+                            </li>
+                            <li><strong>Cómo usar Malwarebytes:</strong>
+                                <ol>
+                                    <li>Descargar e instalar desde el sitio oficial</li>
+                                    <li>Actualizar a la última versión de base de datos</li>
+                                    <li>Realizar un análisis completo del sistema</li>
+                                    <li>Revisar los resultados y poner en cuarentena las amenazas detectadas</li>
+                                    <li>Reiniciar el sistema si es necesario</li>
+                                </ol>
+                            </li>
+                        </ul>
+                        <p><strong>Wireshark:</strong></p>
+                        <ul>
+                            <li><strong>Descripción:</strong> Analizador de protocolos de red que captura y examina datos transmitidos por la red</li>
+                            <li><strong>Características principales:</strong>
+                                <ul>
+                                    <li>Captura de paquetes en vivo y análisis offline</li>
+                                    <li>Soporte para cientos de protocolos</li>
+                                    <li>Visualización detallada de paquetes con filtros avanzados</li>
+                                    <li>Análisis de VoIP y flujos de datos</li>
+                                </ul>
+                            </li>
+                            <li><strong>Usos comunes en seguridad:</strong>
+                                <ul>
+                                    <li>Detección de tráfico anómalo o sospechoso</li>
+                                    <li>Análisis de ataques de red</li>
+                                    <li>Resolución de problemas de seguridad</li>
+                                    <li>Análisis de malware que se comunica por red</li>
+                                </ul>
+                            </li>
+                            <li><strong>Cómo usar Wireshark:</strong>
+                                <ol>
+                                    <li>Descargar e instalar desde el sitio oficial</li>
+                                    <li>Seleccionar la interfaz de red para capturar paquetes</li>
+                                    <li>Iniciar la captura y realizar las acciones de red a analizar</li>
+                                    <li>Detener la captura y aplicar filtros para aislar tráfico relevante</li>
+                                    <li>Analizar los paquetes capturados para identificar posibles problemas o amenazas</li>
+                                </ol>
+                            </li>
+                        </ul>
+                        <div class="tools">
+                            <span class="tool" data-tooltip="Software antimalware que detecta y elimina malware, ransomware y otras amenazas. Ofrece protección en tiempo real y análisis profundo del sistema."><i class="fas fa-bug"></i> Malwarebytes</span>
+                            <span class="tool" data-tooltip="Analizador de protocolos de red que captura y examina datos transmitidos por la red. Esencial para análisis de seguridad y resolución de problemas de red."><i class="fas fa-project-diagram"></i> Wireshark</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="level">
+                <div class="level-header">
+                    <div class="level-icon"><i class="fas fa-user-ninja"></i></div>
+                    <h2>Nivel 3: Avanzado (Para entusiastas y profesionales)</h2>
+                </div>
+                
+                <div class="section">
+                    <h3>1. Ciberseguridad técnica</h3>
+                    
+                    <div class="sub-section">
+                        <h4>Ethical hacking</h4>
+                        <p>El ethical hacking (hacking ético) es la práctica de utilizar las mismas técnicas que los atacantes maliciosos, pero con permiso explícito y con el objetivo de identificar y corregir vulnerabilidades:</p>
+                        <p><strong>Conceptos fundamentales del ethical hacking:</strong></p>
+                        <ul>
+                            <li><strong>Definición:</strong> Proceso autorizado de intentar penetrar sistemas para evaluar su seguridad</li>
+                            <li><strong>Objetivo:</strong> Identificar vulnerabilidades antes de que lo hagan atacantes maliciosos</li>
+                            <li><strong>Marco legal:</strong> Siempre requiere autorización por escrito del propietario del sistema</li>
+                            <li><strong>Diferencia con el hacking malicioso:</strong> El hacker ético tiene permiso, sigue un código ético y busca mejorar la seguridad</li>
+                        </ul>
+                        <p><strong>Fases del ethical hacking:</strong></p>
+                        <ol>
+                            <li><strong>Reconocimiento:</strong> Recopilación de información pública sobre el objetivo</li>
+                            <li><strong>Escaneo y enumeración:</strong> Identificación de sistemas activos, puertos abiertos y servicios</li>
+                            <li><strong>Obtención de acceso:</strong> Explotación de vulnerabilidades identificadas</li>
+                            <li><strong>Mantenimiento del acceso:</strong> Establecimiento de persistencia en el sistema comprometido</li>
+                            <li><strong>Borrado de huellas:</strong> Eliminación de evidencia de la intrusión</li>
+                            <li><strong>Reporte:</strong> Documentación detallada de hallazgos y recomendaciones</li>
+                        </ol>
+                        <p><strong>Certificaciones en ethical hacking:</strong></p>
+                        <ul>
+                            <li><strong>CEH (Certified Ethical Hacker):</strong> Ofrecida por EC-Council</li>
+                            <li><strong>OSCP (Offensive Security Certified Professional):</strong> Ofrecida por Offensive Security, enfocada en habilidades prácticas</li>
+                            <li><strong>GWAPT (GIAC Web Application Penetration Tester):</strong> Especializada en pruebas de aplicaciones web</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="sub-section">
+                        <h4>Herramientas de análisis</h4>
+                        <p>Las herramientas de análisis de vulnerabilidades identifican, cuantifican y priorizan vulnerabilidades en sistemas:</p>
+                        <p><strong>Nmap (Network Mapper):</strong></p>
+                        <ul>
+                            <li><strong>Descripción:</strong> Herramienta de código abierto para descubrir redes y auditar la seguridad</li>
+                            <li><strong>Funcionalidades principales:</strong>
+                                <ul>
+                                    <li>Descubrimiento de hosts en una red</li>
+                                    <li>Escaneo de puertos para identificar servicios abiertos</li>
+                                    <li>Detección de versiones de servicios y sistemas operativos</li>
+                                    <li>Detección de vulnerabilidades mediante scripts (NSE)</li>
+                                </ul>
+                            </li>
+                            <li><strong>Tipos de escaneo con Nmap:</strong>
+                                <ul>
+                                    <li><strong>TCP Connect Scan:</strong> Escaneo completo de conexión TCP (-sT)</li>
+                                    <li><strong>SYN Scan:</strong> Escaneo sigiloso a medio abierto (-sS)</li>
+                                    <li><strong>Version Detection:</strong> Detección de versiones de servicios (-sV)</li>
+                                    <li><strong>OS Detection:</strong> Detección de sistema operativo (-O)</li>
+                                </ul>
+                            </li>
+                            <li><strong>Ejemplos de comandos Nmap:</strong>
+                                <ul>
+                                    <li><code>nmap -sS -O 192.168.1.1</code>: Escaneo SYN y detección de SO</li>
+                                    <li><code>nmap -sV -p 1-1000 192.168.1.1</code>: Detección de versiones en los primeros 1000 puertos</li>
+                                    <li><code>nmap --script vuln 192.168.1.1</code>: Escaneo de vulnerabilidades</li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <p><strong>Metasploit Framework:</strong></p>
+                        <ul>
+                            <li><strong>Descripción:</strong> Plataforma de código abierto para desarrollar, probar y ejecutar exploits</li>
+                            <li><strong>Componentes principales:</strong>
+                                <ul>
+                                    <li><strong>msfconsole:</strong> Interfaz principal y más completa</li>
+                                    <li><strong>msfvenom:</strong> Generador de payloads personalizados</li>
+                                    <li><strong>Auxiliaries:</strong> Módulos que realizan tareas de escaneo, fuzzing, etc.</li>
+                                </ul>
+                            </li>
+                            <li><strong>Elementos de Metasploit:</strong>
+                                <ul>
+                                    <li><strong>Exploits:</strong> Código que aprovecha una vulnerabilidad específica</li>
+                                    <li><strong>Payloads:</strong> Código que se ejecuta después de un exploit exitoso</li>
+                                    <li><strong>Post-exploitation:</strong> Módulos para usar después de obtener acceso</li>
+                                </ul>
+                            </li>
+                            <li><strong>Flujo de trabajo básico en Metasploit:</strong>
+                                <ol>
+                                    <li>Seleccionar un exploit: <code>use exploit/windows/smb/ms17_010_eternalblue</code></li>
+                                    <li>Configurar opciones: <code>set RHOSTS 192.168.1.10</code></li>
+                                    <li>Seleccionar un payload: <code>set payload windows/x64/meterpreter/reverse_tcp</code></li>
+                                    <li>Configurar opciones del payload: <code>set LHOST 192.168.1.5</code></li>
+                                    <li>Ejecutar el exploit: <code>exploit</code></li>
+                                </ol>
+                            </li>
+                        </ul>
+                        <div class="tools">
+                            <span class="tool" data-tooltip="Herramienta de escaneo de redes y auditoría de seguridad. Permite descubrir hosts, puertos abiertos, servicios y vulnerabilidades en una red."><i class="fas fa-satellite-dish"></i> Nmap</span>
+                            <span class="tool" data-tooltip="Plataforma de desarrollo y ejecución de exploits. Permite probar vulnerabilidades, desarrollar exploits y realizar pruebas de penetración de manera estructurada."><i class="fas fa-spider"></i> Metasploit</span>
+                        </div>
+                    </div>
+                    
+                    <div class="sub-section">
+                        <h4>Pentesting y laboratorios</h4>
+                        <p>El pentesting (pruebas de penetración) es una simulación autorizada de un ciberataque contra un sistema:</p>
+                        <p><strong>Conceptos fundamentales de pentesting:</strong></p>
+                        <ul>
+                            <li><strong>Definición:</strong> Proceso metodológico para evaluar la seguridad de sistemas mediante la simulación de ataques</li>
+                            <li><strong>Tipos de pentesting:</strong>
+                                <ul>
+                                    <li><strong>Caja blanca (White box):</strong> El pentester tiene conocimiento completo del sistema</li>
+                                    <li><strong>Caja gris (Gray box):</strong> El pentester tiene información limitada sobre el sistema</li>
+                                    <li><strong>Caja negra (Black box):</strong> El pentester no tiene información previa sobre el sistema</li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <p><strong>Metodologías de pentesting:</strong></p>
+                        <ol>
+                            <li><strong>PTES (Penetration Testing Execution Standard):</strong>
+                                <ul>
+                                    <li>Pre-engagement</li>
+                                    <li>Inteligencia</li>
+                                    <li>Análisis de vulnerabilidades</li>
+                                    <li>Explotación</li>
+                                    <li>Post-explotación</li>
+                                    <li>Reporte</li>
+                                </ul>
+                            </li>
+                            <li><strong>OWASP Testing Guide:</strong>
+                                <ul>
+                                    <li>Especializada en aplicaciones web</li>
+                                    <li>Cubre desde gestión de proyectos hasta pruebas específicas de vulnerabilidades</li>
+                                </ul>
+                            </li>
+                        </ol>
+                        <p><strong>Laboratorios prácticos con virtualización:</strong></p>
+                        <ul>
+                            <li><strong>Virtualización:</strong> Tecnología que permite ejecutar múltiples sistemas operativos en un único equipo físico</li>
+                            <li><strong>Ventajas de usar virtualización para pentesting:</strong>
+                                <ul>
+                                    <li>Aislamiento completo del entorno de pruebas</li>
+                                    <li>Posibilidad de crear instantáneas (snapshots) para revertir cambios</li>
+                                    <li>Facilidad para replicar entornos complejos</li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <p><strong>Plataformas de virtualización:</strong></p>
+                        <ol>
+                            <li><strong>VMware:</strong>
+                                <ul>
+                                    <li><strong>Productos principales:</strong> Workstation, Fusion, ESXi, Player</li>
+                                    <li><strong>Características relevantes:</strong> Soporte para instantáneas, configuración avanzada de redes</li>
+                                </ul>
+                            </li>
+                            <li><strong>VirtualBox:</strong>
+                                <ul>
+                                    <li><strong>Descripción:</strong> Hipervisor de código abierto mantenido por Oracle</li>
+                                    <li><strong>Características relevantes:</strong> Gratuito y multiplataforma, soporte para instantáneas</li>
+                                </ul>
+                            </li>
+                        </ol>
+                        <p><strong>Configuración de un laboratorio de pentesting:</strong></p>
+                        <ol>
+                            <li><strong>Arquitectura básica:</strong>
+                                <ul>
+                                    <li>Máquina atacante (Kali Linux, Parrot OS)</li>
+                                    <li>Máquinas objetivo (vulnerables por diseño)</li>
+                                    <Red aislada para las pruebas</li>
+                                </ul>
+                            </li>
+                            <li><strong>Sistemas operativos comunes para pentesting:</strong>
+                                <ul>
+                                    <li><strong>Kali Linux:</strong> Distribución con herramientas preinstaladas</li>
+                                    <li><strong>Parrot OS:</strong> Alternativa enfocada en seguridad y privacidad</li>
+                                    <li><strong>BlackArch Linux:</strong> Distribución con más de 2800 herramientas</li>
+                                </ul>
+                            </li>
+                            <li><strong>Máquinas vulnerables para practicar:</strong>
+                                <ul>
+                                    <li><strong>Metasploitable:</strong> Máquina virtual Linux intencionalmente vulnerable</li>
+                                    <li><strong>OWASP Broken Web Apps (BWA):</strong> Aplicación web vulnerable para practicar</li>
+                                    <li><strong>VulnHub:</strong> Repositorio de máquinas vulnerables para descargar</li>
+                                </ul>
+                            </li>
+                        </ol>
+                        <div class="tools">
+                            <span class="tool" data-tooltip="Plataforma de virtualización que permite ejecutar múltiples sistemas operativos en una sola máquina física. Ofrece características avanzadas como instantáneas y redes personalizadas."><i class="fas fa-desktop"></i> VMware</span>
+                            <span class="tool" data-tooltip="Hipervisor de código abierto que permite crear y ejecutar máquinas virtuales. Es gratuito, multiplataforma y adecuado para entornos de pruebas de seguridad."><i class="fas fa-desktop"></i> VirtualBox</span>
+                            <span class="tool" data-tooltip="Plataforma online que ofrece laboratorios guiados de ciberseguridad para todos los niveles. Incluye rutas de aprendizaje y entornos prácticos."><i class="fas fa-graduation-cap"></i> TryHackMe</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h3>2. Seguridad en servidores y web</h3>
+                    
+                    <div class="sub-section">
+                        <h4>OWASP Top 10</h4>
+                        <p>OWASP Top 10 es un informe que representa un amplio consenso sobre los riesgos de seguridad más críticos para aplicaciones web:</p>
+                        <p><strong>OWASP Top 10 2021:</strong></p>
+                        <ol>
+                            <li><strong>A01:2021 - Broken Access Control (Control de acceso roto):</strong>
+                                <ul>
+                                    <li><strong>Descripción:</strong> Restricciones sobre lo que los usuarios autenticados pueden hacer no se implementan correctamente</li>
+                                    <li><strong>Ejemplos:</strong> Manipulación de URLs para acceder a recursos no autorizados</li>
+                                    <li><strong>Prevención:</strong> Implementar controles de acceso centralizados, denegar por defecto</li>
+                                </ul>
+                            </li>
+                            <li><strong>A02:2021 - Cryptographic Failures (Fallos criptográficos):</strong>
+                                <ul>
+                                    <li><strong>Descripción:</strong> Fallos relacionados con criptografía que often llevan a la exposición de datos sensibles</li>
+                                    <li><strong>Ejemplos:</strong> Almacenamiento de contraseñas en texto plano</li>
+                                    <li><strong>Prevención:</strong> Cifrar todos los datos sensibles, usar algoritmos actualizados</li>
+                                </ul>
+                            </li>
+                            <li><strong>A03:2021 - Injection (Inyección):</strong>
+                                <ul>
+                                    <li><strong>Descripción:</strong> Datos no confiables se envían a un intérprete como parte de un comando o consulta</li>
+                                    <li><strong>Ejemplos:</strong> Inyección SQL, inyección NoSQL, inyección LDAP</li>
+                                    <li><strong>Prevención:</strong> Usar consultas parametrizadas, sanitizar entradas</li>
+                                </ul>
+                            </li>
+                            <li><strong>A04:2021 - Insecure Design (Diseño inseguro):</strong>
+                                <ul>
+                                    <li><strong>Descripción:</strong> Fallos en el diseño y arquitectura que crean vulnerabilidades</li>
+                                    <li><strong>Prevención:</strong> Integrar seguridad desde las fases iniciales de diseño</li>
+                                </ul>
+                            </li>
+                            <li><strong>A05:2021 - Security Misconfiguration (Configuración de seguridad incorrecta):</strong>
+                                <ul>
+                                    <li><strong>Descripción:</strong> Fallos en la configuración de seguridad de la aplicación, servidores o frameworks</li>
+                                    <li><strong>Prevención:</strong> Mantener plataformas actualizadas, eliminar funciones innecesarias</li>
+                                </ul>
+                            </li>
+                            <li><strong>A06:2021 - Vulnerable and Outdated Components (Componentes vulnerables y desactualizados):</strong>
+                                <ul>
+                                    <li><strong>Descripción:</strong> Uso de componentes con vulnerabilidades conocidas o sin soporte</li>
+                                    <li><strong>Prevención:</strong> Mantener inventario de componentes, monitorizar vulnerabilidades</li>
+                                </ul>
+                            </li>
+                            <li><strong>A07:2021 - Identification and Authentication Failures (Fallos de identificación y autenticación):</strong>
+                                <ul>
+                                    <li><strong>Descripción:</strong> Implementación incorrecta de funciones de identificación y autenticación</li>
+                                    <li><strong>Prevención:</strong> Implementar autenticación multifactor, políticas de contraseñas fuertes</li>
+                                </ul>
+                            </li>
+                            <li><strong>A08:2021 - Software and Data Integrity Failures (Fallos de integridad de software y datos):</strong>
+                                <ul>
+                                    <li><strong>Descripción:</strong> Fallos en la verificación de la integridad de software y datos</li>
+                                    <li><strong>Prevención:</strong> Usar firmas digitales, verificar integridad de datos</li>
+                                </ul>
+                            </li>
+                            <li><strong>A09:2021 - Security Logging and Monitoring Failures (Fallos en registro y monitoreo de seguridad):</strong>
+                                <ul>
+                                    <li><strong>Descripción:</strong> Fallos en la capacidad de detectar, responder y recuperar de ataques</li>
+                                    <li><strong>Prevención:</strong> Implementar registro detallado, monitoreo en tiempo real</li>
+                                </ul>
+                            </li>
+                            <li><strong>A10:2021 - Server-Side Request Forgery (SSRF):</strong>
+                                <ul>
+                                    <li><strong>Descripción:</strong> El atacante induce al servidor a realizar peticiones a destinos no deseados</li>
+                                    <li><strong>Prevención:</strong> Validar y sanitizar URLs entrantes, implementar listas de permitidos</li>
+                                </ul>
+                            </li>
+                        </ol>
+                    </div>
+                    
+                    <div class="sub-section">
+                        <h4>Configuración segura de servidores</h4>
+                        <p>La configuración segura de servidores es fundamental para proteger los datos y servicios:</p>
+                        <p><strong>Configuración segura de servidores Linux:</strong></p>
+                        <ol>
+                            <li><strong>Actualización y parcheado:</strong> Mantener el sistema actualizado con los últimos parches de seguridad</li>
+                            <li><strong>Configuración de cuentas:</strong> Deshabilitar el inicio de sesión directo como root, usar sudo</li>
+                            <li><strong>Seguridad de red:</strong> Configurar un firewall, permitir solo los puertos necesarios</li>
+                            <li><strong>Endurecimiento de servicios:</strong> Deshabilitar servicios innecesarios, configurar con privilegios mínimos</li>
+                            <li><strong>Seguridad del sistema de archivos:</strong> Implementar particiones separadas, configurar permisos adecuados</li>
+                            <li><strong>Auditoría y monitoreo:</strong> Configurar el sistema de auditoría, revisar periódicamente los logs</li>
+                        </ol>
+                        <p><strong>Configuración segura de servidores Windows Server:</strong></p>
+                        <ol>
+                            <li><strong>Actualización y parcheado:</strong> Mantener el sistema actualizado con Windows Update</li>
+                            <li><strong>Configuración de cuentas:</strong> Usar cuentas de usuario estándar, implementar el principio de mínimo privilegio</li>
+                            <li><strong>Seguridad de red:</strong> Configurar el Firewall de Windows, implementar IPSec</li>
+                            <li><strong>Endurecimiento de servicios:</strong> Instalar solo los roles necesarios, configurar con cuentas de servicio</li>
+                            <li><strong>Seguridad del sistema de archivos:</strong> Implementar cifrado con BitLocker, configurar permisos NTFS</li>
+                            <li><strong>Auditoría y monitoreo:</strong> Habilitar políticas de auditoría, configurar el Visor de eventos</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="sub-section">
+                        <h4>Certificados SSL/TLS y HTTPS</h4>
+                        <p>Los certificados SSL/TLS y el protocolo HTTPS garantizan la seguridad en las comunicaciones web:</p>
+                        <p><strong>Conceptos básicos de SSL/TLS:</strong></p>
+                        <ul>
+                            <li><strong>SSL/TLS:</strong> Protocolos criptográficos para establecer conexiones seguras</li>
+                            <li><strong>HTTPS:</strong> Protocolo HTTP que opera sobre una conexión SSL/TLS cifrada</li>
+                        </ul>
+                        <p><strong>Funcionamiento de SSL/TLS:</strong></p>
+                        <ol>
+                            <li><strong>Handshake SSL/TLS:</strong> Proceso donde el cliente y servidor acuerdan protocolos, se autentican y generan claves de sesión</li>
+                            <li><strong>Cifrado de datos:</strong> Una vez establecida la conexión, los datos se cifran antes de enviarse</li>
+                        </ol>
+                        <p><strong>Tipos de certificados SSL/TLS:</strong></p>
+                        <ol>
+                            <li><strong>Validación de Dominio (DV):</strong> Verifica que el solicitante controla el dominio</li>
+                            <li><strong>Validación de Organización (OV):</strong> Verifica el dominio y la existencia legal de la organización</li>
+                            <li><strong>Validación Extendida (EV):</strong> Verificación exhaustiva de la organización</li>
+                            <li><strong>Certificados Wildcard:</strong> Protegen un dominio y todos sus subdominios (*.ejemplo.com)</li>
+                            <li><strong>Certificados Multi-Dominio (SAN):</strong> Protegen múltiples dominios con un solo certificado</li>
+                        </ol>
+                        <p><strong>Implementación de HTTPS:</strong></p>
+                        <ol>
+                            <li><strong>Obtención de un certificado:</strong> Comprar a una CA comercial o usar Let's Encrypt (gratuito)</li>
+                            <li><strong>Instalación del certificado:</strong> En servidores web como Apache, Nginx, IIS</li>
+                            <li><strong>Configuración de SSL/TLS:</strong> Seleccionar protocolos (TLS 1.2/1.3), configurar suites de cifrado</li>
+                            <li><strong>Implementación de HSTS:</strong> Forzar el uso de HTTPS</li>
+                        </ol>
+                        <p><strong>Herramientas y buenas prácticas:</strong></p>
+                        <ul>
+                            <li><strong>Let's Encrypt:</strong> Autoridad de certificación gratuita</li>
+                            <li><strong>Certbot:</strong> Cliente recomendado por Let's Encrypt</li>
+                            <li><strong>SSL Labs SSL Test:</strong> Herramienta para evaluar la configuración SSL/TLS</li>
+                            <li><strong>Prácticas recomendadas:</strong> Deshabilitar protocolos obsoletos, usar suites de cifrado fuertes</li>
+                        </ul>
+                        <div class="tools">
+                            <span class="tool" data-tooltip="Autoridad de certificación gratuita que proporciona certificados SSL/TLS automatizados. Es una iniciativa sin fines de lucro apoyada por organizaciones importantes."><i class="fas fa-certificate"></i> Let's Encrypt</span>
+                            <span class="tool" data-tooltip="Cliente de línea de comandos recomendado por Let's Encrypt para obtener y renovar certificados SSL/TLS de manera automatizada."><i class="fas fa-lock"></i> Certbot</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h3>3. Respuesta a incidentes</h3>
+                    
+                    <div class="sub-section">
+                        <h4>Detección de intrusiones (IDS/IPS)</h4>
+                        <p>Los sistemas de detección de intrusiones (IDS) y prevención de intrusiones (IPS) monitorean actividades maliciosas:</p>
+                        <p><strong>Conceptos básicos:</strong></p>
+                        <ul>
+                            <li><strong>IDS:</strong> Sistema que monitorea y alerta sobre actividades sospechosas pero no toma acciones correctivas automáticas</li>
+                            <li><strong>IPS:</strong> Sistema que además de detectar, tiene la capacidad de bloquear actividades maliciosas</li>
+                        </ul>
+                        <p><strong>Tipos de IDS/IPS:</strong></p>
+                        <ol>
+                            <li><strong>Basados en red (NIDS/NIPS):</strong> Monitorean el tráfico de red en busca de patrones sospechosos</li>
+                            <li><strong>Basados en host (HIDS/HIPS):</strong> Monitorean actividades en dispositivos individuales</li>
+                            <li><strong>Basados en firmas:</strong> Comparan el tráfico con una base de datos de patrones conocidos</li>
+                            <li><strong>Basados en anomalías:</strong> Establecen una línea base de comportamiento normal y alertan sobre desviaciones</li>
+                        </ol>
+                        <p><strong>Herramientas populares de IDS/IPS:</strong></p>
+                        <ol>
+                            <li><strong>Snort:</strong> IDS/IPS de código abierto muy popular que utiliza reglas para detectar patrones de ataque</li>
+                            <li><strong>Suricata:</strong> Alternativa moderna a Snort, con soporte para multithreading y protocolos modernos</li>
+                            <li><strong>OSSEC/Wazuh:</strong> HIDS de código abierto con capacidades de correlación de logs y respuesta activa</li>
+                            <li><strong>Zeek (anteriormente Bro):</strong> Plataforma de monitoreo de seguridad de red con enfoque en generación de logs</li>
+                        </ol>
+                        <p><strong>Configuración y gestión de IDS/IPS:</strong></p>
+                        <ul>
+                            <li><strong>Actualización de reglas:</strong> Mantener las reglas actualizadas para detectar amenazas recientes</li>
+                            <li><strong>Ajuste de reglas:</strong> Personalizar reglas para reducir falsos positivos</li>
+                            <li><strong>Gestión de alertas:</strong> Implementar un sistema para clasificar y priorizar alertas</li>
+                            <li><strong>Integración con SIEM:</strong> Enviar alertas a un sistema de gestión de eventos</li>
+                        </ul>
+                        <div class="tools">
+                            <span class="tool" data-tooltip="IDS/IPS de código abierto que utiliza reglas para detectar patrones de ataque en el tráfico de red. Es uno de los sistemas más utilizados en el mundo."><i class="fas fa-shield-alt"></i> Snort</span>
+                            <span class="tool" data-tooltip="IDS/IPS de código abierto, moderno y de alto rendimiento. Soporta multithreading y protocolos modernos como HTTP/2 y TLS 1.3."><i class="fas fa-shield-alt"></i> Suricata</span>
+                            <span class="tool" data-tooltip="Sistema de detección de intrusiones basado en host (HIDS) de código abierto. Incluye análisis de logs, detección de rootkits y respuesta activa."><i class="fas fa-shield-alt"></i> OSSEC</span>
+                        </div>
+                    </div>
+                    
+                    <div class="sub-section">
+                        <h4>Forense digital</h4>
+                        <p>La forense digital aplica técnicas científicas para preservar, recuperar e investigar material digital:</p>
+                        <p><strong>Análisis de logs:</strong></p>
+                        <ul>
+                            <li><strong>Tipos de logs relevantes:</strong>
+                                <ul>
+                                    <li><strong>Logs de sistema operativo:</strong> Event Viewer (Windows), /var/log/ (Linux)</li>
+                                    <li><strong>Logs de red:</strong> Firewalls, routers, switches</li>
+                                    <li><strong>Logs de aplicaciones:</strong> Servidores web, bases de datos</li>
+                                    <li><strong>Logs de seguridad:</strong> Antivirus, IDS/IPS, SIEM</li>
+                                </ul>
+                            </li>
+                            <li><strong>Técnicas de análisis de logs:</strong>
+                                <ol>
+                                    <li><strong>Análisis temporal:</strong> Establecer una línea de tiempo de eventos</li>
+                                    <li><strong>Correlación de eventos:</strong> Relacionar eventos de diferentes fuentes</li>
+                                    <li><strong>Análisis de frecuencia:</strong> Identificar actividades anómalas por su frecuencia</li>
+                                    <li><strong>Análisis de contenido:</strong> Examinar el contenido en busca de indicadores de compromiso</li>
+                                </ol>
+                            </li>
+                        </ul>
+                        <p><strong>Análisis de malware:</strong></p>
+                        <ul>
+                            <li><strong>Tipos de análisis:</strong>
+                                <ol>
+                                    <li><strong>Análisis estático:</strong> Examinar el código sin ejecutar el malware</li>
+                                    <li><strong>Análisis dinámico:</strong> Ejecutar el malware en un entorno controlado (sandbox)</li>
+                                    <li><strong>Análisis de memoria:</strong> Examinar la volcado de memoria de un sistema infectado</li>
+                                </ol>
+                            </li>
+                            <li><strong>Entornos controlados para análisis:</strong>
+                                <ul>
+                                    <li><strong>Máquinas virtuales:</strong> Aisladas de la red de producción, con instantáneas</li>
+                                    <li><strong>Sandbox:</strong> Entornos específicamente diseñados para ejecutar malware de forma segura</li>
+                                    <li><strong>Redes aisladas:</strong> Sin conexión a internet o con monitoreo exhaustivo</li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <p><strong>Herramientas populares en forense digital:</strong></p>
+                        <ul>
+                            <li><strong>Autopsy:</strong> Plataforma forense con interfaz gráfica</li>
+                            <li><strong>FTK (Forensic Toolkit):</strong> Suite comercial para análisis forense</li>
+                            <li><strong>Volatility Framework:</strong> Herramienta para análisis de memoria</li>
+                            <li><strong>Wireshark:</strong> Analizador de protocolos de red</li>
+                        </ul>
+                        <div class="tools">
+                            <span class="tool" data-tooltip="Plataforma forense digital de código abierto con interfaz gráfica. Permite analizar imágenes de disco, recuperar archivos y analizar cronologías de eventos."><i class="fas fa-search"></i> Autopsy</span>
+                            <span class="tool" data-tooltip="Framework avanzado para el análisis forense de memoria volátil. Permite extraer información de procesos, conexiones de red y otros artefactos de memoria RAM."><i class="fas fa-memory"></i> Volatility</span>
+                        </div>
+                    </div>
+                    
+                    <div class="sub-section">
+                        <h4>Planes de contingencia y recuperación</h4>
+                        <p>Los planes de contingencia y recuperación ante desastres garantizan la continuidad del negocio:</p>
+                        <p><strong>Conceptos fundamentales:</strong></p>
+                        <ul>
+                            <li><strong>Contingencia:</strong> Planificación para responder a incidentes de seguridad</li>
+                            <li><strong>Recuperación ante desastres (DR):</strong> Proceso para restaurar sistemas después de un desastre</li>
+                            <li><strong>Continuidad del negocio (BC):</strong> Estrategia para mantener funciones críticas operativas</li>
+                        </ul>
+                        <p><strong>Componentes de un plan de contingencia:</strong></p>
+                        <ol>
+                            <li><strong>Análisis de impacto en el negocio (BIA):</strong> Identificar procesos críticos y evaluar impactos</li>
+                            <li><strong>Estrategias de respuesta:</strong> Procedimientos para diferentes tipos de incidentes</li>
+                            <li><strong>Recursos necesarios:</strong> Personal, herramientas y proveedores externos</li>
+                            <li><strong>Capacitación y concienciación:</strong> Formación regular y simulacros</li>
+                        </ol>
+                        <p><strong>Componentes de un plan de recuperación ante desastres:</strong></p>
+                        <ol>
+                            <li><strong>Estrategias de respaldo:</strong> Políticas de copias de seguridad (frecuencia, tipo, retención)</li>
+                            <li><strong>Estrategias de recuperación:</strong> Procedimientos para restaurar sistemas y datos</li>
+                            <li><strong>Sitio alternativo:</strong> Configuraciones para recuperación (en frío, tibio, caliente)</li>
+                            <li><strong>Pruebas y validación:</strong> Pruebas regulares de los procedimientos de recuperación</li>
+                        </ol>
+                        <p><strong>Metodologías y estándares:</strong></p>
+                        <ul>
+                            <li><strong>ISO 27031:</strong> Guía para la preparación de las TIC para la continuidad del negocio</li>
+                            <li><strong>ISO 22301:</strong> Estándar para sistemas de gestión de continuidad del negocio</li>
+                            <li><strong>NIST SP 800-34:</strong> Guía para planes de contingencia</li>
+                        </ul>
+                        <p><strong>Implementación práctica:</strong></p>
+                        <ol>
+                            <li><strong>Fase de planificación:</strong> Formar equipo, realizar BIA, definir objetivos</li>
+                            <li><strong>Fase de desarrollo:</strong> Documentar procedimientos, diseñar estrategias</li>
+                            <li><strong>Fase de implementación:</strong> Adquirir tecnologías, capacitar personal</li>
+                            <li><strong>Fase de mantenimiento:</strong> Realizar pruebas, actualizar el plan</li>
+                        </ol>
+                        <div class="concept">
+                            <strong>Componentes:</strong> Análisis de impacto, estrategias de respuesta, recursos necesarios, capacitación.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="level">
+                <div class="level-header">
+                    <div class="level-icon"><i class="fas fa-tools"></i></div>
+                    <h2>Recursos Adicionales</h2>
+                </div>
+                
+                <div class="section">
+                    <h3>Laboratorios prácticos</h3>
+                    <p>Ejercicios con máquinas virtuales en plataformas como TryHackMe, Hack The Box y VulnHub. Los laboratorios prácticos son fundamentales para adquirir experiencia en ciberseguridad:</p>
+                    <p><strong>Plataformas para laboratorios prácticos:</strong></p>
+                    <ol>
+                        <li><strong>TryHackMe:</strong> Plataforma online con laboratorios guiados para diferentes niveles. Ideal para principiantes y usuarios intermedios.</li>
+                        <li><strong>Hack The Box:</strong> Plataforma más orientada a la práctica y desafío. Requiere más conocimientos técnicos.</li>
+                        <li><strong>VulnHub:</strong> Repositorio de máquinas virtuales vulnerables gratuitas. Permite descargar y configurar máquinas locales.</li>
+                        <li><strong>OverTheWire:</strong> Juegos y desafíos para aprender conceptos de seguridad a través de la gamificación.</li>
+                    </ol>
+                    <p><strong>Configuración de un laboratorio local:</strong></p>
+                    <ol>
+                        <li><strong>Software de virtualización:</strong> VirtualBox, VMware Workstation/Fusion.</li>
+                        <li><strong>Sistemas operativos para pentesting:</strong> Kali Linux, Parrot OS, BlackArch.</li>
+                        <li><strong>Máquinas vulnerables populares:</strong> Metasploitable2/3, OWASP Broken Web Apps.</li>
+                    </ol>
+                    <p><strong>Tipos de ejercicios prácticos:</strong></p>
+                    <ol>
+                        <li><strong>Análisis de vulnerabilidades:</strong> Escaneo de puertos, identificación de vulnerabilidades.</li>
+                        <li><strong>Explotación:</strong> Uso de Metasploit, explotación manual, escalada de privilegios.</li>
+                        <li><strong>Análisis de malware:</strong> Ejecución controlada, análisis estático y dinámico.</li>
+                        <li><strong>Forense digital:</strong> Análisis de imágenes de disco, recuperación de datos.</li>
+                    </ol>
+                </div>
+                
+                <div class="section">
+                    <h3>Casos de estudio</h3>
+                    <p>Análisis de brechas de seguridad reales como Equifax, Target, Sony Pictures, WannaCry y SolarWinds. El estudio de brechas reales proporciona lecciones valiosas sobre cómo ocurren los incidentes:</p>
+                    <p><strong>Metodología para analizar casos de estudio:</strong></p>
+                    <ol>
+                        <li><strong>Contexto de la organización:</strong> Tipo de industria, infraestructura tecnológica.</li>
+                        <li><strong>Cronología del incidente:</strong> Fechas de detección e intrusión, duración de la brecha.</li>
+                        <li><strong>Vector de ataque:</strong> Punto de entrada inicial, técnicas utilizadas.</li>
+                        <li><strong>Impacto y consecuencias:</strong> Datos comprometidos, impacto financiero y reputacional.</li>
+                        <li><strong>Respuesta al incidente:</strong> Medidas tomadas, comunicación con partes afectadas.</li>
+                        <li><strong>Lecciones aprendidas:</strong> Medidas correctivas implementadas.</li>
+                    </ol>
+                    <p><strong>Casos de estudio emblemáticos:</strong></p>
+                    <ol>
+                        <li><strong>Equifax (2017):</strong> Explotación de vulnerabilidad no parcheada en Apache Struts. Afectó a 147 millones de personas.</li>
+                        <li><strong>Target (2013):</strong> Credenciales robadas de un proveedor de servicios de HVAC. Perpetradores accedieron a datos de 40 millones de tarjetas de crédito.</li>
+                        <li><strong>Sony Pictures (2014):</strong> Presunto ataque patrocinado por estado. Resultó en la filtración de datos sensibles y correos internos.</li>
+                        <li><strong>WannaCry (2017):</strong> Ataque de ransomware global mediante EternalBlue. Afectó a más de 200,000 computadoras en 150 países.</li>
+                        <li><strong>SolarWinds (2020):</strong> Compromiso de la cadena de suministro. Atacantes inyectaron malware en actualizaciones legítimas.</li>
+                    </ol>
+                </div>
+                
+                <div class="section">
+                    <h3>Glosario de términos</h3>
+                    <p>Definiciones de conceptos clave como amenaza, vulnerabilidad, riesgo, malware, phishing, DDoS, inyección SQL, entre otros. Un glosario de términos es esencial para familiarizarse con la terminología específica:</p>
+                    <p><strong>Términos fundamentales:</strong></p>
+                    <ul>
+                        <li><strong>Ciberseguridad:</strong> Prácticas para proteger sistemas y programas de ataques digitales.</li>
+                        <li><strong>Amenaza:</strong> Circunstancia con potencial de causar daño a sistemas.</li>
+                        <li><strong>Vulnerabilidad:</strong> Debilidad en un sistema que puede ser explotada.</li>
+                        <li><strong>Riesgo:</strong> Probabilidad de que una amenaza explote una vulnerabilidad.</li>
+                        <li><strong>Ataque:</strong> Intento deliberado de explotar vulnerabilidades.</li>
+                    </ul>
+                    <p><strong>Tipos de malware:</strong></p>
+                    <ul>
+                        <li><strong>Virus:</strong> Programa que se replica insertando su código en otros programas.</li>
+                        <li><strong>Gusano (Worm):</strong> Malware que se auto-replica para extenderse.</li>
+                        <li><strong>Troyano:</strong> Programa que parece legítimo pero contiene código malicioso.</li>
+                        <li><strong>Ransomware:</strong> Malware que cifra archivos y exige rescate.</li>
+                    </ul>
+                    <p><strong>Técnicas de ataque:</strong></p>
+                    <ul>
+                        <li><strong>Phishing:</strong> Engaño para obtener información sensible.</li>
+                        <li><strong>Ingeniería social:</strong> Manipulación psicológica para engañar personas.</li>
+                        <li><strong>DDoS:</strong> Sobrecarga de un sistema para hacerlo inaccesible.</li>
+                        <li><strong>Inyección SQL:</strong> Inserción de código SQL malicioso.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>@2025 Ángel Chacín Ávila</p>
+            <div class="license">
+                Este documento se publica bajo <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank">Licencia GPL</a>. 
+                Eres libre de usar, modificar y distribuir este contenido manteniendo los mismos términos de la licencia.
+            </div>
+        </div>
+    </footer>
+    
+    <button class="pdf-download" id="download-pdf" title="Descargar como PDF">
+        <i class="fas fa-file-pdf"></i>
+    </button>
+    
+    <script>
+        document.getElementById('download-pdf').addEventListener('click', function() {
+            const { jsPDF } = window.jspdf;
+            const content = document.getElementById('content-to-pdf');
+            
+            // Mostrar indicador de carga
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            this.disabled = true;
+            
+            html2canvas(content, {
+                scale: 2,
+                useCORS: true,
+                allowTaint: true,
+                logging: false
+            }).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const imgWidth = 210;
+                const pageHeight = 295;
+                const imgHeight = canvas.height * imgWidth / canvas.width;
+                let heightLeft = imgHeight;
+                let position = 0;
+                
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+                
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+                
+                pdf.save('Tutorial-Ciberseguridad-AngelChacin.pdf');
+                
+                // Restaurar botón
+                this.innerHTML = '<i class="fas fa-file-pdf"></i>';
+                this.disabled = false;
+            }).catch(error => {
+                console.error('Error al generar PDF:', error);
+                alert('Error al generar el PDF. Por favor, intente nuevamente.');
+                
+                // Restaurar botón
+                this.innerHTML = '<i class="fas fa-file-pdf"></i>';
+                this.disabled = false;
+            });
+        });
+    </script>
+</body>
+</html>
