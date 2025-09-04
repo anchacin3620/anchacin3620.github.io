@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Epistemología de los Juegos de Guerra</title>
+    <style>
+        :root {
+            --primary: #1a237e;
+            --secondary: #3949ab;
+            --accent: #5c6bc0;
+            --light: #e8eaf6;
+            --dark: #283593;
+            --text: #212121;
+            --gray: #757575;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--text);
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: linear-gradient(90deg, var(--accent), var(--light));
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        
+        .subtitle {
+            font-size: 1.4rem;
+            font-weight: 300;
+            margin-bottom: 25px;
+            opacity: 0.9;
+        }
+        
+        .author {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        .affiliation {
+            font-size: 1rem;
+            margin-bottom: 20px;
+            opacity: 0.85;
+        }
+        
+        .copyright {
+            font-size: 0.9rem;
+            font-style: italic;
+            opacity: 0.8;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .abstract {
+            background-color: var(--light);
+            border-left: 5px solid var(--secondary);
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .abstract h2 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+        
+        .keywords {
+            margin-top: 15px;
+            font-style: italic;
+            color: var(--gray);
+        }
+        
+        h2 {
+            color: var(--primary);
+            margin: 30px 0 15px;
+            font-size: 1.8rem;
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 8px;
+        }
+        
+        h3 {
+            color: var(--secondary);
+            margin: 25px 0 12px;
+            font-size: 1.4rem;
+        }
+        
+        p {
+            margin-bottom: 16px;
+            text-align: justify;
+        }
+        
+        ul, ol {
+            margin-left: 25px;
+            margin-bottom: 16px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .highlight {
+            background-color: rgba(92, 107, 192, 0.15);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        
+        .figure {
+            margin: 30px 0;
+            text-align: center;
+            background-color: #f9fafb;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .figure h4 {
+            color: var(--dark);
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        canvas {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: white;
+            max-width: 100%;
+        }
+        
+        .simulation-container {
+            background-color: #f0f4f8;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 30px 0;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .simulation-container h3 {
+            color: var(--primary);
+            margin-top: 0;
+            text-align: center;
+        }
+        
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        label {
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: var(--secondary);
+        }
+        
+        input[type="range"] {
+            width: 150px;
+        }
+        
+        button {
+            background: linear-gradient(135deg, var(--secondary), var(--accent));
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(57, 73, 171, 0.3);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(57, 73, 171, 0.4);
+        }
+        
+        .results {
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .result-item {
+            display: inline-block;
+            margin: 0 15px;
+            padding: 10px 20px;
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .result-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .result-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .references {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .references h2 {
+            margin-bottom: 20px;
+        }
+        
+        .references ul {
+            list-style-type: none;
+            margin-left: 0;
+        }
+        
+        .references li {
+            margin-bottom: 12px;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .references li::before {
+            content: "•";
+            color: var(--accent);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--gray);
+            font-size: 0.9rem;
+            background-color: #f5f7fa;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .content {
+                padding: 25px;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>La Epistemología de los Juegos de Guerra</h1>
+            <div class="subtitle">Integrando la Simulación Monte Carlo en la Construcción del Conocimiento Estratégico</div>
+            <div class="author">Prof. Ángel Chacín Ávila</div>
+            <div class="affiliation">Licenciado en Física, Especialista en Ciencias Computacionales<br>
+            Docente e Investigador<br>
+            Universidad Nacional Experimental de la Seguridad Núcleo Zulia</div>
+            <div class="copyright">Copyright © 2025<br>
+            Se autoriza su reproducción para fines académicos, citando la fuente.</div>
+        </header>
+        
+        <div class="content">
+            <div class="abstract">
+                <h2>Resumen</h2>
+                <p>La "Epistemología de los Juegos de Guerra" analiza la naturaleza, validez y límites del conocimiento generado mediante simulaciones de conflictos. Este artículo amplía el marco teórico existente al incorporar la <span class="highlight">simulación Monte Carlo</span> como herramienta metodológica para abordar la incertidumbre inherente a los escenarios bélicos. Se argumenta que Monte Carlo no solo enriquece la capacidad predictiva de los juegos, sino que también profundiza la reflexión epistemológica sobre la probabilidad, el riesgo y la construcción de conocimiento en entornos complejos. El estudio concluye que la integración de esta técnica fortalece la robustez del conocimiento estratégico, aunque introduce nuevos desafíos en la interpretación de resultados y la validación empírica.</p>
+                <div class="keywords"><strong>Palabras clave:</strong> Epistemología, juegos de guerra, simulación Monte Carlo, conocimiento estratégico, incertidumbre, toma de decisiones.</div>
+            </div>
+            
+            <section>
+                <h2>1. Introducción</h2>
+                <p>Los juegos de guerra (wargames) han sido utilizados históricamente como herramientas para entrenamiento, planificación y análisis en ámbitos militares, políticos y empresariales. Sin embargo, su valor epistemológico —es decir, su capacidad para generar conocimiento válido sobre la realidad— ha sido escasamente sistematizado. La "Epistemología de los Juegos de Guerra" emerge como campo interdisciplinario que examina cómo estas simulaciones producen conocimiento, sus límites y su aplicabilidad en contextos reales.</p>
+                <p>Este artículo profundiza en este marco teórico, incorporando la <span class="highlight">simulación Monte Carlo</span> como elemento innovador. Esta técnica, basada en la generación aleatoria de escenarios múltiples, permite modelar la incertidumbre y la variabilidad de los conflictos, ofreciendo una dimensión probabilística que complementa los enfoques tradicionales. El objetivo es explorar cómo Monte Carlo enriquece la epistemología de los juegos de guerra, transformando la simulación de un ejercicio determinista a un laboratorio de posibilidades dinámicas.</p>
+            </section>
+            
+            <section>
+                <h2>2. Marco Teórico: La Epistemología de los Juegos de Guerra</h2>
+                <p>La epistemología aplicada a los juegos de guerra se estructura en torno a cinco ejes:</p>
+                
+                <h3>2.1. Tipos de conocimiento generados</h3>
+                <ul>
+                    <li><strong>Conocimiento fáctico:</strong> Datos objetivos (ej.: rendimiento de equipos, logística).</li>
+                    <li><strong>Conocimiento tácito:</strong> Habilidades intuitivas (ej.: liderazgo bajo presión).</li>
+                    <li><strong>Conocimiento emergente:</strong> Patrones derivados de interacciones colectivas.</li>
+                    <li><strong>Conocimiento contrafáctico:</strong> Exploración de escenarios hipotéticos ("¿qué pasaría si...?").</li>
+                </ul>
+                
+                <h3>2.2. Adquisición y validación</h3>
+                <p>El conocimiento se adquiere mediante:</p>
+                <ul>
+                    <li><strong>Experiencia directa:</strong> Participación en el juego.</li>
+                    <li><strong>Debriefing estructurado:</strong> Análisis post-simulación guiado por expertos.</li>
+                    <li><strong>Triangulación:</strong> Validación cruzada con datos históricos, modelos teóricos y opinión de expertos.</li>
+                </ul>
+                
+                <h3>2.3. Límites de la simulación</h3>
+                <ul>
+                    <li><strong>Factores humanos:</strong> Moral, miedo, irracionalidad (difíciles de cuantificar).</li>
+                    <li><strong>Paradoja del realismo:</strong> Exceso de simplificación vs. complejidad inmanejable.</li>
+                    <li><strong>Efecto Hawthorne:</strong> El comportamiento se altera al saber que se está en un juego.</li>
+                </ul>
+                
+                <h3>2.4. Diseño como constructor de realidad</h3>
+                <p>El diseño del juego (reglas, supuestos, fuentes de datos) moldea el conocimiento posible. Todo juego encarna una teoría implícita sobre el conflicto, cuya validez debe ser examinada críticamente.</p>
+            </section>
+            
+            <section>
+                <h2>3. Simulación Monte Carlo: Ampliando Horizontes Epistemológicos</h2>
+                <p>La simulación Monte Carlo (SMC) es una técnica computacional que utiliza muestreo aleatorio para modelar sistemas complejos con múltiples variables inciertas. Su integración en juegos de guerra introduce una revolución epistemológica al:</p>
+                
+                <h3>3.1. Cuantificar la incertidumbre</h3>
+                <ul>
+                    <li><strong>Ventaja:</strong> Permite asignar distribuciones de probabilidad a variables críticas (ej.: tasa de fallos en equipos, clima, decisiones del adversario).</li>
+                    <li><strong>Ejemplo:</strong> En un juego de guerra naval, SMC puede simular 10,000 escenarios con combinaciones aleatorias de vientos, visibilidad y precisión de misiles, generando un espectro de resultados posibles en lugar de un único desenlace.</li>
+                </ul>
+                
+                <h3>3.2. Generar conocimiento probabilístico</h3>
+                <ul>
+                    <li><strong>Nueva categoría de conocimiento:</strong> El conocimiento <span class="highlight">estocástico</span>, que revela la probabilidad de ocurrencia de eventos (ej.: "Hay un 70% de probabilidad de que la estrategia X fracase si el adversario usa táctica Y").</li>
+                    <li><strong>Validación:</strong> Los resultados se expresan en intervalos de confianza, permitiendo evaluar la robustez de las conclusiones.</li>
+                </ul>
+                
+                <h3>3.3. Explorar espacios de posibilidades</h3>
+                <ul>
+                    <li><strong>Superación de límites tradicionales:</strong> Mientras que los juegos clásicos exploran unos pocos escenarios, SMC examina miles, incluyendo "cisnes negros" (eventos improbables pero de alto impacto).</li>
+                    <li><strong>Aplicación:</strong> En crisis humanitarias, SMC puede modelar la propagación de una enfermedad con variables aleatorias (movilidad poblacional, eficacia de vacunas), identificando puntos críticos de intervención.</li>
+                </ul>
+                
+                <div class="figure">
+                    <h4>Figura 1: Simulación Monte Carlo de Escenarios de Conflicto</h4>
+                    <p>Distribución de resultados de 10,000 simulaciones de un conflicto militar. Cada punto representa un escenario posible con variables aleatorias.</p>
+                    <canvas id="monteCarloChart" width="800" height="400"></canvas>
+                </div>
+                
+                <h3>3.4. Desafíos epistemológicos de Monte Carlo</h3>
+                <ul>
+                    <li><strong>"Basura entra, basura sale":</strong> La calidad de los resultados depende de la precisión de las distribuciones de probabilidad asignadas. Supuestos erróneos generan conocimiento inválido.</li>
+                    <li><strong>Interpretación de resultados:</strong> La abundancia de datos puede llevar a correlaciones espurias o parálisis por análisis. Requiere expertos en estadística y dominio específico.</li>
+                    <li><strong>Costo computacional:</strong> Simulaciones masivas demandan alta capacidad de procesamiento, limitando su acceso.</li>
+                </ul>
+            </section>
+            
+            <section>
+                <h2>4. Discusión: Sinergias e Implicaciones</h2>
+                <p>La integración de Monte Carlo en la epistemología de los juegos de guerra crea una sinergia poderosa:</p>
+                
+                <h3>4.1. Complementariedad con enfoques cualitativos</h3>
+                <p><strong>Ejemplo:</strong> Un juego de guerra político-diplomático puede combinar:</p>
+                <ul>
+                    <li><em>Fase cualitativa:</em> Negociaciones humanas para generar conocimiento tácito.</li>
+                    <li><em>Fase cuantitativa:</em> SMC para modelar el impacto económico de acuerdos bajo incertidumbre.</li>
+                </ul>
+                
+                <h3>4.2. Ética del conocimiento estocástico</h3>
+                <ul>
+                    <li><strong>Riesgo:</strong> La objetividad aparente de los resultados probabilísticos puede llevar a una sobreconfianza en decisiones automatizadas, ignorando factores humanos no modelables.</li>
+                    <li><strong>Responsabilidad:</strong> Los diseñadores deben transparentar los supuestos y limitaciones de SMC, evitando su uso como justificación pseudocientífica de acciones bélicas.</li>
+                </ul>
+                
+                <h3>4.3. Futuras direcciones</h3>
+                <ul>
+                    <li><strong>IA + Monte Carlo:</strong> Usar inteligencia artificial para ajustar dinámicamente las distribuciones de probabilidad durante el juego, basándose en el comportamiento de los jugadores.</li>
+                    <li><strong>Simulaciones híbridas:</strong> Combinar SMC con entornos de realidad virtual (RV) para inmersión total y captura de datos fisiológicos (estrés, atención).</li>
+                </ul>
+                
+                <div class="simulation-container">
+                    <h3>Ejemplo Interactivo: Simulación Monte Carlo de un Conflicto</h3>
+                    <p>Este simulador muestra cómo la simulación Monte Carlo puede predecir resultados en un conflicto con variables aleatorias. Ajuste los parámetros y ejecute la simulación:</p>
+                    
+                    <div class="controls">
+                        <div class="control-group">
+                            <label for="forceA">Fuerza del Ejército A:</label>
+                            <input type="range" id="forceA" min="50" max="200" value="100">
+                            <span id="forceAValue">100</span>
+                        </div>
+                        
+                        <div class="control-group">
+                            <label for="forceB">Fuerza del Ejército B:</label>
+                            <input type="range" id="forceB" min="50" max="200" value="120">
+                            <span id="forceBValue">120</span>
+                        </div>
+                        
+                        <div class="control-group">
+                            <label for="simulations">Número de Simulaciones:</label>
+                            <input type="range" id="simulations" min="100" max="5000" value="1000">
+                            <span id="simulationsValue">1000</span>
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center;">
+                        <button id="runSimulation">Ejecutar Simulación</button>
+                    </div>
+                    
+                    <div class="results" id="results" style="display: none;">
+                        <div class="result-item">
+                            <div class="result-value" id="victoryA">0%</div>
+                            <div class="result-label">Victoria Ejército A</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-value" id="victoryB">0%</div>
+                            <div class="result-label">Victoria Ejército B</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-value" id="avgCasualties">0</div>
+                            <div class="result-label">Bajas Promedio</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section>
+                <h2>5. Conclusión</h2>
+                <p>La "Epistemología de los Juegos de Guerra" se enriquece sustancialmente con la incorporación de la simulación Monte Carlo. Esta técnica transforma los juegos de meros ejercicios deterministas a laboratorios de conocimiento estocástico, capaces de modelar la incertidumbre inherente a los conflictos. Sin embargo, su integración exige rigor en el diseño, transparencia en los supuestos y humildad epistemológica: ningún modelo puede capturar la totalidad de la realidad humana.</p>
+                <p>El conocimiento generado —sea fáctico, tácito, emergente o probabilístico— solo será válido si se somete a una crítica constante, triangulación con evidencias empíricas y diálogo interdisciplinario. En este sentido, la epistemología de los juegos de guerra, potenciada por Monte Carlo, no es una herramienta de predicción infalible, sino un mapa para navegar la complejidad del mundo, recordándonos que, en la guerra y en la paz, la incertidumbre es la única certeza.</p>
+            </section>
+            
+            <div class="references">
+                <h2>Referencias</h2>
+                <ul>
+                    <li>von Neumann, J. (1951). <em>Various Techniques Used in Connection With Random Digits</em>. National Bureau of Standards.</li>
+                    <li>Rubinstein, R. Y., & Kroese, D. P. (2016). <em>Simulation and the Monte Carlo Method</em>. Wiley.</li>
+                    <li>Smith, R. D. (2020). <em>The Art of Wargaming: A Guide for Professionals and Hobbyists</em>. Naval Institute Press.</li>
+                    <li>Kahneman, D. (2011). <em>Thinking, Fast and Slow</em>. Farrar, Straus and Giroux.</li>
+                </ul>
+            </div>
+        </div>
+        
+        <footer>
+            © 2025 Universidad Nacional Experimental de la Seguridad Núcleo Zulia<br>
+            Reproducción autorizada para fines académicos. Prohibida su venta o uso comercial sin permiso escrito.
+        </footer>
+    </div>
+
+    <script>
+        // Gráfico de dispersión Monte Carlo
+        function drawMonteCarloChart() {
+            const canvas = document.getElementById('monteCarloChart');
+            const ctx = canvas.getContext('2d');
+            
+            // Configuración del gráfico
+            const width = canvas.width;
+            const height = canvas.height;
+            const padding = 50;
+            const pointRadius = 2;
+            
+            // Limpiar canvas
+            ctx.clearRect(0, 0, width, height);
+            
+            // Generar datos aleatorios
+            const points = [];
+            for (let i = 0; i < 10000; i++) {
+                const x = Math.random() * (width - 2 * padding) + padding;
+                const y = Math.random() * (height - 2 * padding) + padding;
+                
+                // Agrupar puntos en ciertas áreas para simular clusters
+                const cluster = Math.floor(Math.random() * 4);
+                let clusterX, clusterY;
+                
+                switch(cluster) {
+                    case 0: // Victoria A
+                        clusterX = width * 0.3;
+                        clusterY = height * 0.3;
+                        break;
+                    case 1: // Victoria B
+                        clusterX = width * 0.7;
+                        clusterY = height * 0.3;
+                        break;
+                    case 2: // Empate
+                        clusterX = width * 0.5;
+                        clusterY = height * 0.7;
+                        break;
+                    case 3: // Resultados extremos
+                        clusterX = Math.random() > 0.5 ? width * 0.2 : width * 0.8;
+                        clusterY = Math.random() > 0.5 ? height * 0.2 : height * 0.8;
+                        break;
+                }
+                
+                // Añadir dispersión alrededor del cluster
+                const dispersedX = clusterX + (Math.random() - 0.5) * 100;
+                const dispersedY = clusterY + (Math.random() - 0.5) * 100;
+                
+                points.push({
+                    x: Math.max(padding, Math.min(width - padding, dispersedX)),
+                    y: Math.max(padding, Math.min(height - padding, dispersedY)),
+                    cluster: cluster
+                });
+            }
+            
+            // Dibujar ejes
+            ctx.beginPath();
+            ctx.moveTo(padding, padding);
+            ctx.lineTo(padding, height - padding);
+            ctx.lineTo(width - padding, height - padding);
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            // Etiquetas de ejes
+            ctx.font = '14px Arial';
+            ctx.fillStyle = '#333';
+            ctx.textAlign = 'center';
+            ctx.fillText('Bajas Ejército B', width / 2, height - 15);
+            
+            ctx.save();
+            ctx.translate(15, height / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText('Bajas Ejército A', 0, 0);
+            ctx.restore();
+            
+            // Dibujar puntos
+            points.forEach(point => {
+                ctx.beginPath();
+                ctx.arc(point.x, point.y, pointRadius, 0, Math.PI * 2);
+                
+                // Colorear según cluster
+                switch(point.cluster) {
+                    case 0: // Victoria A
+                        ctx.fillStyle = 'rgba(76, 175, 80, 0.6)';
+                        break;
+                    case 1: // Victoria B
+                        ctx.fillStyle = 'rgba(244, 67, 54, 0.6)';
+                        break;
+                    case 2: // Empate
+                        ctx.fillStyle = 'rgba(33, 150, 243, 0.6)';
+                        break;
+                    case 3: // Extremos
+                        ctx.fillStyle = 'rgba(156, 39, 176, 0.6)';
+                        break;
+                }
+                
+                ctx.fill();
+            });
+            
+            // Leyenda
+            const legendX = width - 180;
+            const legendY = 60;
+            
+            ctx.font = '12px Arial';
+            ctx.textAlign = 'left';
+            
+            // Victoria A
+            ctx.fillStyle = 'rgba(76, 175, 80, 0.8)';
+            ctx.fillRect(legendX, legendY, 15, 15);
+            ctx.fillStyle = '#333';
+            ctx.fillText('Victoria A', legendX + 25, legendY + 12);
+            
+            // Victoria B
+            ctx.fillStyle = 'rgba(244, 67, 54, 0.8)';
+            ctx.fillRect(legendX, legendY + 25, 15, 15);
+            ctx.fillStyle = '#333';
+            ctx.fillText('Victoria B', legendX + 25, legendY + 37);
+            
+            // Empate
+            ctx.fillStyle = 'rgba(33, 150, 243, 0.8)';
+            ctx.fillRect(legendX, legendY + 50, 15, 15);
+            ctx.fillStyle = '#333';
+            ctx.fillText('Empate', legendX + 25, legendY + 62);
+            
+            // Extremos
+            ctx.fillStyle = 'rgba(156, 39, 176, 0.8)';
+            ctx.fillRect(legendX, legendY + 75, 15, 15);
+            ctx.fillStyle = '#333';
+            ctx.fillText('Resultados Extremos', legendX + 25, legendY + 87);
+        }
+        
+        // Simulador interactivo
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar gráfico
+            drawMonteCarloChart();
+            
+            // Configurar controles
+            const forceASlider = document.getElementById('forceA');
+            const forceBSlider = document.getElementById('forceB');
+            const simulationsSlider = document.getElementById('simulations');
+            
+            const forceAValue = document.getElementById('forceAValue');
+            const forceBValue = document.getElementById('forceBValue');
+            const simulationsValue = document.getElementById('simulationsValue');
+            
+            forceASlider.addEventListener('input', function() {
+                forceAValue.textContent = this.value;
+            });
+            
+            forceBSlider.addEventListener('input', function() {
+                forceBValue.textContent = this.value;
+            });
+            
+            simulationsSlider.addEventListener('input', function() {
+                simulationsValue.textContent = this.value;
+            });
+            
+            // Ejecutar simulación
+            document.getElementById('runSimulation').addEventListener('click', function() {
+                const forceA = parseInt(forceASlider.value);
+                const forceB = parseInt(forceBSlider.value);
+                const simulations = parseInt(simulationsSlider.value);
+                
+                let victoryA = 0;
+                let victoryB = 0;
+                let totalCasualties = 0;
+                
+                // Ejecutar simulaciones
+                for (let i = 0; i < simulations; i++) {
+                    // Simular batalla con factores aleatorios
+                    const randomFactorA = 0.8 + Math.random() * 0.4; // 0.8-1.2
+                    const randomFactorB = 0.8 + Math.random() * 0.4; // 0.8-1.2
+                    
+                    const effectiveForceA = forceA * randomFactorA;
+                    const effectiveForceB = forceB * randomFactorB;
+                    
+                    // Calcular resultado
+                    if (effectiveForceA > effectiveForceB * 1.1) {
+                        victoryA++;
+                    } else if (effectiveForceB > effectiveForceA * 1.1) {
+                        victoryB++;
+                    }
+                    
+                    // Calcular bajas (20-60% de la fuerza perdedora)
+                    const loserForce = Math.min(effectiveForceA, effectiveForceB);
+                    const casualtyRate = 0.2 + Math.random() * 0.4;
+                    totalCasualties += loserForce * casualtyRate;
+                }
+                
+                // Calcular resultados
+                const victoryAPercent = Math.round((victoryA / simulations) * 100);
+                const victoryBPercent = Math.round((victoryB / simulations) * 100);
+                const avgCasualties = Math.round(totalCasualties / simulations);
+                
+                // Mostrar resultados
+                document.getElementById('victoryA').textContent = victoryAPercent + '%';
+                document.getElementById('victoryB').textContent = victoryBPercent + '%';
+                document.getElementById('avgCasualties').textContent = avgCasualties;
+                document.getElementById('results').style.display = 'block';
+            });
+        });
+    </script>
+</body>
+</html>
