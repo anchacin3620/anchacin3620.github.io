@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trabajo y Energía - Física General</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .formula-box {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        .simulation-canvas {
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            background: white;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="gradient-bg text-white shadow-lg">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <i class="fas fa-atom text-4xl float-animation"></i>
+                    <div>
+                        <h1 class="text-3xl font-bold">Trabajo y Energía</h1>
+                        <p class="text-purple-100">Fundamentos de Física General</p>
+                    </div>
+                </div>
+                <button onclick="toggleMenu()" class="md:hidden">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav id="navMenu" class="bg-white shadow-md hidden md:block">
+        <div class="container mx-auto px-4">
+            <ul class="flex space-x-6 py-3">
+                <li><a href="#definiciones" class="hover:text-purple-600 transition">Definiciones</a></li>
+                <li><a href="#formulas" class="hover:text-purple-600 transition">Fórmulas</a></li>
+                <li><a href="#aplicaciones" class="hover:text-purple-600 transition">Aplicaciones</a></li>
+                <li><a href="#simulacion" class="hover:text-purple-600 transition">Simulación</a></li>
+                <li><a href="#ejercicios" class="hover:text-purple-600 transition">Ejercicios</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Author Section -->
+        <section class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <div class="flex items-center space-x-4">
+                <img src="https://picsum.photos/seed/author/100/100" alt="Profesor Ángel Chacín" class="w-20 h-20 rounded-full">
+                <div>
+                    <h2 class="text-xl font-bold text-gray-800">Profesor Ángel Chacín Ávila</h2>
+                    <p class="text-gray-600">Licenciado en Física</p>
+                    <p class="text-gray-600">Especialista en Ciencias Computacionales</p>
+                    <p class="text-gray-600">Docente e Investigador - Universidad Nacional Experimental de la Seguridad Núcleo Zulia</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Definiciones Section -->
+        <section id="definiciones" class="mb-12">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 flex items-center">
+                <i class="fas fa-book-open mr-3 text-purple-600"></i>
+                Definiciones
+            </h2>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                    <h3 class="text-xl font-semibold text-purple-600 mb-3">
+                        <i class="fas fa-hammer mr-2"></i>Trabajo
+                    </h3>
+                    <p class="text-gray-700 mb-4">
+                        En física, el trabajo es la energía transferida hacia o desde un objeto mediante la aplicación de una fuerza a lo largo de un desplazamiento.
+                    </p>
+                    <div class="bg-purple-50 p-4 rounded-lg">
+                        <p class="text-sm text-gray-600">
+                            <strong>Concepto clave:</strong> El trabajo se realiza solo cuando la componente de la fuerza actúa en la dirección del desplazamiento.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                    <h3 class="text-xl font-semibold text-purple-600 mb-3">
+                        <i class="fas fa-bolt mr-2"></i>Energía
+                    </h3>
+                    <p class="text-gray-700 mb-4">
+                        La energía es la capacidad de un sistema para realizar trabajo. Es una propiedad escalar que se conserva en sistemas aislados.
+                    </p>
+                    <div class="bg-purple-50 p-4 rounded-lg">
+                        <p class="text-sm text-gray-600">
+                            <strong>Tipos principales:</strong> Cinética, Potencial, Térmica, Eléctrica, Química, entre otras.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6 mt-6">
+                <h3 class="text-xl font-semibold text-purple-600 mb-3">
+                    <i class="fas fa-link mr-2"></i>Relación entre Trabajo y Energía
+                </h3>
+                <p class="text-gray-700">
+                    El trabajo realizado sobre un objeto es igual al cambio en su energía cinética (Teorema del trabajo-energía). Esta relación fundamental conecta los conceptos de fuerza, movimiento y energía.
+                </p>
+            </div>
+        </section>
+
+        <!-- Fórmulas Section -->
+        <section id="formulas" class="mb-12">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 flex items-center">
+                <i class="fas fa-calculator mr-3 text-purple-600"></i>
+                Fórmulas Fundamentales
+            </h2>
+
+            <div class="space-y-4">
+                <div class="formula-box">
+                    <h4 class="font-semibold text-gray-800 mb-2">Trabajo (W)</h4>
+                    <p class="text-gray-700 mb-2">El trabajo realizado por una fuerza constante:</p>
+                    $$W = \vec{F} \cdot \vec{d} = Fd\cos\theta$$
+                    <p class="text-sm text-gray-600 mt-2">Donde: F = fuerza, d = desplazamiento, θ = ángulo entre fuerza y desplazamiento</p>
+                </div>
+
+                <div class="formula-box">
+                    <h4 class="font-semibold text-gray-800 mb-2">Energía Cinética (K)</h4>
+                    <p class="text-gray-700 mb-2">Energía asociada al movimiento:</p>
+                    $$K = \frac{1}{2}mv^2$$
+                    <p class="text-sm text-gray-600 mt-2">Donde: m = masa, v = velocidad</p>
+                </div>
+
+                <div class="formula-box">
+                    <h4 class="font-semibold text-gray-800 mb-2">Energía Potencial Gravitatoria (U)</h4>
+                    <p class="text-gray-700 mb-2">Energía almacenada debido a la posición en un campo gravitatorio:</p>
+                    $$U = mgh$$
+                    <p class="text-sm text-gray-600 mt-2">Donde: m = masa, g = aceleración gravitatoria, h = altura</p>
+                </div>
+
+                <div class="formula-box">
+                    <h4 class="font-semibold text-gray-800 mb-2">Teorema del Trabajo-Energía</h4>
+                    <p class="text-gray-700 mb-2">El trabajo neto realizado sobre un objeto es igual al cambio en su energía cinética:</p>
+                    $$W_{neto} = \Delta K = K_f - K_i$$
+                </div>
+
+                <div class="formula-box">
+                    <h4 class="font-semibold text-gray-800 mb-2">Conservación de la Energía Mecánica</h4>
+                    <p class="text-gray-700 mb-2">En ausencia de fuerzas no conservativas:</p>
+                    $$E_m = K + U = constante$$
+                </div>
+            </div>
+        </section>
+
+        <!-- Aplicaciones Section -->
+        <section id="aplicaciones" class="mb-12">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 flex items-center">
+                <i class="fas fa-cogs mr-3 text-purple-600"></i>
+                Aplicaciones Prácticas
+            </h2>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-car text-4xl text-purple-600"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Ingeniería Automotriz</h3>
+                    <p class="text-gray-600 text-sm">
+                        Cálculo de la potencia necesaria para mover vehículos, diseño de sistemas de frenado y análisis de eficiencia energética.
+                    </p>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-solar-panel text-4xl text-purple-600"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Energías Renovables</h3>
+                    <p class="text-gray-600 text-sm">
+                        Diseño de turbinas eólicas, paneles solares y sistemas hidroeléctricos para optimizar la conversión de energía.
+                    </p>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-running text-4xl text-purple-600"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Deportes y Biomecánica</h3>
+                    <p class="text-gray-600 text-sm">
+                        Análisis del rendimiento atlético, optimización de movimientos y estudio de la eficiencia energética del cuerpo humano.
+                    </p>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-rocket text-4xl text-purple-600"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Aeroespacial</h3>
+                    <p class="text-gray-600 text-sm">
+                        Cálculo de la energía necesaria para el despegue, diseño de trayectorias y sistemas de propulsión eficiente.
+                    </p>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-industry text-4xl text-purple-600"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Industria Manufacturera</h3>
+                    <p class="text-gray-600 text-sm">
+                        Diseño de maquinaria, optimización de procesos y análisis de consumo energético en producción.
+                    </p>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-home text-4xl text-purple-600"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Construcción</h3>
+                    <p class="text-gray-600 text-sm">
+                        Diseño de estructuras resistentes, sistemas de elevación y análisis de eficiencia energética en edificios.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Simulación Section -->
+        <section id="simulacion" class="mb-12">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 flex items-center">
+                <i class="fas fa-flask mr-3 text-purple-600"></i>
+                Simulación Interactiva
+            </h2>
+
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="text-gray-700 mb-4">
+                    Esta simulación muestra cómo varía la energía cinética y potencial de un objeto en movimiento bajo la influencia de la gravedad.
+                </p>
+                
+                <div class="mb-4">
+                    <canvas id="simulationCanvas" class="simulation-canvas w-full" width="800" height="400"></canvas>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Masa (kg)</label>
+                        <input type="range" id="massSlider" min="1" max="10" value="5" class="w-full">
+                        <span id="massValue" class="text-sm text-gray-600">5 kg</span>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Velocidad Inicial (m/s)</label>
+                        <input type="range" id="velocitySlider" min="0" max="20" value="10" class="w-full">
+                        <span id="velocityValue" class="text-sm text-gray-600">10 m/s</span>
+                    </div>
+                </div>
+
+                <div class="flex space-x-4">
+                    <button onclick="startSimulation()" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition">
+                        <i class="fas fa-play mr-2"></i>Iniciar
+                    </button>
+                    <button onclick="pauseSimulation()" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition">
+                        <i class="fas fa-pause mr-2"></i>Pausar
+                    </button>
+                    <button onclick="resetSimulation()" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition">
+                        <i class="fas fa-redo mr-2"></i>Reiniciar
+                    </button>
+                </div>
+
+                <div class="mt-6 grid md:grid-cols-3 gap-4">
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <h4 class="font-semibold text-blue-800">Energía Cinética</h4>
+                        <p class="text-2xl font-bold text-blue-600" id="kineticEnergy">0 J</p>
+                    </div>
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <h4 class="font-semibold text-green-800">Energía Potencial</h4>
+                        <p class="text-2xl font-bold text-green-600" id="potentialEnergy">0 J</p>
+                    </div>
+                    <div class="bg-purple-50 p-4 rounded-lg">
+                        <h4 class="font-semibold text-purple-800">Energía Total</h4>
+                        <p class="text-2xl font-bold text-purple-600" id="totalEnergy">0 J</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ejercicios Section -->
+        <section id="ejercicios" class="mb-12">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 flex items-center">
+                <i class="fas fa-pencil-alt mr-3 text-purple-600"></i>
+                Ejercicios de Ejemplo
+            </h2>
+
+            <div class="space-y-6">
+                <!-- Ejercicio 1 -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-xl font-semibold text-purple-600 mb-3">Ejercicio 1: Trabajo realizado por una fuerza</h3>
+                    <p class="text-gray-700 mb-4">
+                        Una caja de 20 kg es empujada horizontalmente sobre una superficie sin fricción con una fuerza de 50 N durante una distancia de 10 metros. 
+                        ¿Cuál es el trabajo realizado?
+                    </p>
+                    <button onclick="toggleSolution(1)" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition mb-4">
+                        <i class="fas fa-eye mr-2"></i>Ver solución
+                    </button>
+                    <div id="solution1" class="hidden bg-gray-50 p-4 rounded-lg">
+                        <h4 class="font-semibold text-gray-800 mb-2">Solución:</h4>
+                        <p class="text-gray-700 mb-2">
+                            Datos: F = 50 N, d = 10 m, θ = 0° (fuerza horizontal)
+                        </p>
+                        <p class="text-gray-700 mb-2">
+                            Usando la fórmula: $W = Fd\cos\theta$
+                        </p>
+                        <p class="text-gray-700 mb-2">
+                            $W = 50 \times 10 \times \cos(0°) = 50 \times 10 \times 1 = 500 \text{ J}$
+                        </p>
+                        <p class="text-gray-700 font-semibold">
+                            <strong>Respuesta:</strong> El trabajo realizado es de 500 Joules.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Ejercicio 2 -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-xl font-semibold text-purple-600 mb-3">Ejercicio 2: Energía cinética</h3>
+                    <p class="text-gray-700 mb-4">
+                        Un automóvil de 1200 kg se mueve a una velocidad de 25 m/s. ¿Cuál es su energía cinética? 
+                        Si su velocidad se duplica, ¿cuánto aumenta su energía cinética?
+                    </p>
+                    <button onclick="toggleSolution(2)" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition mb-4">
+                        <i class="fas fa-eye mr-2"></i>Ver solución
+                    </button>
+                    <div id="solution2" class="hidden bg-gray-50 p-4 rounded-lg">
+                        <h4 class="font-semibold text-gray-800 mb-2">Solución:</h4>
+                        <p class="text-gray-700 mb-2">
+                            Datos: m = 1200 kg, v₁ = 25 m/s
+                        </p>
+                        <p class="text-gray-700 mb-2">
+                            Energía cinética inicial: $K_1 = \frac{1}{2}mv_1^2 = \frac{1}{2} \times 1200 \times (25)^2$
+                        </p>
+                        <p class="text-gray-700 mb-2">
+                            $K_1 = 600 \times 625 = 375,000 \text{ J} = 375 \text{ kJ}$
+                        </p>
+                        <p class="text-gray-700 mb-2">
+                            Si la velocidad se duplica: v₂ = 50 m/s
+                        </p>
+                        <p class="text-gray-700 mb-2">
+                            $K_2 = \frac{1}{2} \times 1200 \times (50)^2 = 600 \times 2500 = 1,500,000 \text{ J} = 1500 \text{ kJ}$
+                        </p>
+                        <p class="text-gray-700 mb-2">
+                            El aumento es: $K_2 - K_1 = 1500 - 375 = 1125 \text{ kJ}$
+                        </p>
+                        <p class="text-gray-700 font-semibold">
+                            <strong>Respuesta:</strong> La energía cinética inicial es 375 kJ. Al duplicar la velocidad, la energía cinética se cuadruplica (aumenta en 1125 kJ).
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Ejercicio 3 -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-xl font-semibold text-purple-600 mb-3">Ejercicio 3: Conservación de la energía</h3>
+                    <p class="text-gray-700 mb-4">
+                        Una pelota de 0.5 kg se deja caer desde una altura de 20 metros. Despreciando la resistencia del aire, 
+                        ¿cuál es su velocidad justo antes de tocar el suelo?
+                    </p>
+                    <button onclick="toggleSolution(3)" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition mb-4">
+                        <i class="fas fa-eye mr-2"></i>Ver solución
+                    </button>
+                    <div id="solution3" class="hidden bg-gray-50 p-4 rounded-lg">
+                        <h4 class="font-semibold text-gray-800 mb-2">Solución:</h4>
+                        <p class="text-gray-700 mb-2">
+                            Datos: m = 0.5 kg, h = 20 m, g = 9.8 m/s²
+                        </p>
+                        <p class="text-gray-700 mb-2">
+                            Por conservación de la energía: $E_{inicial} = E_{final}$
+                        </p>
+                        <p class="text-gray-700 mb-2">
+                            En la parte superior: $E = U + K = mgh + 0 = mgh$
+                        </p>
+                        <p class="text-gray-700 mb-2">
+                            Justo antes del suelo: $E = U + K = 0 + \frac{1}{2}mv^2$
+                        </p>
+                        <p class="text-gray-700 mb-2">
+                            Igualando: $mgh = \frac{1}{2}mv^2$
+                        </p>
+                        <p class="text-gray-700 mb-2">
+                            Cancelando m: $gh = \frac{1}{2}v^2$
+                        </p>
+                        <p class="text-gray-700 mb-2">
+                            $v^2 = 2gh = 2 \times 9.8 \times 20 = 392$
+                        </p>
+                        <p class="text-gray-700 mb-2">
+                            $v = \sqrt{392} \approx 19.8 \text{ m/s}$
+                        </p>
+                        <p class="text-gray-700 font-semibold">
+                            <strong>Respuesta:</strong> La velocidad justo antes de tocar el suelo es aproximadamente 19.8 m/s.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <p class="mb-2">© 2025 Ángel Chacín Ávila</p>
+            <p class="text-sm text-gray-400">Se publica con licencia GPL</p>
+            <div class="mt-4 flex justify-center space-x-4">
+                <a href="#" class="text-gray-400 hover:text-white transition">
+                    <i class="fab fa-github text-2xl"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white transition">
+                    <i class="fab fa-linkedin text-2xl"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white transition">
+                    <i class="fas fa-envelope text-2xl"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Simulación
+        let canvas, ctx;
+        let animationId;
+        let isRunning = false;
+        let ball = {
+            x: 50,
+            y: 200,
+            vx: 5,
+            vy: 0,
+            radius: 20,
+            mass: 5
+        };
+        let gravity = 0.5;
+        let groundY = 350;
+
+        function initSimulation() {
+            canvas = document.getElementById('simulationCanvas');
+            ctx = canvas.getContext('2d');
+            
+            // Ajustar tamaño del canvas
+            canvas.width = canvas.offsetWidth;
+            canvas.height = 400;
+            groundY = canvas.height - 50;
+            
+            drawSimulation();
+        }
+
+        function drawSimulation() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Dibujar suelo
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(0, groundY, canvas.width, canvas.height - groundY);
+            
+            // Dibujar pelota
+            ctx.beginPath();
+            ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+            ctx.fillStyle = '#667eea';
+            ctx.fill();
+            ctx.strokeStyle = '#4c51bf';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            // Dibujar línea de altura
+            ctx.strokeStyle = '#e53e3e';
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(ball.x + ball.radius + 10, ball.y);
+            ctx.lineTo(ball.x + ball.radius + 10, groundY);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // Etiqueta de altura
+            ctx.fillStyle = '#2d3748';
+            ctx.font = '14px Arial';
+            const height = Math.round((groundY - ball.y) / 10);
+            ctx.fillText(`h = ${height} m`, ball.x + ball.radius + 15, (ball.y + groundY) / 2);
+            
+            // Actualizar energías
+            updateEnergies();
+        }
+
+        function updateEnergies() {
+            const height = (groundY - ball.y) / 10; // Convertir a metros
+            const velocity = Math.sqrt(ball.vx * ball.vx + ball.vy * ball.vy);
+            
+            const kineticEnergy = 0.5 * ball.mass * velocity * velocity;
+            const potentialEnergy = ball.mass * 9.8 * height;
+            const totalEnergy = kineticEnergy + potentialEnergy;
+            
+            document.getElementById('kineticEnergy').textContent = `${kineticEnergy.toFixed(1)} J`;
+            document.getElementById('potentialEnergy').textContent = `${potentialEnergy.toFixed(1)} J`;
+            document.getElementById('totalEnergy').textContent = `${totalEnergy.toFixed(1)} J`;
+        }
+
+        function animate() {
+            if (!isRunning) return;
+            
+            // Actualizar posición
+            ball.x += ball.vx;
+            ball.y += ball.vy;
+            
+            // Aplicar gravedad
+            ball.vy += gravity;
+            
+            // Rebote en el suelo
+            if (ball.y + ball.radius > groundY) {
+                ball.y = groundY - ball.radius;
+                ball.vy = -ball.vy * 0.8; // Pérdida de energía en el rebote
+            }
+            
+            // Rebote en las paredes
+            if (ball.x + ball.radius > canvas.width || ball.x - ball.radius < 0) {
+                ball.vx = -ball.vx;
+            }
+            
+            drawSimulation();
+            animationId = requestAnimationFrame(animate);
+        }
+
+        function startSimulation() {
+            isRunning = true;
+            animate();
+        }
+
+        function pauseSimulation() {
+            isRunning = false;
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+            }
+        }
+
+        function resetSimulation() {
+            pauseSimulation();
+            ball.x = 50;
+            ball.y = 200;
+            ball.vx = parseFloat(document.getElementById('velocitySlider').value);
+            ball.vy = 0;
+            drawSimulation();
+        }
+
+        // Event listeners para sliders
+        document.getElementById('massSlider').addEventListener('input', function(e) {
+            ball.mass = parseFloat(e.target.value);
+            document.getElementById('massValue').textContent = `${e.target.value} kg`;
+            drawSimulation();
+        });
+
+        document.getElementById('velocitySlider').addEventListener('input', function(e) {
+            ball.vx = parseFloat(e.target.value);
+            document.getElementById('velocityValue').textContent = `${e.target.value} m/s`;
+            if (!isRunning) {
+                drawSimulation();
+            }
+        });
+
+        // Función para mostrar/ocultar soluciones
+        function toggleSolution(num) {
+            const solution = document.getElementById(`solution${num}`);
+            solution.classList.toggle('hidden');
+        }
+
+        // Función para menú móvil
+        function toggleMenu() {
+            const navMenu = document.getElementById('navMenu');
+            navMenu.classList.toggle('hidden');
+        }
+
+        // Inicializar cuando se carga la página
+        window.addEventListener('load', function() {
+            initSimulation();
+        });
+
+        // Smooth scrolling para enlaces de navegación
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
