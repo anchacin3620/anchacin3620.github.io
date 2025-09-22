@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis del Código Fortran - Simulación Monte Carlo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            margin-top: 30px;
+            margin-bottom: 50px;
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #2980b9;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        h3 {
+            color: #34495e;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+        .code-block {
+            background-color: #f4f4f4;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+        }
+        .objective {
+            background-color: #e8f4fc;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .conclusion {
+            background-color: #e8f8f5;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 30px;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+            color: #7f8c8d;
+            font-size: 14px;
+            border-top: 1px solid #eee;
+        }
+        .highlight {
+            background-color: #fff9c4;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Análisis del Código Fortran en Función de los Objetivos de Investigación</h1>
+        
+        <p>El código <code>jupiter5.f90.txt</code> implementa una simulación Monte Carlo Cinético (KMC) para el proceso de deposición de películas delgadas de Cr y Fe sobre un sustrato. A continuación se analiza cómo el código aborda cada uno de los objetivos específicos de la investigación.</p>
+        
+        <div class="objective">
+            <h2>1. Caracterizar los mecanismos de deposición en películas delgadas de Cr y Fe sobre un sustrato sólido de Mg (001) mediante el método Monte Carlo Cinético.</h2>
+            
+            <p>El código aborda este objetivo a través de varias implementaciones clave:</p>
+            
+            <h3>Selección de materiales</h3>
+            <div class="code-block">
+! Selección de material<br>
+PRINT *, 'Seleccione el material (1=Cr, 2=Fe):'<br>
+READ *, MATERIAL_ID<br>
+IF (MATERIAL_ID == 1) THEN<br>
+&nbsp;&nbsp;&nbsp;&nbsp;material_name = 'Cr'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ADHESION_BASE = 0.98<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ENERGIA_DIFUSION_MIN = 0.01<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ENERGIA_DIFUSION_MAX = 0.25<br>
+ELSE IF (MATERIAL_ID == 2) THEN<br>
+&nbsp;&nbsp;&nbsp;&nbsp;material_name = 'Fe'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ADHESION_BASE = 0.95<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ENERGIA_DIFUSION_MIN = 0.5<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ENERGIA_DIFUSION_MAX = 1.0<br>
+END IF
+            </div>
+            <p>El código permite seleccionar entre Cr y Fe, asignando parámetros específicos para cada material, como la <span class="highlight">energía de difusión</span> y la <span class="highlight">adhesión base</span>, lo que permite caracterizar los mecanismos de deposición particulares para cada material.</p>
+            
+            <h3>Implementación del sustrato de Mg (001)</h3>
+            <div class="code-block">
+SUBROUTINE inicializar_rejilla(material, altura_max_local, tam_rejilla, altura_max)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;! ...<br>
+&nbsp;&nbsp;&nbsp;&nbsp;DO i = 1, tam_rejilla<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DO j = 1, tam_rejilla<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;material(i,j,1) = -1  ! Sustrato (valor negativo)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;material(i,j,2) = -1  ! Sustrato (valor negativo)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;END DO<br>
+&nbsp;&nbsp;&nbsp;&nbsp;END DO<br>
+&nbsp;&nbsp;&nbsp;&nbsp;altura_max_local = 2<br>
+END SUBROUTINE inicializar_rejilla
+            </div>
+            <p>El sustrato se representa con valores negativos en las dos primeras capas, simulando el Mg (001) sobre el cual se depositarán los materiales.</p>
+            
+            <h3>Proceso de deposición</h3>
+            <div class="code-block">
+! Evento de depósito<br>
+CALL safe_random(r)<br>
+x = 1 + FLOOR(r * (tam_rejilla-1))<br>
+CALL safe_random(r)<br>
+y = 1 + FLOOR(r * (tam_rejilla-1))<br>
+z_max = MAXVAL(altura_max_local(MAX(1,x-1):MIN(tam_rejilla,x+1), &<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MAX(1,y-1):MIN(tam_rejilla,y+1)))<br>
+<br>
+CALL safe_random(r)<br>
+energia = energia_promedio + (r - 0.5) * MAX_ENERGIA<br>
+CALL safe_random(r)<br>
+prob_adhesion = adhesion * (1.0 + (energia / MAX_ENERGIA) * 0.2)<br>
+<br>
+IF (prob_adhesion > r .AND. z_max < altura_max) THEN<br>
+&nbsp;&nbsp;&nbsp;&nbsp;depositos = depositos + 1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;material(x,y,z_max+1) = material_id  ! 1=Cr, 2=Fe<br>
+&nbsp;&nbsp;&nbsp;&nbsp;altura_max_local(x,y) = z_max + 1<br>
+END IF
+            </div>
+            <p>El código implementa el proceso de deposición aleatoria sobre el sustrato, considerando la energía de los átomos depositados y la probabilidad de adhesión, que depende del material seleccionado.</p>
+            
+            <h3>Cálculo de mecanismos de deposición</h3>
+            <div class="code-block">
+SUBROUTINE calcular_mecanismos(material, altura_max_local, tam_rejilla, altura_max, &<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;densidad_islas, tamano_promedio_islas, num_islas, total_atomos_superficie)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;! ...<br>
+&nbsp;&nbsp;&nbsp;&nbsp;! Encontrar islas usando BFS<br>
+&nbsp;&nbsp;&nbsp;&nbsp;DO i = 1, tam_rejilla<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DO j = 1, tam_rejilla<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF (visitado(i,j) == 0 .AND. material(i,j,altura_superficie(i,j)) > 0) THEN<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;num_islas = num_islas + 1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tamano_isla = 0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;! ...<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;END IF<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;END DO<br>
+&nbsp;&nbsp;&nbsp;&nbsp;END DO<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;! Calcular métricas<br>
+&nbsp;&nbsp;&nbsp;&nbsp;densidad_islas = REAL(num_islas) / (tam_rejilla * tam_rejilla)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;IF (num_islas > 0) THEN<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tamano_promedio_islas = REAL(total_atomos_superficie) / num_islas<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ELSE<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tamano_promedio_islas = 0.0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;END IF<br>
+END SUBROUTINE calcular_mecanismos
+            </div>
+            <p>Esta subrutina calcula métricas importantes para caracterizar los mecanismos de deposición, como la <span class="highlight">densidad de islas</span>, el <span class="highlight">tamaño promedio de las islas</span> y el número total de átomos en la superficie.</p>
+        </div>
+        
+        <div class="objective">
+            <h2>2. Determinar los efectos de Difusión Superficial en el proceso de deposición de Cr y Fe sobre un sustrato sólido de Mg (001) mediante el método Monte Carlo Cinético.</h2>
+            
+            <p>El código implementa la difusión superficial y su efecto en el proceso de deposición:</p>
+            
+            <h3>Implementación de la difusión</h3>
+            <div class="code-block">
+! Evento de difusión general<br>
+CALL safe_random(r)<br>
+x = 1 + FLOOR(r * (tam_rejilla-1))<br>
+CALL safe_random(r)<br>
+y = 1 + FLOOR(r * (tam_rejilla-1))<br>
+z_max = altura_max_local(x,y)<br>
+<br>
+! Solo difunden átomos depositados (no sustrato)<br>
+IF (z_max > 2 .AND. material(x,y,z_max) > 0) THEN<br>
+&nbsp;&nbsp;&nbsp;&nbsp;CALL safe_random(r)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;IF (prob_difusion_const > r) THEN<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;! Elegir dirección de difusión<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF (r < 0.25) THEN<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nuevo_x = MODULO(x - 2 + tam_rejilla - 1, tam_rejilla) + 1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nuevo_y = y<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;! ... otras direcciones<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;! Verificar si el movimiento es válido<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF (nuevo_x >= 1 .AND. nuevo_x <= tam_rejilla .AND. &<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nuevo_y >= 1 .AND. nuevo_y <= tam_rejilla) THEN<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF (material(nuevo_x, nuevo_y, z_max) == 0 .AND. &<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;altura_max_local(nuevo_x, nuevo_y) == z_max - 1) THEN<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;! Realizar difusión<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;material(nuevo_x, nuevo_y, z_max) = material(x,y,z_max)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;material(x,y,z_max) = 0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;altura_max_local(x,y) = z_max - 1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;altura_max_local(nuevo_x, nuevo_y) = z_max<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;difusiones = difusiones + 1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;END IF<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;END IF<br>
+&nbsp;&nbsp;&nbsp;&nbsp;END IF<br>
+END IF
+            </div>
+            <p>El código implementa eventos de difusión donde los átomos depositados pueden moverse a posiciones adyacentes, simulando el proceso de difusión superficial.</p>
+            
+            <h3>Cálculo de la probabilidad de difusión</h3>
+            <div class="code-block">
+! Precalcular constante de difusión<br>
+prob_difusion_const = EXP(-energia_difusion / (KB * TEMP_SUBSTRATO))
+            </div>
+            <p>La probabilidad de difusión se calcula utilizando la energía de difusión específica para cada material y la temperatura del sustrato, siguiendo una distribución de Boltzmann.</p>
+            
+            <h3>Cálculo de la longitud de difusión</h3>
+            <div class="code-block">
+SUBROUTINE calcular_longitud_difusion(difusiones, tiempo, longitud_difusion_promedio)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;IF (difusiones > 0 .AND. tiempo > 0.0) THEN<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;longitud_difusion_promedio = SQRT(2.0 * REAL(difusiones) / tiempo)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ELSE<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;longitud_difusion_promedio = 0.0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;END IF<br>
+END SUBROUTINE calcular_longitud_difusion
+            </div>
+            <p>Esta subrutina calcula la <span class="highlight">longitud de difusión promedio</span>, una métrica importante para cuantificar los efectos de la difusión superficial en el proceso de deposición.</p>
+        </div>
+        
+        <div class="objective">
+            <h2>3. Delimitar el efecto del modo de deposición en las propiedades físicas de las películas delgadas de Cr y Fe en un sustrato sólido de Mg (001).</h2>
+            
+            <p>El código implementa diferentes modos de deposición y calcula varias propiedades físicas de las películas resultantes:</p>
+            
+            <h3>Modos de deposición</h3>
+            <div class="code-block">
+! Selección de modo de deposición<br>
+PRINT *, 'Modo de deposición (1=Térmico, 2=Balístico, 3=Aleatorio):'<br>
+READ *, modo_deposicion<br>
+<br>
+! Configurar parámetros según modo de deposición<br>
+IF (modo_deposicion == 1) THEN  ! Térmico<br>
+&nbsp;&nbsp;&nbsp;&nbsp;energia_promedio = energia_thermal<br>
+&nbsp;&nbsp;&nbsp;&nbsp;tasa_eventos = tasa_thermal<br>
+ELSE IF (modo_deposicion == 2) THEN  ! Balístico<br>
+&nbsp;&nbsp;&nbsp;&nbsp;energia_promedio = energia_ballistic<br>
+&nbsp;&nbsp;&nbsp;&nbsp;tasa_eventos = tasa_ballistic<br>
+ELSE  ! Aleatorio<br>
+&nbsp;&nbsp;&nbsp;&nbsp;CALL RANDOM_NUMBER(tasa_eventos)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;tasa_eventos = 10000.0 + 90000.0 * tasa_eventos<br>
+&nbsp;&nbsp;&nbsp;&nbsp;CALL RANDOM_NUMBER(energia_promedio)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;energia_promedio = 2.0 + 3.0 * energia_promedio<br>
+END IF
+            </div>
+            <p>El código permite seleccionar entre tres modos de deposición: térmico, balístico y aleatorio, cada uno con diferentes parámetros de energía y tasa de eventos.</p>
+            
+            <h3>Cálculo de propiedades físicas</h3>
+            <div class="code-block">
+SUBROUTINE calcular_propiedades_fisicas(material, altura_max_local, tam_rejilla, altura_max, &<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cobertura_fraccional, rugosidad_rms, anisotropia_superficial)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;! ...<br>
+&nbsp;&nbsp;&nbsp;&nbsp;! Calcular rugosidad RMS<br>
+&nbsp;&nbsp;&nbsp;&nbsp;rugosidad_rms = 0.0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;DO i = 1, tam_rejilla<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DO j = 1, tam_rejilla<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rugosidad_rms = rugosidad_rms + (altura_superficie(i,j) - altura_media)**2<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;END DO<br>
+&nbsp;&nbsp;&nbsp;&nbsp;END DO<br>
+&nbsp;&nbsp;&nbsp;&nbsp;rugosidad_rms = SQRT(rugosidad_rms / (tam_rejilla * tam_rejilla))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;! Calcular cobertura fraccional<br>
+&nbsp;&nbsp;&nbsp;&nbsp;cobertura_fraccional = 0.0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;DO i = 1, tam_rejilla<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DO j = 1, tam_rejilla<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF (altura_superficie(i,j) > 2) THEN<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cobertura_fraccional = cobertura_fraccional + 1.0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;END IF<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;END DO<br>
+&nbsp;&nbsp;&nbsp;&nbsp;END DO<br>
+&nbsp;&nbsp;&nbsp;&nbsp;cobertura_fraccional = cobertura_fraccional / (tam_rejilla * tam_rejilla)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;! Calcular anisotropía superficial<br>
+&nbsp;&nbsp;&nbsp;&nbsp;diff_x = 0.0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;diff_y = 0.0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;DO i = 1, tam_rejilla<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DO j = 1, tam_rejilla<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;diff_x = diff_x + ABS(altura_superficie(i,j) - altura_superficie(MODULO(i, tam_rejilla) + 1, j))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;diff_y = diff_y + ABS(altura_superficie(i,j) - altura_superficie(i, MODULO(j, tam_rejilla) + 1))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;END DO<br>
+&nbsp;&nbsp;&nbsp;&nbsp;END DO<br>
+&nbsp;&nbsp;&nbsp;&nbsp;diff_x = diff_x / (tam_rejilla * tam_rejilla)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;diff_y = diff_y / (tam_rejilla * tam_rejilla)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;IF (diff_y > 0.0) THEN<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;anisotropia_superficial = diff_x / diff_y<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ELSE<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;anisotropia_superficial = 1.0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;END IF<br>
+END SUBROUTINE calcular_propiedades_fisicas
+            </div>
+            <p>Esta subrutina calcula varias propiedades físicas importantes de las películas delgadas:</p>
+            <ul>
+                <li><span class="highlight">Cobertura fraccional</span>: proporción de la superficie cubierta por el material depositado</li>
+                <li><span class="highlight">Rugosidad RMS</span>: medida de la rugosidad superficial</li>
+                <li><span class="highlight">Anisotropía superficial</span>: medida de la directionalidad de la superficie</li>
+            </ul>
+            
+            <h3>Almacenamiento de resultados</h3>
+            <div class="code-block">
+WRITE(nombre_archivo, '(A,A1,A,I0.3,A,I0.3,A,F4.2,A,F6.0,A,F4.1,A)') &<br>
+&nbsp;&nbsp;&nbsp;&nbsp;TRIM(material_name), '_', '3d_altura_c', corrida, '_s', snapshot_actual, '_ed', energia_difusion, &<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'_te', tasa_eventos, '_ep', energia_promedio, '.dat'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+CALL guardar_datos(material, TAM_REJILLA, ALTURA_MAX, nombre_archivo, &<br>
+&nbsp;&nbsp;&nbsp;&nbsp;energia_difusion, TEMP_SUBSTRATO, tasa_eventos, adhesion, energia_promedio, num_eventos, &<br>
+&nbsp;&nbsp;&nbsp;&nbsp;densidad_islas, tamano_promedio_islas, cobertura_fraccional, rugosidad_rms, &<br>
+&nbsp;&nbsp;&nbsp;&nbsp;anisotropia_superficial, longitud_difusion_promedio, num_islas, total_atomos_superficie)
+            </div>
+            <p>El código guarda los resultados en archivos con nombres que incluyen información sobre el material, modo de deposición y parámetros utilizados, facilitando el análisis posterior del efecto del modo de deposición en las propiedades físicas.</p>
+        </div>
+        
+        <div class="conclusion">
+            <h2>Resumen de Resultados</h2>
+            <p>El código <code>jupiter5.f90.txt</code> implementa de manera completa los objetivos específicos de la investigación:</p>
+            
+            <ol>
+                <li><strong>Caracterización de mecanismos de deposición</strong>: El código permite seleccionar entre Cr y Fe, implementa un sustrato de Mg (001), simula el proceso de deposición y calcula métricas como densidad de islas y tamaño promedio de islas.</li>
+                
+                <li><strong>Efectos de la difusión superficial</strong>: Implementa eventos de difusión con probabilidades basadas en la energía de difusión específica para cada material y calcula la longitud de difusión promedio.</li>
+                
+                <li><strong>Efecto del modo de deposición</strong>: Permite seleccionar entre tres modos de deposición (térmico, balístico y aleatorio) y calcula propiedades físicas como cobertura fraccional, rugosidad y anisotropía superficial.</li>
+            </ol>
+            
+            <p>El código está bien estructurado, con subrutinas claras para cada funcionalidad, y guarda los resultados de manera organizada para su posterior análisis.</p>
+        </div>
+    </div>
+   
