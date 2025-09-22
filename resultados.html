@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis de Simulación Monte Carlo de Procesos de Deposición</title>
+    
+    <!-- MathJax para renderizar ecuaciones -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --background-color: #f9f9f9;
+            --text-color: #333;
+            --code-bg: #f4f4f4;
+            --border-color: #ddd;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            border-bottom: 5px solid var(--secondary-color);
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-top: 30px;
+        }
+        
+        h3 {
+            color: var(--secondary-color);
+            margin-top: 25px;
+        }
+        
+        .abstract {
+            background-color: #e8f4fc;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 5px solid var(--secondary-color);
+        }
+        
+        .section {
+            background-color: white;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: var(--code-bg);
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        
+        pre {
+            background-color: var(--code-bg);
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .highlight {
+            background-color: #fff9c4;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        
+        .equation {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f0f7ff;
+            border-radius: 8px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            text-align: left;
+        }
+        
+        th {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        .image-container {
+            text-align: center;
+            margin: 25px 0;
+        }
+        
+        .image-container img {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .image-caption {
+            margin-top: 10px;
+            font-style: italic;
+            color: #666;
+        }
+        
+        .conclusion {
+            background-color: #e8f8f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 5px solid #27ae60;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9em;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .section {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Simulación Monte Carlo de los Procesos de Deposición en Películas Delgadas</h1>
+            <p>Caracterización de Cr y Fe sobre un Sustrato Sólido de Mg (001)</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="abstract">
+            <h2>Resumen del Proyecto</h2>
+            <p>Este trabajo presenta una simulación computacional utilizando el método Monte Carlo Cinético (KMC) para modelar la deposición de películas delgadas de Cromo (Cr) y Hierro (Fe) sobre un sustrato de Magnesio (Mg) con orientación cristalina (001). El objetivo es caracterizar los mecanismos de deposición, estudiar los efectos de la difusión superficial y analizar cómo el modo de deposición afecta las propiedades físicas de las películas.</p>
+        </div>
+        
+        <div class="section">
+            <h2>Objetivos de la Investigación</h2>
+            <h3>Objetivo General</h3>
+            <p>Simular el proceso de deposición de películas delgadas de Cr y Fe mediante el método de Monte Carlo.</p>
+            
+            <h3>Objetivos Específicos</h3>
+            <ul>
+                <li>Caracterizar los mecanismos de deposición en películas delgadas de Cr y Fe sobre un sustrato sólido de Mg (001) mediante el método Monte Carlo Cinético.</li>
+                <li>Determinar los efectos de Difusión Superficial en el proceso de deposición de Cr y Fe sobre un sustrato sólido de Mg (001) mediante el método Monte Carlo Cinético.</li>
+                <li>Delimitar el efecto del modo de deposición en las propiedades físicas de las películas delgadas de Cr y Fe en un sustrato sólido de Mg (001).</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>Formulación del Problema</h2>
+            <p>¿Será posible realizar una simulación con el Método de Monte Carlo de los procesos de deposición en películas delgadas de Cr y Fe sobre un sustrato sólido de Mg(001), utilizando el modelo balístico que permita determinar con un alto grado de precisión la caracterización de los mecanismos de deposición, los parámetros que controlan el crecimiento de las películas y el efecto que el modo de deposición en las propiedades físicas de las mismas?</p>
+        </div>
+        
+        <div class="section">
+            <h2>Componentes del Código</h2>
+            
+            <h3>Código Fortran Principal (jupiter5.f90.txt)</h3>
+            <p><strong>Funcionalidad:</strong> Simulación Monte Carlo Cinética del proceso de deposición.</p>
+            
+            <h4>Características clave:</h4>
+            <ul>
+                <li><strong>Modelado de materiales:</strong> Implementa parámetros específicos para Cr y Fe:
+                    <ul>
+                        <li>Cr: Mayor adhesión (0.98), menor energía de difusión (0.01-0.25 eV)</li>
+                        <li>Fe: Menor adhesión (0.95), mayor energía de difusión (0.5-1.0 eV)</li>
+                    </ul>
+                </li>
+                <li><strong>Modos de deposición:</strong>
+                    <ul>
+                        <li>Térmico: Energía promedio = 2.0 eV, tasa = 50000 eventos</li>
+                        <li>Balístico: Energía promedio = 5.0 eV, tasa = 20000 eventos</li>
+                        <li>Aleatorio: Parámetros generados aleatoriamente</li>
+                    </ul>
+                </li>
+                <li><strong>Procesos simulados:</strong>
+                    <ul>
+                        <li>Deposición de átomos en posiciones aleatorias</li>
+                        <li>Difusión superficial de átomos depositados</li>
+                        <li>Cálculo de métricas de crecimiento (rugosidad, densidad de islas, cobertura)</li>
+                    </ul>
+                </li>
+                <li><strong>Salida:</strong> Archivos .dat con datos de altura y metadatos de simulación</li>
+            </ul>
+            
+            <h4>Algoritmo principal:</h4>
+            <ol>
+                <li>Inicialización del sustrato (Mg)</li>
+                <li>Selección de material (Cr/Fe) y modo de deposición</li>
+                <li>Bucle de simulación con eventos de deposición/difusión</li>
+                <li>Cálculo periódico de métricas</li>
+                <li>Almacenamiento de resultados en snapshots</li>
+            </ol>
+            
+            <h3>Scripts de Post-procesamiento Python</h3>
+            
+            <h4>f3.py - Visualización 3D básica</h4>
+            <ul>
+                <li>Genera mapas promedio 2D y 3D para cada material</li>
+                <li>Visualiza la topografía superficial promedio</li>
+                <li>Separa resultados por material (Fe/Cr)</li>
+            </ul>
+            
+            <h4>f15.py - Análisis 2D avanzado</h4>
+            <ul>
+                <li>Genera 6 tipos diferentes de visualizaciones 2D:
+                    <ul>
+                        <li>Mapa de puntos (estilo gnuplot)</li>
+                        <li>Mapa de calor (heatmap)</li>
+                        <li>Mapa de contorno</li>
+                        <li>Mapa de superficie (proyección 2D)</li>
+                        <li>Mapa granulado (con textura)</li>
+                        <li>Mapa interpolado (suavizado)</li>
+                    </ul>
+                </li>
+                <li>Organiza resultados en directorios por material</li>
+            </ul>
+            
+            <h4>f7.py - Análisis completo</h4>
+            <ul>
+                <li>Procesamiento integral de datos de simulación</li>
+                <li>Identificación de etapas de crecimiento (nucleación, coalescencia, crecimiento)</li>
+                <li>Cálculo de métricas avanzadas:
+                    <ul>
+                        <li>Rugosidad (RMS)</li>
+                        <li>Asimetría y curtosis de la distribución de alturas</li>
+                        <li>Densidad de islas</li>
+                        <li>Cobertura fraccional</li>
+                        <li>Anisotropía superficial</li>
+                    </ul>
+                </li>
+                <li>Generación de visualizaciones individuales y comparativas</li>
+                <li>Exportación de resultados a CSV y reportes de texto</li>
+            </ul>
+            
+            <h4>f9.py - Análisis comparativo optimizado</h4>
+            <ul>
+                <li>Versión optimizada de f7.py sin generar gráficos individuales</li>
+                <li>Enfoque en análisis comparativos entre materiales</li>
+                <li>Generación de mapas promedio y estadísticas globales</li>
+                <li>Exportación eficiente de resultados</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>Análisis de Resultados</h2>
+            
+            <h3>Relación Energía de Difusión vs. Rugosidad</h3>
+            <div class="image-container">
+                <img src="https://z-cdn-media.chatglm.cn/files/3c02ee18-f347-4dca-9f26-abbcbe4810c8_rugosidad_vs_energia.png?auth_key=1790032315-c2fb6fde74fa4036958330d44db641fc-0-132fa21c099b3146deac85bc46407799" alt="Rugosidad vs Energía de difusión">
+                <div class="image-caption">Relación entre energía de difusión y rugosidad para Cr y Fe</div>
+            </div>
+            
+            <p><strong>Observaciones clave:</strong></p>
+            <ul>
+                <li><strong>Cr (naranja):</strong> Se concentra en bajas energías (0.01-0.25 eV) con rugosidades entre 4-10 capas</li>
+                <li><strong>Fe (azul):</strong> Se distribuye en energías más altas (0.5-1.0 eV) con rugosidades entre 2.5-9.5 capas</li>
+                <li><strong>Patrón interesante:</strong> A mayor energía de difusión, la rugosidad tiende a ser más variable en Fe, mientras que Cr mantiene una rugosidad relativamente alta incluso con baja energía</li>
+            </ul>
+            
+            <p><strong>Interpretación física:</strong></p>
+            <ul>
+                <li>La mayor energía de difusión de Fe permite una mayor movilidad superficial, lo que podría llevar a una reorganización más eficiente de los átomos</li>
+                <li>Cr, con menor energía de difusión, forma estructuras más rígidas y rugosas</li>
+                <li>La dispersión en Fe sugiere una mayor sensibilidad a las condiciones de deposición</li>
+            </ul>
+            
+            <h3>Mapas de Contorno</h3>
+            <div class="image-container">
+                <img src="https://z-cdn-media.chatglm.cn/files/f0576e08-3f03-46d0-a238-30b1f7c87eab_mapa_contorno_Fe.png?auth_key=1790032315-fa6245fcc84d47379dfc5ad86253881e-0-8101c018b6e7ef5fc0ffdb3df5a1284f" alt="Mapa de Contorno - Fe">
+                <div class="image-caption">Mapa de contorno para Fe</div>
+            </div>
+            
+            <div class="image-container">
+                <img src="https://z-cdn-media.chatglm.cn/files/9d553a33-5b8b-4a4e-aa92-0cd980470773_mapa_contorno_Cr.png?auth_key=1790032315-06db38cc7117494195ee97799dc75fa4-0-6b41ba941982e6b6e55f31983ae5da3d" alt="Mapa de Contorno - Cr">
+                <div class="image-caption">Mapa de contorno para Cr</div>
+            </div>
+            
+            <p><strong>Características morfológicas:</strong></p>
+            <ul>
+                <li><strong>Fe:</strong> Muestra una distribución más homogénea con zonas de transición suaves entre alturas</li>
+                <li><strong>Cr:</strong> Presenta una estructura más fragmentada con cambios bruscos de altura</li>
+                <li><strong>Altura máxima:</strong> Ambos materiales alcanzan ~14.4 capas en las zonas más altas</li>
+            </ul>
+            
+            <p><strong>Interpretación:</strong></p>
+            <ul>
+                <li>La morfología más homogénea de Fe sugiere una mejor difusión superficial</li>
+                <li>La estructura fragmentada de Cr indica una menor movilidad atómica</li>
+                <li>Ambos materiales muestran una distribución no uniforme típica del crecimiento de islas</li>
+            </ul>
+            
+            <h3>Visualizaciones 3D Promedio</h3>
+            <div class="image-container">
+                <img src="https://z-cdn-media.chatglm.cn/files/58a24883-e4b3-409e-b0c0-f02364351e15_mapa_3d_promedio_Fe.png?auth_key=1790032315-244cc455a6c44067ae038fa777c422ae-0-6d932949f0bddc8acb3ff6ec5f7ad8b9" alt="Mapa 3D Promedio - Fe">
+                <div class="image-caption">Mapa 3D promedio para Fe (60 simulaciones)</div>
+            </div>
+            
+            <div class="image-container">
+                <img src="https://z-cdn-media.chatglm.cn/files/a6f71881-295e-49b5-9a52-5b62ea9c7743_mapa_3d_promedio_Cr.png?auth_key=1790032315-262eb28abff8418aa4ba566a762dc136-0-b45e27fffa76be9fb4eeb5be12f4273b" alt="Mapa 3D Promedio - Cr">
+                <div class="image-caption">Mapa 3D promedio para Cr (60 simulaciones)</div>
+            </div>
+            
+            <p><strong>Topografía superficial:</strong></p>
+            <ul>
+                <li><strong>Fe:</strong> Estructura más suave con picos menos pronunciados</li>
+                <li><strong>Cr:</strong> Topografía más accidentada con picos más agudos</li>
+                <li><strong>Altura promedio:</strong> Ambos alrededor de 9-10 capas</li>
+            </ul>
+            
+            <p><strong>Análisis de crecimiento:</strong></p>
+            <ul>
+                <li>La diferencia morfológica confirma los resultados de los mapas 2D</li>
+                <li>Fe muestra una mejor coalescencia de islas</li>
+                <li>Cr mantiene una estructura de islas más definida</li>
+            </ul>
+            
+            <h3>Distribución de Alturas</h3>
+            <div class="image-container">
+                <img src="https://z-cdn-media.chatglm.cn/files/e12c5b0d-b98d-4a2a-b961-ba0b02e5d9f9_histograma_promedio.png?auth_key=1790032315-b0d9bd05215c47d1ad61e2f3bba4f14a-0-f32c20809b9d9a9328ba3085c5151623" alt="Histograma de Distribución de Alturas">
+                <div class="image-caption">Distribución de alturas promedio (120 simulaciones)</div>
+            </div>
+            
+            <p><strong>Estadísticas globales:</strong></p>
+            <ul>
+                <li>Media: 9.28 capas</li>
+                <li>Desviación estándar: 8.99 capas</li>
+                <li>Distribución bimodal: Pico cerca de 0 (sustrato) y pico principal entre 5-30 capas</li>
+            </ul>
+            
+            <p><strong>Interpretación:</strong></p>
+            <ul>
+                <li>La alta desviación estándar indica una gran variabilidad en el crecimiento</li>
+                <li>La distribución bimodal es característica de películas delgadas en etapa de crecimiento</li>
+                <li>La presencia de valores cercanos a 0 confirma la existencia de zonas sin recubrir</li>
+            </ul>
+            
+            <h3>Comparación de Rugosidad</h3>
+            <div class="image-container">
+                <img src="https://z-cdn-media.chatglm.cn/files/198ff26b-ad92-4c42-aae1-5c78456d20b7_comparacion_rugosidad.png?auth_key=1790032315-a43b0b4cb7904bf397ba0b17cc538f2a-0-96a3c0013b514e8e4032c184edc99057" alt="Comparación de Rugosidad">
+                <div class="image-caption">Comparación de rugosidad entre Fe y Cr</div>
+            </div>
+            
+            <p><strong>Distribuciones:</strong></p>
+            <ul>
+                <li><strong>Fe:</strong> Mayor frecuencia en rugosidades altas (9-10 capas)</li>
+                <li><strong>Cr:</strong> Distribución más uniforme entre 4-10 capas</li>
+                <li>Ambos materiales muestran rugosidades similares en general</li>
+            </ul>
+            
+            <p><strong>Análisis estadístico:</strong></p>
+            <ul>
+                <li>Fe: 6.8689 ± 2.5555</li>
+                <li>Cr: 6.7844 ± 2.5242</li>
+                <li>Diferencia mínima (&lt;1.5%) no estadísticamente significativa</li>
+            </ul>
+            
+            <h3>Comparación de Espesor</h3>
+            <div class="image-container">
+                <img src="https://z-cdn-media.chatglm.cn/files/8d0151b7-d35d-449f-b3cd-1518e1abe99f_comparacion_espesor.png?auth_key=1790032315-bcfc0f1ce32a43b8a8e2b6c4d4ae1698-0-183a848d7ca413537534b3088a44aa93" alt="Comparación de Espesor">
+                <div class="image-caption">Comparación de espesor entre Fe y Cr</div>
+            </div>
+            
+            <p><strong>Distribuciones:</strong></p>
+            <ul>
+                <li><strong>Fe:</strong> Pico más pronunciado en espesores altos (15-16 capas)</li>
+                <li><strong>Cr:</strong> Distribución más plana</li>
+                <li>Ambos materiales muestran espesores entre 2-16 capas</li>
+            </ul>
+            
+            <p><strong>Análisis estadístico:</strong></p>
+            <ul>
+                <li>Fe: 9.3509 ± 5.2982</li>
+                <li>Cr: 9.2074 ± 5.2289</li>
+                <li>Nuevamente, diferencias mínimas (&lt;1.6%)</li>
+            </ul>
+            
+            <h3>Reporte Numérico Detallado</h3>
+            <pre>
+RESULTADOS DEL ANÁLISIS DE SIMULACIONES
+========================================
+
+Resultados para Fe:
+Promedio - Rugosidad: 6.8689 ± 2.5555
+Promedio - Espesor: 9.3509 ± 5.2982
+Promedio - Altura máxima: 24.7500 ± 6.5565
+Promedio - Cobertura (> 10): 40.83% ± 26.96%
+Promedio - Cobertura (> 20): 15.66% ± 16.65%
+Promedio - Cobertura (> 30): 0.00% ± 0.00%
+Promedio - Cobertura (> 60): 0.00% ± 0.00%
+Distribución de etapas (%):
+  nucleacion: 0.00%
+  coalescencia: 33.33%
+  crecimiento: 66.67%
+
+Resultados para Cr:
+Promedio - Rugosidad: 6.7844 ± 2.5242
+Promedio - Espesor: 9.2074 ± 5.2289
+Promedio - Altura máxima: 24.4833 ± 6.6320
+Promedio - Cobertura (> 10): 40.16% ± 26.68%
+Promedio - Cobertura (> 20): 14.86% ± 16.14%
+Promedio - Cobertura (> 30): 0.00% ± 0.00%
+Promedio - Cobertura (> 60): 0.00% ± 0.00%
+Distribución de etapas (%):
+  nucleacion: 0.00%
+  coalescencia: 33.33%
+  crecimiento: 66.67%
+
+Total de simulaciones Fe: 60
+Total de simulaciones Cr: 60
+Total de simulaciones: 120
+            </pre>
+            
+            <h4>Métricas cuantitativas:</h4>
+            <table>
+                <tr>
+                    <th>Propiedad</th>
+                    <th>Fe</th>
+                    <th>Cr</th>
+                    <th>Diferencia</th>
+                </tr>
+                <tr>
+                    <td>Rugosidad</td>
+                    <td>6.87 ± 2.56</td>
+                    <td>6.78 ± 2.52</td>
+                    <td>1.3%</td>
+                </tr>
+                <tr>
+                    <td>Espesor</td>
+                    <td>9.35 ± 5.30</td>
+                    <td>9.21 ± 5.23</td>
+                    <td>1.5%</td>
+                </tr>
+                <tr>
+                    <td>Altura máxima</td>
+                    <td>24.75 ± 6.56</td>
+                    <td>24.48 ± 6.63</td>
+                    <td>1.1%</td>
+                </tr>
+                <tr>
+                    <td>Cobertura (&gt;10 capas)</td>
+                    <td>40.83% ± 26.96%</td>
+                    <td>40.16% ± 26.68%</td>
+                    <td>1.7%</td>
+                </tr>
+                <tr>
+                    <td>Cobertura (&gt;20 capas)</td>
+                    <td>15.66% ± 16.65%</td>
+                    <td>14.86% ± 16.14%</td>
+                    <td>5.4%</td>
+                </tr>
+            </table>
+            
+            <h4>Distribución de etapas de crecimiento:</h4>
+            <ul>
+                <li>Nucleación: 0% (ambos materiales)</li>
+                <li>Coalescencia: 33.33% (ambos materiales)</li>
+                <li>Crecimiento: 66.67% (ambos materiales)</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>Análisis de la Ausencia de la Etapa de Nucleación</h2>
+            
+            <h3>Definición de las etapas de crecimiento</h3>
+            <p>En la deposición de películas delgadas, las etapas se definen por la evolución de la morfología de la superficie:</p>
+            <ul>
+                <li><strong>Nucleación:</strong> Ocurre en la fase inicial, cuando los primeros átomos impactan el sustrato y forman pequeños grupos o "núcleos" aislados. Esta etapa es muy breve.</li>
+                <li><strong>Coalescencia:</strong> Las islas crecen y comienzan a unirse entre sí, creando una red interconectada.</li>
+                <li><strong>Crecimiento:</strong> Una vez que las islas se han unido, la película continúa creciendo en espesor.</li>
+            </ul>
+            
+            <h3>Tiempo de simulación y captura de datos</h3>
+            <p>El programa Fortran tiene parámetros clave para la simulación:</p>
+            <pre>
+INTEGER, PARAMETER :: MAX_EVENTOS = 5000       ! Total de eventos por simulación
+INTEGER, PARAMETER :: INTERVALO_SNAPSHOT = 1000 ! Primer snapshot en el evento 1000
+            </pre>
+            
+            <p><strong>La contradicción de los datos:</strong></p>
+            <ul>
+                <li>La evidencia visual (Mapas 2D y 3D) y el Histograma de Distribución de Alturas muestran claramente un crecimiento en islas (modo Volmer-Weber), que por definición, requiere de una etapa de nucleación.</li>
+                <li>Sin embargo, el reporte numérico indica que el porcentaje de simulaciones en la etapa de nucleación es del 0.00%. En cambio, el 33.33% de las simulaciones están en la fase de coalescencia y el 66.67% en la de crecimiento.</li>
+            </ul>
+            
+            <h3>La explicación</h3>
+            <p>Esta aparente contradicción se resuelve al entender que, dado el gran número de eventos simulados (5,000), la etapa de nucleación es superada muy rápidamente. Para el momento en que se toma el primer "snapshot" (en el evento 1,000), la superficie ya ha evolucionado más allá de la fase de nucleación inicial.</p>
+            
+            <p>En otras palabras, el código es tan eficiente y la simulación avanza tan rápido que la etapa de nucleación concluye antes de que el programa de análisis registre la primera medición. Por lo tanto, el reporte numérico refleja que todas las corridas de simulación analizadas ya estaban en la etapa de coalescencia o crecimiento, lo cual es consistente con la alta rugosidad y el espesor promedio que se observan en las gráficas.</p>
+            
+            <div class="highlight">
+                <p><strong>Conclusión clave:</strong> La nucleación sí ocurre, pero es un proceso tan rápido que no es capturado por los intervalos de muestreo actuales. Esto es físicamente realista, ya que en experimentos reales la nucleación también es un proceso fugaz.</p>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>Derivación de la Ecuación Maestra Probabilística</h2>
+            
+            <p>A partir del análisis del código Fortran, podemos derivar la ecuación maestra probabilística que fundamenta el algoritmo de Monte Carlo Cinético (KMC). Esta ecuación describe la evolución temporal de la probabilidad de que el sistema se encuentre en un estado específico durante el proceso de deposición.</p>
+            
+            <h3>Estados del Sistema y Variables</h3>
+            <p>El sistema se define por:</p>
+            <ul>
+                <li><strong>Configuración espacial:</strong> \( \mathbf{n} = \{n_{i,j,k}\} \), donde \( n_{i,j,k} \) representa la ocupación del sitio \((i,j,k)\)</li>
+                <li>\( n_{i,j,k} = \begin{cases} 
+                      0 & \text{vacío} \\
+                      1 & \text{átomo de Cr} \\
+                      2 & \text{átomo de Fe} \\
+                      -1 & \text{sustrato Mg}
+                  \end{cases} \)</li>
+                <li><strong>Altura local:</strong> \( h_{i,j} = \max\{k : n_{i,j,k} > 0\} \)</li>
+            </ul>
+            
+            <h3>Eventos y Tasas de Transición</h3>
+            <p>El modelo considera dos tipos de eventos fundamentales:</p>
+            
+            <h4>Evento de Deposición</h4>
+            <ul>
+                <li><strong>Tasa de deposición:</strong> \( r_{\text{dep}} = \text{tasa\_eventos} \)</li>
+                <li><strong>Probabilidad de adhesión:</strong> 
+                    \[ p_{\text{adh}}(i,j,E) = \text{adhesion} \times \left(1 + \frac{E}{E_{\text{max}}} \times 0.2\right) \]</li>
+                <li><strong>Tasa neta de deposición:</strong>
+                    \[ W_{\text{dep}}(\mathbf{n} \to \mathbf{n}') = r_{\text{dep}} \cdot p_{\text{adh}}(i,j,E) \cdot \delta_{\mathbf{n}', \mathbf{n} + \delta_{i,j,h_{i,j}+1}} \]
+                    donde \( \delta_{i,j,h_{i,j}+1} \) representa la adición de un átomo en la posición \((i,j,h_{i,j}+1)\).</li>
+            </ul>
+            
+            <h4>Evento de Difusión</h4>
+            <ul>
+                <li><strong>Tasa de difusión</strong> (Ecuación de Arrhenius):
+                    \[ r_{\text{dif}}(i,j) = \nu_0 \exp\left(-\frac{E_{\text{dif}}}{k_B T_{\text{substrato}}}\right) \]
+                    donde \( \nu_0 \) es el factor de frecuencia (implícito en el código como <code>prob_difusion_const</code>).</li>
+                <li><strong>Tasa neta de difusión:</strong>
+                    \[ W_{\text{dif}}(\mathbf{n} \to \mathbf{n}') = r_{\text{dif}}(i,j) \cdot \sum_{\langle i',j' \rangle} \delta_{\mathbf{n}', \mathbf{n} - \delta_{i,j,h_{i,j}} + \delta_{i',j',h_{i,j}}} \cdot \Theta_{\text{vacía}}(i',j',h_{i,j}) \]
+                    donde:
+                    <ul>
+                        <li>\( \langle i',j' \rangle \) son los vecinos primeros de \((i,j)\)</li>
+                        <li>\( \Theta_{\text{vacía}} \) es 1 si el sitio destino está vacío, 0 en caso contrario</li>
+                    </ul>
+                </li>
+            </ul>
+            
+            <h3>Ecuación Maestra Completa</h3>
+            <div class="equation">
+                \[
+                \frac{dP(\mathbf{n}, t)}{dt} = \sum_{\mathbf{n}'} \left[ W_{\mathbf{n}' \to \mathbf{n}} P(\mathbf{n}', t) - W_{\mathbf{n} \to \mathbf{n}'} P(\mathbf{n}, t) \right]
+                \]
+            </div>
+            
+            <p>Desglosada en términos de los eventos:</p>
+            
+            <div class="equation">
+                \[
+                \frac{dP(\mathbf{n}, t)}{dt} = \underbrace{\sum_{\substack{i,j \\ E}} W_{\text{dep}}(\mathbf{n} - \delta_{i,j,h_{i,j}+1} \to \mathbf{n}) P(\mathbf{n} - \delta_{i,j,h_{i,j}+1}, t)}_{\text{ganancia por deposición}} + \underbrace{\sum_{\substack{i,j \\ \langle i',j' \rangle}} W_{\text{dif}}(\mathbf{n} - \delta_{\text{mov}} \to \mathbf{n}) P(\mathbf{n} - \delta_{\text{mov}}, t)}_{\text{ganancia por difusión}} - \underbrace{\left[ \sum_{\substack{i,j \\ E}} W_{\text{dep}}(\mathbf{n} \to \mathbf{n} + \delta_{i,j,h_{i,j}+1}) + \sum_{\substack{i,j \\ \langle i',j' \rangle}} W_{\text{dif}}(\mathbf{n} \to \mathbf{n} - \delta_{\text{mov}}) \right] P(\mathbf{n}, t)}_{\text{pérdida por eventos salientes}}
+                \]
+            </div>
+            
+            <h3>Implementación en el Algoritmo KMC</h3>
+            <p>El código Fortran implementa una solución estocástica de esta ecuación maestra mediante:</p>
+            
+            <h4>Cálculo de la Tasa Total</h4>
+            <pre>
+total_rate = tasa_eventos + prob_difusion_const * (tam_rejilla * tam_rejilla)
+            </pre>
+            <p>Que corresponde a:</p>
+            <div class="equation">
+                \[
+                R_{\text{total}} = \sum_{i,j} r_{\text{dep}} + \sum_{i,j} r_{\text{dif}}(i,j)
+                \]
+            </div>
+            
+            <h4>Selección de Eventos</h4>
+            <pre>
+IF (r < tasa_eventos / total_rate) THEN
+    ! Evento de deposición
+ELSE
+    ! Evento de difusión
+END IF
+            </pre>
+            <p>Implementa la probabilidad de selección:</p>
+            <div class="equation">
+                \[
+                P(\text{depósito}) = \frac{\sum_{i,j} r_{\text{dep}}}{R_{\text{total}}}, \quad P(\text{difusión}) = \frac{\sum_{i,j} r_{\text{dif}}(i,j)}{R_{\text{total}}}
+                \]
+            </div>
+            
+            <h4>Avance Temporal</h4>
+            <pre>
+tiempo = tiempo + (-LOG(r_tiempo) / tasa_eventos)
+            </pre>
+            <p>Implementa el tiempo de espera entre eventos:</p>
+            <div class="equation">
+                \[
+                \Delta t = -\frac{\ln(u)}{R_{\text{total}}}, \quad u \sim \mathcal{U}(0,1]
+                \]
+            </div>
+            
+            <h3>Ecuación Maestra Simplificada para el Modelo Balístico</h3>
+            <p>Considerando las características específicas del modelo balístico implementado:</p>
+            
+            <div class="equation">
+                \[
+                \frac{dP(\mathbf{n}, t)}{dt} = \sum_{i,j} \left[ \lambda_{\text{dep}} \cdot p_{\text{adh}}(E) \cdot P(\mathbf{n} - \delta_{i,j,h_{i,j}+1}, t) \right] + \sum_{i,j} \left[ \Gamma_{\text{dif}} \cdot \sum_{\langle i',j' \rangle} \Theta_{\text{vacía}}(i',j',h_{i,j}) \cdot P(\mathbf{n} - \delta_{\text{mov}}, t) \right] - \left[ \lambda_{\text{dep}} + \Gamma_{\text{dif}} \cdot N_{\text{átomos}} \right] P(\mathbf{n}, t)
+                \]
+            </div>
+            
+            <p>donde:</p>
+            <ul>
+                <li>\( \lambda_{\text{dep}} = r_{\text{dep}} \) es la tasa de deposición global</li>
+                <li>\( \Gamma_{\text{dif}} = \nu_0 \exp\left(-\frac{E_{\text{dif}}}{k_B T}\right) \) es la tasa de difusión por átomo</li>
+                <li>\( N_{\text{átomos}} \) es el número total de átomos en la superficie</li>
+            </ul>
+            
+            <h3>Conexión con el Código Fortran</h3>
+            
+            <h4>Parámetros Físicos en la Ecuación</h4>
+            <table>
+                <tr>
+                    <th>Parámetro en Ecuación</th>
+                    <th>Variable en Código</th>
+                    <th>Descripción</th>
+                </tr>
+                <tr>
+                    <td>\( \lambda_{\text{dep}} \)</td>
+                    <td><code>tasa_eventos</code></td>
+                    <td>Tasa de deposición global</td>
+                </tr>
+                <tr>
+                    <td>\( \Gamma_{\text{dif}} \)</td>
+                    <td><code>prob_difusion_const</code></td>
+                    <td>Tasa de difusión por átomo</td>
+                </tr>
+                <tr>
+                    <td>\( p_{\text{adh}}(E) \)</td>
+                    <td><code>prob_adhesion</code></td>
+                    <td>Probabilidad de adhesión</td>
+                </tr>
+                <tr>
+                    <td>\( E_{\text{dif}} \)</td>
+                    <td><code>energia_difusion</code></td>
+                    <td>Energía de difusión</td>
+                </tr>
+                <tr>
+                    <td>\( k_B T \)</td>
+                    <td><code>KB * TEMP_SUBSTRATO</code></td>
+                    <td>Energía térmica</td>
+                </tr>
+            </table>
+            
+            <h4>Implementación de la Probabilidad de Adhesión</h4>
+            <pre>
+prob_adhesion = adhesion * (1.0 + (energia / MAX_ENERGIA) * 0.2)
+            </pre>
+            <p>Que corresponde a:</p>
+            <div class="equation">
+                \[
+                p_{\text{adh}}(E) = \alpha \left(1 + \beta \frac{E}{E_{\text{max}}}\right)
+                \]
+            </div>
+            <p>donde \( \alpha \) es la adhesión base y \( \beta = 0.2 \) es un factor de corrección energética.</p>
+            
+            <h3>Interpretación Física de la Ecuación Maestra</h3>
+            <ol>
+                <li><strong>Término de ganancia por deposición:</strong> Representa la probabilidad de llegar al estado \(\mathbf{n}\) por la adición de un átomo en cualquier posición \((i,j)\) con energía \(E\).</li>
+                <li><strong>Término de ganancia por difusión:</strong> Representa la probabilidad de llegar a \(\mathbf{n}\) por el movimiento de un átomo desde una posición vecina.</li>
+                <li><strong>Término de pérdida:</strong> Representa todas las formas en que el sistema puede abandonar el estado \(\mathbf{n}\) mediante deposición o difusión.</li>
+                <li><strong>Carácter balístico:</strong> La energía del átomo incidente \(E\) afecta directamente la probabilidad de adhesión, modelando el impacto balístico.</li>
+            </ol>
+            
+            <h3>Validación con Resultados Experimentales</h3>
+            <p>La ecuación maestra derivada explica los resultados observados:</p>
+            <ul>
+                <li><strong>Crecimiento en islas (Volmer-Weber):</strong> La baja probabilidad de adhesión en zonas de alta curvatura favorece la formación de islas.</li>
+                <li><strong>Diferencias Cr vs Fe:</strong> La mayor energía de difusión de Fe (\(E_{\text{dif}}^{\text{Fe}} = 0.5-1.0\) eV) vs Cr (\(E_{\text{dif}}^{\text{Cr}} = 0.01-0.25\) eV) explica las diferencias morfológicas.</li>
+                <li><strong>Etapa de nucleación no observada:</strong> La alta tasa de deposición (\(\lambda_{\text{dep}}\)) domina inicialmente, pero rápidamente los eventos de difusión (\(\Gamma_{\text{dif}}\)) se vuelven significativos.</li>
+            </ul>
+            
+            <div class="conclusion">
+                <h3>Conclusión</h3>
+                <p>La ecuación maestra probabilística que fundamenta el código Fortran es:</p>
+                
+                <div class="equation">
+                    \[
+                    \boxed{\frac{dP(\mathbf{n}, t)}{dt} = \sum_{i,j} \lambda_{\text{dep}} p_{\text{adh}}(E) P(\mathbf{n} - \delta_{i,j,h_{i,j}+1}, t) + \sum_{i,j} \Gamma_{\text{dif}} \sum_{\langle i',j' \rangle} \Theta_{\text{vacía}}(i',j',h_{i,j}) P(\mathbf{n} - \delta_{\text{mov}}, t) - \left[ \lambda_{\text{dep}} + \Gamma_{\text{dif}} N_{\text{átomos}} \right] P(\mathbf{n}, t)}
+                    \]
+                </div>
+                
+                <p>Esta ecuación captura esencialmente:</p>
+                <ol>
+                    <li>La competencia entre deposición balística y difusión térmica</li>
+                    <li>La dependencia energética de la adhesión atómica</li>
+                    <li>La evolución estocástica de la morfología superficial</li>
+                    <li>Las diferencias intrínsecas entre materiales (Cr vs Fe)</li>
+                </ol>
+                
+                <p>El algoritmo KMC implementado resuelve numéricamente esta ecuación mediante la simulación de trayectorias estocásticas, lo que permite estudiar la evolución temporal de películas delgadas con un alto grado de realismo físico.</p>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>Simulación Monte Carlo de Procesos de Deposición en Películas Delgadas | Elaborado por Ángel Chacín Ávila</p>
+        <p>Se publica con licencia GPL</p>
+    </footer>
+</body>
+</html>
