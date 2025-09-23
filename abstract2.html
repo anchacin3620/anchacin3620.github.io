@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumen de Investigación</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+            background-color: #f9f9f9;
+        }
+        
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+        
+        .abstract {
+            text-align: justify;
+            font-size: 1.1rem;
+            color: #444;
+            background-color: #f8f9fa;
+            padding: 25px;
+            border-left: 5px solid #3498db;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        
+        .highlight {
+            background-color: #e8f4fc;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: 500;
+        }
+        
+        @media (max-width: 600px) {
+            body {
+                margin: 20px auto;
+                padding: 0 15px;
+            }
+            
+            .container {
+                padding: 25px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .abstract {
+                font-size: 1rem;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Resumen de Investigación</h1>
+        
+        <div class="abstract" id="abstract-text">
+            Cargando resumen...
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const abstractText = `Este trabajo presenta una simulación computacional mediante el método Monte Carlo Cinético para modelar la deposición de películas delgadas de <span class="highlight">Cromo (Cr)</span> y <span class="highlight">Hierro (Fe)</span> sobre un sustrato de Magnesio (001), caracterizando los mecanismos de deposición, estudiando los efectos de la difusión superficial y analizando cómo el modo de deposición afecta las propiedades físicas de las películas. La implementación incluye un código en Fortran que simula el proceso con parámetros específicos para cada material: Cr (adhesión=0.98, energía de difusión=0.01-0.25 eV) y Fe (adhesión=0.95, energía de difusión=0.5-1.0 eV), utilizando el modo de deposición balístico. Para el análisis se desarrollaron scripts en Python que generan mapas 2D/3D, calculan métricas de crecimiento (rugosidad, densidad de islas, cobertura) y realizan comparaciones entre materiales. Los resultados revelan que Fe exhibe una distribución homogénea con transiciones suaves entre alturas, atribuible a su mayor energía de difusión que facilita la movilidad superficial, mientras que Cr presenta una estructura fragmentada con cambios bruscos de altura, formando estructuras más rígidas y rugosas. Aunque ambos materiales mostraron valores similares de rugosidad (Fe: 6.87±2.56, Cr: 6.78±2.52) y espesor (Fe: 9.35±5.30, Cr: 9.21±5.23), sus patrones de crecimiento son morfológicamente distintos. El estudio demuestra que la simulación Monte Carlo permite modelar con alta precisión los procesos de deposición en películas delgadas, proporcionando una herramienta valiosa para predecir y controlar las propiedades morfológicas en función de los parámetros de deposición y las características intrínsecas de los materiales.`;
+            
+            document.getElementById('abstract-text').innerHTML = abstractText;
+        });
+    </script>
+</body>
+</html>
