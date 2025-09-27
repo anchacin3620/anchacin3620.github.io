@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capítulo II - Ecuación Maestra Probabilística</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f7f1;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #2980b9;
+            margin-top: 30px;
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+        }
+        h3 {
+            color: #34495e;
+            margin-top: 25px;
+        }
+        p {
+            text-align: justify;
+            margin-bottom: 15px;
+        }
+        .equation {
+            background-color: #f0f8ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #3498db;
+            overflow-x: auto;
+        }
+        .equation-number {
+            text-align: right;
+            font-weight: bold;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+        .example {
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #16a085;
+        }
+        .example-title {
+            font-weight: bold;
+            color: #16a085;
+            margin-bottom: 10px;
+        }
+        .algorithm {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #9b59b6;
+        }
+        .algorithm-step {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+        .algorithm-step:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #9b59b6;
+            font-weight: bold;
+        }
+        .highlight {
+            background-color: #fff9c4;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        .parameter {
+            font-style: italic;
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <h1>CAPÍTULO II<br>ECUACIÓN MAESTRA PROBABILÍSTICA</h1>
+
+    <h2>2.1 Introducción</h2>
+    <p>La simulación Monte Carlo Cinético (KMC) empleada en este trabajo se fundamenta en la ecuación maestra probabilística, una herramienta matemática que describe la evolución temporal de sistemas estocásticos mediante tasas de transición entre estados discretos. Este capítulo detalla cómo la ecuación maestra se utiliza para modelar los procesos físicos de deposición (adsorción) y difusión superficial en un sistema teórico de películas delgadas metálicas (Cr y Fe) sobre un sustrato de magnesio Mg (001). Se explica su formulación, su aplicación en la derivación de tasas de transición específicas, y cómo estas tasas se implementan en los algoritmos KMC codificados en Fortran 90, conectando la base teórica con la simulación computacional.</p>
+
+    <h2>2.2 Fundamentos de la Ecuación Maestra Probabilística</h2>
+    <p>La ecuación maestra probabilística describe la dinámica de un sistema estocástico en términos de la probabilidad \(P(\sigma,t)\) de que el sistema se encuentre en un estado \(\sigma\) en el tiempo \(t\). En el contexto de la simulación KMC, los estados \(\sigma\) representan configuraciones del sistema (por ejemplo, la posición de átomos de Cr o Fe en la rejilla), y la ecuación modela cómo estas configuraciones evolucionan debido a eventos como adsorción y difusión.</p>
+    
+    <p>La forma general de la ecuación maestra es:</p>
+    
+    <div class="equation">
+        \[
+        \frac{dP(\sigma,t)}{dt} = \sum_{\sigma' \neq \sigma} \left[ W(\sigma' \rightarrow \sigma)P(\sigma',t) - W(\sigma \rightarrow \sigma')P(\sigma,t) \right] \quad (1)
+        \]
+        <div class="equation-number">(1)</div>
+    </div>
+    
+    <p>Donde:</p>
+    <ul>
+        <li>\(P(\sigma,t)\): Probabilidad de estar en el estado \(\sigma\) en el tiempo \(t\).</li>
+        <li>\(W(\sigma' \rightarrow \sigma)\): Tasa de transición del estado \(\sigma'\) al estado \(\sigma\).</li>
+        <li>\(W(\sigma \rightarrow \sigma')\): Tasa de transición del estado \(\sigma\) al estado \(\sigma'\).</li>
+    </ul>
+    
+    <p>El primer término del sumatorio representa las transiciones que llevan al sistema al estado \(\sigma\) desde otros estados \(\sigma'\), mientras que el segundo término representa las transiciones que lo sacan del estado \(\sigma\). En el contexto del trabajo, el sistema no resuelve explícitamente esta ecuación diferencial en el tiempo, sino que la utiliza para derivar un algoritmo KMC que simula trayectorias estocásticas basadas en las tasas \(W\).</p>
+
+    <h2>2.3 Aplicación al modelo de deposición de películas delgadas</h2>
+    <p>En este trabajo, el sistema se modela como una rejilla discreta tridimensional (50 × 50 × 30, reducida para pruebas) donde los átomos de Cr o Fe interactúan con el sustrato Mg (001). Los estados \(\sigma\) corresponden a configuraciones específicas de la rejilla, definidas por la ocupación de sitios (vacío, Cr, Fe, Mg) y las alturas superficiales. Los eventos posibles incluyen:</p>
+    
+    <ul>
+        <li><span class="highlight">Adsorción</span>: Un átomo se deposita en un sitio de la superficie.</li>
+        <li><span class="highlight">Difusión</span>: Un átomo se mueve a un sitio vecino en la superficie.</li>
+    </ul>
+    
+    <p>La ecuación maestra se aplica al definir las tasas de transición (\(W\)) para cada evento, que dependen de parámetros físicos como energía de difusión (\(E_d\)), temperatura del sustrato (\(T_{subs}\)), y energía de las partículas incidentes (\(E\)). Las tasas se derivan analíticamente y se implementan en el algoritmo KMC para simular la evolución del sistema.</p>
+
+    <h2>2.4 Derivación de las tasas de transición</h2>
+    <p>Las tasas de transición (\(W\)) se derivaron analíticamente para cada tipo de evento, basándose en principios termodinámicos y estadísticos y ajustándose a las condiciones específicas del sistema Cr/Fe-Mg (001). A continuación, se describen las tasas utilizadas en este trabajo.</p>
+
+    <h3>2.4.1 Difusión Superficial</h3>
+    <p>La tasa de difusión superficial se calcula usando la ecuación de Arrhenius, que describe procesos térmicamente activados:</p>
+    
+    <div class="equation">
+        \[
+        W_{\text{diff}} = \nu e^{-E_d / (k_B T_{subs})} \quad (2)
+        \]
+        <div class="equation-number">(2)</div>
+    </div>
+    
+    <p>Donde:</p>
+    <ul>
+        <li>\(\nu\): Frecuencia de intento, asumida como \(10^{13} \, \text{s}^{-1}\), un valor estándar en simulaciones KMC basado en la teoría de transición de estados.</li>
+        <li>\(E_d\): Energía de activación, con valores que dependen del material:
+            <ul>
+                <li>Para Cr: valor aleatorio entre 0.01 eV y 0.25 eV.</li>
+                <li>Para Fe: valor aleatorio entre 0.5 eV y 1.0 eV.</li>
+            </ul>
+        </li>
+        <li>\(k_B\): Constante de Boltzmann, \(8.617 \times 10^{-5} \, \text{eV/K}\).</li>
+        <li>\(T_{subs}\): Temperatura del sustrato, fijada en 500 K en las simulaciones.</li>
+    </ul>
+    
+    <p>En el código, esta tasa se normaliza como una probabilidad para facilitar su uso en el algoritmo KMC:</p>
+    
+    <div class="equation">
+        \[
+        P_{\text{diff}} = e^{-E_d / (k_B T_{subs})} \quad (3)
+        \]
+        <div class="equation-number">(3)</div>
+    </div>
+    
+    <p>A continuación, se presentan ejemplos numéricos para \(T_{subs} = 500 \, \text{K}\):</p>
+    
+    <div class="example">
+        <div class="example-title">Ejemplo numérico:</div>
+        <p>Para Cr (valor promedio de \(E_d = 0.13 \, \text{eV}\)):
+        \[
+        P_{\text{diff}} = e^{-0.13 / (8.617 \times 10^{-5} \times 500)} = e^{-0.13 / 0.043085} \approx e^{-3.017} \approx 0.049
+        \]</p>
+        
+        <p>Para Fe (valor promedio de \(E_d = 0.75 \, \text{eV}\)):
+        \[
+        P_{\text{diff}} = e^{-0.75 / 0.043085} \approx e^{-17.41} \approx 2.8 \times 10^{-8}
+        \]</p>
+    </div>
+    
+    <p>Estas probabilidades reflejan que la difusión es más probable para Cr que para Fe, lo que se alinea con los parámetros del material.</p>
+
+    <h3>2.4.2 Adsorción</h3>
+    <p>En la simulación 3D, la probabilidad de adsorción (\(P_{ads}\)) depende de la energía de la partícula (\(E\)) y del coeficiente de adherencia (<span class="parameter">adhesion</span>):</p>
+    
+    <div class="equation">
+        \[
+        P_{\text{ads}} = \text{adhesion} \times \left(1 + 0.2 \times \frac{E}{E_{\max}}\right) \quad (4)
+        \]
+        <div class="equation-number">(4)</div>
+    </div>
+    
+    <p>Donde:</p>
+    <ul>
+        <li><span class="parameter">adhesion</span>: Coeficiente de adherencia base, que depende del material:
+            <ul>
+                <li>Para Cr: <span class="parameter">ADHESION_BASE</span> = 0.98</li>
+                <li>Para Fe: <span class="parameter">ADHESION_BASE</span> = 0.95</li>
+            </ul>
+        </li>
+        <li>Además, se añade una variación aleatoria: <span class="parameter">adhesion</span> = <span class="parameter">ADHESION_BASE</span> + 0.03 × r, donde r es un número aleatorio uniforme entre 0 y 1.</li>
+        <li>\(E\): Energía de la partícula, generada uniformemente entre \(E_{prom} - 1.5\) y \(E_{prom} + 1.5\) eV, donde \(E_{prom}\) depende del modo de deposición:
+            <ul>
+                <li>Térmico: \(E_{prom} = 2.0 \, \text{eV}\)</li>
+                <li>Balístico: \(E_{prom} = 5.0 \, \text{eV}\)</li>
+                <li>Aleatorio: \(E_{prom}\) entre 2.0 y 5.0 eV</li>
+            </ul>
+        </li>
+        <li>\(E_{\max} = 5.0 \, \text{eV}\) (valor máximo de energía considerado).</li>
+    </ul>
+    
+    <p>Si \(P_{ads} > r\) (donde r es un número aleatorio uniforme entre 0 y 1), la partícula se adhiere; de lo contrario, se refleja (no se adhiere).</p>
+    
+    <div class="example">
+        <div class="example-title">Ejemplo numérico:</div>
+        <p>Para Cr en modo térmico (\(E_{prom} = 2.0 \, \text{eV}\)), suponiendo \(E = 2.0 \, \text{eV}\) y <span class="parameter">adhesion</span> = 0.98:
+        \[
+        P_{\text{ads}} = 0.98 \times \left(1 + 0.2 \times \frac{2.0}{5.0}\right) = 0.98 \times (1 + 0.08) = 0.98 \times 1.08 = 1.0584
+        \]</p>
+        <p>Dado que la probabilidad no puede exceder 1, se trunca a 1.0. En el código, esto se maneja implícitamente al comparar con un número aleatorio.</p>
+    </div>
+
+    <h2>2.5 Implementación en el algoritmo KMC</h2>
+    <p>Resolver la ecuación maestra directamente para calcular \(P(\sigma,t)\) en una rejilla grande (50 × 50 × 30) sería computacionalmente inviable debido al gran número de estados posibles. En lugar de eso, la ecuación maestra se utiliza como base teórica para construir un algoritmo KMC que simula trayectorias estocásticas del sistema. El algoritmo sigue estos pasos:</p>
+    
+    <div class="algorithm">
+        <div class="algorithm-step"><strong>Lista de eventos:</strong> Para cada paso, se identifican los eventos posibles (adsorción o difusión) y sus tasas de transición (\(W\)).</div>
+        <div class="algorithm-step"><strong>Selección de eventos:</strong> Se genera un número aleatorio (\(r\)) entre 0 y 1 y se compara con las probabilidades normalizadas (\(P_{diff}\) o \(P_{ads}\)) para elegir el evento que ocurre.</div>
+        <div class="algorithm-step"><strong>Actualización del sistema:</strong> Se actualiza la configuración del sistema (\(\sigma\)), modificando variables como <span class="parameter">material(i,j,k)</span> y <span class="parameter">altura_max_local(i,j)</span>.</div>
+        <div class="algorithm-step"><strong>Avance en tiempo:</strong> El tiempo de simulación se incrementa según la tasa total de eventos.</div>
+        <div class="algorithm-step"><strong>Iteración:</strong> El proceso se repite hasta alcanzar el número máximo de eventos (5000 en las simulaciones de prueba).</div>
+    </div>
+    
+    <p>Esta implementación se codificó en Fortran 90, y el algoritmo completo se detalla en el anexo. La ecuación maestra probabilística sirve como la piedra angular del modelo KMC, proporcionando un marco teórico sólido para derivar tasas de transición que reflejan los procesos físicos de deposición de películas delgadas.</p>
+</body>
+</html>
