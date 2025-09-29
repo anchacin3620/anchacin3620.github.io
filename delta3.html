@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capítulo III - Método de Monte Carlo</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/docx@7.8.2/build/index.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f7f1;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #2980b9;
+            margin-top: 30px;
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+        }
+        h3 {
+            color: #34495e;
+            margin-top: 25px;
+        }
+        p {
+            text-align: justify;
+            margin-bottom: 15px;
+        }
+        .equation {
+            background-color: #f0f8ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #3498db;
+            overflow-x: auto;
+            text-align: center;
+        }
+        .equation-number {
+            text-align: right;
+            font-weight: bold;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+        .example {
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #16a085;
+        }
+        .example-title {
+            font-weight: bold;
+            color: #16a085;
+            margin-bottom: 10px;
+        }
+        .algorithm {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #9b59b6;
+        }
+        .algorithm-step {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+        .algorithm-step:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #9b59b6;
+            font-weight: bold;
+        }
+        .highlight {
+            background-color: #fff9c4;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        .parameter {
+            font-style: italic;
+            color: #e74c3c;
+        }
+        .code-block {
+            background-color: #f4f4f4;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+        }
+        .download-btn {
+            display: block;
+            width: 200px;
+            margin: 30px auto;
+            padding: 12px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+        .download-btn:hover {
+            background-color: #2980b9;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+            color: #3498db;
+        }
+        .equation-image {
+            max-width: 100%;
+            height: auto;
+            margin: 10px 0;
+        }
+        .error-message {
+            display: none;
+            color: #e74c3c;
+            text-align: center;
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #fadbd8;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>CAPÍTULO III<br>MÉTODO DE MONTE CARLO</h1>
+
+    <h2>3.1 Introducción</h2>
+    <p>El Método de Monte Carlo (MC) es una técnica computacional que utiliza muestreo aleatorio para resolver problemas probabilísticos o estocásticos, permitiendo aproximar soluciones numéricas a problemas complejos donde las soluciones analíticas son inviables. Desarrollado en los años 1940 por científicos como John von Neumann y Stanislaw Ulam, el método lleva el nombre del famoso casino de Monte Carlo debido a su dependencia de números aleatorios. Desde su creación, se ha convertido en una herramienta fundamental en campos como la física, la química y la ciencia de materiales.</p>
+    <p>En el contexto de las simulaciones de películas delgadas, el Método de Monte Carlo se aplica para modelar procesos estocásticos como el crecimiento, la nucleación y la difusión de partículas sobre un sustrato, capturando la naturaleza aleatoria de estos fenómenos a escalas atómicas y nanométricas.</p>
+    <p>En el trabajo "Simulación Monte Carlo de los Procesos de Deposición en Películas Delgadas de Cr y Fe sobre un sustrato sólido de Mg (001)", el Método de Monte Carlo se utiliza para simular la deposición de partículas metálicas Cr y Fe sobre un sustrato de magnesio, analizando propiedades como la rugosidad, la densidad y la morfología de la película resultante.</p>
+    <p>Este capítulo introduce el Método de Monte Carlo, describe su variante cinética KMC, justifica su uso en simulaciones de deposición de películas delgadas, detalla la construcción del algoritmo KMC implementado en el código de simulación y ofrece un breve resumen de resultados simulados típicos.</p>
+
+    <h2>3.2. Método de Monte Carlo Cinético y su aplicación a simulaciones de deposición de películas delgadas</h2>
+    <p>El Método de Monte Carlo Cinético (KMC) es una variante del Método de Monte Carlo diseñada específicamente para simular procesos dinámicos fuera del equilibrio, como el crecimiento de películas delgadas durante la deposición. A diferencia del MC estándar, que se enfoca en calcular propiedades de equilibrio, el KMC modela la evolución temporal de un sistema estocástico mediante una secuencia de eventos discretos, cada uno asociado a una tasa de transición (W).</p>
+    <p>En el KMC, el sistema se describe mediante estados discretos σ que representan configuraciones específicas, como las posiciones de partículas en una rejilla. Los eventos posibles (adsorción, difusión) se seleccionan aleatoriamente según sus tasas de transición, las cuales se derivan de principios físicos, como se explicó en el capítulo anterior. El KMC avanza simulando estos eventos y calcula el intervalo de tiempo entre ellos Δt.</p>
+    <p>La implementación del KMC en este trabajo se basa en la ecuación maestra probabilística detallada en el Capítulo II:</p>
+    
+    <div class="equation">
+        \[
+        \frac{dP(\sigma,t)}{dt} = \sum_{\sigma'} \left[ W(\sigma' \rightarrow \sigma) P(\sigma',t) - W(\sigma \rightarrow \sigma') P(\sigma,t) \right]
+        \]
+    </div>
+    
+    <p>Donde las tasas de transición W se derivan para los procesos de adsorción y difusión como:</p>
+    
+    <div class="equation">
+        \[
+        W_{\text{diff}} = \nu e^{-\frac{E_d}{k_B T_{\text{subs}}}}
+        \]
+    </div>
+    
+    <div class="equation">
+        \[
+        P_{\text{ads}} = \text{adhesion} \times \left(1 + \frac{E}{E_{\text{max}}} \times 0.2\right)
+        \]
+    </div>
+
+    <h2>3.3 Ventajas del uso del KMC en simulaciones de deposición de películas delgadas</h2>
+    <p>El KMC fue elegido como la herramienta más adecuada para simular el proceso de deposición de películas delgadas de Cr y Fe sobre Mg (001) por las siguientes razones:</p>
+    
+    <ol>
+        <li><strong>Modelado de procesos dinámicos</strong>: El KMC es ideal para procesos fuera del equilibrio, como la deposición secuencial de partículas, donde los eventos ocurren de manera estocástica.</li>
+        
+        <li><strong>Escalas de tiempo y espacio relevantes</strong>: Permite simular escalas espaciales de nanómetros a micrómetros (rejillas de 300×300×100) y escalas de tiempo efectivas que serían inviables con métodos como la Dinámica Molecular (MD).</li>
+        
+        <li><strong>Eficiencia computacional</strong>: Comparado con la MD, que resuelve las ecuaciones de movimiento de cada partícula, el KMC es más eficiente al enfocarse en eventos discretos, reduciendo significativamente el costo computacional.</li>
+        
+        <li><strong>Incorporación de tasas físicas</strong>: Permite definir tasas de transición basadas en parámetros físicos, como $P_{\text{diff}} = e^{-\frac{E_d}{k_B T_{\text{subs}}}}$, lo que asegura que las simulaciones reflejen las propiedades físicas del sistema.</li>
+        
+        <li><strong>Flexibilidad y adaptabilidad</strong>: El KMC puede adaptarse a diferentes condiciones (distintos materiales y modos de deposición) ajustando las tasas de transición y los eventos modelados, lo que lo hace versátil para estudiar sistemas como Cr/Fe-Mg (001).</li>
+    </ol>
+
+    <h2>3.4 Construcción del algoritmo KMC implementado</h2>
+    <p>El código de simulación implementa un algoritmo KMC unificado que permite simular tanto en 2D como en 3D, y para ambos materiales (Cr y Fe) en un único programa. A continuación se detalla su estructura y funcionamiento.</p>
+
+    <h3>3.4.1 Algoritmo KMC General</h3>
+    <p>El algoritmo KMC implementado sigue los principios del método, resolviendo la ecuación maestra mediante la simulación de trayectorias estocásticas. Los pasos del algoritmo son los siguientes:</p>
+    
+    <ol>
+        <li><strong>Inicialización</strong>:
+            <ul>
+                <li>Definir la rejilla L×L×H (3D) o L×L (2D).</li>
+                <li>Establecer el sustrato inicial: con dos capas explícitas de Mg (valor -1 en la matriz).</li>
+                <li>Definir los parámetros físicos: energía de difusión (Ed), temperatura del sustrato (Tsubs), coeficiente de adherencia (adhesion) y número de eventos (MAX_EVENTOS).</li>
+            </ul>
+        </li>
+        
+        <li><strong>Selección de material y modo de deposición</strong>:
+            <ul>
+                <li>Selección del material (Cr o Fe) mediante parámetros específicos.</li>
+                <li>Selección del modo de deposición (térmico, balístico o aleatorio).</li>
+            </ul>
+        </li>
+        
+        <li><strong>Bucle principal</strong> (para cada evento de 1 a MAX_EVENTOS):
+            <ul>
+                <li>Calcular la tasa total de eventos.</li>
+                <li>Seleccionar el tipo de evento (deposición o difusión).</li>
+                <li>Para eventos de deposición:
+                    <ul>
+                        <li>Generar una posición inicial (x,y) aleatoria en la rejilla.</li>
+                        <li>Generar una energía (E) según el modo de deposición.</li>
+                        <li>Calcular la probabilidad de adherencia.</li>
+                        <li>Si se adhiere, depositar la partícula en la posición adecuada.</li>
+                    </ul>
+                </li>
+                <li>Para eventos de difusión:
+                    <ul>
+                        <li>Seleccionar un átomo aleatoriamente.</li>
+                        <li>Calcular la probabilidad de difusión.</li>
+                        <li>Si difunde, mover la partícula a un sitio vecino vacío.</li>
+                    </ul>
+                </li>
+                <li>Avanzar el tiempo.</li>
+            </ul>
+        </li>
+        
+        <li><strong>Actualización y Almacenamiento</strong>:
+            <ul>
+                <li>Actualizar la rejilla: asignar el material depositado (Cr, Fe).</li>
+                <li>Guardar los datos en archivos de salida: .dat con datos de altura y metadatos de simulación.</li>
+            </ul>
+        </li>
+        
+        <li><strong>Finalización</strong>:
+            <ul>
+                <li>Calcular estadísticas finales del sistema.</li>
+                <li>Generar archivos de salida finales para análisis posterior.</li>
+            </ul>
+        </li>
+    </ol>
+
+    <h3>3.4.2 Implementación del sustrato de Mg (001)</h3>
+    <p>El sustrato de Mg (001) se implementa en el código mediante la inicialización de las dos primeras capas de la rejilla con un valor negativo (-1), que representa el material del sustrato:</p>
+    
+    <div class="code-block">
+SUBROUTINE inicializar_rejilla(material, altura_max_local, tam_rejilla, altura_max)<br>
+    INTEGER, DIMENSION(tam_rejilla,tam_rejilla,altura_max), INTENT(OUT) :: material<br>
+    INTEGER, DIMENSION(tam_rejilla,tam_rejilla), INTENT(OUT) :: altura_max_local<br>
+    INTEGER, INTENT(IN) :: tam_rejilla, altura_max<br>
+    INTEGER :: i, j<br>
+    material = 0<br>
+    DO i = 1, tam_rejilla<br>
+        DO j = 1, tam_rejilla<br>
+            material(i,j,1) = -1  ! Sustrato (valor negativo)<br>
+            material(i,j,2) = -1  ! Sustrato (valor negativo)<br>
+        END DO<br>
+    END DO<br>
+    altura_max_local = 2<br>
+END SUBROUTINE inicializar_rejilla
+    </div>
+
+    <h3>3.4.3 Selección de material y modo de deposición</h3>
+    <p>El código permite seleccionar dinámicamente el material (Cr o Fe) y el modo de deposición (térmico, balístico o aleatorio) al inicio de la simulación. Cada material tiene parámetros específicos:</p>
+    
+    <ul>
+        <li><strong>Cromo (Cr)</strong>:
+            <ul>
+                <li>Adhesión base: 0.98</li>
+                <li>Energía de difusión: 0.01-0.25 eV</li>
+                <li>Mayor probabilidad de adherencia</li>
+                <li>Menor energía de difusión (mayor movilidad superficial)</li>
+            </ul>
+        </li>
+        
+        <li><strong>Hierro (Fe)</strong>:
+            <ul>
+                <li>Adhesión base: 0.95</li>
+                <li>Energía de difusión: 0.5-1.0 eV</li>
+                <li>Menor probabilidad de adherencia</li>
+                <li>Mayor energía de difusión (menor movilidad superficial)</li>
+            </ul>
+        </li>
+    </ul>
+    
+    <p>Los modos de deposición tienen las siguientes características:</p>
+    
+    <ol>
+        <li><strong>Modo Térmico</strong>:
+            <ul>
+                <li>Energía promedio: 2.0 eV</li>
+                <li>Tasa de eventos: 50000</li>
+                <li>Simula deposición a baja energía</li>
+            </ul>
+        </li>
+        
+        <li><strong>Modo Balístico</strong>:
+            <ul>
+                <li>Energía promedio: 5.0 eV</li>
+                <li>Tasa de eventos: 20000</li>
+                <li>Simula deposición a alta energía</li>
+            </ul>
+        </li>
+        
+        <li><strong>Modo Aleatorio</strong>:
+            <ul>
+                <li>Energía promedio: valor aleatorio entre 2.0 y 5.0 eV</li>
+                <li>Tasa de eventos: valor aleatorio entre 10000 y 100000</li>
+                <li>Permite explorar una amplia gama de condiciones</li>
+            </ul>
+        </li>
+    </ol>
+
+    <h3>3.4.4 Procesos simulados: deposición y difusión</h3>
+    <p>El código implementa dos procesos fundamentales en la deposición de películas delgadas:</p>
+    
+    <ol>
+        <li><strong>Deposición</strong>:
+            <ul>
+                <li>Generación de una posición aleatoria (x,y) en la rejilla.</li>
+                <li>Cálculo de la energía del átomo incidente según el modo de deposición.</li>
+                <li>Cálculo de la probabilidad de adhesión:
+                    <div class="equation">
+                        \[
+                        P_{\text{ads}} = \text{adhesion} \times \left(1 + \frac{E}{E_{\text{max}}} \times 0.2\right)
+                        \]
+                    </div>
+                </li>
+                <li>Si la partícula se adhiere, se deposita en la posición (x,y,z_max+1), donde z_max es la altura máxima en el vecindario 3×3.</li>
+            </ul>
+        </li>
+        
+        <li><strong>Difusión</strong>:
+            <ul>
+                <li>Selección aleatoria de un átomo en la superficie.</li>
+                <li>Cálculo de la probabilidad de difusión según la ecuación de Arrhenius:
+                    <div class="equation">
+                        \[
+                        P_{\text{diff}} = e^{-\frac{E_d}{k_B T_{\text{subs}}}}
+                        \]
+                    </div>
+                </li>
+                <li>Si el átomo difunde, se mueve a una posición vecina vacía en la superficie.</li>
+            </ul>
+        </li>
+    </ol>
+
+    <h3>3.4.5 Cálculo de métricas avanzadas</h3>
+    <p>El código implementa subrutinas para calcular diversas métricas que caracterizan las películas delgadas:</p>
+    
+    <ol>
+        <li><strong>Mecanismos de deposición</strong>:
+            <ul>
+                <li>Densidad de islas: número de islas por unidad de área.</li>
+                <li>Tamaño promedio de islas: tamaño medio de las islas formadas.</li>
+                <li>Número total de átomos en la superficie.</li>
+            </ul>
+        </li>
+        
+        <li><strong>Propiedades físicas</strong>:
+            <ul>
+                <li>Cobertura fraccional: proporción de la superficie cubierta por el material depositado.</li>
+                <li>Rugosidad RMS: medida de la rugosidad superficial.</li>
+                <li>Anisotropía superficial: medida de la direccionalidad de la superficie.</li>
+            </ul>
+        </li>
+        
+        <li><strong>Longitud de difusión</strong>:
+            <ul>
+                <li>Longitud de difusión promedio: medida de la distancia media recorrida por los átomos durante la difusión.</li>
+            </ul>
+        </li>
+    </ol>
+
+    <h3>3.4.6 Almacenamiento de resultados</h3>
+    <p>El código genera archivos de salida con nombres que incluyen información sobre el material, modo de deposición y parámetros utilizados, facilitando el análisis posterior:</p>
+    
+    <div class="code-block">
+WRITE(nombre_archivo, '(A,A1,A,I0.3,A,I0.3,A,F4.2,A,F6.0,A,F4.1,A)') &<br>
+    TRIM(material_name), '_', '3d_altura_c', corrida, '_s', snapshot_actual, '_ed', energia_difusion, &<br>
+    '_te', tasa_eventos, '_ep', energia_promedio, '.dat'
+    </div>
+    
+    <p>Cada archivo contiene:</p>
+    <ul>
+        <li>Metadatos de la simulación (material, modo de deposición, parámetros físicos).</li>
+        <li>Métricas calculadas (densidad de islas, rugosidad, cobertura, etc.).</li>
+        <li>Datos de altura de la superficie para cada posición (i,j).</li>
+    </ul>
+
+    <h2>3.5 Adaptación a Simulaciones 2D y 3D</h2>
+    <p>El código de simulación está diseñado para funcionar tanto en 2D como en 3D, con adaptaciones específicas para cada caso:</p>
+
+    <h3>3.5.1 Simulaciones 2D</h3>
+    <p>Para las simulaciones 2D, el código se configura con los siguientes parámetros y adaptaciones:</p>
+    
+    <ul>
+        <li><strong>Rejilla</strong>: 300×300 sitios (representada como una matriz de alturas)</li>
+        <li><strong>Distribución de energía</strong>: Uniforme</li>
+        <li><strong>Probabilidades</strong>:
+            <ul>
+                <li>Adsorción: $P_{\text{ads}} = 1 - \sin(\theta) \cdot E/10$</li>
+                <li>Sputtering: $P_{\text{sput}} = 1 - \sin(\theta) \cdot E/10$</li>
+                <li>Difusión: $P_{\text{diff}} = e^{-\frac{E_d}{k_B T_{\text{subs}}}}$</li>
+            </ul>
+        </li>
+        <li><strong>Sustrato</strong>: Plano o con defectos iniciales (5% de los sitios ocupados para Fe, ajustado para Cr)</li>
+    </ul>
+    
+    <p>La implementación 2D se maneja internamente en el código mediante una representación simplificada de la rejilla y el uso de matrices de alturas en lugar de una estructura tridimensional completa.</p>
+
+    <h3>3.5.2 Simulaciones 3D</h3>
+    <p>Para las simulaciones 3D, el código se configura con los siguientes parámetros:</p>
+    
+    <ul>
+        <li><strong>Rejilla</strong>: 300×300×100 sitios</li>
+        <li><strong>Número de partículas</strong>: 20,000</li>
+        <li><strong>Distribución de energía</strong>: Maxwell-Boltzmann, con una media de 0.13 eV a $T_{\text{plasma}} = 1000K$</li>
+        <li><strong>Probabilidades</strong>:
+            <ul>
+                <li>Adherencia: $P_{\text{stick}} = \text{sticking} \cdot e^{-\frac{E}{k_B T_{\text{plasma}}}}$ con sticking = 0.9 para Cr y 0.85 para Fe</li>
+                <li>Difusión: $P_{\text{diff}} = e^{-\frac{E_d}{k_B T_{\text{subs}}}}$</li>
+            </ul>
+        </li>
+        <li><strong>Sustrato</strong>: Dos capas explícitas de Mg (valor -1 en la matriz material)</li>
+    </ul>
+    
+    <p>La implementación 3D utiliza una estructura tridimensional completa para representar la posición de cada átomo en el espacio.</p>
+
+    <h2>3.6 Justificación del uso de la subrutina de números aleatorios de Fortran 90</h2>
+    <p>El código utiliza la subrutina `RANDOM_NUMBER` de Fortran 90 para generar números aleatorios, debido a las siguientes razones:</p>
+    
+    <ul>
+        <li><strong>Integración nativa</strong>: `RANDOM_NUMBER` es una función intrínseca de Fortran 90, lo que elimina la necesidad de bibliotecas externas.</li>
+        <li><strong>Eficiencia</strong>: Es rápida y adecuada para simulaciones con un gran número de iteraciones (hasta 50,000 eventos).</li>
+        <li><strong>Calidad suficiente</strong>: Aunque no es la mejor en términos de aleatoriedad (comparada con generadores como Mersenne Twister), su calidad es suficiente para las necesidades del KMC en este trabajo.</li>
+        <li><strong>Facilidad de uso</strong>: Su sintaxis simple (`CALL RANDOM_NUMBER(r)`) facilita su implementación.</li>
+        <li><strong>Contexto de recursos limitados</strong>: En el entorno del trabajo, evitar dependencias externas era una prioridad, y `RANDOM_NUMBER` cumplió con los requisitos.</li>
+    </ul>
+    
+    <p>La implementación de la generación de números aleatorios es crucial para el método KMC, ya que determina la selección estocástica de eventos y la evolución del sistema.</p>
+
+    <h2>3.7 Resumen de resultados simulados típicos</h2>
+    <p>El código de simulación ha permitido simular eficazmente el proceso de deposición de películas delgadas de Cr y Fe sobre Mg (001). Los resultados típicos obtenidos incluyen:</p>
+    
+    <ul>
+        <li><strong>Relación energía-rugosidad</strong>: Cr mantiene rugosidades altas (4-10 capas) incluso con baja energía de difusión (0.01-0.25 eV), mientras que Fe muestra mayor variabilidad en rugosidad (2.5-9.5 capas) con energías más altas (0.5-1.0 eV).</li>
+        
+        <li><strong>Morfología superficial</strong>: Fe presenta una distribución más homogénea con transiciones suaves entre alturas, mientras que Cr muestra una estructura más fragmentada con cambios bruscos.</li>
+        
+        <li><strong>Métricas cuantitativas</strong>: Las diferencias entre materiales son mínimas en términos globales:
+            <ul>
+                <li>Rugosidad: Fe (6.87±2.56) vs Cr (6.78±2.52) - diferencia del 1.3%</li>
+                <li>Espesor: Fe (9.35±5.30) vs Cr (9.21±5.23) - diferencia del 1.5%</li>
+            </ul>
+        </li>
+        
+        <li><strong>Etapas de crecimiento</strong>: Ambos materiales muestran 0% en nucleación, 33.33% en coalescencia y 66.67% en crecimiento, lo que indica que la etapa de nucleación es extremadamente rápida y no es capturada por los intervalos de muestreo actuales.</li>
+        
+        <li><strong>Efecto del modo de deposición</strong>: Los diferentes modos de deposición (térmico, balístico y aleatorio) producen variaciones significativas en las propiedades de las películas, como la rugosidad, la cobertura fraccional y la anisotropía superficial.</li>
+    </ul>
+    
+    <p>Estos resultados demuestran la capacidad del método KMC implementado en el código de simulación para simular eficazmente los procesos de deposición y proporcionar información valiosa sobre las diferencias entre materiales en términos de morfología superficial y mecanismos de crecimiento, así como el efecto de las condiciones de deposición en las propiedades finales de las películas delgadas.</p>
+
+    <div id="loading" class="loading">Generando documento Word con ecuaciones renderizadas...</div>
+    <div id="error-message" class="error-message">Error al generar el documento. Por favor, intente nuevamente.</div>
+    <button id="download-word" class="download-btn">Descargar como Word (.docx)</button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('download-word').addEventListener('click', async function() {
+                const downloadBtn = document.getElementById('download-word');
+                const loading = document.getElementById('loading');
+                const errorMessage = document.getElementById('error-message');
+                
+                downloadBtn.disabled = true;
+                loading.style.display = 'block';
+                errorMessage.style.display = 'none';
+                
+                try {
+                    // Crear el documento Word con todas las secciones y ecuaciones
+                    const doc = await createWordDocument();
+                    
+                    // Generar y descargar el documento
+                    const blob = await docx.Packer.toBlob(doc);
+                    saveAs(blob, "Capitulo_III_Metodo_de_Monte_Carlo.docx");
+                    
+                    console.log("Documento creado y descargado correctamente");
+                } catch (error) {
+                    console.error("Error al generar el documento:", error);
+                    errorMessage.style.display = 'block';
+                } finally {
+                    downloadBtn.disabled = false;
+                    loading.style.display = 'none';
+                }
+            });
+            
+            // Función para convertir una imagen URL a base64
+            async function urlToBase64(url) {
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        throw new Error(`Error al obtener la imagen: ${response.status}`);
+                    }
+                    const blob = await response.blob();
+                    return new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onload = () => resolve(reader.result);
+                        reader.onerror = reject;
+                        reader.readAsDataURL(blob);
+                    });
+                } catch (error) {
+                    console.error("Error en urlToBase64:", error);
+                    throw error;
+                }
+            }
+            
+            // Función para crear una imagen PNG desde LaTeX
+            async function latexToPng(latex, width = 400, height = 50) {
+                try {
+                    // Usamos un servicio que genera PNG desde LaTeX
+                    const encodedLatex = encodeURIComponent(latex);
+                    const url = `https://latex.codecogs.com/png.latex?\\dpi{150} ${encodedLatex}`;
+                    return await urlToBase64(url);
+                } catch (error) {
+                    console.error("Error en latexToPng:", error);
+                    throw error;
+                }
+            }
+            
+            // Función para procesar texto y convertir ecuaciones LaTeX a imágenes
+            async function processTextWithEquations(text) {
+                try {
+                    // Expresión regular para encontrar ecuaciones entre $...$                     const equationRegex = /\$([^$]+)\$/g;
+                    
+                    // Array para almacenar los elementos del párrafo (texto e imágenes)
+                    const elements = [];
+                    let lastIndex = 0;
+                    let match;
+                    
+                    // Buscar todas las ecuaciones en el texto
+                    while ((match = equationRegex.exec(text)) !== null) {
+                        // Agregar el texto antes de la ecuación
+                        if (match.index > lastIndex) {
+                            const beforeText = text.substring(lastIndex, match.index);
+                            if (beforeText.trim()) {
+                                elements.push(new docx.TextRun(beforeText));
+                            }
+                        }
+                        
+                        // Convertir la ecuación a imagen
+                        const equation = match[1];
+                        try {
+                            const image = await latexToPng(equation, 400, 50);
+                            elements.push(new docx.ImageRun({
+                                data: image,
+                                transformation: {
+                                    width: 400,
+                                    height: 50
+                                }
+                            }));
+                        } catch (error) {
+                            console.error("Error al convertir ecuación a imagen:", error);
+                            // Si hay error, agregar la ecuación como texto
+                            elements.push(new docx.TextRun(`$${equation}$`));
+                        }
+                        
+                        lastIndex = match.index + match[0].length;
+                    }
+                    
+                    // Agregar el texto restante después de la última ecuación
+                    if (lastIndex < text.length) {
+                        const remainingText = text.substring(lastIndex);
+                        if (remainingText.trim()) {
+                            elements.push(new docx.TextRun(remainingText));
+                        }
+                    }
+                    
+                    return elements;
+                } catch (error) {
+                    console.error("Error en processTextWithEquations:", error);
+                    throw error;
+                }
+            }
+            
+            // Función para crear un párrafo con ecuaciones convertidas a imágenes
+            async function createParagraphWithEquations(text, options = {}) {
+                try {
+                    const elements = await processTextWithEquations(text);
+                    return new docx.Paragraph({
+                        children: elements,
+                        ...options
+                    });
+                } catch (error) {
+                    console.error("Error en createParagraphWithEquations:", error);
+                    throw error;
+                }
+            }
+            
+            // Función principal para crear el documento Word
+            async function createWordDocument() {
+                try {
+                    // Crear un nuevo documento Word
+                    const doc = new docx.Document({
+                        sections: [{
+                            properties: {},
+                            children: [
+                                // Título del capítulo
+                                new docx.Paragraph({
+                                    text: "CAPÍTULO III",
+                                    heading: docx.HeadingLevel.HEADING_1,
+                                    alignment: docx.AlignmentType.CENTER,
+                                    spacing: { after: 200 }
+                                }),
+                                new docx.Paragraph({
+                                    text: "MÉTODO DE MONTE CARLO",
+                                    heading: docx.HeadingLevel.HEADING_1,
+                                    alignment: docx.AlignmentType.CENTER,
+                                    spacing: { after: 400 }
+                                }),
+                                
+                                // Sección 3.1
+                                new docx.Paragraph({
+                                    text: "3.1 Introducción",
+                                    heading: docx.HeadingLevel.HEADING_2,
+                                    spacing: { before: 200, after: 200 }
+                                }),
+                                await createParagraphWithEquations("El Método de Monte Carlo (MC) es una técnica computacional que utiliza muestreo aleatorio para resolver problemas probabilísticos o estocásticos, permitiendo aproximar soluciones numéricas a problemas complejos donde las soluciones analíticas son inviables. Desarrollado en los años 1940 por científicos como John von Neumann y Stanislaw Ulam, el método lleva el nombre del famoso casino de Monte Carlo debido a su dependencia de números aleatorios. Desde su creación, se ha convertido en una herramienta fundamental en campos como la física, la química y la ciencia de materiales."),
+                                
+                                await createParagraphWithEquations("En el contexto de las simulaciones de películas delgadas, el Método de Monte Carlo se aplica para modelar procesos estocásticos como el crecimiento, la nucleación y la difusión de partículas sobre un sustrato, capturando la naturaleza aleatoria de estos fenómenos a escalas atómicas y nanométricas."),
+                                
+                                await createParagraphWithEquations("En el trabajo \"Simulación Monte Carlo de los Procesos de Deposición en Películas Delgadas de Cr y Fe sobre un sustrato sólido de Mg (001)\", el Método de Monte Carlo se utiliza para simular la deposición de partículas metálicas Cr y Fe sobre un sustrato de magnesio, analizando propiedades como la rugosidad, la densidad y la morfología de la película resultante."),
+                                
+                                await createParagraphWithEquations("Este capítulo introduce el Método de Monte Carlo, describe su variante cinética KMC, justifica su uso en simulaciones de deposición de películas delgadas, detalla la construcción del algoritmo KMC implementado en el código de simulación y ofrece un breve resumen de resultados simulados típicos."),
+                                
+                                // Sección 3.2
+                                new docx.Paragraph({
+                                    text: "3.2. Método de Monte Carlo Cinético y su aplicación a simulaciones de deposición de películas delgadas",
+                                    heading: docx.HeadingLevel.HEADING_2,
+                                    spacing: { before: 200, after: 200 }
+                                }),
+                                await createParagraphWithEquations("El Método de Monte Carlo Cinético (KMC) es una variante del Método de Monte Carlo diseñada específicamente para simular procesos dinámicos fuera del equilibrio, como el crecimiento de películas delgadas durante la deposición. A diferencia del MC estándar, que se enfoca en calcular propiedades de equilibrio, el KMC modela la evolución temporal de un sistema estocástico mediante una secuencia de eventos discretos, cada uno asociado a una tasa de transición (W)."),
+                                
+                                await createParagraphWithEquations("En el KMC, el sistema se describe mediante estados discretos σ que representan configuraciones específicas, como las posiciones de partículas en una rejilla. Los eventos posibles (adsorción, difusión) se seleccionan aleatoriamente según sus tasas de transición, las cuales se derivan de principios físicos, como se explicó en el capítulo anterior. El KMC avanza simulando estos eventos y calcula el intervalo de tiempo entre ellos Δt."),
+                                
+                                await createParagraphWithEquations("La implementación del KMC en este trabajo se basa en la ecuación maestra probabilística detallada en el Capítulo II:"),
+                                
+                                // Ecuación maestra
+                                new docx.Paragraph({
+                                    children: [
+                                        new docx.ImageRun({
+                                            data: await latexToPng("\\frac{dP(\\sigma,t)}{dt} = \\sum_{\\sigma'} \\left[ W(\\sigma' \\rightarrow \\sigma) P(\\sigma',t) - W(\\sigma \\rightarrow \\sigma') P(\\sigma,t) \\right]"),
+                                            transformation: {
+                                                width: 500,
+                                                height: 80
+                                            }
+                                        })
+                                    ],
+                                    alignment: docx.AlignmentType.CENTER,
+                                    spacing: { after: 200 }
+                                }),
+                                
+                                await createParagraphWithEquations("Donde las tasas de transición W se derivan para los procesos de adsorción y difusión como:"),
+                                
+                                // Ecuación de difusión
+                                new docx.Paragraph({
+                                    children: [
+                                        new docx.ImageRun({
+                                            data: await latexToPng("W_{\\text{diff}} = \\nu e^{-\\frac{E_d}{k_B T_{\\text{subs}}}}"),
+                                            transformation: {
+                                                width: 300,
+                                                height: 50
+                                            }
+                                        })
+                                    ],
+                                    alignment: docx.AlignmentType.CENTER,
+                                    spacing: { after: 200 }
+                                }),
+                                
+                                // Ecuación de adsorción
+                                new docx.Paragraph({
+                                    children: [
+                                        new docx.ImageRun({
+                                            data: await latexToPng("P_{\\text{ads}} = \\text{adhesion} \\times \\left(1 + \\frac{E}{E_{\\text{max}}} \\times 0.2\\right)"),
+                                            transformation: {
+                                                width: 350,
+                                                height: 60
+                                            }
+                                        })
+                                    ],
+                                    alignment: docx.AlignmentType.CENTER,
+                                    spacing: { after: 400 }
+                                }),
+                                
+                                // Sección 3.3
+                                new docx.Paragraph({
+                                    text: "3.3 Ventajas del uso del KMC en simulaciones de deposición de películas delgadas",
+                                    heading: docx.HeadingLevel.HEADING_2,
+                                    spacing: { before: 200, after: 200 }
+                                }),
+                                await createParagraphWithEquations("El KMC fue elegido como la herramienta más adecuada para simular el proceso de deposición de películas delgadas de Cr y Fe sobre Mg (001) por las siguientes razones:"),
+                                
+                                await createParagraphWithEquations("1. Modelado de procesos dinámicos: El KMC es ideal para procesos fuera del equilibrio, como la deposición secuencial de partículas, donde los eventos ocurren de manera estocástica.\n\n2. Escalas de tiempo y espacio relevantes: Permite simular escalas espaciales de nanómetros a micrómetros (rejillas de 300×300×100) y escalas de tiempo efectivas que serían inviables con métodos como la Dinámica Molecular (MD).\n\n3. Eficiencia computacional: Comparado con la MD, que resuelve las ecuaciones de movimiento de cada partícula, el KMC es más eficiente al enfocarse en eventos discretos, reduciendo significativamente el costo computacional.\n\n4. Incorporación de tasas físicas: Permite definir tasas de transición basadas en parámetros físicos, como $P_{\\text{diff}} = e^{-\\frac{E_d}{k_B T_{\\text{subs}}}}$, lo que asegura que las simulaciones reflejen las propiedades físicas del sistema.\n\n5. Flexibilidad y adaptabilidad: El KMC puede adaptarse a diferentes condiciones (distintos materiales y modos de deposición) ajustando las tasas de transición y los eventos modelados, lo que lo hace versátil para estudiar sistemas como Cr/Fe-Mg (001)."),
+                                
+                                // Sección 3.4
+                                new docx.Paragraph({
+                                    text: "3.4 Construcción del algoritmo KMC implementado",
+                                    heading: docx.HeadingLevel.HEADING_2,
+                                    spacing: { before: 200, after: 200 }
+                                }),
+                                await createParagraphWithEquations("El código de simulación implementa un algoritmo KMC unificado que permite simular tanto en 2D como en 3D, y para ambos materiales (Cr y Fe) en un único programa. A continuación se detalla su estructura y funcionamiento."),
+                                
+                                // Subsección 3.4.1
+                                new docx.Paragraph({
+                                    text: "3.4.1 Algoritmo KMC General",
+                                    heading: docx.HeadingLevel.HEADING_3,
+                                    spacing: { before: 200, after: 200 }
+                                }),
+                                await createParagraphWithEquations("El algoritmo KMC implementado sigue los principios del método, resolviendo la ecuación maestra mediante la simulación de trayectorias estocásticas. Los pasos del algoritmo son los siguientes:"),
+                                
+                                await createParagraphWithEquations("1. Inicialización:\n   a) Definir la rejilla L×L×H (3D) o L×L (2D).\n   b) Establecer el sustrato inicial: con dos capas explícitas de Mg (valor -1 en la matriz).\n   c) Definir los parámetros físicos: energía de difusión (Ed), temperatura del sustrato (Tsubs), coeficiente de adherencia (adhesion) y número de eventos (MAX_EVENTOS).\n\n2. Selección de material y modo de deposición:\n   a) Selección del material (Cr o Fe) mediante parámetros específicos.\n   b) Selección del modo de deposición (térmico, balístico o aleatorio).\n\n3. Bucle principal (para cada evento de 1 a MAX_EVENTOS):\n   a) Calcular la tasa total de eventos.\n   b) Seleccionar el tipo de evento (deposición o difusión).\n   c) Para eventos de deposición:\n      i) Generar una posición inicial (x,y) aleatoria en la rejilla.\n      ii) Generar una energía (E) según el modo de deposición.\n      iii) Calcular la probabilidad de adherencia.\n      iv) Si se adhiere, depositar la partícula en la posición adecuada.\n   d) Para eventos de difusión:\n      i) Seleccionar un átomo aleatoriamente.\n      ii) Calcular la probabilidad de difusión.\n      iii) Si difunde, mover la partícula a un sitio vecino vacío.\n   e) Avanzar el tiempo.\n\n4. Actualización y Almacenamiento:\n   a) Actualizar la rejilla: asignar el material depositado (Cr, Fe).\n   b) Guardar los datos en archivos de salida: .dat con datos de altura y metadatos de simulación.\n\n5. Finalización:\n   a) Calcular estadísticas finales del sistema.\n   b) Generar archivos de salida finales para análisis posterior."),
+                                
+                                // Subsección 3.4.2
+                                new docx.Paragraph({
+                                    text: "3.4.2 Implementación del sustrato de Mg (001)",
+                                    heading: docx.HeadingLevel.HEADING_3,
+                                    spacing: { before: 200, after: 200 }
+                                }),
+                                await createParagraphWithEquations("El sustrato de Mg (001) se implementa en el código mediante la inicialización de las dos primeras capas de la rejilla con un valor negativo (-1), que representa el material del sustrato:"),
+                                
+                                // Código de sustrato
+                                new docx.Paragraph({
+                                    children: [
+                                        new docx.TextRun({
+                                            text: "SUBROUTINE inicializar_rejilla(material, altura_max_local, tam_rejilla, altura_max)\n",
+                                            bold: true
+                                        }),
+                                        new docx.TextRun("    INTEGER, DIMENSION(tam_rejilla,tam_rejilla,altura_max), INTENT(OUT) :: material\n"),
+                                        new docx.TextRun("    INTEGER, DIMENSION(tam_rejilla,tam_rejilla), INTENT(OUT) :: altura_max_local\n"),
+                                        new docx.TextRun("    INTEGER, INTENT(IN) :: tam_rejilla, altura_max\n"),
+                                        new docx.TextRun("    INTEGER :: i, j\n"),
+                                        new docx.TextRun("    material = 0\n"),
+                                        new docx.TextRun("    DO i = 1, tam_rejilla\n"),
+                                        new docx.TextRun("        DO j = 1, tam_rejilla\n"),
+                                        new docx.TextRun("            material(i,j,1) = -1  ! Sustrato (valor negativo)\n"),
+                                        new docx.TextRun("            material(i,j,2) = -1  ! Sustrato (valor negativo)\n"),
+                                        new docx.TextRun("        END DO\n"),
+                                        new docx.TextRun("    END DO\n"),
+                                        new docx.TextRun("    altura_max_local = 2\n"),
+                                        new docx.TextRun("END SUBROUTINE inicializar_rejilla")
+                                    ],
+                                    spacing: { after: 400 }
+                                }),
+                                
+                                // Subsección 3.4.3
+                                new docx.Paragraph({
+                                    text: "3.4.3 Selección de material y modo de deposición",
+                                    heading: docx.HeadingLevel.HEADING_3,
+                                    spacing: { before: 200, after: 200 }
+                                }),
+                                await createParagraphWithEquations("El código permite seleccionar dinámicamente el material (Cr o Fe) y el modo de deposición (térmico, balístico o aleatorio) al inicio de la simulación. Cada material tiene parámetros específicos:"),
+                                
+                                await createParagraphWithEquations("Cromo (Cr):\n• Adhesión base: 0.98\n• Energía de difusión: 0.01-0.25 eV\n• Mayor probabilidad de adherencia\n• Menor energía de difusión (mayor movilidad superficial)\n\nHierro (Fe):\n• Adhesión base: 0.95\n• Energía de difusión: 0.5-1.0 eV\n• Menor probabilidad de adherencia\n• Mayor energía de difusión (menor movilidad superficial)"),
+                                
+                                await createParagraphWithEquations("Los modos de deposición tienen las siguientes características:"),
+                                
+                                await createParagraphWithEquations("1. Modo Térmico:\n   • Energía promedio: 2.0 eV\n   • Tasa de eventos: 50000\n   • Simula deposición a baja energía\n\n2. Modo Balístico:\n   • Energía promedio: 5.0 eV\n   • Tasa de eventos: 20000\n   • Simula deposición a alta energía\n\n3. Modo Aleatorio:\n   • Energía promedio: valor aleatorio entre 2.0 y 5.0 eV\n   • Tasa de eventos: valor aleatorio entre 10000 y 100000\n   • Permite explorar una amplia gama de condiciones"),
+                                
+                                // Subsección 3.4.4
+                                new docx.Paragraph({
+                                    text: "3.4.4 Procesos simulados: deposición y difusión",
+                                    heading: docx.HeadingLevel.HEADING_3,
+                                    spacing: { before: 200, after: 200 }
+                                }),
+                                await createParagraphWithEquations("El código implementa dos procesos fundamentales en la deposición de películas delgadas:"),
+                                
+                                await createParagraphWithEquations("1. Deposición:\n   • Generación de una posición aleatoria (x,y) en la rejilla.\n   • Cálculo de la energía del átomo incidente según el modo de deposición.\n   • Cálculo de la probabilidad de adhesión:\n"),
+                                
+                                // Ecuación de adsorción
+                                new docx.Paragraph({
+                                    children: [
+                                        new docx.ImageRun({
+                                            data: await latexToPng("P_{\\text{ads}} = \\text{adhesion} \\times \\left(1 + \\frac{E}{E_{\\text{max}}} \\times 0.2\\right)"),
+                                            transformation: {
+                                                width: 350,
+                                                height: 60
+                                            }
+                                        })
+                                    ],
+                                    alignment: docx.AlignmentType.CENTER,
+                                    spacing: { after: 100 }
+                                }),
+                                
+                                await createParagraphWithEquations("   • Si la partícula se adhiere, se deposita en la posición (x,y,z_max+1), donde z_max es la altura máxima en el vecindario 3×3.\n\n2. Difusión:\n   • Selección aleatoria de un átomo en la superficie.\n   • Cálculo de la probabilidad de difusión según la ecuación de Arrhenius:\n"),
+                                
+                                // Ecuación de difusión
+                                new docx.Paragraph({
+                                    children: [
+                                        new docx.ImageRun({
+                                            data: await latexToPng("P_{\\text{diff}} = e^{-\\frac{E_d}{k_B T_{\\text{subs}}}}"),
+                                            transformation: {
+                                                width: 250,
+                                                height: 50
+                                            }
+                                        })
+                                    ],
+                                    alignment: docx.AlignmentType.CENTER,
+                                    spacing: { after: 100 }
+                                }),
+                                
+                                await createParagraphWithEquations("   • Si el átomo difunde, se mueve a una posición vecina vacía en la superficie."),
+                                
+                                // Subsección 3.4.5
+                                new docx.Paragraph({
+                                    text: "3.4.5 Cálculo de métricas avanzadas",
+                                    heading: docx.HeadingLevel.HEADING_3,
+                                    spacing: { before: 200, after: 200 }
+                                }),
+                                await createParagraphWithEquations("El código implementa subrutinas para calcular diversas métricas que caracterizan las películas delgadas:"),
+                                
+                                await createParagraphWithEquations("1. Mecanismos de deposición:\n   • Densidad de islas: número de islas por unidad de área.\n   • Tamaño promedio de islas: tamaño medio de las islas formadas.\n   • Número total de átomos en la superficie.\n\n2. Propiedades físicas:\n   • Cobertura fraccional: proporción de la superficie cubierta por el material depositado.\n   • Rugosidad RMS: medida de la rugosidad superficial.\n   • Anisotropía superficial: medida de la direccionalidad de la superficie.\n\n3. Longitud de difusión:\n   • Longitud de difusión promedio: medida de la distancia media recorrida por los átomos durante la difusión."),
+                                
+                                // Subsección 3.4.6
+                                new docx.Paragraph({
+                                    text: "3.4.6 Almacenamiento de resultados",
+                                    heading: docx.HeadingLevel.HEADING_3,
+                                    spacing: { before: 200, after: 200 }
+                                }),
+                                await createParagraphWithEquations("El código genera archivos de salida con nombres que incluyen información sobre el material, modo de deposición y parámetros utilizados, facilitando el análisis posterior:"),
+                                
+                                // Código de almacenamiento
+                                new docx.Paragraph({
+                                    children: [
+                                        new docx.TextRun({
+                                            text: "WRITE(nombre_archivo, '(A,A1,A,I0.3,A,I0.3,A,F4.2,A,F6.0,A,F4.1,A)') &\n",
+                                            bold: true
+                                        }),
+                                        new docx.TextRun("    TRIM(material_name), '_', '3d_altura_c', corrida, '_s', snapshot_actual, '_ed', energia_difusion, &\n"),
+                                        new docx.TextRun("    '_te', tasa_eventos, '_ep', energia_promedio, '.dat'")
+                                    ],
+                                    spacing: { after: 200 }
+                                }),
+                                
+                                await createParagraphWithEquations("Cada archivo contiene:\n• Metadatos de la simulación (material, modo de deposición, parámetros físicos).\n• Métricas calculadas (densidad de islas, rugosidad, cobertura, etc.).\n• Datos de altura de la superficie para cada posición (i,j)."),
+                                
+                                // Sección 3.5
+                                new docx.Paragraph({
+                                    text: "3.5 Adaptación a Simulaciones 2D y 3D",
+                                    heading: docx.HeadingLevel.HEADING_2,
+                                    spacing: { before: 200, after: 200 }
+                                }),
+                                await createParagraphWithEquations("El código de simulación está diseñado para funcionar tanto en 2D como en 3D, con adaptaciones específicas para cada caso:"),
+                                
+                                // Subsección 3.5.1
+                                new docx.Paragraph({
+                                    text: "3.5.1 Simulaciones 2D",
+                                    heading: docx.HeadingLevel.HEADING_3,
+                                    spacing: { before: 200, after: 200 }
+                                }),
+                                await createParagraphWithEquations("Para las simulaciones 2D, el código se configura con los siguientes parámetros y adaptaciones:"),
+                                
+                                await createParagraphWithEquations("• Rejilla: 300×300 sitios (representada como una matriz de alturas)\n• Distribución de energía: Uniforme\n• Probabilidades:\n  - Adsorción: $P_{\\text{ads}} = 1 - \\sin(\\theta) \\cdot E/10$\n  - Sputtering: $P_{\\text{sput}} = 1 - \\sin(\\theta) \\cdot E/10$\n  - Difusión: $P_{\\text{diff}} = e^{-\\frac{E_d}{k_B T_{\\text{subs}}}}$\n• Sustrato: Plano o con defectos iniciales (5% de los sitios ocupados para Fe, ajustado para Cr)"),
+                                
+                                await createParagraphWithEquations("La implementación 2D se maneja internamente en el código mediante una representación simplificada de la rejilla y el uso de matrices de alturas en lugar de una estructura tridimensional completa."),
+                                
+                                // Subsección 3.5.2
+                                new docx.Paragraph({
+                                    text: "3.5.2 Simulaciones 3D",
+                                    heading: docx.HeadingLevel.HEADING_3,
+                                    spacing: { before: 200, after: 200 }
+                                }),
+                                await createParagraphWithEquations("Para las simulaciones 3D, el código se configura con los siguientes parámetros:"),
+                                
+                                await createParagraphWithEquations("• Rejilla: 300×300×100 sitios\n• Número de partículas: 20,000\n• Distribución de energía: Maxwell-Boltzmann, con una media de 0.13 eV a $T_{\\text{plasma}} = 1000K$\n• Probabilidades:\n  - Adherencia: $P_{\\text{stick}} = \\text{sticking} \\cdot e^{-\\frac{E}{k_B T_{\\text{plasma}}}}$ con sticking = 0.9 para Cr y 0.85 para Fe\n  - Difusión: $P_{\\text{diff}} = e^{-\\frac{E_d}{k_B T_{\\text{subs}}}}$\n• Sustrato: Dos capas explícitas de Mg (valor -1 en la matriz material)"),
+                                
+                                await createParagraphWithEquations("La implementación 3D utiliza una estructura tridimensional completa para representar la posición de cada átomo en el espacio."),
+                                
+                                // Sección 3.6
+                                new docx.Paragraph({
+                                    text: "3.6 Justificación del uso de la subrutina de números aleatorios de Fortran 90",
+                                    heading: docx.HeadingLevel.HEADING_2,
+                                    spacing: { before: 200, after: 200 }
+                                }),
+                                await createParagraphWithEquations("El código utiliza la subrutina `RANDOM_NUMBER` de Fortran 90 para generar números aleatorios, debido a las siguientes razones:\n• Integración nativa: `RANDOM_NUMBER` es una función intrínseca de Fortran 90, lo que elimina la necesidad de bibliotecas externas.\n• Eficiencia: Es rápida y adecuada para simulaciones con un gran número de iteraciones (hasta 50,000 eventos).\n• Calidad suficiente: Aunque no es la mejor en términos de aleatoriedad (comparada con generadores como Mersenne Twister), su calidad es suficiente para las necesidades del KMC en este trabajo.\n• Facilidad de uso: Su sintaxis simple (`CALL RANDOM_NUMBER(r)`) facilita su implementación.\n• Contexto de recursos limitados: En el entorno del trabajo, evitar dependencias externas era una prioridad, y `RANDOM_NUMBER` cumplió con los requisitos."),
+                                
+                                await createParagraphWithEquations("La implementación de la generación de números aleatorios es crucial para el método KMC, ya que determina la selección estocástica de eventos y la evolución del sistema."),
+                                
+                                // Sección 3.7
+                                new docx.Paragraph({
+                                    text: "3.7 Resumen de resultados simulados típicos",
+                                    heading: docx.HeadingLevel.HEADING_2,
+                                    spacing: { before: 200, after: 200 }
+                                }),
+                                await createParagraphWithEquations("El código de simulación ha permitido simular eficazmente el proceso de deposición de películas delgadas de Cr y Fe sobre Mg (001). Los resultados típicos obtenidos incluyen:\n• Relación energía-rugosidad: Cr mantiene rugosidades altas (4-10 capas) incluso con baja energía de difusión (0.01-0.25 eV), mientras que Fe muestra mayor variabilidad en rugosidad (2.5-9.5 capas) con energías más altas (0.5-1.0 eV).\n\n• Morfología superficial: Fe presenta una distribución más homogénea con transiciones suaves entre alturas, mientras que Cr muestra una estructura más fragmentada con cambios bruscos.\n\n• Métricas cuantitativas: Las diferencias entre materiales son mínimas en términos globales:\n  - Rugosidad: Fe (6.87±2.56) vs Cr (6.78±2.52) - diferencia del 1.3%\n  - Espesor: Fe (9.35±5.30) vs Cr (9.21±5.23) - diferencia del 1.5%\n\n• Etapas de crecimiento: Ambos materiales muestran 0% en nucleación, 33.33% en coalescencia y 66.67% en crecimiento, lo que indica que la etapa de nucleación es extremadamente rápida y no es capturada por los intervalos de muestreo actuales.\n\n• Efecto del modo de deposición: Los diferentes modos de deposición (térmico, balístico y aleatorio) producen variaciones significativas en las propiedades de las películas, como la rugosidad, la cobertura fraccional y la anisotropía superficial."),
+                                
+                                await createParagraphWithEquations("Estos resultados demuestran la capacidad del método KMC implementado en el código de simulación para simular eficazmente los procesos de deposición y proporcionar información valiosa sobre las diferencias entre materiales en términos de morfología superficial y mecanismos de crecimiento, así como el efecto de las condiciones de deposición en las propiedades finales de las películas delgadas.")
+                            ]
+                        }]
+                    });
+                    
+                    return doc;
+                } catch (error) {
+                    console.error("Error en createWordDocument:", error);
+                    throw error;
+                }
+            }
+        });
+    </script>
+</body>
+</html>
