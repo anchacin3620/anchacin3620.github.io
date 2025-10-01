@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen: Manifiesto de Cartagena</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            flex: 1;
+        }
+        h1 {
+            text-align: center;
+            color: #8B0000;
+            margin-bottom: 30px;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .question {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-left: 4px solid #8B0000;
+            background-color: #f9f9f9;
+        }
+        .options label {
+            display: block;
+            padding: 8px;
+            margin-bottom: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .options label:hover {
+            background-color: #f0e6e6;
+        }
+        input[type="radio"] {
+            margin-right: 10px;
+        }
+        button {
+            background-color: #8B0000;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            display: block;
+            margin: 20px auto;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #A52A2A;
+        }
+        #results {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            background-color: #f0e6e6;
+            border-radius: 5px;
+            margin-top: 30px;
+        }
+        .score {
+            font-size: 24px;
+            font-weight: bold;
+            color: #8B0000;
+            margin: 20px 0;
+        }
+        .error {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        .progress {
+            margin-bottom: 20px;
+            text-align: right;
+            color: #7f8c8d;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 15px;
+            font-size: 14px;
+            color: #7f8c8d;
+            border-top: 1px solid #ddd;
+        }
+        footer p {
+            margin: 5px 0;
+        }
+        .footer-title {
+            font-weight: bold;
+            color: #8B0000;
+        }
+        .gpl-license {
+            font-style: italic;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Examen: Manifiesto de Cartagena</h1>
+        
+        <div id="user-info" class="section">
+            <h2>Datos del Estudiante</h2>
+            <div class="form-group">
+                <label for="firstName">Nombre:</label>
+                <input type="text" id="firstName" required>
+            </div>
+            <div class="form-group">
+                <label for="lastName">Apellido:</label>
+                <input type="text" id="lastName" required>
+            </div>
+            <div class="form-group">
+                <label for="idNumber">Cédula Venezolana:</label>
+                <input type="text" id="idNumber" required pattern="[VvEe]?\d{6,8}" title="Formato de cédula venezolana (V12345678 o E1234567)">
+                <div class="error" id="idError"></div>
+            </div>
+            <button id="start-btn">Comenzar Examen</button>
+        </div>
+        
+        <div id="quiz" class="section" style="display:none;">
+            <div class="progress" id="progress">Pregunta 1 de 20</div>
+            
+            <form id="quiz-form">
+                <!-- Preguntas generadas por JavaScript -->
+            </form>
+            
+            <button id="submit-btn">Finalizar Examen</button>
+        </div>
+        
+        <div id="results">
+            <h2>Resultados del Examen</h2>
+            <div id="student-info"></div>
+            <div class="score" id="score"></div>
+            <p>Por favor, realiza una captura de pantalla de estos resultados y envíala a tu profesor.</p>
+            <button id="restart-btn">Realizar otro examen</button>
+        </div>
+    </div>
+
+    <footer>
+        <p class="footer-title">Elaborado por el Profesor Ángel Chacín Ávila</p>
+        <p>Licenciado en Física, Especialista en Ciencias Computacionales</p>
+        <p>Diplomado en Educación Policial, Docente e Investigador</p>
+        <p>Universidad Nacional Experimental de la Seguridad Núcleo Zulia</p>
+        <p class="gpl-license">©2025 - Se publica con licencia GPL</p>
+    </footer>
+
+    <script>
+        // Datos del examen - 20 preguntas sobre el Manifiesto de Cartagena
+        const questions = [
+            {
+                question: "¿Cuál fue el año en que Simón Bolívar escribió el Manifiesto de Cartagena?",
+                options: [
+                    "1810",
+                    "1811",
+                    "1812",
+                    "1813"
+                ],
+                answer: 2
+            },
+            {
+                question: "¿En qué ciudad fue escrito y publicado el Manifiesto de Cartagena?",
+                options: [
+                    "Caracas",
+                    "Bogotá",
+                    "Cartagena de Indias",
+                    "Santa Marta"
+                ],
+                answer: 2
+            },
+            {
+                question: "¿Cuál era el objetivo principal del Manifiesto de Cartagena?",
+                options: [
+                    "Declarar la independencia de Venezuela",
+                    "Explicar las causas de la caída de la Primera República",
+                    "Proclamar a Simón Bolívar como libertador",
+                    "Establecer la constitución de la Nueva Granada"
+                ],
+                answer: 1
+            },
+            {
+                question: "¿Cuál fue el principal error identificado por Bolívar en el Manifiesto?",
+                options: [
+                    "La falta de apoyo internacional",
+                    "La adopción del sistema federal",
+                    "La ausencia de un ejército profesional",
+                    "La oposición de los indígenas"
+                ],
+                answer: 1
+            },
+            {
+                question: "¿Qué desastre natural afectó significativamente a la Primera República en 1812?",
+                options: [
+                    "Una inundación",
+                    "Un huracán",
+                    "Un terremoto",
+                    "Una sequía"
+                ],
+                answer: 2
+            },
+            {
+                question: "¿Quién firmó la capitulación que puso fin a la Primera República?",
+                options: [
+                    "Simón Bolívar",
+                    "Domingo de Monteverde",
+                    "Francisco de Miranda",
+                    "Santiago Mariño"
+                ],
+                answer: 2
+            },
+            {
+                question: "Según Bolívar, ¿qué tipo de gobierno proponía para evitar los errores de la Primera República?",
+                options: [
+                    "Federalista",
+                    "Centralista",
+                    "Monárquico",
+                    "Democrático directo"
+                ],
+                answer: 1
+            },
+            {
+                question: "¿Qué proponía Bolívar como estrategia para la Nueva Granada en el Manifiesto?",
+                options: [
+                    "Consolidar la independencia de la Nueva Granada primero",
+                    "Liberar Venezuela para eliminar la base realista",
+                    "Buscar alianzas con potencias europeas",
+                    "Negociar la paz con España"
+                ],
+                answer: 1
+            },
+            {
+                question: "¿Qué sector social identificó Bolívar como opositor al proyecto independentista?",
+                options: [
+                    "Los indígenas",
+                    "Los comerciantes",
+                    "La Iglesia Católica",
+                    "Los esclavos"
+                ],
+                answer: 2
+            },
+            {
+                question: "¿Cuál fue la consecuencia inmediata del Manifiesto de Cartagena?",
+                options: [
+                    "La declaración de independencia de la Nueva Granada",
+                    "El inicio de la Campaña Admirable",
+                    "La formación de la Gran Colombia",
+                    "La captura de Francisco de Miranda"
+                ],
+                answer: 1
+            },
+            {
+                question: "Según la perspectiva crítica presentada, ¿por qué la mayoría de la población apoyaba a la Corona?",
+                options: [
+                    "Por lealtad al rey Fernando VII",
+                    "Por considerar a los mantuanos como sus opresores",
+                    "Por miedo a las represalias del ejército realista",
+                    "Por las promesas de reformas de la Corona"
+                ],
+                answer: 1
+            },
+            {
+                question: "¿Qué clase social lideró el movimiento independentista en Venezuela?",
+                options: [
+                    "Los indígenas",
+                    "Los pardos",
+                    "Los mantuanos (terratenientes criollos)",
+                    "Los comerciantes extranjeros"
+                ],
+                answer: 2
+            },
+            {
+                question: "¿Qué término se utilizó para referirse despectivamente a la Primera República?",
+                options: [
+                    "República Fantasma",
+                    "Patria Boba",
+                    "Gobierno Efímero",
+                    "Estado Fallido"
+                ],
+                answer: 1
+            },
+            {
+                question: "¿Cuál fue la fecha del terremoto que afectó a las ciudades republicanas?",
+                options: [
+                    "26 de marzo de 1812",
+                    "19 de abril de 1810",
+                    "5 de julio de 1811",
+                    "25 de julio de 1812"
+                ],
+                answer: 0
+            },
+            {
+                question: "¿Quién lideraba la ofensiva realista contra la Primera República?",
+                options: [
+                    "Fernando VII",
+                    "Francisco de Miranda",
+                    "Domingo de Monteverde",
+                    "Simón Bolívar"
+                ],
+                answer: 2
+            },
+            {
+                question: "Según Bolívar, ¿qué problema administrativo denunció en el Manifiesto?",
+                options: [
+                    "La falta de impuestos",
+                    "La mala administración de los ingresos públicos",
+                    "La excesiva burocracia",
+                    "La corrupción militar"
+                ],
+                answer: 1
+            },
+            {
+                question: "¿Qué propuesta militar hizo Bolívar en el Manifiesto?",
+                options: [
+                    "Crear milicias populares",
+                    "Formar un ejército profesional y disciplinado",
+                    "Buscar apoyo militar extranjero",
+                    "Utilizar tácticas de guerrilla"
+                ],
+                answer: 1
+            },
+            {
+                question: "¿Qué título completo tenía el Manifiesto de Cartagena?",
+                options: [
+                    "Manifiesto a los pueblos de América",
+                    "Carta de Jamaica",
+                    "Memoria dirigida a los ciudadanos de la Nueva Granada por un caraqueño",
+                    "Discurso de Angostura"
+                ],
+                answer: 2
+            },
+            {
+                question: "¿Qué importancia histórica tiene el Manifiesto de Cartagena?",
+                options: [
+                    "Fue la primera constitución de Venezuela",
+                    "Fue el primer gran documento político de Bolívar",
+                    "Estableció la independencia de Colombia",
+                    "Firmó la paz con España"
+                ],
+                answer: 1
+            },
+            {
+                question: "Según el análisis presentado, ¿qué factor fundamental no mencionó explícitamente Bolívar en su Manifiesto?",
+                options: [
+                    "La influencia de la Iglesia",
+                    "La división política entre los patriotas",
+                    "La fractura social entre las clases",
+                    "La falta de recursos económicos"
+                ],
+                answer: 2
+            }
+        ];
+
+        // Variables globales
+        let currentQuestion = 0;
+        let userAnswers = new Array(questions.length).fill(null);
+        let userData = {};
+
+        // Elementos DOM
+        const userInfoSection = document.getElementById('user-info');
+        const quizSection = document.getElementById('quiz');
+        const resultsSection = document.getElementById('results');
+        const quizForm = document.getElementById('quiz-form');
+        const progressText = document.getElementById('progress');
+        const startBtn = document.getElementById('start-btn');
+        const submitBtn = document.getElementById('submit-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        const idNumberInput = document.getElementById('idNumber');
+        const idError = document.getElementById('idError');
+
+        // Validar cédula venezolana
+        function validateVenezuelanId(id) {
+            // Eliminar posibles espacios y convertir a mayúsculas
+            id = id.trim().toUpperCase();
+            
+            // Patrón: V o E seguido de 6 a 8 dígitos, o solo 6 a 8 dígitos
+            const pattern = /^([VE]?\d{6,8})$/;
+            
+            if (!pattern.test(id)) {
+                idError.textContent = "Formato inválido. Use V12345678 o E1234567";
+                return false;
+            }
+            
+            idError.textContent = "";
+            return true;
+        }
+
+        // Iniciar el examen
+        startBtn.addEventListener('click', () => {
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const idNumber = idNumberInput.value.trim();
+            
+            if (!firstName || !lastName || !idNumber) {
+                alert('Por favor, complete todos los campos');
+                return;
+            }
+            
+            if (!validateVenezuelanId(idNumber)) {
+                return;
+            }
+            
+            // Guardar datos del usuario
+            userData = {
+                firstName,
+                lastName,
+                idNumber
+            };
+            
+            // Ocultar sección de información y mostrar examen
+            userInfoSection.style.display = 'none';
+            quizSection.style.display = 'block';
+            
+            // Cargar la primera pregunta
+            showQuestion(currentQuestion);
+        });
+
+        // Mostrar pregunta
+        function showQuestion(index) {
+            // Actualizar barra de progreso
+            progressText.textContent = `Pregunta ${index + 1} de ${questions.length}`;
+            
+            // Limpiar formulario
+            quizForm.innerHTML = '';
+            
+            // Obtener pregunta actual
+            const question = questions[index];
+            
+            // Crear elemento de pregunta
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'question';
+            questionDiv.innerHTML = `<h3>${question.question}</h3>`;
+            
+            // Crear opciones de respuesta
+            const optionsDiv = document.createElement('div');
+            optionsDiv.className = 'options';
+            
+            question.options.forEach((option, i) => {
+                const label = document.createElement('label');
+                const input = document.createElement('input');
+                input.type = 'radio';
+                input.name = 'answer';
+                input.value = i;
+                
+                // Marcar opción si ya fue seleccionada
+                if (userAnswers[index] === i) {
+                    input.checked = true;
+                }
+                
+                // Guardar respuesta al seleccionar
+                input.addEventListener('change', () => {
+                    userAnswers[index] = parseInt(input.value);
+                });
+                
+                label.appendChild(input);
+                label.appendChild(document.createTextNode(option));
+                optionsDiv.appendChild(label);
+            });
+            
+            questionDiv.appendChild(optionsDiv);
+            quizForm.appendChild(questionDiv);
+            
+            // Crear botones de navegación
+            const navDiv = document.createElement('div');
+            navDiv.style.display = 'flex';
+            navDiv.style.justifyContent = 'space-between';
+            navDiv.style.marginTop = '20px';
+            
+            if (index > 0) {
+                const prevBtn = document.createElement('button');
+                prevBtn.textContent = 'Anterior';
+                prevBtn.type = 'button';
+                prevBtn.addEventListener('click', () => {
+                    showQuestion(currentQuestion - 1);
+                });
+                navDiv.appendChild(prevBtn);
+            } else {
+                navDiv.appendChild(document.createElement('div')); // Espaciador
+            }
+            
+            if (index < questions.length - 1) {
+                const nextBtn = document.createElement('button');
+                nextBtn.textContent = 'Siguiente';
+                nextBtn.type = 'button';
+                nextBtn.addEventListener('click', () => {
+                    showQuestion(currentQuestion + 1);
+                });
+                navDiv.appendChild(nextBtn);
+            } else {
+                navDiv.appendChild(document.createElement('div')); // Espaciador
+            }
+            
+            quizForm.appendChild(navDiv);
+            
+            // Actualizar pregunta actual
+            currentQuestion = index;
+        }
+
+        // Finalizar examen y calcular puntuación
+        submitBtn.addEventListener('click', () => {
+            // Verificar que todas las preguntas estén respondidas
+            const unanswered = userAnswers.filter(answer => answer === null).length;
+            
+            if (unanswered > 0) {
+                if (!confirm(`Tienes ${unanswered} pregunta(s) sin responder. ¿Estás seguro de que quieres finalizar?`)) {
+                    return;
+                }
+            }
+            
+            // Calcular puntuación
+            let score = 0;
+            userAnswers.forEach((answer, index) => {
+                if (answer === questions[index].answer) {
+                    score++;
+                }
+            });
+            
+            // Guardar resultados en localStorage
+            const results = {
+                ...userData,
+                score,
+                total: questions.length,
+                date: new Date().toLocaleString()
+            };
+            
+            localStorage.setItem('examResults', JSON.stringify(results));
+            
+            // Mostrar resultados
+            document.getElementById('student-info').textContent = 
+                `Estudiante: ${userData.firstName} ${userData.lastName} - Cédula: ${userData.idNumber}`;
+            
+            document.getElementById('score').textContent = 
+                `Calificación: ${score} / ${questions.length}`;
+            
+            // Ocultar examen y mostrar resultados
+            quizSection.style.display = 'none';
+            resultsSection.style.display = 'block';
+        });
+
+        // Reiniciar examen
+        restartBtn.addEventListener('click', () => {
+            // Reiniciar variables
+            currentQuestion = 0;
+            userAnswers = new Array(questions.length).fill(null);
+            userData = {};
+            
+            // Limpiar formularios
+            document.getElementById('firstName').value = '';
+            document.getElementById('lastName').value = '';
+            idNumberInput.value = '';
+            idError.textContent = '';
+            
+            // Mostrar sección de información y ocultar demás
+            userInfoSection.style.display = 'block';
+            quizSection.style.display = 'none';
+            resultsSection.style.display = 'none';
+        });
+
+        // Validar cédula mientras se escribe
+        idNumberInput.addEventListener('input', () => {
+            validateVenezuelanId(idNumberInput.value);
+        });
+    </script>
+</body>
+</html>
