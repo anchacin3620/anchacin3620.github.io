@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario - Carta de Jamaica</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #c1272d;
+            --secondary-color: #0033a0;
+            --text-color: #333;
+            --light-bg: #f9f9f9;
+            --border-color: #ddd;
+            --accent-color: #f0c808;
+            --success-color: #28a745;
+            --error-color: #dc3545;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: #fff;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        header h1 {
+            text-align: center;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        
+        .form-section {
+            background-color: var(--light-bg);
+            padding: 30px 0;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .form-container h2 {
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #a02020;
+        }
+        
+        .quiz-container {
+            display: none;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .question {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .question h3 {
+            margin-bottom: 15px;
+            color: var(--secondary-color);
+        }
+        
+        .options {
+            list-style-type: none;
+        }
+        
+        .options li {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .options li:hover {
+            background-color: var(--light-bg);
+        }
+        
+        .options li input {
+            margin-right: 10px;
+        }
+        
+        .quiz-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        .results-container {
+            display: none;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .results-container h2 {
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+        }
+        
+        .score {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 20px 0;
+        }
+        
+        .student-info {
+            background-color: var(--light-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .student-info h3 {
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .info-row {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        
+        .info-label {
+            font-weight: 500;
+            width: 200px;
+        }
+        
+        .capture-message {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-weight: 500;
+            font-size: 18px;
+        }
+        
+        footer {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+        
+        footer p {
+            text-align: center;
+            margin: 0;
+            font-size: 14px;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 4px;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .notification.success {
+            background-color: var(--success-color);
+        }
+        
+        .notification.error {
+            background-color: var(--error-color);
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: var(--light-bg);
+            border-radius: 5px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .question-counter {
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 500;
+            color: var(--secondary-color);
+        }
+        
+        @media (max-width: 768px) {
+            .quiz-actions {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .info-row {
+                flex-direction: column;
+            }
+            
+            .info-label {
+                width: 100%;
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Unidad Curricular Documentos del Libertador</h1>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="form-section" id="studentForm">
+            <div class="form-container">
+                <h2>Información del Estudiante</h2>
+                <form id="formData">
+                    <div class="form-group">
+                        <label for="nombre">Nombre:</label>
+                        <input type="text" id="nombre" name="nombre" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="apellido">Apellido:</label>
+                        <input type="text" id="apellido" name="apellido" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="cedula">Cédula Venezolana:</label>
+                        <input type="text" id="cedula" name="cedula" pattern="[VE]-[0-9]{7,9}" placeholder="Ej: V-12345678" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ambiente">Ambiente de Clase:</label>
+                        <input type="text" id="ambiente" name="ambiente" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="periodo">Periodo:</label>
+                        <select id="periodo" name="periodo" required>
+                            <option value="">Seleccione un periodo</option>
+                            <option value="2025-I">2025-I</option>
+                            <option value="2025-II">2025-II</option>
+                            <option value="2026-I">2026-I</option>
+                            <option value="2026-II">2026-II</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="programa">Programa de Formación Nacional:</label>
+                        <select id="programa" name="programa" required>
+                            <option value="">Seleccione un programa</option>
+                            <option value="PNFCJ">Criminalística</option>
+                            <option value="PNFIP">Investigación Penal</option>
+                            <option value="PNFP">Policial</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn">Comenzar Cuestionario</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="quiz-container" id="quizContainer">
+            <h2>Cuestionario: Carta de Jamaica</h2>
+            <p>Responde las siguientes preguntas sobre la Carta de Jamaica de Simón Bolívar. Cada respuesta correcta vale 1 punto.</p>
+            
+            <div class="progress-bar">
+                <div class="progress" id="progressBar"></div>
+            </div>
+            
+            <div class="question-counter" id="questionCounter">Pregunta 1 de 20</div>
+            
+            <div class="question">
+                <h3>1. ¿Cuándo fue escrita la Carta de Jamaica?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q1" value="a"> 6 de septiembre de 1814</li>
+                    <li><input type="radio" name="q1" value="b"> 6 de septiembre de 1815</li>
+                    <li><input type="radio" name="q1" value="c"> 6 de septiembre de 1816</li>
+                    <li><input type="radio" name="q1" value="d"> 6 de septiembre de 1817</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>2. ¿Dónde fue escrita la Carta de Jamaica?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q2" value="a"> Caracas, Venezuela</li>
+                    <li><input type="radio" name="q2" value="b"> Kingston, Jamaica</li>
+                    <li><input type="radio" name="q2" value="c"> Haití</li>
+                    <li><input type="radio" name="q2" value="d"> Bogotá, Colombia</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>3. ¿A quién estaba dirigida originalmente la Carta de Jamaica?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q3" value="a"> Al rey de España</li>
+                    <li><input type="radio" name="q3" value="b"> A Henry Cullen, un comerciante jamaiquino</li>
+                    <li><input type="radio" name="q3" value="c"> A los líderes independentistas</li>
+                    <li><input type="radio" name="q3" value="d"> Al presidente de Estados Unidos</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>4. ¿Cuál era el título original de la Carta de Jamaica?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q4" value="a"> "Manifiesto de Carúpano"</li>
+                    <li><input type="radio" name="q4" value="b"> "Contestación de un Americano Meridional a un caballero de esta isla"</li>
+                    <li><input type="radio" name="q4" value="c"> "Carta a los pueblos de América"</li>
+                    <li><input type="radio" name="q4" value="d"> "Llamado a la libertad"</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>5. ¿Quién fue el secretario de Bolívar que transcribió la carta?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q5" value="a"> Francisco de Miranda</li>
+                    <li><input type="radio" name="q5" value="b"> Antonio José de Sucre</li>
+                    <li><input type="radio" name="q5" value="c"> Pedro Briceño Méndez</li>
+                    <li><input type="radio" name="q5" value="d"> Santiago Mariño</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>6. ¿Qué evento histórico motivó la redacción de la Carta de Jamaica?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q6" value="a"> La independencia de Estados Unidos</li>
+                    <li><input type="radio" name="q6" value="b"> La caída de la Segunda República de Venezuela</li>
+                    <li><input type="radio" name="q6" value="c"> La Batalla de Boyacá</li>
+                    <li><input type="radio" name="q6" value="d"> La muerte de Francisco de Miranda</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>7. ¿Qué ofreció Alexandre Pétion a Bolívar a cambio de abolir la esclavitud?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q7" value="a"> Oro y riquezas</li>
+                    <li><input type="radio" name="q7" value="b"> Apoyo militar y económico</li>
+                    <li><input type="radio" name="q7" value="c"> Territorios en Haití</li>
+                    <li><input type="radio" name="q7" value="d"> El título de Libertador</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>8. ¿Qué teoría filosófica influyó en el pensamiento de Bolívar al escribir la Carta de Jamaica?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q8" value="a"> El existencialismo</li>
+                    <li><input type="radio" name="q8" value="b"> La Ilustración</li>
+                    <li><input type="radio" name="q8" value="c"> El marxismo</li>
+                    <li><input type="radio" name="q8" value="d"> El positivismo</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>9. ¿Qué autor era el favorito de Bolívar y mencionó en la Carta de Jamaica?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q9" value="a"> Voltaire</li>
+                    <li><input type="radio" name="q9" value="b"> Rousseau</li>
+                    <li><input type="radio" name="q9" value="c"> Montesquieu</li>
+                    <li><input type="radio" name="q9" value="d"> Locke</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>10. ¿Qué concepto utilizó Bolívar para definir al Imperio español?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q10" value="a"> Despotismo ilustrado</li>
+                    <li><input type="radio" name="q10" value="b"> Despotismo oriental</li>
+                    <li><input type="radio" name="q10" value="c"> Monarquía absoluta</li>
+                    <li><input type="radio" name="q10" value="d"> Imperialismo</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>11. ¿Qué argumento utilizó Bolívar para justificar la rebelión de los criollos?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q11" value="a"> La ruptura del contrato social por parte de la Corona</li>
+                    <li><input type="radio" name="q11" value="b"> La necesidad de un cambio económico</li>
+                    <li><input type="radio" name="q11" value="c"> La influencia de ideas extranjeras</li>
+                    <li><input type="radio" name="q11" value="d"> La opresión de la Iglesia</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>12. ¿Qué dinastía española fue criticada por Bolívar en la Carta de Jamaica?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q12" value="a"> Los Austrias</li>
+                    <li><input type="radio" name="q12" value="b"> Los Borbones</li>
+                    <li><input type="radio" name="q12" value="c"> Los Trastámara</li>
+                    <li><input type="radio" name="q12" value="d"> Los Habsburgo</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>13. ¿Qué documento histórico español fue abolido por Fernando VII y mencionado por Bolívar?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q13" value="a"> Las Leyes de Indias</li>
+                    <li><input type="radio" name="q13" value="b"> La Constitución de 1812</li>
+                    <li><input type="radio" name="q13" value="c"> El Tratado de Tordesillas</li>
+                    <li><input type="radio" name="q13" value="d"> La Real Cédula de Gracia</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>14. ¿Qué ocurrió con Bolívar después de escribir la Carta de Jamaica?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q14" value="a"> Regresó inmediatamente a Venezuela</li>
+                    <li><input type="radio" name="q14" value="b"> Viajó a Haití en busca de apoyo</li>
+                    <li><input type="radio" name="q14" value="c"> Fue capturado por los españoles</li>
+                    <li><input type="radio" name="q14" value="d"> Se trasladó a Estados Unidos</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>15. ¿Qué país ofreció apoyo a Bolívar después de la Carta de Jamaica?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q15" value="a"> Estados Unidos</li>
+                    <li><input type="radio" name="q15" value="b"> Haití</li>
+                    <li><input type="radio" name="q15" value="c"> Inglaterra</li>
+                    <li><input type="radio" name="q15" value="d"> Francia</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>16. ¿Qué promesa hizo Bolívar a cambio del apoyo recibido?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q16" value="a"> Establecer una monarquía</li>
+                    <li><input type="radio" name="q16" value="b"> Abolir la esclavitud</li>
+                    <li><input type="radio" name="q16" value="c"> Ceder territorios</li>
+                    <li><input type="radio" name="q16" value="d"> Pagar una deuda económica</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>17. ¿Cuál fue la principal consecuencia de la ayuda recibida por Bolívar?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q17" value="a"> La creación de la Gran Colombia</li>
+                    <li><input type="radio" name="q17" value="b"> La expedición libertadora de 1816</li>
+                    <li><input type="radio" name="q17" value="c"> La independencia de Perú</li>
+                    <li><input type="radio" name="q17" value="d"> La batalla de Carabobo</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>18. ¿Qué decreto firmó Bolívar en Haití?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q18" value="a"> Decreto de Guerra a Muerte</li>
+                    <li><input type="radio" name="q18" value="b"> Decreto de Trujillo</li>
+                    <li><input type="radio" name="q18" value="c"> Decreto de Abolición de la Esclavitud</li>
+                    <li><input type="radio" name="q18" value="d"> Decreto de Organización del Ejército</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>19. ¿Cuándo zarpó Bolívar desde Haití hacia Venezuela?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q19" value="a"> Diciembre de 1815</li>
+                    <li><input type="radio" name="q19" value="b"> Abril de 1816</li>
+                    <li><input type="radio" name="q19" value="c"> Marzo de 1817</li>
+                    <li><input type="radio" name="q19" value="d"> Febrero de 1818</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>20. ¿Qué importancia histórica tiene la Carta de Jamaica?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q20" value="a"> Fue el primer documento independentista de América</li>
+                    <li><input type="radio" name="q20" value="b"> Es un análisis profundo de las causas del fracaso inicial y una visión profética del futuro de América</li>
+                    <li><input type="radio" name="q20" value="c"> Estableció la forma de gobierno de las nuevas repúblicas</li>
+                    <li><input type="radio" name="q20" value="d"> Declaró la independencia de Venezuela</li>
+                </ul>
+            </div>
+            
+            <div class="quiz-actions">
+                <button type="button" class="btn" id="prevBtn" disabled>Anterior</button>
+                <button type="button" class="btn" id="nextBtn">Siguiente</button>
+                <button type="button" class="btn" id="submitBtn" style="display: none;">Enviar</button>
+            </div>
+        </div>
+        
+        <div class="results-container" id="resultsContainer">
+            <h2>Resultados del Cuestionario</h2>
+            <div class="score" id="scoreDisplay">0/20</div>
+            <div class="student-info">
+                <h3>Información del Estudiante</h3>
+                <div class="info-row">
+                    <div class="info-label">Nombre y Apellido:</div>
+                    <div id="studentName"></div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Cédula:</div>
+                    <div id="studentCedula"></div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Ambiente de Clase:</div>
+                    <div id="studentAmbiente"></div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Periodo:</div>
+                    <div id="studentPeriodo"></div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Programa de Formación:</div>
+                    <div id="studentPrograma"></div>
+                </div>
+            </div>
+            <div class="capture-message">
+                <i class="fas fa-camera"></i> Hacer capture y enviar al profesor
+            </div>
+            <button type="button" class="btn" id="restartBtn">Reintentar</button>
+        </div>
+    </div>
+    
+    <div class="notification" id="notification"></div>
+    
+    <footer>
+        <div class="container">
+            <p>Elaborado por el Profesor Ángel Chacín Ávila, Licenciado en Física, Especialista en Ciencias Computacionales, Diplomado en Educación Policial, Docente e Investigador de la Universidad Nacional Experimental de la Seguridad Núcleo Zulia, se publica con licencia GPL @2025</p>
+        </div>
+    </footer>
+    
+    <script>
+        // Variables globales
+        let currentQuestion = 0;
+        let score = 0;
+        let studentData = {};
+        
+        // Elementos del DOM
+        const studentForm = document.getElementById('studentForm');
+        const quizContainer = document.getElementById('quizContainer');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const formData = document.getElementById('formData');
+        const questions = document.querySelectorAll('.question');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const restartBtn = document.getElementById('restartBtn');
+        const notification = document.getElementById('notification');
+        const progressBar = document.getElementById('progressBar');
+        const questionCounter = document.getElementById('questionCounter');
+        
+        // Respuestas correctas
+        const correctAnswers = {
+            q1: 'b',
+            q2: 'b',
+            q3: 'b',
+            q4: 'b',
+            q5: 'c',
+            q6: 'b',
+            q7: 'b',
+            q8: 'b',
+            q9: 'c',
+            q10: 'b',
+            q11: 'a',
+            q12: 'b',
+            q13: 'b',
+            q14: 'b',
+            q15: 'b',
+            q16: 'b',
+            q17: 'b',
+            q18: 'b',
+            q19: 'b',
+            q20: 'b'
+        };
+        
+        // Event Listeners
+        formData.addEventListener('submit', startQuiz);
+        prevBtn.addEventListener('click', prevQuestion);
+        nextBtn.addEventListener('click', nextQuestion);
+        submitBtn.addEventListener('click', submitQuiz);
+        restartBtn.addEventListener('click', restartQuiz);
+        
+        // Funciones
+        function startQuiz(e) {
+            e.preventDefault();
+            
+            // Obtener datos del estudiante
+            studentData = {
+                nombre: document.getElementById('nombre').value,
+                apellido: document.getElementById('apellido').value,
+                cedula: document.getElementById('cedula').value,
+                ambiente: document.getElementById('ambiente').value,
+                periodo: document.getElementById('periodo').value,
+                programa: document.getElementById('programa').value
+            };
+            
+            // Validar que todos los campos estén llenos
+            if (!studentData.nombre || !studentData.apellido || !studentData.cedula || 
+                !studentData.ambiente || !studentData.periodo || !studentData.programa) {
+                showNotification('Por favor, complete todos los campos', 'error');
+                return;
+            }
+            
+            // Mostrar el cuestionario
+            studentForm.style.display = 'none';
+            quizContainer.style.display = 'block';
+            
+            // Mostrar la primera pregunta
+            showQuestion(0);
+        }
+        
+        function showQuestion(index) {
+            // Ocultar todas las preguntas
+            questions.forEach(question => {
+                question.style.display = 'none';
+            });
+            
+            // Mostrar la pregunta actual
+            questions[index].style.display = 'block';
+            
+            // Actualizar botones de navegación
+            prevBtn.disabled = index === 0;
+            nextBtn.style.display = index === questions.length - 1 ? 'none' : 'inline-block';
+            submitBtn.style.display = index === questions.length - 1 ? 'inline-block' : 'none';
+            
+            // Actualizar barra de progreso
+            const progress = ((index + 1) / questions.length) * 100;
+            progressBar.style.width = `${progress}%`;
+            
+            // Actualizar contador de preguntas
+            questionCounter.textContent = `Pregunta ${index + 1} de ${questions.length}`;
+        }
+        
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion(currentQuestion);
+            }
+        }
+        
+        function nextQuestion() {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                showQuestion(currentQuestion);
+            }
+        }
+        
+        function submitQuiz() {
+            // Calcular puntuación
+            score = 0;
+            
+            // Verificar respuestas
+            for (let i = 1; i <= 20; i++) {
+                const selectedOption = document.querySelector(`input[name="q${i}"]:checked`);
+                if (selectedOption && selectedOption.value === correctAnswers[`q${i}`]) {
+                    score++;
+                }
+            }
+            
+            // Mostrar resultados
+            showResults();
+        }
+        
+        function showResults() {
+            // Ocultar el cuestionario
+            quizContainer.style.display = 'none';
+            
+            // Mostrar los resultados
+            resultsContainer.style.display = 'block';
+            
+            // Mostrar puntuación
+            document.getElementById('scoreDisplay').textContent = `${score}/20`;
+            
+            // Mostrar información del estudiante
+            document.getElementById('studentName').textContent = `${studentData.nombre} ${studentData.apellido}`;
+            document.getElementById('studentCedula').textContent = studentData.cedula;
+            document.getElementById('studentAmbiente').textContent = studentData.ambiente;
+            document.getElementById('studentPeriodo').textContent = studentData.periodo;
+            document.getElementById('studentPrograma').textContent = getProgramaName(studentData.programa);
+            
+            // Mostrar notificación
+            if (score >= 12) {
+                showNotification('¡Felicidades! Has aprobado el cuestionario', 'success');
+            } else {
+                showNotification('No has alcanzado la puntuación mínima. Inténtalo de nuevo', 'error');
+            }
+        }
+        
+        function restartQuiz() {
+            // Reiniciar variables
+            currentQuestion = 0;
+            score = 0;
+            
+            // Limpiar formulario
+            formData.reset();
+            
+            // Mostrar formulario inicial
+            studentForm.style.display = 'block';
+            resultsContainer.style.display = 'none';
+        }
+        
+        function getProgramaName(code) {
+            const programas = {
+                'PNFCJ': 'Criminalística',
+                'PNFIP': 'Investigación Penal',
+                'PNFP': 'Policial'
+            };
+            return programas[code] || code;
+        }
+        
+        function showNotification(message, type) {
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
