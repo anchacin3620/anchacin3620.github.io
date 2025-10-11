@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprendiendo Ecuaciones de Primer Grado</title>
+    <style>
+        /* --- Estilos Generales --- */
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --background-color: #f4f7f6;
+            --text-color: #333;
+            --light-gray: #ecf0f1;
+            --border-color: #bdc3c7;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* --- Header y Teoría --- */
+        header {
+            text-align: center;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin: 0;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-top: 40px;
+        }
+
+        .teoria p {
+            text-align: justify;
+        }
+
+        .teoria strong {
+            color: var(--accent-color);
+        }
+
+        /* --- Sección de Ejemplos --- */
+        #ejemplos-container {
+            margin-top: 20px;
+        }
+
+        .ejemplo-bloque {
+            background-color: var(--light-gray);
+            border: 1px solid var(--border-color);
+            border-left: 5px solid var(--secondary-color);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .ejemplo-bloque:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .ecuacion {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .btn-resolver {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-resolver:hover {
+            background-color: #2980b9;
+        }
+
+        .pasos-container {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #fff;
+            border: 1px dashed var(--border-color);
+            border-radius: 5px;
+            display: none; /* Oculto por defecto */
+        }
+
+        .pasos-container.visible {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .paso {
+            margin-bottom: 8px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        
+        .paso-explicacion {
+            color: #555;
+            font-style: italic;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        /* --- Footer --- */
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            background-color: var(--primary-color);
+            color: var(--light-gray);
+            border-radius: 0 0 10px 10px;
+            font-size: 0.9em;
+        }
+
+        footer p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Guía de Ecuaciones de Primer Grado</h1>
+            <p>Aprende a despejar la <strong>x</strong> paso a paso con ejemplos interactivos.</p>
+        </header>
+
+        <main>
+            <section id="teoria" class="teoria">
+                <h2>¿Qué son las Ecuaciones de Primer Grado?</h2>
+                <p>
+                    Una ecuación de primer grado, también llamada ecuación lineal, es una <strong>igualdad matemática</strong> que involucra una o más variables (generalmente <strong>x</strong>) donde el exponente más alto de la variable es <strong>1</strong>. El objetivo principal es encontrar el valor numérico de la variable que hace que la igualdad sea cierta. A este valor se le llama <strong>solución</strong> o <strong>raíz</strong> de la ecuación.
+                </p>
+                <p>
+                    La forma más común es <strong>ax + b = c</strong>, donde 'a', 'b' y 'c' son números conocidos y 'x' es la incógnita que queremos encontrar.
+                </p>
+
+                <h2>¿Cómo se resuelven? El Arte de "Despejar la x"</h2>
+                <p>
+                    Para resolver una ecuación, nuestro objetivo es <strong>aislar la variable 'x'</strong> en un lado de la igualdad. Para lograrlo, utilizamos operaciones matemáticas (suma, resta, multiplicación, división) en <strong>ambos lados</strong> de la ecuación para mantener el equilibrio. La regla de oro es: <strong>"lo que haces en un lado, lo debes hacer en el otro"</strong>.
+                </p>
+                <p>
+                    El proceso general es:
+                </p>
+                <ol>
+                    <li><strong>Agrupar términos con 'x':</strong> Mueve todos los términos que contengan 'x' al lado izquierdo de la ecuación.</li>
+                    <li><strong>Agrupar términos numéricos:</strong> Mueve todos los términos que son solo números (constantes) al lado derecho.</li>
+                    <li><strong>Despejar 'x':</strong> Una vez que tienes la forma <strong>ax = b</strong>, divide ambos lados por 'a' para obtener el valor final de 'x'.</li>
+                </ol>
+            </section>
+
+            <section id="ejemplos">
+                <h2>20 Ejemplos Paso a Paso</h2>
+                <p>Haz clic en "Mostrar Pasos" para ver la solución detallada de cada ecuación.</p>
+                <div id="ejemplos-container">
+                    <!-- Los ejemplos se generarán aquí con JavaScript -->
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p><strong>Elaborado por el Profesor Ángel Chacín Ávila</strong></p>
+            <p>Licenciado en Física, Especialista en Ciencias Computacionales, Docente, Diplomado en Educación Policial, Docente e Investigador de la Universidad Nacional Experimental de la Seguridad Núcleo Zulia</p>
+            <p>&copy; 2025 se publica con licencia GPL</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // Base de datos de los 20 ejemplos, de simple a complejo
+            const ejemplos = [
+                // Nivel 1: Sumas y Restas directas
+                {
+                    ecuacion: "x - 1 = 8",
+                    pasos: [
+                        { texto: "x - 1 = 8", clase: "paso" },
+                        { texto: "Para despejar x, sumamos 1 a ambos lados:", clase: "paso-explicacion" },
+                        { texto: "x - 1 + 1 = 8 + 1", clase: "paso" },
+                        { texto: "x = 9", clase: "paso" }
+                    ]
+                },
+                {
+                    ecuacion: "x + 5 = 12",
+                    pasos: [
+                        { texto: "x + 5 = 12", clase: "paso" },
+                        { texto: "Restamos 5 de ambos lados:", clase: "paso-explicacion" },
+                        { texto: "x + 5 - 5 = 12 - 5", clase: "paso" },
+                        { texto: "x = 7", clase: "paso" }
+                    ]
+                },
+                // Nivel 2: Multiplicación y División directas
+                {
+                    ecuacion: "3x = 15",
+                    pasos: [
+                        { texto: "3x = 15", clase: "paso" },
+                        { texto: "Dividimos ambos lados por 3:", clase: "paso-explicacion" },
+                        { texto: "3x / 3 = 15 / 3", clase: "paso" },
+                        { texto: "x = 5", clase: "paso" }
+                    ]
+                },
+                {
+                    ecuacion: "x / 4 = 6",
+                    pasos: [
+                        { texto: "x / 4 = 6", clase: "paso" },
+                        { texto: "Multiplicamos ambos lados por 4:", clase: "paso-explicacion" },
+                        { texto: "(x / 4) * 4 = 6 * 4", clase: "paso" },
+                        { texto: "x = 24", clase: "paso" }
+                    ]
+                },
+                // Nivel 3: Combinando suma/resta con multiplicación/división
+                {
+                    ecuacion: "2x + 3 = 11",
+                    pasos: [
+                        { texto: "2x + 3 = 11", clase: "paso" },
+                        { texto: "Primero, restamos 3 de ambos lados:", clase: "paso-explicacion" },
+                        { texto: "2x + 3 - 3 = 11 - 3", clase: "paso" },
+                        { texto: "2x = 8", clase: "paso" },
+                        { texto: "Ahora, dividimos ambos lados por 2:", clase: "paso-explicacion" },
+                        { texto: "2x / 2 = 8 / 2", clase: "paso" },
+                        { texto: "x = 4", clase: "paso" }
+                    ]
+                },
+                {
+                    ecuacion: "5y - 10 = 15",
+                    pasos: [
+                        { texto: "5y - 10 = 15", clase: "paso" },
+                        { texto: "Sumamos 10 a ambos lados:", clase: "paso-explicacion" },
+                        { texto: "5y - 10 + 10 = 15 + 10", clase: "paso" },
+                        { texto: "5y = 25", clase: "paso" },
+                        { texto: "Dividimos ambos lados por 5:", clase: "paso-explicacion" },
+                        { texto: "5y / 5 = 25 / 5", clase: "paso" },
+                        { texto: "y = 5", clase: "paso" }
+                    ]
+                },
+                {
+                    ecuacion: "x/2 + 1 = 5",
+                    pasos: [
+                        { texto: "x/2 + 1 = 5", clase: "paso" },
+                        { texto: "Restamos 1 de ambos lados:", clase: "paso-explicacion" },
+                        { texto: "x/2 + 1 - 1 = 5 - 1", clase: "paso" },
+                        { texto: "x/2 = 4", clase: "paso" },
+                        { texto: "Multiplicamos ambos lados por 2:", clase: "paso-explicacion" },
+                        { texto: "(x/2) * 2 = 4 * 2", clase: "paso" },
+                        { texto: "x = 8", clase: "paso" }
+                    ]
+                },
+                // Nivel 4: Introduciendo fracciones
+                {
+                    ecuacion: "2x + 3/4 = 5",
+                    pasos: [
+                        { texto: "2x + 3/4 = 5", clase: "paso" },
+                        { texto: "Restamos 3/4 de ambos lados:", clase: "paso-explicacion" },
+                        { texto: "2x = 5 - 3/4", clase: "paso" },
+                        { texto: "Convertimos 5 a cuartos: 5 = 20/4", clase: "paso-explicacion" },
+                        { texto: "2x = 20/4 - 3/4", clase: "paso" },
+                        { texto: "2x = 17/4", clase: "paso" },
+                        { texto: "Dividimos por 2 (o multiplicamos por 1/2):", clase: "paso-explicacion" },
+                        { texto: "x = (17/4) / 2 = 17/8", clase: "paso" }
+                    ]
+                },
+                {
+                    ecuacion: "x - 1/3 = 2/3",
+                    pasos: [
+                        { texto: "x - 1/3 = 2/3", clase: "paso" },
+                        { texto: "Sumamos 1/3 a ambos lados:", clase: "paso-explicacion" },
+                        { texto: "x - 1/3 + 1/3 = 2/3 + 1/3", clase: "paso" },
+                        { texto: "x = 3/3", clase: "paso" },
+                        { texto: "x = 1", clase: "paso" }
+                    ]
+                },
+                // Nivel 5: Paréntesis (Propiedad Distributiva)
+                {
+                    ecuacion: "3(x + 2) = 21",
+                    pasos: [
+                        { texto: "3(x + 2) = 21", clase: "paso" },
+                        { texto: "Aplicamos la propiedad distributiva: 3*x + 3*2", clase: "paso-explicacion" },
+                        { texto: "3x + 6 = 21", clase: "paso" },
+                        { texto: "Restamos 6 de ambos lados:", clase: "paso-explicacion" },
+                        { texto: "3x + 6 - 6 = 21 - 6", clase: "paso" },
+                        { texto: "3x = 15", clase: "paso" },
+                        { texto: "Dividimos por 3:", clase: "paso-explicacion" },
+                        { texto: "x = 5", clase: "paso" }
+                    ]
+                },
+                {
+                    ecuacion: "2(x - 5) + 4 = 10",
+                    pasos: [
+                        { texto: "2(x - 5) + 4 = 10", clase: "paso" },
+                        { texto: "Distribuimos el 2:", clase: "paso-explicacion" },
+                        { texto: "2x - 10 + 4 = 10", clase: "paso" },
+                        { texto: "Combinamos los términos numéricos (-10 + 4):", clase: "paso-explicacion" },
+                        { texto: "2x - 6 = 10", clase: "paso" },
+                        { texto: "Sumamos 6 a ambos lados:", clase: "paso-explicacion" },
+                        { texto: "2x = 16", clase: "paso" },
+                        { texto: "Dividimos por 2:", clase: "paso-explicacion" },
+                        { texto: "x = 8", clase: "paso" }
+                    ]
+                },
+                // Nivel 6: Términos con x en ambos lados
+                {
+                    ecuacion: "4x + 1 = 2x + 9",
+                    pasos: [
+                        { texto: "4x + 1 = 2x + 9", clase: "paso" },
+                        { texto: "Restamos 2x de ambos lados para agrupar las x:", clase: "paso-explicacion" },
+                        { texto: "4x - 2x + 1 = 2x - 2x + 9", clase: "paso" },
+                        { texto: "2x + 1 = 9", clase: "paso" },
+                        { texto: "Restamos 1 de ambos lados:", clase: "paso-explicacion" },
+                        { texto: "2x = 8", clase: "paso" },
+                        { texto: "Dividimos por 2:", clase: "paso-explicacion" },
+                        { texto: "x = 4", clase: "paso" }
+                    ]
+                },
+                {
+                    ecuacion: "5x - 3 = 3x + 7",
+                    pasos: [
+                        { texto: "5x - 3 = 3x + 7", clase: "paso" },
+                        { texto: "Restamos 3x de ambos lados:", clase: "paso-explicacion" },
+                        { texto: "2x - 3 = 7", clase: "paso" },
+                        { texto: "Sumamos 3 a ambos lados:", clase: "paso-explicacion" },
+                        { texto: "2x = 10", clase: "paso" },
+                        { texto: "Dividimos por 2:", clase: "paso-explicacion" },
+                        { texto: "x = 5", clase: "paso" }
+                    ]
+                },
+                // Nivel 7: Coeficientes negativos
+                {
+                    ecuacion: "-2x + 10 = 4",
+                    pasos: [
+                        { texto: "-2x + 10 = 4", clase: "paso" },
+                        { texto: "Restamos 10 de ambos lados:", clase: "paso-explicacion" },
+                        { texto: "-2x = 4 - 10", clase: "paso" },
+                        { texto: "-2x = -6", clase: "paso" },
+                        { texto: "Dividimos por -2:", clase: "paso-explicacion" },
+                        { texto: "x = (-6) / (-2)", clase: "paso" },
+                        { texto: "x = 3", clase: "paso" }
+                    ]
+                },
+                {
+                    ecuacion: "7 - 3x = 1",
+                    pasos: [
+                        { texto: "7 - 3x = 1", clase: "paso" },
+                        { texto: "Restamos 7 de ambos lados:", clase: "paso-explicacion" },
+                        { texto: "-3x = 1 - 7", clase: "paso" },
+                        { texto: "-3x = -6", clase: "paso" },
+                        { texto: "Dividimos por -3:", clase: "paso-explicacion" },
+                        { texto: "x = (-6) / (-3)", clase: "paso" },
+                        { texto: "x = 2", clase: "paso" }
+                    ]
+                },
+                // Nivel 8: Fracciones en ambos lados y con paréntesis
+                {
+                    ecuacion: "(x + 4) / 2 = 5",
+                    pasos: [
+                        { texto: "(x + 4) / 2 = 5", clase: "paso" },
+                        { texto: "Multiplicamos ambos lados por 2 para eliminar el denominador:", clase: "paso-explicacion" },
+                        { texto: "x + 4 = 5 * 2", clase: "paso" },
+                        { texto: "x + 4 = 10", clase: "paso" },
+                        { texto: "Restamos 4 de ambos lados:", clase: "paso-explicacion" },
+                        { texto: "x = 6", clase: "paso" }
+                    ]
+                },
+                {
+                    ecuacion: "3x/5 - 2 = 4",
+                    pasos: [
+                        { texto: "3x/5 - 2 = 4", clase: "paso" },
+                        { texto: "Sumamos 2 a ambos lados:", clase: "paso-explicacion" },
+                        { texto: "3x/5 = 6", clase: "paso" },
+                        { texto: "Multiplicamos ambos lados por 5:", clase: "paso-explicacion" },
+                        { texto: "3x = 30", clase: "paso" },
+                        { texto: "Dividimos por 3:", clase: "paso-explicacion" },
+                        { texto: "x = 10", clase: "paso" }
+                    ]
+                },
+                // Nivel 9: Complejidad mixta
+                {
+                    ecuacion: "4(x - 1) = 2x + 6",
+                    pasos: [
+                        { texto: "4(x - 1) = 2x + 6", clase: "paso" },
+                        { texto: "Distribuimos el 4:", clase: "paso-explicacion" },
+                        { texto: "4x - 4 = 2x + 6", clase: "paso" },
+                        { texto: "Restamos 2x de ambos lados:", clase: "paso-explicacion" },
+                        { texto: "2x - 4 = 6", clase: "paso" },
+                        { texto: "Sumamos 4 a ambos lados:", clase: "paso-explicacion" },
+                        { texto: "2x = 10", clase: "paso" },
+                        { texto: "Dividimos por 2:", clase: "paso-explicacion" },
+                        { texto: "x = 5", clase: "paso" }
+                    ]
+                },
+                // Nivel 10: Máxima complejidad para primer grado
+                {
+                    ecuacion: "5 - (2x + 1) = 3x + 8",
+                    pasos: [
+                        { texto: "5 - (2x + 1) = 3x + 8", clase: "paso" },
+                        { texto: "Ojo con el signo menos! Distribuimos el -1:", clase: "paso-explicacion" },
+                        { texto: "5 - 2x - 1 = 3x + 8", clase: "paso" },
+                        { texto: "Combinamos términos numéricos (5 - 1):", clase: "paso-explicacion" },
+                        { texto: "4 - 2x = 3x + 8", clase: "paso" },
+                        { texto: "Sumamos 2x a ambos lados para que las x sean positivas:", clase: "paso-explicacion" },
+                        { texto: "4 = 5x + 8", clase: "paso" },
+                        { texto: "Restamos 8 de ambos lados:", clase: "paso-explicacion" },
+                        { texto: "4 - 8 = 5x", clase: "paso" },
+                        { texto: "-4 = 5x", clase: "paso" },
+                        { texto: "Dividimos por 5:", clase: "paso-explicacion" },
+                        { texto: "x = -4/5", clase: "paso" }
+                    ]
+                },
+                {
+                    ecuacion: "2(x/3 + 1) = 4x - 2",
+                    pasos: [
+                        { texto: "2(x/3 + 1) = 4x - 2", clase: "paso" },
+                        { texto: "Distribuimos el 2:", clase: "paso-explicacion" },
+                        { texto: "2x/3 + 2 = 4x - 2", clase: "paso" },
+                        { texto: "Restamos 2x/3 de ambos lados:", clase: "paso-explicacion" },
+                        { texto: "2 = 4x - 2x/3 - 2", clase: "paso" },
+                        { texto: "Sumamos 2 a ambos lados:", clase: "paso-explicacion" },
+                        { texto: "4 = 4x - 2x/3", clase: "paso" },
+                        { texto: "Para restar las x, común denominador (3): 4x = 12x/3", clase: "paso-explicacion" },
+                        { texto: "4 = 12x/3 - 2x/3", clase: "paso" },
+                        { texto: "4 = 10x/3", clase: "paso" },
+                        { texto: "Multiplicamos por 3:", clase: "paso-explicacion" },
+                        { texto: "12 = 10x", clase: "paso" },
+                        { texto: "Dividimos por 10:", clase: "paso-explicacion" },
+                        { texto: "x = 12/10 = 6/5", clase: "paso" }
+                    ]
+                }
+            ];
+
+            const contenedor = document.getElementById('ejemplos-container');
+
+            ejemplos.forEach((ejemplo, index) => {
+                // Crear el bloque principal del ejemplo
+                const bloque = document.createElement('div');
+                bloque.className = 'ejemplo-bloque';
+
+                // Crear el título de la ecuación
+                const tituloEcuacion = document.createElement('div');
+                tituloEcuacion.className = 'ecuacion';
+                tituloEcuacion.textContent = `Ejemplo ${index + 1}: ${ejemplo.ecuacion}`;
+                bloque.appendChild(tituloEcuacion);
+
+                // Crear el botón
+                const boton = document.createElement('button');
+                boton.className = 'btn-resolver';
+                boton.textContent = 'Mostrar Pasos';
+                bloque.appendChild(boton);
+
+                // Crear el contenedor para los pasos (inicialmente oculto)
+                const pasosContainer = document.createElement('div');
+                pasosContainer.className = 'pasos-container';
+
+                // Añadir evento al botón
+                boton.addEventListener('click', () => {
+                    if (pasosContainer.classList.contains('visible')) {
+                        // Si ya está visible, lo ocultamos
+                        pasosContainer.classList.remove('visible');
+                        boton.textContent = 'Mostrar Pasos';
+                    } else {
+                        // Si está oculto, lo mostramos
+                        // Limpiamos pasos anteriores por si acaso
+                        pasosContainer.innerHTML = '';
+                        ejemplo.pasos.forEach(paso => {
+                            const p = document.createElement('p');
+                            p.className = paso.clase;
+                            p.textContent = paso.texto;
+                            pasosContainer.appendChild(p);
+                        });
+                        pasosContainer.classList.add('visible');
+                        boton.textContent = 'Ocultar Pasos';
+                    }
+                });
+                
+                bloque.appendChild(pasosContainer);
+                contenedor.appendChild(bloque);
+            });
+        });
+    </script>
+</body>
+</html>
