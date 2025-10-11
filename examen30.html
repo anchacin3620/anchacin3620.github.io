@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario - Rebelión de Riego y Entrevista Bolívar-Morillo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #c1272d;
+            --secondary-color: #0033a0;
+            --text-color: #333;
+            --light-bg: #f9f9f9;
+            --border-color: #ddd;
+            --accent-color: #f0c808;
+            --success-color: #28a745;
+            --error-color: #dc3545;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: #fff;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        header h1 {
+            text-align: center;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        
+        .form-section {
+            background-color: var(--light-bg);
+            padding: 30px 0;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .form-container h2 {
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #a02020;
+        }
+        
+        .quiz-container {
+            display: none;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .question {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .question h3 {
+            margin-bottom: 15px;
+            color: var(--secondary-color);
+        }
+        
+        .options {
+            list-style-type: none;
+        }
+        
+        .options li {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .options li:hover {
+            background-color: var(--light-bg);
+        }
+        
+        .options li input {
+            margin-right: 10px;
+        }
+        
+        .quiz-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        .results-container {
+            display: none;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .results-container h2 {
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+        }
+        
+        .score {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 20px 0;
+        }
+        
+        .student-info {
+            background-color: var(--light-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .student-info h3 {
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .info-row {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        
+        .info-label {
+            font-weight: 500;
+            width: 200px;
+        }
+        
+        .capture-message {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-weight: 500;
+            font-size: 18px;
+        }
+        
+        footer {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 20px 0;
+            margin-top: 40px;
+            text-align: center;
+        }
+        
+        footer p {
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 4px;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .notification.success {
+            background-color: var(--success-color);
+        }
+        
+        .notification.error {
+            background-color: var(--error-color);
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: var(--light-bg);
+            border-radius: 5px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .question-counter {
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 500;
+            color: var(--secondary-color);
+        }
+        
+        @media (max-width: 768px) {
+            .quiz-actions {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .info-row {
+                flex-direction: column;
+            }
+            
+            .info-label {
+                width: 100%;
+                margin-bottom: 5px;
+            }
+            
+            footer p {
+                font-size: 12px;
+                padding: 0 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Unidad Curricular Historia de Venezuela</h1>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="form-section" id="studentForm">
+            <div class="form-container">
+                <h2>Información del Estudiante</h2>
+                <form id="formData">
+                    <div class="form-group">
+                        <label for="nombre">Nombre:</label>
+                        <input type="text" id="nombre" name="nombre" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="apellido">Apellido:</label>
+                        <input type="text" id="apellido" name="apellido" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="cedula">Cédula Venezolana:</label>
+                        <input type="text" id="cedula" name="cedula" pattern="[VE]-[0-9]{7,9}" placeholder="Ej: V-12345678" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ambiente">Ambiente de Clase:</label>
+                        <input type="text" id="ambiente" name="ambiente" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="periodo">Periodo:</label>
+                        <select id="periodo" name="periodo" required>
+                            <option value="">Seleccione un periodo</option>
+                            <option value="2025-I">2025-I</option>
+                            <option value="2025-II">2025-II</option>
+                            <option value="2026-I">2026-I</option>
+                            <option value="2026-II">2026-II</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="programa">Programa de Formación Nacional:</label>
+                        <select id="programa" name="programa" required>
+                            <option value="">Seleccione un programa</option>
+                            <option value="PNFCJ">Criminalística</option>
+                            <option value="PNFIP">Investigación Penal</option>
+                            <option value="PNFP">Policial</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn">Comenzar Cuestionario</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="quiz-container" id="quizContainer">
+            <h2>Cuestionario: Rebelión de Riego y Entrevista Bolívar-Morillo</h2>
+            <p>Responde las siguientes preguntas sobre la Rebelión de Rafael Riego y su efecto en la independencia, junto con la entrevista entre Bolívar y Morillo. Cada respuesta correcta vale 1 punto.</p>
+            
+            <div class="progress-bar">
+                <div class="progress" id="progressBar"></div>
+            </div>
+            
+            <div class="question-counter" id="questionCounter">Pregunta 1 de 20</div>
+            
+            <div class="question">
+                <h3>1. ¿En qué año ocurrió la Rebelión de Rafael Riego?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q1" value="a"> 1819</li>
+                    <li><input type="radio" name="q1" value="b"> 1820</li>
+                    <li><input type="radio" name="q1" value="c"> 1821</li>
+                    <li><input type="radio" name="q1" value="d"> 1822</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>2. ¿Qué posición ocupaba Riego en el ejército español al momento de la rebelión?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q2" value="a"> General</li>
+                    <li><input type="radio" name="q2" value="b"> Coronel</li>
+                    <li><input type="radio" name="q2" value="c"> Comandante</li>
+                    <li><input type="radio" name="q2" value="d"> Capitán</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>3. ¿Cuál fue el objetivo principal de la Rebelión de Riego?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q3" value="a"> Proclamar la independencia de España</li>
+                    <li><input type="radio" name="q3" value="b"> Restablecer la Constitución de 1812</li>
+                    <li><input type="radio" name="q3" value="c"> Apoyar a Fernando VII</li>
+                    <li><input type="radio" name="q3" value="d"> Luchar contra la invasión francesa</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>4. ¿Dónde se inició la Rebelión de Riego?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q4" value="a"> Madrid</li>
+                    <li><input type="radio" name="q4" value="b"> Las Cabezas de San Juan</li>
+                    <li><input type="radio" name="q4" value="c"> Sevilla</li>
+                    <li><input type="radio" name="q4" value="d"> Cádiz</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>5. ¿Qué rey español se vio obligado a jurar la Constitución como consecuencia de la rebelión?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q5" value="a"> Carlos IV</li>
+                    <li><input type="radio" name="q5" value="b"> Fernando VII</li>
+                    <li><input type="radio" name="q5" value="c"> José Bonaparte</li>
+                    <li><input type="radio" name="q5" value="d"> Alfonso XII</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>6. ¿Qué período se conoce como el Trienio Liberal?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q6" value="a"> 1812-1815</li>
+                    <li><input type="radio" name="q6" value="b"> 1820-1823</li>
+                    <li><input type="radio" name="q6" value="c"> 1823-1826</li>
+                    <li><input type="radio" name="q6" value="d"> 1830-1833</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>7. ¿Qué consecuencia tuvo la Rebelión de Riego en las colonias americanas?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q7" value="a"> Fortaleció el poder realista</li>
+                    <li><input type="radio" name="q7" value="b"> Debilitó el esfuerzo militar español en América</li>
+                    <li><input type="radio" name="q7" value="c"> Provocó la inmediata independencia de todas las colonias</li>
+                    <li><input type="radio" name="q7" value="d"> No tuvo ningún efecto</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>8. ¿Quién era el jefe del ejército realista en Venezuela y Nueva Granada en 1820?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q8" value="a"> Francisco de Miranda</li>
+                    <li><input type="radio" name="q8" value="b"> Simón Bolívar</li>
+                    <li><input type="radio" name="q8" value="c"> Pablo Morillo</li>
+                    <li><input type="radio" name="q8" value="d"> José Antonio Páez</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>9. ¿En qué año se realizó la entrevista entre Bolívar y Morillo?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q9" value="a"> 1819</li>
+                    <li><input type="radio" name="q9" value="b"> 1820</li>
+                    <li><input type="radio" name="q9" value="c"> 1821</li>
+                    <li><input type="radio" name="q9" value="d"> 1822</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>10. ¿Dónde se llevó a cabo la entrevista entre Bolívar y Morillo?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q10" value="a"> Caracas</li>
+                    <li><input type="radio" name="q10" value="b"> Bogotá</li>
+                    <li><input type="radio" name="q10" value="c"> Santa Ana, Venezuela</li>
+                    <li><input type="radio" name="q10" value="d"> Quito</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>11. ¿Qué acuerdo se firmó durante la entrevista entre Bolívar y Morillo?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q11" value="a"> Tratado de Armisticio y Regularización de la Guerra</li>
+                    <li><input type="radio" name="q11" value="b"> Tratado de Paz y Amistad</li>
+                    <li><input type="radio" name="q11" value="c"> Tratado de Unión</li>
+                    <li><input type="radio" name="q11" value="d"> Tratado de Alianza</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>12. ¿Cuál fue el principal objetivo de Bolívar en la entrevista con Morillo?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q12" value="a"> Rendirse al ejército realista</li>
+                    <li><input type="radio" name="q12" value="b"> Obtener un armisticio para reorganizar sus fuerzas</li>
+                    <li><input type="radio" name="q12" value="c"> Solicitar ayuda militar a España</li>
+                    <li><input type="radio" name="q12" value="d"> Negociar la independencia inmediata</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>13. ¿Qué decisión tomó Morillo después de la entrevista con Bolívar?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q13" value="a"> Continuar la guerra con más fuerza</li>
+                    <li><input type="radio" name="q13" value="b"> Retirarse a España</li>
+                    <li><input type="radio" name="q13" value="c"> Unirse a las fuerzas independentistas</li>
+                    <li><input type="radio" name="q13" value="d"> Viajar a México</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>14. ¿Qué sucedió con el ejército realista después de la entrevista?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q14" value="a"> Se fortaleció con refuerzos de España</li>
+                    <li><input type="radio" name="q14" value="b"> Se dividió entre absolutistas y liberales</li>
+                    <li><input type="radio" name="q14" value="c"> Se rindió inmediatamente</li>
+                    <li><input type="radio" name="q14" value="d"> Se trasladó a Perú</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>15. ¿Qué papel jugó la Rebelión de Riego en la independencia de América?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q15" value="a"> Fue la causa directa de la independencia</li>
+                    <li><input type="radio" name="q15" value="b"> No tuvo relación</li>
+                    <li><input type="radio" name="q15" value="c"> Contribuyó al debilitamiento del poder español en América</li>
+                    <li><input type="radio" name="q15" value="d"> Impidió la independencia</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>16. ¿Qué ocurrió con Rafael Riego después del fracaso del Trienio Liberal?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q16" value="a"> Fue exiliado</li>
+                    <li><input type="radio" name="q16" value="b"> Fue ejecutado</li>
+                    <li><input type="radio" name="q16" value="c"> Se convirtió en rey</li>
+                    <li><input type="radio" name="q16" value="d"> Murió en la batalla</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>17. ¿Qué potencia extranjera intervino en España para restaurar el absolutismo?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q17" value="a"> Inglaterra</li>
+                    <li><input type="radio" name="q17" value="b"> Francia</li>
+                    <li><input type="radio" name="q17" value="c"> Estados Unidos</li>
+                    <li><input type="radio" name="q17" value="d"> Rusia</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>18. ¿Qué batalla, ocurrida después de la entrevista, aseguró la independencia de Venezuela?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q18" value="a"> Batalla de Boyacá</li>
+                    <li><input type="radio" name="q18" value="b"> Batalla de Carabobo</li>
+                    <li><input type="radio" name="q18" value="c"> Batalla de Pichincha</li>
+                    <li><input type="radio" name="q18" value="d"> Batalla de Ayacucho</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>19. ¿Qué documento representó la Constitución restablecida por la Rebelión de Riego?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q19" value="a"> Constitución de Bayona</li>
+                    <li><input type="radio" name="q19" value="b"> Constitución de Cádiz de 1812</li>
+                    <li><input type="radio" name="q19" value="c"> Constitución de 1837</li>
+                    <li><input type="radio" name="q19" value="d"> Constitución de 1876</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>20. ¿Cómo se conoce el período que va desde la Rebelión de Riego hasta la intervención francesa?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q20" value="a"> Década Ominosa</li>
+                    <li><input type="radio" name="q20" value="b"> Trienio Liberal</li>
+                    <li><input type="radio" name="q20" value="c"> Bienio Progresista</li>
+                    <li><input type="radio" name="q20" value="d"> Sexenio Democrático</li>
+                </ul>
+            </div>
+            
+            <div class="quiz-actions">
+                <button type="button" class="btn" id="prevBtn" style="display:none;">Anterior</button>
+                <button type="button" class="btn" id="nextBtn">Siguiente</button>
+                <button type="button" class="btn" id="submitBtn" style="display:none;">Enviar Respuestas</button>
+            </div>
+        </div>
+        
+        <div class="results-container" id="resultsContainer">
+            <h2>Resultados del Cuestionario</h2>
+            <div class="score" id="scoreDisplay">0/20</div>
+            <p id="scoreMessage"></p>
+            
+            <div class="student-info">
+                <h3>Información del Estudiante</h3>
+                <div class="info-row">
+                    <span class="info-label">Nombre:</span>
+                    <span id="resultNombre"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Apellido:</span>
+                    <span id="resultApellido"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Cédula:</span>
+                    <span id="resultCedula"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Ambiente:</span>
+                    <span id="resultAmbiente"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Periodo:</span>
+                    <span id="resultPeriodo"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Programa:</span>
+                    <span id="resultPrograma"></span>
+                </div>
+            </div>
+            
+            <div class="capture-message">
+                <i class="fas fa-camera"></i> Por favor, capture o imprima esta pantalla como comprobante de su evaluación
+            </div>
+            
+            <button type="button" class="btn" id="restartBtn">Realizar Nuevo Cuestionario</button>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>Elaborado por el Profesor Ángel Chacín Ávila, Licenciado en Física, Especialista en Ciencias Computacionales, Diplomado en Educación Policial, Docente e Investigador de la Universidad Nacional Experimental de la Seguridad Núcleo Zulia @2025 se publica con licencia GPL</p>
+        </div>
+    </footer>
+    
+    <div class="notification" id="notification"></div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos del DOM
+            const studentForm = document.getElementById('studentForm');
+            const formData = document.getElementById('formData');
+            const quizContainer = document.getElementById('quizContainer');
+            const resultsContainer = document.getElementById('resultsContainer');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const submitBtn = document.getElementById('submitBtn');
+            const restartBtn = document.getElementById('restartBtn');
+            const progressBar = document.getElementById('progressBar');
+            const questionCounter = document.getElementById('questionCounter');
+            const notification = document.getElementById('notification');
+            
+            // Variables para el cuestionario
+            let currentQuestion = 0;
+            const totalQuestions = 20;
+            const questions = document.querySelectorAll('.question');
+            const correctAnswers = {
+                q1: 'b',  // 1820
+                q2: 'c',  // Comandante
+                q3: 'b',  // Restablecer la Constitución de 1812
+                q4: 'b',  // Las Cabezas de San Juan
+                q5: 'b',  // Fernando VII
+                q6: 'b',  // 1820-1823
+                q7: 'b',  // Debilitó el esfuerzo militar español en América
+                q8: 'c',  // Pablo Morillo
+                q9: 'b',  // 1820
+                q10: 'c', // Santa Ana, Venezuela
+                q11: 'a', // Tratado de Armisticio y Regularización de la Guerra
+                q12: 'b', // Obtener un armisticio para reorganizar sus fuerzas
+                q13: 'b', // Retirarse a España
+                q14: 'b', // Se dividió entre absolutistas y liberales
+                q15: 'c', // Contribuyó al debilitamiento del poder español en América
+                q16: 'b', // Fue ejecutado
+                q17: 'b', // Francia
+                q18: 'b', // Batalla de Carabobo
+                q19: 'b', // Constitución de Cádiz de 1812
+                q20: 'b'  // Trienio Liberal
+            };
+            
+            // Event Listeners
+            formData.addEventListener('submit', startQuiz);
+            prevBtn.addEventListener('click', showPreviousQuestion);
+            nextBtn.addEventListener('click', showNextQuestion);
+            submitBtn.addEventListener('click', submitQuiz);
+            restartBtn.addEventListener('click', restartQuiz);
+            
+            // Funciones
+            function startQuiz(e) {
+                e.preventDefault();
+                
+                // Validar formulario
+                if (!formData.checkValidity()) {
+                    showNotification('Por favor, complete todos los campos requeridos', 'error');
+                    return;
+                }
+                
+                // Mostrar cuestionario
+                studentForm.style.display = 'none';
+                quizContainer.style.display = 'block';
+                
+                // Mostrar primera pregunta
+                showQuestion(0);
+            }
+            
+            function showQuestion(index) {
+                // Ocultar todas las preguntas
+                questions.forEach(question => {
+                    question.style.display = 'none';
+                });
+                
+                // Mostrar pregunta actual
+                questions[index].style.display = 'block';
+                
+                // Actualizar contador y barra de progreso
+                questionCounter.textContent = `Pregunta ${index + 1} de ${totalQuestions}`;
+                progressBar.style.width = `${((index + 1) / totalQuestions) * 100}%`;
+                
+                // Actualizar botones
+                prevBtn.style.display = index === 0 ? 'none' : 'inline-block';
+                nextBtn.style.display = index === totalQuestions - 1 ? 'none' : 'inline-block';
+                submitBtn.style.display = index === totalQuestions - 1 ? 'inline-block' : 'none';
+                
+                currentQuestion = index;
+            }
+            
+            function showPreviousQuestion() {
+                if (currentQuestion > 0) {
+                    showQuestion(currentQuestion - 1);
+                }
+            }
+            
+            function showNextQuestion() {
+                if (currentQuestion < totalQuestions - 1) {
+                    // Verificar si se ha seleccionado una respuesta
+                    const currentOptions = questions[currentQuestion].querySelectorAll('input[type="radio"]');
+                    const isSelected = Array.from(currentOptions).some(option => option.checked);
+                    
+                    if (!isSelected) {
+                        showNotification('Por favor, seleccione una respuesta antes de continuar', 'error');
+                        return;
+                    }
+                    
+                    showQuestion(currentQuestion + 1);
+                }
+            }
+            
+            function submitQuiz() {
+                // Verificar si se ha seleccionado una respuesta en la última pregunta
+                const currentOptions = questions[currentQuestion].querySelectorAll('input[type="radio"]');
+                const isSelected = Array.from(currentOptions).some(option => option.checked);
+                
+                if (!isSelected) {
+                    showNotification('Por favor, seleccione una respuesta antes de enviar', 'error');
+                    return;
+                }
+                
+                // Calcular puntuación
+                let score = 0;
+                
+                for (let i = 1; i <= totalQuestions; i++) {
+                    const selectedOption = document.querySelector(`input[name="q${i}"]:checked`);
+                    if (selectedOption && selectedOption.value === correctAnswers[`q${i}`]) {
+                        score++;
+                    }
+                }
+                
+                // Mostrar resultados
+                showResults(score);
+            }
+            
+            function showResults(score) {
+                // Ocultar cuestionario
+                quizContainer.style.display = 'none';
+                
+                // Mostrar contenedor de resultados
+                resultsContainer.style.display = 'block';
+                
+                // Actualizar puntuación
+                document.getElementById('scoreDisplay').textContent = `${score}/${totalQuestions}`;
+                
+                // Mensaje según puntuación
+                let message = '';
+                if (score >= 18) {
+                    message = '¡Excelente! Has demostrado un conocimiento sobresaliente sobre la Rebelión de Riego y la entrevista entre Bolívar y Morillo.';
+                } else if (score >= 15) {
+                    message = '¡Muy bien! Tienes un buen conocimiento de estos eventos históricos.';
+                } else if (score >= 10) {
+                    message = 'Bien. Has aprobado, pero te recomendamos repasar algunos conceptos.';
+                } else {
+                    message = 'Necesitas mejorar tu conocimiento sobre estos eventos históricos. Te recomendamos estudiar más.';
+                }
+                
+                document.getElementById('scoreMessage').textContent = message;
+                
+                // Mostrar información del estudiante
+                document.getElementById('resultNombre').textContent = document.getElementById('nombre').value;
+                document.getElementById('resultApellido').textContent = document.getElementById('apellido').value;
+                document.getElementById('resultCedula').textContent = document.getElementById('cedula').value;
+                document.getElementById('resultAmbiente').textContent = document.getElementById('ambiente').value;
+                document.getElementById('resultPeriodo').textContent = document.getElementById('periodo').value;
+                document.getElementById('resultPrograma').textContent = document.getElementById('programa').value;
+                
+                // Notificación
+                showNotification('Cuestionario completado con éxito', 'success');
+            }
+            
+            function restartQuiz() {
+                // Ocultar resultados
+                resultsContainer.style.display = 'none';
+                
+                // Mostrar formulario
+                studentForm.style.display = 'block';
+                
+                // Reiniciar formulario
+                formData.reset();
+                
+                // Reiniciar respuestas
+                document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                    radio.checked = false;
+                });
+                
+                // Reiniciar progreso
+                progressBar.style.width = '0%';
+            }
+            
+            function showNotification(message, type) {
+                notification.textContent = message;
+                notification.className = `notification ${type}`;
+                notification.style.display = 'block';
+                
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>
