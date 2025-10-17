@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis de Simulación de Deposición de Películas Delgadas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        .header {
+            background: linear-gradient(135deg, #1a2a6c, #2c3e50);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .card-header {
+            background-color: #1a2a6c;
+            color: white;
+            font-weight: bold;
+            border-radius: 10px 10px 0 0 !important;
+            padding: 1rem;
+        }
+        .img-container {
+            text-align: center;
+            margin: 1rem 0;
+            position: relative;
+        }
+        .img-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .nav-tabs .nav-link {
+            color: #1a2a6c;
+            font-weight: 500;
+        }
+        .nav-tabs .nav-link.active {
+            background-color: #1a2a6c;
+            color: white;
+            border-color: #1a2a6c;
+        }
+        .table {
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .table thead th {
+            background-color: #1a2a6c;
+            color: white;
+            border: none;
+        }
+        .highlight {
+            background-color: #e3f2fd;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        .conclusion-box {
+            background-color: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .objective-box {
+            background-color: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .btn-export {
+            background-color: #1a2a6c;
+            color: white;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 5px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        .btn-export:hover {
+            background-color: #0d1b3d;
+            color: white;
+        }
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 1rem 0;
+        }
+        footer {
+            background-color: #1a2a6c;
+            color: white;
+            padding: 1.5rem 0;
+            margin-top: 3rem;
+        }
+        .image-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            display: none;
+        }
+        .image-info {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+        }
+        .loading-spinner {
+            display: inline-block;
+            width: 2rem;
+            height: 2rem;
+            border: 3px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top-color: #1a2a6c;
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .image-description {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            text-align: left;
+            border-left: 4px solid #1a2a6c;
+        }
+        .image-description h5 {
+            margin-top: 0;
+            color: #1a2a6c;
+        }
+        .retry-btn {
+            background-color: #1a2a6c;
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 4px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        .retry-btn:hover {
+            background-color: #0d1b3d;
+        }
+        .img-placeholder {
+            width: 100%;
+            height: 300px;
+            background-color: #f1f1f1;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            border: 1px dashed #ccc;
+            flex-direction: column;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1 class="text-center">Análisis de Simulación Monte Carlo de Procesos de Deposición</h1>
+            <p class="text-center">Películas Delgadas de Cr y Fe sobre Sustrato Sólido de Mg (001)</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-12 text-end">
+                <button class="btn btn-export" onclick="exportToWord()">
+                    <i class="bi bi-file-earword"></i> Exportar a Word
+                </button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="mb-0">Objetivos del Trabajo</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="objective-box">
+                            <h5>Objetivo General</h5>
+                            <p>Simular el proceso de deposición de películas delgadas de Cr y Fe mediante el método de Monte Carlo.</p>
+                        </div>
+                        <div class="objective-box">
+                            <h5>Objetivos Específicos</h5>
+                            <ol>
+                                <li>Caracterizar los mecanismos de deposición en películas delgadas de Cr y Fe sobre un sustrato sólido de Mg (001) mediante el método Monte Carlo Cinético.</li>
+                                <li>Determinar los efectos de Difusión Superficial en el proceso de deposición de Cr y Fe sobre un sustrato sólido de Mg (001) mediante el método Monte Carlo Cinético.</li>
+                                <li>Delimitar el efecto del modo de deposición en las propiedades físicas de las películas delgadas de Cr y Fe en un sustrato sólido de Mg (001).</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <ul class="nav nav-tabs" id="analysisTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="visual-tab" data-bs-toggle="tab" data-bs-target="#visual" type="button" role="tab" aria-controls="visual" aria-selected="true">Análisis Visual</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="numerical-tab" data-bs-toggle="tab" data-bs-target="#numerical" type="button" role="tab" aria-controls="numerical" aria-selected="false">Análisis Numérico</button>
+            </li>
+        </ul>
+        <div class="tab-content" id="analysisTabsContent">
+            <div class="tab-pane fade show active" id="visual" role="tabpanel" aria-labelledby="visual-tab">
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h3 class="mb-0">Análisis Visual: Modo de Deposición Térmica</h3>
+                    </div>
+                    <div class="card-body">
+                        <h4>1. Caracterización de los Mecanismos de Deposición</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="img-container">
+                                    <img src="https://z-cdn-media.chatglm.cn/files/03be815b-4b5e-444e-8c75-42328aac5e61_rugosidad_vs_energia%20%281%29.png?auth_key=1792267590-72726bf05d1d4eeb9dd853453c401472-0-d94878932bf874441002c33cc775b8fb" alt="Rugosidad vs Energía de difusión" class="img-fluid">
+                                    <p class="mt-2"><strong>Figura 1:</strong> Rugosidad vs Energía de difusión</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="img-container">
+                                    <img src="https://z-cdn-media.chatglm.cn/files/b80d7d16-befa-4cd4-b91b-80efa2369110_histograma_promedio%20%281%29.png?auth_key=1792267590-b396830faf645fcb6da52224d509373-0-530c57769e6343443a51b842de92d5d8" alt="Distribución de Alturas Promedio" class="img-fluid">
+                                    <p class="mt-2"><strong>Figura 2:</strong> Distribución de Alturas Promedio</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <p>La Figura 1 muestra claramente cómo la rugosidad superficial varía con la energía de difusión para ambos materiales:</p>
+                            <ul>
+                                <li><span class="highlight">Cromo (Cr)</span>: Presenta una rugosidad relativamente constante (alrededor de 4-5 capas) en todo el rango de energías de difusión estudiado (0.01-0.25 eV).</li>
+                                <li><span class="highlight">Hierro (Fe)</span>: Muestra una mayor variabilidad en la rugosidad, con valores que oscilan entre aproximadamente 3 y 7 capas.</li>
+                            </ul>
+                            <p>La Figura 2 muestra una distribución bimodal con picos alrededor de 2-3 capas y 14-15 capas, sugiriendo la formación de dos tipos principales de estructuras: películas delgadas con pocas capas e islas de mayor altura.</p>
+                        </div>
+
+                        <h4 class="mt-4">2. Efectos de la Difusión Superficial</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="img-container">
+                                    <img src="https://z-cdn-media.chatglm.cn/files/00e638b0-a064-4f45-904f-15d8ffd1de80_mapa_contorno_Fe%20%281%29.png?auth_key=1792267590-99b14de3ddb1407bb46a27b608ce0fa1-0-94542816bda40fba2b17fcc3126b23ef" alt="Mapa de Contorno - Fe" class="img-fluid">
+                                    <p class="mt-2"><strong>Figura 3:</strong> Mapa de Contorno - Fe</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="img-container">
+                                    <img src="https://z-cdn-media.chatglm.cn/files/02722061-3222-4069-8eed-8434c710a6c6_mapa_contorno_Cr%20%281%29.png?auth_key=1792267590-8748f44655d74cb491ea43883bee9bb9-0-6393adf432160cb6ca6c23bfeae9a1af" alt="Mapa de Contorno - Cr" class="img-fluid">
+                                    <p class="mt-2"><strong>Figura 4:</strong> Mapa de Contorno - Cr</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="img-container">
+                                    <img src="https://z-cdn-media.chatglm.cn/files/3279b689-635a-47b7-a365-1ed329b427d0_mapa_3d_promedio_Fe%20%281%29.png?auth_key=1792267590-f68fa2517cd942b281c053d5586fe8c5-0-21a651257b9a6f93cc29bc846dfc380d" alt="Mapa 3D Promedio de Altura - Fe" class="img-fluid">
+                                    <p class="mt-2"><strong>Figura 5:</strong> Mapa 3D Promedio de Altura - Fe</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="img-container">
+                                    <img src="https://z-cdn-media.chatglm.cn/files/d96b4a59-ea69-4238-ac54-f2bc7e25e84f_mapa_3d_promedio_Cr%20%281%29.png?auth_key=1792267590-bff4d8a10a33460bac2c93eaa69b013d-0-b834dad667d3b7ccdafbb983804f8a0b" alt="Mapa 3D Promedio de Altura - Cr" class="img-fluid">
+                                    <p class="mt-2"><strong>Figura 6:</strong> Mapa 3D Promedio de Altura - Cr</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <p>Los mapas de contorno (Figuras 3 y 4) y los mapas 3D (Figuras 5 y 6) revelan patrones distintivos de crecimiento:</p>
+                            <ul>
+                                <li><span class="highlight">Hierro (Fe)</span>: Muestra una distribución más homogénea con alturas que varían gradualmente. La presencia de regiones extensas con alturas intermedias (8-10 capas) sugiere una difusión superficial significativa.</li>
+                                <li><span class="highlight">Cromo (Cr)</span>: Presenta una distribución más heterogénea con transiciones más abruptas entre regiones de diferentes alturas, indicando una difusión superficial más limitada.</li>
+                            </ul>
+                        </div>
+
+                        <h4 class="mt-4">3. Efecto del Modo de Deposición en las Propiedades Físicas</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="img-container">
+                                    <img src="https://z-cdn-media.chatglm.cn/files/96754a10-1c74-4abb-971c-252398265e61_comparacion_rugosidad%20%281%29.png?auth_key=1792267590-35c44378b5c24e0c85715dd145b2a190-0-49ef0f486267b3eec4e3b6dc25fb51a0" alt="Comparación de Rugosidad: Fe vs Cr" class="img-fluid">
+                                    <p class="mt-2"><strong>Figura 7:</strong> Comparación de Rugosidad: Fe vs Cr</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="img-container">
+                                    <img src="https://z-cdn-media.chatglm.cn/files/b6bb5a92-ccfe-476d-aad1-3266fc9e0266_comparacion_espesor%20%281%29.png?auth_key=1792267590-24654a7688cb4f20acf85b0e8dfd3d59-0-f945768e1005caa21cca258f50c7e35b" alt="Comparación de Espesor: Fe vs Cr" class="img-fluid">
+                                    <p class="mt-2"><strong>Figura 8:</strong> Comparación de Espesor: Fe vs Cr</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <p>Las Figuras 7 y 8 muestran las diferencias en las propiedades físicas de las películas:</p>
+                            <ul>
+                                <li><span class="highlight">Rugosidad</span>: El Fe presenta una distribución más amplia con un pico alrededor de 5-6 capas, mientras que el Cr muestra una distribución más concentrada alrededor de 4-5 capas.</li>
+                                <li><span class="highlight">Espesor</span>: El Fe muestra una distribución bimodal con picos alrededor de 4 capas y 15-16 capas, mientras que el Cr presenta una distribución más uniforme con un pico pronunciado alrededor de 2-3 capas.</li>
+                            </ul>
+                        </div>
+
+                        <div class="conclusion-box mt-4">
+                            <h4>Conclusiones para el Modo de Deposición Térmica</h4>
+                            <ol>
+                                <li><strong>Mecanismos de deposición</strong>: En modo térmico, el Cr forma películas más uniformes y predecibles, mientras que el Fe muestra una mayor variabilidad en la morfología superficial.</li>
+                                <li><strong>Efectos de la difusión superficial</strong>: El Fe presenta una mayor difusión superficial que el Cr, lo que resulta en películas más homogéneas pero con mayor variabilidad en la rugosidad.</li>
+                                <li><strong>Propiedades físicas</strong>: El modo de deposición térmica favorece la formación de películas delgadas de Cr con rugosidad relativamente constante, mientras que el Fe muestra una mayor tendencia a formar islas de mayor altura con rugosidad más variable.</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="numerical" role="tabpanel" aria-labelledby="numerical-tab">
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h3 class="mb-0">Análisis Cuantitativo de los Resultados de la Simulación</h3>
+                    </div>
+                    <div class="card-body">
+                        <h4>Análisis Comparativo entre Fe y Cr</h4>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Propiedad</th>
+                                        <th>Hierro (Fe)</th>
+                                        <th>Cromo (Cr)</th>
+                                        <th>Diferencia</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Rugosidad (capas)</td>
+                                        <td>6.8277 ± 2.5383</td>
+                                        <td>6.8311 ± 2.5599</td>
+                                        <td>0.0034</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Espesor Promedio (capas)</td>
+                                        <td>9.3238 ± 5.2937</td>
+                                        <td>9.2214 ± 5.2457</td>
+                                        <td>0.1024</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Altura Máxima (capas)</td>
+                                        <td>24.4500 ± 6.6918</td>
+                                        <td>24.5167 ± 6.8325</td>
+                                        <td>0.0667</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cobertura > 10 capas (%)</td>
+                                        <td>40.96 ± 26.98</td>
+                                        <td>40.28 ± 26.81</td>
+                                        <td>0.68</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cobertura > 20 capas (%)</td>
+                                        <td>15.40 ± 16.66</td>
+                                        <td>15.13 ± 16.29</td>
+                                        <td>0.27</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cobertura > 30 capas (%)</td>
+                                        <td>0.00 ± 0.00</td>
+                                        <td>0.00 ± 0.00</td>
+                                        <td>0.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cobertura > 60 capas (%)</td>
+                                        <td>0.00 ± 0.00</td>
+                                        <td>0.00 ± 0.00</td>
+                                        <td>0.00</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="mt-4">
+                            <h5>Distribución de Etapas de Crecimiento</h5>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="card text-center">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Nucleación</h5>
+                                            <h2 class="card-text text-primary">0.00%</h2>
+                                            <p class="card-text">Ambos materiales</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card text-center">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Coalescencia</h5>
+                                            <h2 class="card-text text-primary">33.33%</h2>
+                                            <p class="card-text">Ambos materiales</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card text-center">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Crecimiento</h5>
+                                            <h2 class="card-text text-primary">66.67%</h2>
+                                            <p class="card-text">Ambos materiales</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h4 class="mt-4">Interpretación de Resultados</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header bg-primary text-white">
+                                        <h5 class="mb-0">Rugosidad Superficial</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <p>Ambos materiales presentan valores de rugosidad prácticamente idénticos, con una diferencia mínima de solo 0.0034 capas. Las desviaciones estándar son muy similares, indicando una variabilidad comparable en la rugosidad de ambos materiales.</p>
+                                        <p>Este resultado es interesante considerando que las energías de difusión son muy diferentes entre ambos materiales (Fe: 0.5-1.0 eV, Cr: 0.01-0.25 eV). Sugiere que, en modo de deposición térmica, el sistema alcanza un equilibrio similar en términos de rugosidad superficial.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header bg-primary text-white">
+                                        <h5 class="mb-0">Espesor y Altura Máxima</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <p>El espesor promedio es ligeramente mayor para el Fe (diferencia de 0.1024 capas), mientras que el Cr presenta una altura máxima ligeramente superior (diferencia de 0.0667 capas).</p>
+                                        <p>Estas diferencias podrían atribuirse a la mayor energía de difusión del Fe, que permite a los átomos moverse más fácilmente y formar estructuras ligeramente más altas, mientras que el Cr, con su mayor adhesión (0.98 vs 0.95), puede formar estructuras más altas localmente.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card mt-4">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0">Cobertura Fraccional</h5>
+                            </div>
+                            <div class="card-body">
+                                <p>Las coberturas son muy similares para ambos materiales, con ligeras ventajas para el Fe en ambos rangos (>10 capas y >20 capas). Las desviaciones estándar son altas (aproximadamente 27% para >10 capas y 16.5% para >20 capas), lo que indica una gran variabilidad entre las diferentes simulaciones.</p>
+                                <p>La ausencia de cobertura por encima de 30 capas sugiere que el modo de deposición térmica no favorece la formación de estructuras muy altas. Estos resultados son consistentes con la distribución bimodal observada en el histograma de alturas promedio, con picos alrededor de 2-3 capas y 14-15 capas.</p>
+                            </div>
+                        </div>
+
+                        <div class="card mt-4">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0">Distribución de Etapas de Crecimiento</h5>
+                            </div>
+                            <div class="card-body">
+                                <p>La distribución idéntica entre ambos materiales indica que, en modo de deposición térmica, el proceso de crecimiento sigue una evolución similar independientemente del material depositado. La ausencia de etapa de nucleación sugiere que las simulaciones se iniciaron después de que ya se habían formado los núcleos iniciales en el sustrato.</p>
+                                <p>La predominancia de la etapa de crecimiento (66.67%) sobre la coalescencia (33.33%) sugiere que las simulaciones capturan principalmente la fase de crecimiento vertical de las islas ya formadas.</p>
+                            </div>
+                        </div>
+
+                        <div class="conclusion-box mt-4">
+                            <h4>Conclusiones Finales</h4>
+                            <ol>
+                                <li><strong>Similitudes entre materiales</strong>: A pesar de las diferencias en las propiedades intrínsecas de Fe y Cr, el modo de deposición térmica produce resultados muy similares en términos de rugosidad, espesor y cobertura. Esto sugiere que, en este modo de deposición, las condiciones termodinámicas y la temperatura del sustrato juegan un papel más determinante que las propiedades específicas del material.</li>
+                                <li><strong>Mecanismo de crecimiento</strong>: Los resultados son consistentes con un mecanismo de crecimiento de islas (Volmer-Weber), donde los átomos depositados forman núcleos que crecen vertical y lateralmente hasta coalescer.</li>
+                                <li><strong>Equilibrio dinámico</strong>: La similitud en los resultados a pesar de las diferentes energías de difusión sugiere que el sistema alcanza un equilibrio dinámico donde la tasa de deposición y la movilidad superficial se compensan mutuamente.</li>
+                                <li><strong>Relevancia para aplicaciones</strong>: La rugosidad moderada y la cobertura uniforme observadas en el modo de deposición térmica podrían ser ventajosas para aplicaciones que requieren películas con propiedades ópticas o electrónicas específicas, donde la uniformidad es un factor crítico.</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p>Simulación Monte Carlo de los Procesos de Deposición en Películas Delgadas de Cr y Fe sobre un Sustrato Sólido de Mg (001)</p>
+                    <p>Elaborado por Ángel Chacín Ávila, se publica con licencia GPL</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/7.8.2/docx.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script>
+        // Función para verificar y manejar errores de carga de imágenes
+        document.addEventListener('DOMContentLoaded', function() {
+            const images = document.querySelectorAll('.img-container img');
+            
+            images.forEach(img => {
+                // Verificar si la imagen se carga correctamente
+                img.addEventListener('error', function() {
+                    // Si hay un error, mostrar un placeholder con información
+                    const container = this.parentElement;
+                    const placeholder = document.createElement('div');
+                    placeholder.className = 'img-placeholder';
+                    placeholder.innerHTML = `
+                        <div>
+                            <i class="bi bi-exclamation-triangle" style="font-size: 3rem; color: #dc3545;"></i>
+                            <p class="mt-2">No se pudo cargar la imagen</p>
+                            <button class="retry-btn" onclick="retryLoadImage('${this.src}', ${Array.from(images).indexOf(this)})">Reintentar</button>
+                        </div>
+                    `;
+                    
+                    // Ocultar la imagen y mostrar el placeholder
+                    this.style.display = 'none';
+                    container.insertBefore(placeholder, this.nextSibling);
+                });
+                
+                // Verificar si la imagen ya está cargada
+                if (img.complete) {
+                    if (img.naturalWidth === 0) {
+                        // La imagen no se pudo cargar
+                        img.dispatchEvent(new Event('error'));
+                    }
+                }
+            });
+        });
+        
+        // Función para reintentar cargar una imagen
+        function retryLoadImage(src, index) {
+            const images = document.querySelectorAll('.img-container img');
+            const img = images[index];
+            const container = img.parentElement;
+            
+            // Eliminar el placeholder si existe
+            const placeholder = container.querySelector('.img-placeholder');
+            if (placeholder) {
+                placeholder.remove();
+            }
+            
+            // Mostrar la imagen y forzar su recarga
+            img.style.display = 'block';
+            
+            // Añadir un timestamp para evitar caché
+            const timestamp = new Date().getTime();
+            const url = new URL(src);
+            url.searchParams.set('t', timestamp);
+            
+            img.src = url.toString();
+        }
+        
+        function exportToWord() {
+            const { Document, Packer, Paragraph, TextRun, HeadingLevel, Table, TableRow, TableCell, WidthType, BorderStyle } = docx;
+            
+            // Crear el documento
+            const doc = new Document({
+                sections: [{
+                    properties: {},
+                    children: [
+                        new Paragraph({
+                            text: "Análisis de Simulación Monte Carlo de Procesos de Deposición",
+                            heading: HeadingLevel.TITLE,
+                            alignment: "center"
+                        }),
+                        new Paragraph({
+                            text: "Películas Delgadas de Cr y Fe sobre Sustrato Sólido de Mg (001)",
+                            heading: HeadingLevel.HEADING_1,
+                            alignment: "center"
+                        }),
+                        new Paragraph(""),
+                        
+                        // Objetivos del trabajo
+                        new Paragraph({
+                            text: "Objetivos del Trabajo",
+                            heading: HeadingLevel.HEADING_1
+                        }),
+                        new Paragraph({
+                            text: "Objetivo General",
+                            heading: HeadingLevel.HEADING_2
+                        }),
+                        new Paragraph("Simular el proceso de deposición de películas delgadas de Cr y Fe mediante el método de Monte Carlo."),
+                        new Paragraph(""),
+                        
+                        new Paragraph({
+                            text: "Objetivos Específicos",
+                            heading: HeadingLevel.HEADING_2
+                        }),
+                        new Paragraph("1. Caracterizar los mecanismos de deposición en películas delgadas de Cr y Fe sobre un sustrato sólido de Mg (001) mediante el método Monte Carlo Cinético."),
+                        new Paragraph("2. Determinar los efectos de Difusión Superficial en el proceso de deposición de Cr y Fe sobre un sustrato sólido de Mg (001) mediante el método Monte Carlo Cinético."),
+                        new Paragraph("3. Delimitar el efecto del modo de deposición en las propiedades físicas de las películas delgadas de Cr y Fe en un sustrato sólido de Mg (001)."),
+                        new Paragraph(""),
+                        
+                        // Análisis Visual
+                        new Paragraph({
+                            text: "Análisis Visual: Modo de Deposición Térmica",
+                            heading: HeadingLevel.HEADING_1
+                        }),
+                        
+                        new Paragraph({
+                            text: "1. Caracterización de los Mecanismos de Deposición",
+                            heading: HeadingLevel.HEADING_2
+                        }),
+                        new Paragraph("La Figura 1 muestra claramente cómo la rugosidad superficial varía con la energía de difusión para ambos materiales:"),
+                        new Paragraph("• Cromo (Cr): Presenta una rugosidad relativamente constante (alrededor de 4-5 capas) en todo el rango de energías de difusión estudiado (0.01-0.25 eV)."),
+                        new Paragraph("• Hierro (Fe): Muestra una mayor variabilidad en la rugosidad, con valores que oscilan entre aproximadamente 3 y 7 capas."),
+                        new Paragraph("La Figura 2 muestra una distribución bimodal con picos alrededor de 2-3 capas y 14-15 capas, sugiriendo la formación de dos tipos principales de estructuras: películas delgadas con pocas capas e islas de mayor altura."),
+                        new Paragraph(""),
+                        
+                        new Paragraph({
+                            text: "2. Efectos de la Difusión Superficial",
+                            heading: HeadingLevel.HEADING_2
+                        }),
+                        new Paragraph("Los mapas de contorno y los mapas 3D revelan patrones distintivos de crecimiento:"),
+                        new Paragraph("• Hierro (Fe): Muestra una distribución más homogénea con alturas que varían gradualmente. La presencia de regiones extensas con alturas intermedias (8-10 capas) sugiere una difusión superficial significativa."),
+                        new Paragraph("• Cromo (Cr): Presenta una distribución más heterogénea con transiciones más abruptas entre regiones de diferentes alturas, indicando una difusión superficial más limitada."),
+                        new Paragraph(""),
+                        
+                        new Paragraph({
+                            text: "3. Efecto del Modo de Deposición en las Propiedades Físicas",
+                            heading: HeadingLevel.HEADING_2
+                        }),
+                        new Paragraph("Las Figuras 7 y 8 muestran las diferencias en las propiedades físicas de las películas:"),
+                        new Paragraph("• Rugosidad: El Fe presenta una distribución más amplia con un pico alrededor de 5-6 capas, mientras que el Cr muestra una distribución más concentrada alrededor de 4-5 capas."),
+                        new Paragraph("• Espesor: El Fe muestra una distribución bimodal con picos alrededor de 4 capas y 15-16 capas, mientras que el Cr presenta una distribución más uniforme con un pico pronunciado alrededor de 2-3 capas."),
+                        new Paragraph(""),
+                        
+                        new Paragraph({
+                            text: "Conclusiones para el Modo de Deposición Térmica",
+                            heading: HeadingLevel.HEADING_2
+                        }),
+                        new Paragraph("1. Mecanismos de deposición: En modo térmico, el Cr forma películas más uniformes y predecibles, mientras que el Fe muestra una mayor variabilidad en la morfología superficial."),
+                        new Paragraph("2. Efectos de la difusión superficial: El Fe presenta una mayor difusión superficial que el Cr, lo que resulta en películas más homogéneas pero con mayor variabilidad en la rugosidad."),
+                        new Paragraph("3. Propiedades físicas: El modo de deposición térmica favorece la formación de películas delgadas de Cr con rugosidad relativamente constante, mientras que el Fe muestra una mayor tendencia a formar islas de mayor altura con rugosidad más variable."),
+                        new Paragraph(""),
+                        
+                        // Análisis Numérico
+                        new Paragraph({
+                            text: "Análisis Cuantitativo de los Resultados de la Simulación",
+                            heading: HeadingLevel.HEADING_1
+                        }),
+                        
+                        new Paragraph({
+                            text: "Análisis Comparativo entre Fe y Cr",
+                            heading: HeadingLevel.HEADING_2
+                        }),
+                        
+                        // Tabla de resultados
+                        new Table({
+                            width: {
+                                size: 100,
+                                type: WidthType.PERCENTAGE
+                            },
+                            rows: [
+                                new TableRow({
+                                    children: [
+                                        new TableCell({
+                                            text: "Propiedad",
+                                            width: {
+                                                size: 30,
+                                                type: WidthType.PERCENTAGE
+                                            }
+                                        }),
+                                        new TableCell({
+                                            text: "Hierro (Fe)",
+                                            width: {
+                                                size: 25,
+                                                type: WidthType.PERCENTAGE
+                                            }
+                                        }),
+                                        new TableCell({
+                                            text: "Cromo (Cr)",
+                                            width: {
+                                                size: 25,
+                                                type: WidthType.PERCENTAGE
+                                            }
+                                        }),
+                                        new TableCell({
+                                            text: "Diferencia",
+                                            width: {
+                                                size: 20,
+                                                type: WidthType.PERCENTAGE
+                                            }
+                                        })
+                                    ]
+                                }),
+                                new TableRow({
+                                    children: [
+                                        new TableCell("Rugosidad (capas)"),
+                                        new TableCell("6.8277 ± 2.5383"),
+                                        new TableCell("6.8311 ± 2.5599"),
+                                        new TableCell("0.0034")
+                                    ]
+                                }),
+                                new TableRow({
+                                    children: [
+                                        new TableCell("Espesor Promedio (capas)"),
+                                        new TableCell("9.3238 ± 5.2937"),
+                                        new TableCell("9.2214 ± 5.2457"),
+                                        new TableCell("0.1024")
+                                    ]
+                                }),
+                                new TableRow({
+                                    children: [
+                                        new TableCell("Altura Máxima (capas)"),
+                                        new TableCell("24.4500 ± 6.6918"),
+                                        new TableCell("24.5167 ± 6.8325"),
+                                        new TableCell("0.0667")
+                                    ]
+                                }),
+                                new TableRow({
+                                    children: [
+                                        new TableCell("Cobertura > 10 capas (%)"),
+                                        new TableCell("40.96 ± 26.98"),
+                                        new TableCell("40.28 ± 26.81"),
+                                        new TableCell("0.68")
+                                    ]
+                                }),
+                                new TableRow({
+                                    children: [
+                                        new TableCell("Cobertura > 20 capas (%)"),
+                                        new TableCell("15.40 ± 16.66"),
+                                        new TableCell("15.13 ± 16.29"),
+                                        new TableCell("0.27")
+                                    ]
+                                }),
+                                new TableRow({
+                                    children: [
+                                        new TableCell("Cobertura > 30 capas (%)"),
+                                        new TableCell("0.00 ± 0.00"),
+                                        new TableCell("0.00 ± 0.00"),
+                                        new TableCell("0.00")
+                                    ]
+                                }),
+                                new TableRow({
+                                    children: [
+                                        new TableCell("Cobertura > 60 capas (%)"),
+                                        new TableCell("0.00 ± 0.00"),
+                                        new TableCell("0.00 ± 0.00"),
+                                        new TableCell("0.00")
+                                    ]
+                                })
+                            ]
+                        }),
+                        new Paragraph(""),
+                        
+                        new Paragraph({
+                            text: "Distribución de Etapas de Crecimiento",
+                            heading: HeadingLevel.HEADING_2
+                        }),
+                        new Paragraph("• Nucleación: 0.00% (Ambos materiales)"),
+                        new Paragraph("• Coalescencia: 33.33% (Ambos materiales)"),
+                        new Paragraph("• Crecimiento: 66.67% (Ambos materiales)"),
+                        new Paragraph(""),
+                        
+                        new Paragraph({
+                            text: "Interpretación de Resultados",
+                            heading: HeadingLevel.HEADING_2
+                        }),
+                        new Paragraph({
+                            text: "Rugosidad Superficial",
+                            heading: HeadingLevel.HEADING_3
+                        }),
+                        new Paragraph("Ambos materiales presentan valores de rugosidad prácticamente idénticos, con una diferencia mínima de solo 0.0034 capas. Las desviaciones estándar son muy similares, indicando una variabilidad comparable en la rugosidad de ambos materiales."),
+                        new Paragraph("Este resultado es interesante considerando que las energías de difusión son muy diferentes entre ambos materiales (Fe: 0.5-1.0 eV, Cr: 0.01-0.25 eV). Sugiere que, en modo de deposición térmica, el sistema alcanza un equilibrio similar en términos de rugosidad superficial."),
+                        new Paragraph(""),
+                        
+                        new Paragraph({
+                            text: "Espesor y Altura Máxima",
+                            heading: HeadingLevel.HEADING_3
+                        }),
+                        new Paragraph("El espesor promedio es ligeramente mayor para el Fe (diferencia de 0.1024 capas), mientras que el Cr presenta una altura máxima ligeramente superior (diferencia de 0.0667 capas)."),
+                        new Paragraph("Estas diferencias podrían atribuirse a la mayor energía de difusión del Fe, que permite a los átomos moverse más fácilmente y formar estructuras ligeramente más altas, mientras que el Cr, con su mayor adhesión (0.98 vs 0.95), puede formar estructuras más altas localmente."),
+                        new Paragraph(""),
+                        
+                        new Paragraph({
+                            text: "Cobertura Fraccional",
+                            heading: HeadingLevel.HEADING_3
+                        }),
+                        new Paragraph("Las coberturas son muy similares para ambos materiales, con ligeras ventajas para el Fe en ambos rangos (>10 capas y >20 capas). Las desviaciones estándar son altas (aproximadamente 27% para >10 capas y 16.5% para >20 capas), lo que indica una gran variabilidad entre las diferentes simulaciones."),
+                        new Paragraph("La ausencia de cobertura por encima de 30 capas sugiere que el modo de deposición térmica no favorece la formación de estructuras muy altas. Estos resultados son consistentes con la distribución bimodal observada en el histograma de alturas promedio, con picos alrededor de 2-3 capas y 14-15 capas."),
+                        new Paragraph(""),
+                        
+                        new Paragraph({
+                            text: "Distribución de Etapas de Crecimiento",
+                            heading: HeadingLevel.HEADING_3
+                        }),
+                        new Paragraph("La distribución idéntica entre ambos materiales indica que, en modo de deposición térmica, el proceso de crecimiento sigue una evolución similar independientemente del material depositado. La ausencia de etapa de nucleación sugiere que las simulaciones se iniciaron después de que ya se habían formado los núcleos iniciales en el sustrato."),
+                        new Paragraph("La predominancia de la etapa de crecimiento (66.67%) sobre la coalescencia (33.33%) sugiere que las simulaciones capturan principalmente la fase de crecimiento vertical de las islas ya formadas."),
+                        new Paragraph(""),
+                        
+                        new Paragraph({
+                            text: "Conclusiones Finales",
+                            heading: HeadingLevel.HEADING_2
+                        }),
+                        new Paragraph("1. Similitudes entre materiales: A pesar de las diferencias en las propiedades intrínsecas de Fe y Cr, el modo de deposición térmica produce resultados muy similares en términos de rugosidad, espesor y cobertura. Esto sugiere que, en este modo de deposición, las condiciones termodinámicas y la temperatura del sustrato juegan un papel más determinante que las propiedades específicas del material."),
+                        new Paragraph("2. Mecanismo de crecimiento: Los resultados son consistentes con un mecanismo de crecimiento de islas (Volmer-Weber), donde los átomos depositados forman núcleos que crecen vertical y lateralmente hasta coalescer."),
+                        new Paragraph("3. Equilibrio dinámico: La similitud en los resultados a pesar de las diferentes energías de difusión sugiere que el sistema alcanza un equilibrio dinámico donde la tasa de deposición y la movilidad superficial se compensan mutuamente."),
+                        new Paragraph("4. Relevancia para aplicaciones: La rugosidad moderada y la cobertura uniforme observadas en el modo de deposición térmica podrían ser ventajosas para aplicaciones que requieren películas con propiedades ópticas o electrónicas específicas, donde la uniformidad es un factor crítico."),
+                        new Paragraph(""),
+                        
+                        new Paragraph("Elaborado por Ángel Chacín Ávila, se publica con licencia GPL")
+                    ]
+                }]
+            });
+            
+            // Generar y descargar el documento
+            Packer.toBlob(doc).then(blob => {
+                saveAs(blob, "Analisis_Simulacion_Monte_Carlo.docx");
+                console.log("Documento generado y descargado exitosamente.");
+            });
+        }
+    </script>
+</body>
+</html>
