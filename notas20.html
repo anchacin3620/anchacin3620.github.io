@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Evaluación - Criminalística</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #34495e;
+            --success: #2ecc71;
+            --warning: #f39c12;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .header-info {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .info-block {
+            flex: 1;
+            min-width: 200px;
+            margin: 5px;
+        }
+        
+        .info-block h3 {
+            color: var(--primary);
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .info-block p {
+            font-size: 0.95rem;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .card h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 10px;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group label {
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .form-group input, .form-group select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .btn-danger {
+            background-color: var(--accent);
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+        }
+        
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+        
+        .btn-export {
+            background-color: var(--warning);
+            color: var(--dark);
+        }
+        
+        .btn-export:hover {
+            background-color: #e67e22;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        
+        .final-grade {
+            font-weight: bold;
+            color: var(--success);
+        }
+        
+        .actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            background-color: var(--success);
+            color: white;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.error {
+            background-color: var(--accent);
+        }
+        
+        @media (max-width: 768px) {
+            .header-info {
+                flex-direction: column;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .table-container {
+                font-size: 0.9rem;
+            }
+            
+            th, td {
+                padding: 8px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Sistema de Evaluación - Criminalística</h1>
+            <p>PNF: Investigación Penal | Proceso: I-2025 | Trayecto: I</p>
+        </header>
+        
+        <div class="header-info">
+            <div class="info-block">
+                <h3>Unidad Curricular</h3>
+                <p>Criminalística</p>
+            </div>
+            <div class="info-block">
+                <h3>Docente</h3>
+                <p>Francisco Pirela</p>
+            </div>
+            <div class="info-block">
+                <h3>Fecha Inicio</h3>
+                <p id="fecha-inicio">-</p>
+            </div>
+            <div class="info-block">
+                <h3>Fecha Culminación</h3>
+                <p id="fecha-culminacion">-</p>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>Agregar Nuevo Estudiante</h2>
+            <form id="student-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="cedula">Cédula</label>
+                        <input type="text" id="cedula" placeholder="Ej: 12345678" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nombres">Nombres</label>
+                        <input type="text" id="nombres" placeholder="Nombres del estudiante" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="apellidos">Apellidos</label>
+                        <input type="text" id="apellidos" placeholder="Apellidos del estudiante" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="e1">E1 (20%)</label>
+                        <input type="number" id="e1" min="0" max="20" step="0.1" placeholder="0-20" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="e2">E2 (20%)</label>
+                        <input type="number" id="e2" min="0" max="20" step="0.1" placeholder="0-20" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="e3">E3 (20%)</label>
+                        <input type="number" id="e3" min="0" max="20" step="0.1" placeholder="0-20" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="e4">E4 (20%)</label>
+                        <input type="number" id="e4" min="0" max="20" step="0.1" placeholder="0-20" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="e5">E5 (15%)</label>
+                        <input type="number" id="e5" min="0" max="20" step="0.1" placeholder="0-20" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="actitudinal">Actitudinal (5%)</label>
+                        <input type="number" id="actitudinal" min="0" max="20" step="0.1" placeholder="0-20" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn">Agregar Estudiante</button>
+            </form>
+        </div>
+        
+        <div class="card">
+            <h2>Lista de Estudiantes</h2>
+            <div class="table-container">
+                <table id="students-table">
+                    <thead>
+                        <tr>
+                            <th>N°</th>
+                            <th>Cédula</th>
+                            <th>Nombres</th>
+                            <th>Apellidos</th>
+                            <th>E1</th>
+                            <th>E2</th>
+                            <th>E3</th>
+                            <th>E4</th>
+                            <th>E5</th>
+                            <th>Actitudinal</th>
+                            <th>Nota Final</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="students-tbody">
+                        <!-- Los estudiantes se agregarán aquí dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+            <div style="margin-top: 20px; text-align: center;">
+                <button id="export-btn" class="btn btn-export">Exportar a Excel</button>
+                <button id="clear-btn" class="btn btn-danger">Limpiar Todo</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="notification" class="notification"></div>
+    
+    <script>
+        // Datos iniciales
+        let students = [];
+        let studentCounter = 1;
+        
+        // Configuración de fechas
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date();
+            const startDate = new Date(today);
+            startDate.setDate(today.getDate() - 30);
+            const endDate = new Date(today);
+            endDate.setDate(today.getDate() + 30);
+            
+            document.getElementById('fecha-inicio').textContent = formatDate(startDate);
+            document.getElementById('fecha-culminacion').textContent = formatDate(endDate);
+        });
+        
+        function formatDate(date) {
+            const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+            return date.toLocaleDateString('es-ES', options);
+        }
+        
+        // Función para mostrar notificaciones
+        function showNotification(message, isError = false) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = 'notification show';
+            
+            if (isError) {
+                notification.classList.add('error');
+            }
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Función para calcular la nota final
+        function calculateFinalGrade(e1, e2, e3, e4, e5, actitudinal) {
+            return (e1 * 0.20) + (e2 * 0.20) + (e3 * 0.20) + (e4 * 0.20) + (e5 * 0.15) + (actitudinal * 0.05);
+        }
+        
+        // Función para agregar un estudiante a la tabla
+        function addStudentToTable(student) {
+            const tbody = document.getElementById('students-tbody');
+            const row = document.createElement('tr');
+            
+            row.innerHTML = `
+                <td>${student.id}</td>
+                <td>${student.cedula}</td>
+                <td>${student.nombres}</td>
+                <td>${student.apellidos}</td>
+                <td>${student.e1}</td>
+                <td>${student.e2}</td>
+                <td>${student.e3}</td>
+                <td>${student.e4}</td>
+                <td>${student.e5}</td>
+                <td>${student.actitudinal}</td>
+                <td class="final-grade">${student.finalGrade.toFixed(2)}</td>
+                <td class="actions">
+                    <button class="btn btn-danger" onclick="removeStudent(${student.id})">Eliminar</button>
+                </td>
+            `;
+            
+            tbody.appendChild(row);
+        }
+        
+        // Función para agregar un estudiante
+        function addStudent(event) {
+            event.preventDefault();
+            
+            const cedula = document.getElementById('cedula').value;
+            const nombres = document.getElementById('nombres').value;
+            const apellidos = document.getElementById('apellidos').value;
+            const e1 = parseFloat(document.getElementById('e1').value);
+            const e2 = parseFloat(document.getElementById('e2').value);
+            const e3 = parseFloat(document.getElementById('e3').value);
+            const e4 = parseFloat(document.getElementById('e4').value);
+            const e5 = parseFloat(document.getElementById('e5').value);
+            const actitudinal = parseFloat(document.getElementById('actitudinal').value);
+            
+            // Validar que todos los campos estén completos
+            if (!cedula || !nombres || !apellidos || isNaN(e1) || isNaN(e2) || isNaN(e3) || 
+                isNaN(e4) || isNaN(e5) || isNaN(actitudinal)) {
+                showNotification('Por favor complete todos los campos correctamente', true);
+                return;
+            }
+            
+            // Validar que las notas estén en el rango correcto
+            if (e1 < 0 || e1 > 20 || e2 < 0 || e2 > 20 || e3 < 0 || e3 > 20 || 
+                e4 < 0 || e4 > 20 || e5 < 0 || e5 > 20 || actitudinal < 0 || actitudinal > 20) {
+                showNotification('Las notas deben estar entre 0 y 20', true);
+                return;
+            }
+            
+            // Calcular la nota final
+            const finalGrade = calculateFinalGrade(e1, e2, e3, e4, e5, actitudinal);
+            
+            // Crear objeto estudiante
+            const student = {
+                id: studentCounter++,
+                cedula,
+                nombres,
+                apellidos,
+                e1,
+                e2,
+                e3,
+                e4,
+                e5,
+                actitudinal,
+                finalGrade
+            };
+            
+            // Agregar al array
+            students.push(student);
+            
+            // Agregar a la tabla
+            addStudentToTable(student);
+            
+            // Limpiar formulario
+            document.getElementById('student-form').reset();
+            
+            // Mostrar notificación
+            showNotification('Estudiante agregado correctamente');
+        }
+        
+        // Función para eliminar un estudiante
+        function removeStudent(id) {
+            // Eliminar del array
+            students = students.filter(student => student.id !== id);
+            
+            // Limpiar la tabla
+            const tbody = document.getElementById('students-tbody');
+            tbody.innerHTML = '';
+            
+            // Volver a agregar los estudiantes
+            students.forEach(student => {
+                addStudentToTable(student);
+            });
+            
+            showNotification('Estudiante eliminado correctamente');
+        }
+        
+        // Función para exportar a Excel
+        function exportToExcel() {
+            if (students.length === 0) {
+                showNotification('No hay estudiantes para exportar', true);
+                return;
+            }
+            
+            // Crear un nuevo libro de trabajo
+            const wb = XLSX.utils.book_new();
+            
+            // Crear una hoja de trabajo con los datos de los estudiantes
+            const wsData = [
+                ['N°', 'Cédula', 'Nombres', 'Apellidos', 'E1', 'E2', 'E3', 'E4', 'E5', 'Actitudinal', 'Nota Final']
+            ];
+            
+            students.forEach(student => {
+                wsData.push([
+                    student.id,
+                    student.cedula,
+                    student.nombres,
+                    student.apellidos,
+                    student.e1,
+                    student.e2,
+                    student.e3,
+                    student.e4,
+                    student.e5,
+                    student.actitudinal,
+                    student.finalGrade.toFixed(2)
+                ]);
+            });
+            
+            const ws = XLSX.utils.aoa_to_sheet(wsData);
+            
+            // Añadir la hoja de trabajo al libro
+            XLSX.utils.book_append_sheet(wb, ws, 'Estudiantes');
+            
+            // Generar el archivo Excel
+            const fileName = `Notas_Criminalistica_${new Date().toISOString().slice(0, 10)}.xlsx`;
+            XLSX.writeFile(wb, fileName);
+            
+            showNotification('Archivo Excel exportado correctamente');
+        }
+        
+        // Función para limpiar todos los datos
+        function clearAll() {
+            if (students.length === 0) {
+                showNotification('No hay datos para limpiar', true);
+                return;
+            }
+            
+            if (confirm('¿Está seguro de que desea eliminar todos los estudiantes?')) {
+                students = [];
+                studentCounter = 1;
+                
+                // Limpiar la tabla
+                const tbody = document.getElementById('students-tbody');
+                tbody.innerHTML = '';
+                
+                showNotification('Todos los estudiantes han sido eliminados');
+            }
+        }
+        
+        // Event listeners
+        document.getElementById('student-form').addEventListener('submit', addStudent);
+        document.getElementById('export-btn').addEventListener('click', exportToExcel);
+        document.getElementById('clear-btn').addEventListener('click', clearAll);
+    </script>
+</body>
+</html>
