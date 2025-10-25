@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Educativo: Integración por Partes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        canvas {
+            border: 2px solid var(--primary-color);
+            background-color: #fff;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: block;
+            width: 100%;
+            max-width: 800px;
+            height: auto;
+        }
+        
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        button:hover {
+            background-color: #3a5a8c;
+            transform: translateY(-2px);
+        }
+        
+        button:disabled {
+            background-color: var(--secondary-color);
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-preview {
+            background-color: var(--success-color);
+        }
+        
+        .btn-preview:hover {
+            background-color: #218838;
+        }
+        
+        .btn-stop {
+            background-color: var(--danger-color);
+        }
+        
+        .btn-stop:hover {
+            background-color: #c82333;
+        }
+        
+        .progress-container {
+            width: 100%;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            margin: 20px 0;
+            height: 25px;
+            overflow: hidden;
+            display: none;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0%;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        #status {
+            margin-top: 15px;
+            font-size: 16px;
+            color: var(--dark-color);
+            text-align: center;
+            min-height: 24px;
+        }
+        
+        .notification {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .notification.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .notification.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .info-box {
+            background-color: #e7f3ff;
+            border-left: 4px solid var(--primary-color);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .info-box i {
+            color: var(--primary-color);
+            margin-right: 10px;
+        }
+        
+        /* Footer Styles */
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: auto;
+            width: 100%;
+        }
+        
+        footer .container {
+            background-color: transparent;
+            box-shadow: none;
+            padding: 0;
+        }
+        
+        footer p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        
+        footer a {
+            color: #4a6fa5;
+            text-decoration: none;
+        }
+        
+        footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .license-badge {
+            display: inline-block;
+            margin-top: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            canvas {
+                height: 300px;
+            }
+            
+            .controls {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <div class="container">
+            <h1>Video Educativo: Integración por Partes</h1>
+            
+            <div class="info-box">
+                <i class="fas fa-info-circle"></i>
+                <span>Esta herramienta genera un video explicativo paso a paso del método de integración por partes.</span>
+            </div>
+            
+            <canvas id="canvas" width="800" height="400" role="img" aria-label="Animación de integración por partes"></canvas>
+            
+            <div class="progress-container" id="progressContainer">
+                <div class="progress-bar" id="progressBar">0%</div>
+            </div>
+            
+            <div class="controls" role="group" aria-label="Controles de video">
+                <button id="previewBtn" onclick="startPreview()" aria-label="Previsualizar animación">
+                    <i class="fas fa-play"></i> Previsualizar
+                </button>
+                <button id="generateBtn" onclick="startAnimationAndDownload()" aria-label="Generar y descargar video">
+                    <i class="fas fa-video"></i> Generar y Descargar Video
+                </button>
+                <button id="stopBtn" onclick="stopRecording()" disabled aria-label="Detener grabación" style="display:none;">
+                    <i class="fas fa-stop"></i> Detener
+                </button>
+            </div>
+            
+            <div id="status" role="status" aria-live="polite">Haz clic en un botón para comenzar.</div>
+            
+            <div id="notification" class="notification" role="alert"></div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>Elaborado por el Profesor Ángel Chacín Ávila</p>
+            <p>Se publica con licencia GPL @2025</p>
+            <div class="license-badge">
+                <a href="https://www.gnu.org/licenses/gpl-3.0.es.html" target="_blank" rel="noopener noreferrer">
+                    <img src="https://www.gnu.org/graphics/gplv3-127x51.png" alt="GPLv3 License" width="88" height="31">
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ccapture.js/1.1.0/CCapture.all.min.js"></script>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const status = document.getElementById('status');
+        const progressBar = document.getElementById('progressBar');
+        const progressContainer = document.getElementById('progressContainer');
+        const generateBtn = document.getElementById('generateBtn');
+        const previewBtn = document.getElementById('previewBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const notification = document.getElementById('notification');
+        
+        let frame = 0;
+        let capturer = null;
+        let isRecording = false;
+        let isPreviewing = false;
+        let animationId = null;
+        let totalFrames = 300; // 10 segundos a 30 fps
+        
+        // Función para mostrar notificaciones
+        function showNotification(message, type) {
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 5000);
+        }
+        
+        function drawScene(step) {
+            // Limpiar canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Fondo con gradiente
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            gradient.addColorStop(0, '#f9f9f9');
+            gradient.addColorStop(1, '#ffffff');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Título con sombra
+            ctx.font = 'bold 28px Arial';
+            ctx.fillStyle = '#4a6fa5';
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.2)';
+            ctx.shadowBlur = 4;
+            ctx.shadowOffsetX = 2;
+            ctx.shadowOffsetY = 2;
+            ctx.fillText('Integración por Partes: ∫ x e^x dx', 20, 50);
+            
+            // Resetear sombra
+            ctx.shadowColor = 'transparent';
+            ctx.shadowBlur = 0;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 0;
+            
+            // Contenedor para los pasos
+            ctx.fillStyle = '#f0f5ff';
+            ctx.strokeStyle = '#d1e3ff';
+            ctx.lineWidth = 1;
+            roundRect(ctx, 10, 70, canvas.width - 20, canvas.height - 80, 10, true, true);
+            
+            // Pasos con animación de aparición
+            ctx.font = '22px Arial';
+            ctx.fillStyle = '#333';
+            
+            if (step >= 0) {
+                ctx.fillText('Fórmula: ∫ u dv = uv - ∫ v du', 30, 110);
+            }
+            
+            if (step >= 1) {
+                ctx.fillStyle = '#4a6fa5';
+                ctx.fillText('Paso 1: Elegir u y dv', 30, 150);
+                
+                ctx.fillStyle = '#333';
+                ctx.font = '20px Arial';
+                ctx.fillText('u = x  →  du = dx', 50, 190);
+                ctx.fillText('dv = e^x dx  →  v = e^x', 50, 220);
+            }
+            
+            if (step >= 2) {
+                ctx.fillStyle = '#4a6fa5';
+                ctx.font = '22px Arial';
+                ctx.fillText('Paso 2: Aplicar la fórmula', 30, 260);
+                
+                ctx.fillStyle = '#333';
+                ctx.font = '20px Arial';
+                ctx.fillText('∫ x e^x dx = x e^x - ∫ e^x dx', 50, 300);
+            }
+            
+            if (step >= 3) {
+                ctx.fillStyle = '#4a6fa5';
+                ctx.font = '22px Arial';
+                ctx.fillText('Paso 3: Resolver la integral restante', 30, 340);
+                
+                ctx.fillStyle = '#333';
+                ctx.font = '20px Arial';
+                ctx.fillText('∫ e^x dx = e^x', 50, 380);
+            }
+            
+            if (step >= 4) {
+                ctx.fillStyle = '#4a6fa5';
+                ctx.font = '22px Arial';
+                ctx.fillText('Paso 4: Resultado final', 30, 420);
+                
+                ctx.fillStyle = '#333';
+                ctx.font = '20px Arial';
+                ctx.fillText('∫ x e^x dx = x e^x - e^x + C', 50, 460);
+                
+                // Resaltar el resultado
+                ctx.strokeStyle = '#4a6fa5';
+                ctx.lineWidth = 2;
+                roundRect(ctx, 45, 440, 300, 30, 5, false, true);
+            }
+            
+            // Gráfica de e^x con animación
+            if (step >= 4) {
+                ctx.beginPath();
+                ctx.strokeStyle = '#4a6fa5';
+                ctx.lineWidth = 3;
+                
+                // Ejes
+                ctx.moveTo(550, 350);
+                ctx.lineTo(750, 350);
+                ctx.moveTo(650, 250);
+                ctx.lineTo(650, 350);
+                
+                // Curva e^x
+                for (let x = 0; x < 100; x += 1) {
+                    const xPos = x + 550;
+                    const yPos = 350 - Math.exp(x / 20) * 10;
+                    if (x === 0) ctx.moveTo(xPos, yPos);
+                    else ctx.lineTo(xPos, yPos);
+                }
+                ctx.stroke();
+                
+                // Etiqueta
+                ctx.fillStyle = '#4a6fa5';
+                ctx.font = '18px Arial';
+                ctx.fillText('f(x) = e^x', 600, 240);
+            }
+        }
+        
+        // Función para dibujar rectángulos redondeados
+        function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
+            if (typeof radius === "undefined") {
+                radius = 5;
+            }
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+            if (fill) {
+                ctx.fill();
+            }
+            if (stroke) {
+                ctx.stroke();
+            }
+        }
+        
+        function startPreview() {
+            if (isRecording || isPreviewing) return;
+            
+            isPreviewing = true;
+            previewBtn.disabled = true;
+            generateBtn.disabled = true;
+            status.textContent = 'Previsualizando animación...';
+            
+            frame = 0;
+            animatePreview();
+        }
+        
+        function animatePreview() {
+            if (frame > totalFrames) {
+                isPreviewing = false;
+                previewBtn.disabled = false;
+                generateBtn.disabled = false;
+                status.textContent = 'Previsualización completada. Puedes generar el video ahora.';
+                return;
+            }
+            
+            // Controlar los pasos según los frames
+            let step = Math.floor(frame / 60); // Cambiar paso cada 2 segundos
+            drawScene(step);
+            frame++;
+            animationId = requestAnimationFrame(animatePreview);
+        }
+        
+        function startAnimationAndDownload() {
+            if (isRecording || isPreviewing) return;
+            
+            try {
+                // Inicializar CCapture para grabar en WebM
+                capturer = new CCapture({
+                    format: 'webm',
+                    framerate: 30, // Reducido a 30 fps para mejor rendimiento
+                    name: 'integral_por_partes',
+                    quality: 1
+                });
+                
+                capturer.start();
+                isRecording = true;
+                progressContainer.style.display = 'block';
+                previewBtn.disabled = true;
+                generateBtn.disabled = true;
+                stopBtn.disabled = false;
+                stopBtn.style.display = 'inline-flex';
+                status.textContent = 'Generando video... Por favor, espera.';
+                
+                frame = 0;
+                animate();
+            } catch (error) {
+                showNotification('Error al inicializar la grabación: ' + error.message, 'error');
+                console.error('Error al inicializar CCapture:', error);
+                resetRecordingState();
+            }
+        }
+        
+        function animate() {
+            if (!isRecording) return;
+            
+            if (frame > totalFrames) {
+                stopRecording();
+                return;
+            }
+            
+            // Actualizar barra de progreso
+            const progress = Math.floor((frame / totalFrames) * 100);
+            progressBar.style.width = progress + '%';
+            progressBar.textContent = progress + '%';
+            
+            // Controlar los pasos según los frames
+            let step = Math.floor(frame / 60); // Cambiar paso cada 2 segundos
+            drawScene(step);
+            capturer.capture(canvas); // Capturar frame
+            frame++;
+            requestAnimationFrame(animate);
+        }
+        
+        function stopRecording() {
+            if (!isRecording) return;
+            
+            isRecording = false;
+            status.textContent = 'Finalizando grabación...';
+            
+            capturer.stop();
+            capturer.save((blob) => {
+                try {
+                    // Crear enlace de descarga
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = 'integral_por_partes.webm';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                    
+                    showNotification('Video descargado exitosamente como WebM.', 'success');
+                    status.textContent = 'Video descargado como WebM.';
+                } catch (error) {
+                    showNotification('Error al descargar el video: ' + error.message, 'error');
+                    console.error('Error al descargar el video:', error);
+                    status.textContent = 'Error al descargar el video.';
+                } finally {
+                    resetRecordingState();
+                }
+            });
+        }
+        
+        function resetRecordingState() {
+            isRecording = false;
+            previewBtn.disabled = false;
+            generateBtn.disabled = false;
+            stopBtn.disabled = true;
+            stopBtn.style.display = 'none';
+            progressContainer.style.display = 'none';
+            progressBar.style.width = '0%';
+            progressBar.textContent = '0%';
+        }
+    </script>
+</body>
+</html>
