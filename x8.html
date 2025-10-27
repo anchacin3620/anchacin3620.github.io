@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulación Monte Carlo de Procesos de Deposición en Películas Delgadas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- CORRECCIÓN: Volvemos a las URLs originales de las librerías y añadimos el atributo "defer" para una carga más segura -->
+    <script src="https://cdn.jsdelivr.net/npm/docx@7.1.0/build/index.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js" defer></script>
+    
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --background-color: #f8f9fa;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--background-color);
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            font-weight: 300;
+        }
+        
+        .section {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        h3 {
+            color: var(--secondary-color);
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        
+        .objectives {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .objective-card {
+            flex: 1;
+            min-width: 300px;
+            background: var(--light-color);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .objective-card h4 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .method-description {
+            background: #e8f4fc;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .result-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-top: 3px solid var(--secondary-color);
+        }
+        
+        .result-card h4 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .comparison-table th, .comparison-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .comparison-table th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .comparison-table .highlight {
+            background-color: #e8f4fc;
+            font-weight: 600;
+        }
+        
+        .image-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .image-card {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .image-card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .image-card .caption {
+            padding: 15px;
+            background: white;
+        }
+        
+        .image-card .caption h4 {
+            margin-bottom: 5px;
+            color: var(--primary-color);
+        }
+        
+        .conclusion {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 25px;
+            border-radius: 8px;
+            border-left: 4px solid var(--success-color);
+        }
+        
+        .conclusion h3 {
+            color: var(--success-color);
+        }
+        
+        .conclusion ul {
+            padding-left: 20px;
+            margin-top: 15px;
+        }
+        
+        .conclusion li {
+            margin-bottom: 10px;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-right: 5px;
+        }
+        
+        .badge-thermal {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .badge-ballistic {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .badge-increase {
+            background-color: #27ae60;
+            color: white;
+        }
+        
+        .badge-decrease {
+            background-color: #f39c12;
+            color: white;
+        }
+        
+        .download-btn {
+            display: block;
+            width: 250px;
+            margin: 30px auto;
+            padding: 15px;
+            background-color: var(--success-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+        
+        .download-btn:hover {
+            background-color: #219653;
+        }
+        
+        .download-btn:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+        
+        .download-btn i {
+            margin-right: 10px;
+        }
+        
+        footer {
+            background: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+        
+        @media (max-width: 768px) {
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .image-container {
+                flex-direction: column;
+            }
+            
+            .comparison-table {
+                font-size: 0.9rem;
+            }
+            
+            .comparison-table th, .comparison-table td {
+                padding: 8px 10px;
+            }
+        }
+        
+        /* Estilos para mensajes de estado */
+        .status-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 5px;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .status-message.success {
+            background-color: var(--success-color);
+        }
+        
+        .status-message.error {
+            background-color: var(--accent-color);
+        }
+        
+        .status-message.info {
+            background-color: var(--secondary-color);
+        }
+        
+        .progress-container {
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .progress-bar {
+            height: 20px;
+            background-color: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background-color: var(--success-color);
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        .progress-text {
+            text-align: center;
+            margin-top: 5px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Simulación Monte Carlo de Procesos de Deposición en Películas Delgadas</h1>
+            <p>Análisis comparativo de modos de deposición térmico y balístico para Cr y Fe sobre Mg (001)</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <section class="section">
+            <h2>Objetivos del Trabajo</h2>
+            <div class="objectives">
+                <div class="objective-card">
+                    <h4>Objetivo General</h4>
+                    <p>Simular el proceso de deposición de películas delgadas de Cr y Fe mediante el método de Monte Carlo.</p>
+                </div>
+                <div class="objective-card">
+                    <h4>Objetivos Específicos</h4>
+                    <ol>
+                        <li>Caracterizar los mecanismos de deposición en películas delgadas de Cr y Fe sobre Mg (001) mediante KMC.</li>
+                        <li>Determinar los efectos de la difusión superficial en el proceso de deposición.</li>
+                        <li>Delimitar el efecto del modo de deposición en las propiedades físicas de las películas.</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Descripción del Método KMC</h2>
+            <div class="method-description">
+                <p>El programa <code>simulation_kmc_unificado</code> implementa una simulación Monte Carlo Cinético tridimensional que modela:</p>
+                <ul>
+                    <li>La deposición de átomos (Cr o Fe) sobre un sustrato de Mg (001)</li>
+                    <li>La difusión superficial de átomos depositados</li>
+                    <li>Tres modos de deposición: Térmico, Balístico y Aleatorio</li>
+                </ul>
+                <p><strong>Parámetros clave:</strong></p>
+                <ul>
+                    <li>Rejilla tridimensional: 50×50×30 sitios</li>
+                    <li>Temperatura del sustrato: 500K</li>
+                    <li>Temperatura del plasma: 1000K</li>
+                    <li>Constante de Boltzmann: 8.617×10⁻⁵ eV/K</li>
+                </ul>
+                <p><strong>Propiedades de materiales:</strong></p>
+                <ul>
+                    <li><strong>Cromo (Cr):</strong> Mayor adhesión (0.98), menor energía de difusión (0.01-0.25 eV)</li>
+                    <li><strong>Hierro (Fe):</strong> Menor adhesión (0.95), mayor energía de difusión (0.5-1.0 eV)</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Análisis del Modo Térmico</h2>
+            <h3>Resultados Numéricos</h3>
+            <div class="results-grid">
+                <div class="result-card">
+                    <h4>Resultados para Fe</h4>
+                    <ul>
+                        <li>Rugosidad: 6.83 ± 2.54 capas</li>
+                        <li>Espesor: 9.32 ± 5.29 capas</li>
+                        <li>Altura máxima: 24.45 ± 6.69 capas</li>
+                        <li>Cobertura (>10 capas): 40.96%</li>
+                        <li>Cobertura (>20 capas): 15.40%</li>
+                        <li>Distribución de etapas: 33.33% coalescencia, 66.67% crecimiento</li>
+                    </ul>
+                </div>
+                <div class="result-card">
+                    <h4>Resultados para Cr</h4>
+                    <ul>
+                        <li>Rugosidad: 6.83 ± 2.56 capas</li>
+                        <li>Espesor: 9.22 ± 5.25 capas</li>
+                        <li>Altura máxima: 24.52 ± 6.83 capas</li>
+                        <li>Cobertura (>10 capas): 40.28%</li>
+                        <li>Cobertura (>20 capas): 15.13%</li>
+                        <li>Distribución de etapas: 33.33% coalescencia, 66.67% crecimiento</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <h3>Conclusiones del Modo Térmico</h3>
+            <ul>
+                <li>Homogeneidad entre materiales: Las altas temperaturas (500K) igualan las diferencias intrínsecas entre Fe y Cr</li>
+                <li>Crecimiento limitado: Ningún material supera 30 capas de altura, indicando saturación</li>
+                <li>Etapa avanzada: Ausencia de nucleación (0%) y predominio de crecimiento (66.67%) sugieren películas maduras</li>
+                <li>Cr forma islas más compactas inicialmente, pero ambos materiales convergen en espesor final</li>
+            </ul>
+            
+            <h3>Visualización de Resultados</h3>
+            <div class="image-container">
+                <div class="image-card">
+                    <img src="https://z-cdn-media.chatglm.cn/files/37768e0e-a19f-423a-9488-abec87a46d71_comparacion_espesor.png?auth_key=1792296018-0cf586bda3f44e74b6de4e37f4cb7179-0-445535939cc453c89e9ec3d5bb44c81d" alt="Comparación de Espesor">
+                    <div class="caption">
+                        <h4>Comparación de Espesor: Fe vs Cr</h4>
+                        <p>En modo térmico, ambos materiales muestran distribuciones de espesor muy similares</p>
+                    </div>
+                </div>
+                <div class="image-card">
+                    <img src="https://z-cdn-media.chatglm.cn/files/52f1945b-fa96-43d5-a25b-bc4de9f95dbb_comparacion_rugosidad.png?auth_key=1792296018-0a1129086b1649a1a43d074b814e2494-0-a7e52fa70db96e100615e3472bc5371d" alt="Comparación de Rugosidad">
+                    <div class="caption">
+                        <h4>Comparación de Rugosidad: Fe vs Cr</h4>
+                        <p>Cr presenta un pico más definido en 9-10 capas, mientras Fe muestra una distribución más amplia</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="image-container">
+                <div class="image-card">
+                    <img src="https://z-cdn-media.chatglm.cn/files/fb5a51fc-8322-4c70-9b25-fd9d0ff5eb3a_mapa_3d_promedio_Cr.png?auth_key=1792296018-bb6028d0ef494e9e93f7db429189ef6e-0-cfe0436f3ee2584386f8c6e5908f9c69" alt="Mapa 3D Cr">
+                    <div class="caption">
+                        <h4>Mapa 3D Promedio - Cr</h4>
+                        <p>Topografía con picos agudos y valles profundos, transiciones abruptas entre alto/bajo</p>
+                    </div>
+                </div>
+                <div class="image-card">
+                    <img src="https://z-cdn-media.chatglm.cn/files/b33c5557-8e94-40b8-ad12-231c3bea50b8_mapa_3d_promedio_Fe.png?auth_key=1792296018-4276aa34b33543fcae1d680fa432b0ef-0-21a8365545cc0c46320a6d6e4165c786" alt="Mapa 3D Fe">
+                    <div class="caption">
+                        <h4>Mapa 3D Promedio - Fe</h4>
+                        <p>Superficie más suave y continua, transiciones graduales de altura</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="image-container">
+                <div class="image-card">
+                    <img src="https://anchacin3620.github.io/cr.png?auth_key=1792296018-8f638a38cec4625bf555602c0f5a3f0-0-587ac6902fa8cece735372eb8866c0e8" alt="Mapa Contorno Cr">
+                    <div class="caption">
+                        <h4>Mapa de Contorno - Cr</h4>
+                        <p>Parches bien definidos de alta altura, bordes nítidos entre regiones</p>
+                    </div>
+                </div>
+                <div class="image-card">
+                    <img src="https://z-cdn-media.chatglm.cn/files/dc63b278-6c52-46b6-a985-e50d241c5ce6_mapa_contorno_Fe.png?auth_key=1792296018-f10b5cb3010f4224b7a8e5301c217a18-0-8538793c8912742915ca427692e99c7c" alt="Mapa Contorno Fe">
+                    <div class="caption">
+                        <h4>Mapa de Contorno - Fe</h4>
+                        <p>Gradientes suaves de altura, transiciones difusas entre regiones</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="image-container">
+                <div class="image-card">
+                    <img src="https://z-cdn-media.chatglm.cn/files/b86d529b-6028-4b19-8290-4d5cbdf008df_rugosidad_vs_energia.png?auth_key=1792296018-95def81d04824bcbba5b1386f276dc0e-0-09d8e6f1763304b8db671bf7e5973428" alt="Rugosidad vs Energía">
+                    <div class="caption">
+                        <h4>Rugosidad vs Energía de Difusión</h4>
+                        <p>En modo térmico, la temperatura alta (500K) mitiga diferencias energéticas entre materiales</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Análisis del Modo Balístico</h2>
+            <h3>Resultados Numéricos</h3>
+            <div class="results-grid">
+                <div class="result-card">
+                    <h4>Resultados para Fe</h4>
+                    <ul>
+                        <li>Rugosidad: 7.28 ± 2.62 capas</li>
+                        <li>Espesor: 10.52 ± 5.63 capas</li>
+                        <li>Altura máxima: 27.83 ± 7.01 capas</li>
+                        <li>Cobertura (>10 capas): 46.35%</li>
+                        <li>Cobertura (>20 capas): 20.83%</li>
+                        <li>Cobertura (>30 capas): 2.50%</li>
+                        <li>Distribución de etapas: 30.00% coalescencia, 70.00% crecimiento</li>
+                    </ul>
+                </div>
+                <div class="result-card">
+                    <h4>Resultados para Cr</h4>
+                    <ul>
+                        <li>Rugosidad: 7.53 ± 2.68 capas</li>
+                        <li>Espesor: 10.81 ± 5.71 capas</li>
+                        <li>Altura máxima: 28.22 ± 7.12 capas</li>
+                        <li>Cobertura (>10 capas): 47.92%</li>
+                        <li>Cobertura (>20 capas): 21.67%</li>
+                        <li>Cobertura (>30 capas): 3.33%</li>
+                        <li>Distribución de etapas: 30.00% coalescencia, 70.00% crecimiento</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <h3>Visualización de Resultados - Modo Balístico</h3>
+            <div class="image-container">
+                <div class="image-card">
+                    <img src="https://z-cdn-media.chatglm.cn/files/de27b97c-c4bb-4c46-92b3-eb5479a5e984_rugosidad_vs_energia%20%281%29.png?auth_key=1792342409-f2dc313ad18d4e619eb8a0d38aa5568b-0-c7f9e00226f1b30bcafff73633282fef" alt="Rugosidad vs Energía">
+                    <div class="caption">
+                        <h4>Rugosidad vs Energía de Difusión - Modo Balístico</h4>
+                        <p>En modo balístico, Cr mantiene concentración en baja energía (0-0.25 eV) con rugosidad 4-9 capas, mientras Fe se distribuye en mayor energía (0.5-0.9 eV) con rugosidad 3-9 capas, mostrando mayor dispersión vertical.</p>
+                    </div>
+                </div>
+                <div class="image-card">
+                    <img src="https://z-cdn-media.chatglm.cn/files/6b013e72-b4fb-4f02-93bc-be59f91cb27d_comparacion_rugosidad%20%281%29.png?auth_key=1792342409-cafd728d400043dfa4e586f28e517d33-0-eeefc3de7b58b4b194396ad504dd3b47" alt="Comparación de Rugosidad">
+                    <div class="caption">
+                        <h4>Comparación de Rugosidad: Fe vs Cr - Modo Balístico</h4>
+                        <p>Fe muestra distribución más amplia y desplazada hacia mayores rugosidades (pico en 9-10 capas), mientras Cr mantiene doble pico (5 y 9-10 capas), confirmando mayor heterogeneidad superficial en modo balístico.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="image-container">
+                <div class="image-card">
+                    <img src="https://z-cdn-media.chatglm.cn/files/47b9fc42-d0bb-4034-a843-d600fc6ed3ac_comparacion_espesor%20%281%29.png?auth_key=1792342409-d13dfaaca8a34f23a55c8b85564032e6-0-2340b1d9d23ed98891394f517de70b03" alt="Comparación de Espesor">
+                    <div class="caption">
+                        <h4>Comparación de Espesor: Fe vs Cr - Modo Balístico</h4>
+                        <p>En modo balístico, Cr alcanza mayor espesor promedio en el rango 15-16 capas, mientras Fe muestra distribución más simétrica alrededor de 10 capas, confirmando datos numéricos de +17.3% para Cr vs +12.9% para Fe.</p>
+                    </div>
+                </div>
+                <div class="image-card">
+                    <img src="https://z-cdn-media.chatglm.cn/files/b229bc1c-27c2-4a4b-a59b-8841636855d9_histograma_promedio%20%281%29.png?auth_key=1792342409-602c8dc6a4674802aa0ea94d279311cb-0-7eae45a4cd274daa6fb0bec6f31277eb" alt="Histograma de Alturas">
+                    <div class="caption">
+                        <h4>Distribución de Alturas Promedio - Modo Balístico</h4>
+                        <p>El histograma (media 9.28 capas, desviación 8.99) confirma amplia dispersión en alturas, con alta probabilidad en bajas alturas y cola extendida hacia valores >30 capas, característico del crecimiento vertical en modo balístico.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="image-container">
+                <div class="image-card">
+                    <img src="https://z-cdn-media.chatglm.cn/files/f320f871-cdbc-4db4-bcb2-425659942e6d_mapa_3d_promedio_Fe%20%281%29.png?auth_key=1792342409-e635430bcc2f4e82bbe83e0d623f1075-0-23202add20c4f6fe359852ebdc6d008d" alt="Mapa 3D Fe">
+                    <div class="caption">
+                        <h4>Mapa 3D Promedio - Fe - Modo Balístico</h4>
+                        <p>Fe muestra topografía con picos pronunciados (hasta 14 capas) y valles profundos, con transiciones abruptas entre altas y bajas, confirmando mayor rugosidad (+6.6%) respecto al modo térmico.</p>
+                    </div>
+                </div>
+                <div class="image-card">
+                    <img src="https://z-cdn-media.chatglm.cn/files/80349f5e-a65d-4875-8c07-516379b44f2c_mapa_3d_promedio_Cr%20%281%29.png?auth_key=1792342409-efbe3d632c144defb8da5ed13d0232ea-0-dc011643b8d2e58229eed11d41e23262" alt="Mapa 3D Cr">
+                    <div class="caption">
+                        <h4>Mapa 3D Promedio - Cr - Modo Balístico</h4>
+                        <p>Cr presenta superficie con islas más altas y definidas (hasta 12 capas), con transiciones más abruptas que Fe, explicando su mayor rugosidad (+10.3%) y cobertura en capas altas (>30 capas: 3.33% vs 2.50% Fe).</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="image-container">
+                <div class="image-card">
+                    <img src="https://z-cdn-media.chatglm.cn/files/52836eee-c8c2-49e6-8ad0-d0a82a980fcd_mapa_contorno_Fe%20%281%29.png?auth_key=1792342409-73622ddb323c4123a02d058a3580264a-0-5beba0ae742a512c09ea1b624c1d8d7e" alt="Mapa Contorno Fe">
+                    <div class="caption">
+                        <h4>Mapa de Contorno - Fe - Modo Balístico</h4>
+                        <p>Regiones de alta altura (amarillo, 14.4 capas) más concentradas y definidas, con bordes nítidos que confirman formación de columnas verticales características del modo balístico.</p>
+                    </div>
+                </div>
+                <div class="image-card">
+                    <img src="https://z-cdn-media.chatglm.cn/files/75a0cf73-f4bc-49a9-a3ec-0038b926708f_mapa_contorno_Cr%20%281%29.png?auth_key=1792342409-f74b25d6fec94d09a55ed63f5599c99e-0-22f8c9dfbd98e51cea4b658320dbbade" alt="Mapa Contorno Cr">
+                    <div class="caption">
+                        <h4>Mapa de Contorno - Cr - Modo Balístico</h4>
+                        <p>Distribución de altura más heterogénea, con parches de alta altura (amarillo) más aislados y bordes muy definidos, explicando mayor cobertura en capas altas (+43.2% en >20 capas vs +35.3% Fe).</p>
+                    </div>
+                </div>
+            </div>
+            
+            <h3>Conclusiones del Modo Balístico</h3>
+            <ul>
+                <li><strong>Mayor crecimiento vertical:</strong> Ambos materiales alcanzan alturas superiores a 30 capas (imposible en modo térmico), confirmado por histograma con cola extendida y mapas 3D.</li>
+                <li><strong>Mayor cobertura:</strong> Incremento significativo en áreas con >10 y >20 capas, especialmente en Cr (+43.2% vs +35.3% Fe), visible en mapas de contorno.</li>
+                <li><strong>Mayor rugosidad:</strong> Cr muestra mayor incremento relativo (+10.3% vs +6.6% Fe), evidenciado por picos más pronunciados en mapas 3D y distribución de rugosidad más amplia.</li>
+                <li><strong>Formación de nanoestructuras:</strong> Mapas de contorno revelan islas bien definidas con bordes nítidos, característicos del crecimiento balístico.</li>
+                <li><strong>Respuesta material diferencial:</strong> Cr aprovecha mejor el modo balístico para alcanzar mayores espesores y coberturas, debido a su menor energía de difusión intrínseca.</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>Comparación entre Modos de Deposición</h2>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Parámetro</th>
+                        <th>Modo Térmico</th>
+                        <th>Modo Balístico</th>
+                        <th>Cambio (%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Fe - Rugosidad</strong></td>
+                        <td>6.83 ± 2.54</td>
+                        <td class="highlight">7.28 ± 2.62</td>
+                        <td><span class="badge badge-increase">+6.6%</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cr - Rugosidad</strong></td>
+                        <td>6.83 ± 2.56</td>
+                        <td class="highlight">7.53 ± 2.68</td>
+                        <td><span class="badge badge-increase">+10.3%</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Fe - Espesor</strong></td>
+                        <td>9.32 ± 5.29</td>
+                        <td class="highlight">10.52 ± 5.63</td>
+                        <td><span class="badge badge-increase">+12.9%</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cr - Espesor</strong></td>
+                        <td>9.22 ± 5.25</td>
+                        <td class="highlight">10.81 ± 5.71</td>
+                        <td><span class="badge badge-increase">+17.3%</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Fe - Altura Máxima</strong></td>
+                        <td>24.45 ± 6.69</td>
+                        <td class="highlight">27.83 ± 7.01</td>
+                        <td><span class="badge badge-increase">+13.8%</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cr - Altura Máxima</strong></td>
+                        <td>24.52 ± 6.83</td>
+                        <td class="highlight">28.22 ± 7.12</td>
+                        <td><span class="badge badge-increase">+15.0%</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Fe - Cobertura (>10 capas)</strong></td>
+                        <td>40.96%</td>
+                        <td class="highlight">46.35%</td>
+                        <td><span class="badge badge-increase">+13.2%</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cr - Cobertura (>10 capas)</strong></td>
+                        <td>40.28%</td>
+                        <td class="highlight">47.92%</td>
+                        <td><span class="badge badge-increase">+19.0%</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Fe - Cobertura (>20 capas)</strong></td>
+                        <td>15.40%</td>
+                        <td class="highlight">20.83%</td>
+                        <td><span class="badge badge-increase">+35.3%</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cr - Cobertura (>20 capas)</strong></td>
+                        <td>15.13%</td>
+                        <td class="highlight">21.67%</td>
+                        <td><span class="badge badge-increase">+43.2%</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Fe - Cobertura (>30 capas)</strong></td>
+                        <td>0.00%</td>
+                        <td class="highlight">2.50%</td>
+                        <td><span class="badge badge-increase">+∞</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cr - Cobertura (>30 capas)</strong></td>
+                        <td>0.00%</td>
+                        <td class="highlight">3.33%</td>
+                        <td><span class="badge badge-increase">+∞</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Fe - Etapa Crecimiento</strong></td>
+                        <td>66.67%</td>
+                        <td class="highlight">70.00%</td>
+                        <td><span class="badge badge-increase">+3.33%</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cr - Etapa Crecimiento</strong></td>
+                        <td>66.67%</td>
+                        <td class="highlight">70.00%</td>
+                        <td><span class="badge badge-increase">+3.33%</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>Interpretación Física</h3>
+            <ul>
+                <li><strong>Energía cinética más alta:</strong> El modo balístico (5.0 eV vs. 2.0 eV térmico) permite a los átomos penetrar más profundamente en la superficie</li>
+                <li><strong>Menor movilidad superficial:</strong> Menor tiempo para difusión antes de quedar "atrapados", favoreciendo el crecimiento vertical</li>
+                <li><strong>Menor tasa de deposición:</strong> 20,000 (vs. 50,000 térmico) permite a los átomos apilarse más verticalmente</li>
+                <li><strong>Respuesta diferencial de materiales:</strong> Cr muestra mayores incrementos que Fe debido a su menor energía de difusión intrínseca</li>
+            </ul>
+        </section>
+
+        <section class="section conclusion">
+            <h2>Conclusiones Finales</h2>
+            <h3>Relación con Objetivos del Trabajo</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Objetivo Específico</th>
+                        <th>Evidencia</th>
+                        <th>Cumplimiento</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Caracterizar mecanismos de deposición</td>
+                        <td>Mayor crecimiento vertical en balístico (70% vs. 66.67% térmico)</td>
+                        <td><span class="badge badge-success">Completado</span></td>
+                    </tr>
+                    <tr>
+                        <td>Efectos de difusión superficial</td>
+                        <td>Mayor rugosidad en Cr (+10.3% vs. +6.6% Fe) confirma menor movilidad</td>
+                        <td><span class="badge badge-success">Completado</span></td>
+                    </tr>
+                    <tr>
+                        <td>Efecto del modo de deposición</td>
+                        <td>Diferencias significativas: +12-17% espesor, +6-10% rugosidad</td>
+                        <td><span class="badge badge-success">Completado</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>Conclusiones Principales</h3>
+            <ul>
+                <li><strong>Modo Térmico:</strong> Produce películas más uniformes y continuas, con menor rugosidad y crecimiento vertical limitado. Ideal para aplicaciones que requieren homogeneidad superficial.</li>
+                <li><strong>Modo Balístico:</strong> Genera películas más gruesas con mayor cobertura, pero con mayor rugosidad. Permite alcanzar alturas >30 capas, imposible en modo térmico. Adecuado para aplicaciones que requieren mayor espesor.</li>
+                <li><strong>Diferencias materiales:</strong> Cr responde más intensamente al cambio de modo que Fe, debido a su menor energía de difusión intrínseca.</li>
+                <li><strong>Implicaciones prácticas:</strong> 
+                    <ul>
+                        <li>Para aplicaciones que requieren continuidad: Fe en modo térmico es preferible</li>
+                        <li>Para aplicaciones que requieren nanoestructuras definidas: Cr en modo balístico es mejor</li>
+                        <li>Para mayor espesor: Modo balístico es superior</li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+        
+        <button id="download-btn" class="download-btn">
+            <i class="fas fa-file-word"></i> Descargar Informe en Word
+        </button>
+        
+        <div class="progress-container" id="progress-container">
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+            <div class="progress-text" id="progress-text">Preparando documento...</div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>Elaborado por Ángel Chacín Ávila @2025 se publica con licencia GPL</p>
+        </div>
+    </footer>
+
+    <!-- Mensaje de estado -->
+    <div id="status-message" class="status-message"></div>
+
+    <script>
+        // Función para mostrar mensajes de estado
+        function showStatus(message, type) {
+            const statusElement = document.getElementById('status-message');
+            statusElement.textContent = message;
+            statusElement.className = `status-message ${type}`;
+            statusElement.style.display = 'block';
+            
+            setTimeout(() => {
+                statusElement.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Función para actualizar la barra de progreso
+        function updateProgress(percent, text) {
+            const progressElement = document.getElementById('progress');
+            const progressTextElement = document.getElementById('progress-text');
+            const progressContainer = document.getElementById('progress-container');
+            
+            progressContainer.style.display = 'block';
+            progressElement.style.width = `${percent}%`;
+            progressTextElement.textContent = text;
+            
+            if (percent >= 100) {
+                setTimeout(() => {
+                    progressContainer.style.display = 'none';
+                }, 2000);
+            }
+        }
+
+        // Esperamos a que toda la página y sus recursos se carguen
+        window.onload = function() {
+            // Verificamos que las librerías necesarias estén disponibles
+            if (typeof docx === 'undefined' || typeof saveAs === 'undefined') {
+                let errorMsg = 'Error: No se pudieron cargar las librerías necesarias para generar el documento Word.';
+                if (typeof docx === 'undefined') errorMsg += ' La librería "docx.js" no está disponible.';
+                if (typeof saveAs === 'undefined') errorMsg += ' La librería "FileSaver.js" no está disponible.';
+                errorMsg += ' Recarga la página o verifica tu conexión a internet.';
+                
+                showStatus(errorMsg, 'error');
+                const btn = document.getElementById('download-btn');
+                btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error de librería';
+                btn.disabled = true;
+                return;
+            }
+            
+            document.getElementById('download-btn').addEventListener('click', async function() {
+                const originalText = this.innerHTML;
+                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generando documento...';
+                this.disabled = true;
+                
+                showStatus('Iniciando generación del documento Word...', 'info');
+                updateProgress(5, 'Iniciando generación del documento...');
+                
+                try {
+                    // Extraer colores CSS para usarlos en el documento Word
+                    const styles = window.getComputedStyle(document.documentElement);
+                    const primaryColor = styles.getPropertyValue('--primary-color').trim();
+                    const secondaryColor = styles.getPropertyValue('--secondary-color').trim();
+                    const successColor = styles.getPropertyValue('--success-color').trim();
+                    const lightColor = styles.getPropertyValue('--light-color').trim();
+                    
+                    // Crear estilos personalizados para el documento Word
+                    const docStyles = {
+                        title: {
+                            run: {
+                                bold: true,
+                                size: 32,
+                                color: primaryColor
+                            },
+                            paragraph: {
+                                spacing: { after: 300 },
+                                alignment: docx.AlignmentType.CENTER
+                            }
+                        },
+                        subtitle: {
+                            run: {
+                                size: 24,
+                                color: "#555"
+                            },
+                            paragraph: {
+                                spacing: { after: 200 },
+                                alignment: docx.AlignmentType.CENTER
+                            }
+                        },
+                        heading1: {
+                            run: {
+                                bold: true,
+                                size: 28,
+                                color: primaryColor
+                            },
+                            paragraph: {
+                                spacing: { before: 400, after: 200 },
+                                heading: docx.HeadingLevel.HEADING_1,
+                                border: { bottom: { color: secondaryColor, size: 6, style: docx.BorderStyle.SINGLE } }
+                            }
+                        },
+                        heading2: {
+                            run: {
+                                bold: true,
+                                size: 24,
+                                color: secondaryColor
+                            },
+                            paragraph: {
+                                spacing: { before: 300, after: 150 },
+                                heading: docx.HeadingLevel.HEADING_2
+                            }
+                        },
+                        heading3: {
+                            run: {
+                                bold: true,
+                                size: 22,
+                                color: secondaryColor
+                            },
+                            paragraph: {
+                                spacing: { before: 200, after: 100 },
+                                heading: docx.HeadingLevel.HEADING_3
+                            }
+                        },
+                        normal: {
+                            run: {
+                                size: 22
+                            },
+                            paragraph: {
+                                spacing: { after: 120 }
+                            }
+                        },
+                        imageCaption: {
+                            run: {
+                                italics: true,
+                                size: 20
+                            },
+                            paragraph: {
+                                spacing: { before: 100, after: 200 },
+                                alignment: docx.AlignmentType.CENTER
+                            }
+                        },
+                        tableHeader: {
+                            run: {
+                                bold: true,
+                                size: 22,
+                                color: "FFFFFF"
+                            },
+                            paragraph: {
+                                spacing: { after: 80 }
+                            }
+                        },
+                        tableCell: {
+                            run: {
+                                size: 22
+                            },
+                            paragraph: {
+                                spacing: { after: 80 }
+                            }
+                        },
+                        conclusion: {
+                            run: {
+                                size: 22
+                            },
+                            paragraph: {
+                                spacing: { after: 120 }
+                            }
+                        }
+                    };
+                    
+                    // Crear un nuevo documento Word
+                    const doc = new docx.Document({
+                        sections: [{
+                            properties: {},
+                            children: [
+                                new docx.Paragraph({
+                                    text: "Simulación Monte Carlo de Procesos de Deposición en Películas Delgadas",
+                                    ...docStyles.title
+                                }),
+                                new docx.Paragraph({
+                                    text: "Análisis comparativo de modos de deposición térmico y balístico para Cr y Fe sobre Mg (001)",
+                                    ...docStyles.subtitle
+                                })
+                            ]
+                        }]
+                    });
+                    
+                    // Función para descargar una imagen y convertirla a formato docx
+                    async function downloadImageForDocx(url, index, total) {
+                        try {
+                            updateProgress(10 + Math.floor((index / total) * 40), `Descargando imagen ${index + 1} de ${total}...`);
+                            
+                            // Usamos un proxy para evitar problemas de CORS
+                            const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+                            
+                            const response = await fetch(proxyUrl);
+                            if (!response.ok) {
+                                throw new Error(`Error al descargar la imagen: ${response.status}`);
+                            }
+                            
+                            const blob = await response.blob();
+                            const arrayBuffer = await blob.arrayBuffer();
+                            
+                            return {
+                                data: arrayBuffer,
+                                transformation: {
+                                    width: 500,
+                                    height: 300
+                                }
+                            };
+                        } catch (error) {
+                            console.error('Error al descargar imagen:', error);
+                            showStatus(`Error al descargar imagen: ${error.message}`, 'error');
+                            return null;
+                        }
+                    }
+                    
+                    // Función para procesar una sección HTML y agregarla al documento Word
+                    async function processSection(sectionElement) {
+                        const sectionTitle = sectionElement.querySelector('h2');
+                        if (sectionTitle) {
+                            doc.addSection({
+                                properties: {},
+                                children: [
+                                    new docx.Paragraph({
+                                        text: sectionTitle.textContent,
+                                        ...docStyles.heading1
+                                    })
+                                ]
+                            });
+                        }
+                        
+                        // Procesar todos los elementos hijos de la sección
+                        const childElements = Array.from(sectionElement.children);
+                        
+                        for (const element of childElements) {
+                            if (element.tagName === 'H3') {
+                                doc.addSection({
+                                    properties: {},
+                                    children: [
+                                        new docx.Paragraph({
+                                            text: element.textContent,
+                                            ...docStyles.heading2
+                                        })
+                                    ]
+                                });
+                            } else if (element.tagName === 'P') {
+                                // Procesar párrafos con formato
+                                const textRuns = [];
+                                const childNodes = Array.from(element.childNodes);
+                                
+                                for (const node of childNodes) {
+                                    if (node.nodeType === Node.TEXT_NODE) {
+                                        textRuns.push(new docx.TextRun({ text: node.textContent }));
+                                    } else if (node.nodeType === Node.ELEMENT_NODE) {
+                                        if (node.tagName === 'STRONG') {
+                                            textRuns.push(new docx.TextRun({ text: node.textContent, bold: true }));
+                                        } else if (node.tagName === 'CODE') {
+                                            textRuns.push(new docx.TextRun({ text: node.textContent }));
+                                        }
+                                    }
+                                }
+                                
+                                doc.addSection({
+                                    properties: {},
+                                    children: [
+                                        new docx.Paragraph({
+                                            children: textRuns,
+                                            ...docStyles.normal
+                                        })
+                                    ]
+                                });
+                            } else if (element.tagName === 'UL' || element.tagName === 'OL') {
+                                // Procesar listas
+                                const listItems = Array.from(element.querySelectorAll('li'));
+                                const listParagraphs = [];
+                                
+                                for (const item of listItems) {
+                                    listParagraphs.push(
+                                        new docx.Paragraph({
+                                            text: item.textContent,
+                                            ...docStyles.normal
+                                        })
+                                    );
+                                }
+                                
+                                doc.addSection({
+                                    properties: {},
+                                    children: listParagraphs
+                                });
+                            } else if (element.tagName === 'DIV' && element.classList.contains('image-container')) {
+                                // Procesar contenedor de imágenes
+                                const imageCards = Array.from(element.querySelectorAll('.image-card'));
+                                
+                                for (const card of imageCards) {
+                                    const img = card.querySelector('img');
+                                    const caption = card.querySelector('.caption');
+                                    const title = caption ? caption.querySelector('h4') : null;
+                                    const description = caption ? caption.querySelector('p') : null;
+                                    
+                                    if (img) {
+                                        const downloadedImage = await downloadImageForDocx(img.src, 0, 1);
+                                        
+                                        if (downloadedImage) {
+                                            doc.addSection({
+                                                properties: {},
+                                                children: [
+                                                    new docx.Paragraph({
+                                                        text: title ? title.textContent : '',
+                                                        ...docStyles.imageCaption
+                                                    }),
+                                                    new docx.Paragraph({
+                                                        children: [
+                                                            new docx.ImageRun({
+                                                                data: downloadedImage.data,
+                                                                transformation: downloadedImage.transformation
+                                                            })
+                                                        ]
+                                                    }),
+                                                    new docx.Paragraph({
+                                                        text: description ? description.textContent : '',
+                                                        ...docStyles.normal
+                                                    })
+                                                ]
+                                            });
+                                        }
+                                    }
+                                }
+                            } else if (element.tagName === 'TABLE') {
+                                // Procesar tablas
+                                const tableRows = Array.from(element.querySelectorAll('tr'));
+                                const docxRows = [];
+                                
+                                for (const row of tableRows) {
+                                    const cells = Array.from(row.querySelectorAll('td, th'));
+                                    const docxCells = [];
+                                    
+                                    for (const cell of cells) {
+                                        const isHeader = cell.tagName === 'TH';
+                                        const cellStyle = isHeader ? docStyles.tableHeader : docStyles.tableCell;
+                                        
+                                        // Procesar el contenido de la celda
+                                        const cellTextRuns = [];
+                                        const cellChildNodes = Array.from(cell.childNodes);
+                                        
+                                        for (const node of cellChildNodes) {
+                                            if (node.nodeType === Node.TEXT_NODE) {
+                                                cellTextRuns.push(new docx.TextRun({ text: node.textContent }));
+                                            } else if (node.nodeType === Node.ELEMENT_NODE) {
+                                                if (node.tagName === 'STRONG') {
+                                                    cellTextRuns.push(new docx.TextRun({ text: node.textContent, bold: true }));
+                                                } else if (node.tagName === 'SPAN' && node.classList.contains('badge')) {
+                                                    // Procesar badges
+                                                    const badgeColor = node.classList.contains('badge-increase') ? successColor : 
+                                                                   node.classList.contains('badge-decrease') ? '#f39c12' : 
+                                                                   node.classList.contains('badge-thermal') ? '#3498db' : 
+                                                                   node.classList.contains('badge-ballistic') ? '#e74c3c' : '#333';
+                                                    
+                                                    cellTextRuns.push(new docx.TextRun({ 
+                                                        text: node.textContent, 
+                                                        bold: true,
+                                                        color: badgeColor
+                                                    }));
+                                                }
+                                            }
+                                        }
+                                        
+                                        const docxCell = new docx.TableCell({
+                                            children: [
+                                                new docx.Paragraph({
+                                                    children: cellTextRuns,
+                                                    ...cellStyle
+                                                })
+                                            ]
+                                        });
+                                        
+                                        // Aplicar color de fondo a las celdas de encabezado
+                                        if (isHeader) {
+                                            docxCell.shading = {
+                                                type: docx.ShadingType.SOLID,
+                                                color: primaryColor
+                                            };
+                                        }
+                                        
+                                        docxCells.push(docxCell);
+                                    }
+                                    
+                                    docxRows.push(new docx.TableRow({ children: docxCells }));
+                                }
+                                
+                                doc.addSection({
+                                    properties: {},
+                                    children: [
+                                        new docx.Table({
+                                            width: {
+                                                size: 100,
+                                                type: docx.WidthType.PERCENTAGE
+                                            },
+                                            rows: docxRows
+                                        })
+                                    ]
+                                });
+                            }
+                        }
+                    }
+                    
+                    // Procesar todas las secciones del documento
+                    updateProgress(10, 'Analizando estructura del documento...');
+                    const sections = Array.from(document.querySelectorAll('.section'));
+                    
+                    for (const section of sections) {
+                        await processSection(section);
+                    }
+                    
+                    // Agregar pie de página
+                    doc.addSection({
+                        properties: {},
+                        children: [
+                            new docx.Paragraph({
+                                text: "Elaborado por Ángel Chacín Ávila @2025 se publica con licencia GPL",
+                                ...docStyles.normal
+                            })
+                        ]
+                    });
+                    
+                    updateProgress(90, 'Generando archivo para descarga...');
+                    
+                    // Generar y descargar el documento
+                    docx.Packer.toBlob(doc).then(blob => {
+                        saveAs(blob, "Simulacion_Monte_Carlo_Deposicion_Peliculas_Delgadas.docx");
+                        
+                        updateProgress(100, '¡Documento descargado correctamente!');
+                        showStatus('Documento Word generado y descargado correctamente', 'success');
+                        
+                        // Restaurar el botón
+                        this.innerHTML = originalText;
+                        this.disabled = false;
+                    }).catch(error => {
+                        console.error('Error al generar el documento:', error);
+                        showStatus(`Error al generar el documento: ${error.message}`, 'error');
+                        
+                        // Restaurar el botón y mostrar mensaje de error
+                        this.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error al generar documento';
+                        this.disabled = false;
+                        
+                        // Restaurar el texto original después de 2 segundos
+                        setTimeout(() => {
+                            this.innerHTML = originalText;
+                        }, 2000);
+                    });
+                } catch (error) {
+                    console.error('Error general:', error);
+                    showStatus(`Error general: ${error.message}`, 'error');
+                    
+                    // Restaurar el botón y mostrar mensaje de error
+                    this.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error al generar documento';
+                    this.disabled = false;
+                    
+                    // Restaurar el texto original después de 2 segundos
+                    setTimeout(() => {
+                        this.innerHTML = originalText;
+                    }, 2000);
+                }
+            });
+        };
+    </script>
+</body>
+</html>
