@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión de Notas - Criminalística</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .header {
+            background-color: #343a40;
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+        .card {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .table-container {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        .table th {
+            position: sticky;
+            top: 0;
+            background-color: #343a40;
+            color: white;
+            z-index: 10;
+        }
+        .grade-input {
+            width: 80px;
+        }
+        .grade-cell {
+            text-align: center;
+        }
+        .final-grade {
+            font-weight: bold;
+            background-color: #e9ecef;
+        }
+        .btn-export {
+            background-color: #28a745;
+            color: white;
+        }
+        .btn-export:hover {
+            background-color: #218838;
+            color: white;
+        }
+        .section-title {
+            border-bottom: 2px solid #dee2e6;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .grade-section {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .grade-weight {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background-color: #28a745;
+            color: white;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: none;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1 class="text-center">Sistema de Gestión de Notas</h1>
+            <p class="text-center">PNF: CRIMINALÍSTICA - PROCESO: II-2025 - TRAYECTO: INICIAL</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="notification" id="notification"></div>
+        
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title section-title">Importar Datos</h5>
+                <div class="mb-3">
+                    <label for="fileInput" class="form-label">Seleccionar archivo Excel:</label>
+                    <input class="form-control" type="file" id="fileInput" accept=".xlsx, .xls">
+                </div>
+                <button class="btn btn-primary" id="importBtn">Importar Datos</button>
+                <div class="loading mt-3" id="loading">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                    <p class="mt-2">Procesando archivo...</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" id="dataCard" style="display: none;">
+            <div class="card-body">
+                <h5 class="card-title section-title">Registro de Notas</h5>
+                
+                <div class="grade-section">
+                    <h6>Primer Corte del Trimestre (60%)</h6>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="e1Weight" class="form-label">Evaluación 1</label>
+                                <input type="number" class="form-control" id="e1Weight" value="20" readonly>
+                                <div class="grade-weight">Ponderación: 20%</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="e2Weight" class="form-label">Evaluación 2</label>
+                                <input type="number" class="form-control" id="e2Weight" value="20" readonly>
+                                <div class="grade-weight">Ponderación: 20%</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="e3Weight" class="form-label">Evaluación 3</label>
+                                <input type="number" class="form-control" id="e3Weight" value="20" readonly>
+                                <div class="grade-weight">Ponderación: 20%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grade-section">
+                    <h6>Segundo Corte del Trimestre (40%)</h6>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="e4Weight" class="form-label">Evaluación 4</label>
+                                <input type="number" class="form-control" id="e4Weight" value="20" readonly>
+                                <div class="grade-weight">Ponderación: 20%</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="e5Weight" class="form-label">Evaluación 5</label>
+                                <input type="number" class="form-control" id="e5Weight" value="15" readonly>
+                                <div class="grade-weight">Ponderación: 15%</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="actitudinalWeight" class="form-label">Actitudinal</label>
+                                <input type="number" class="form-control" id="actitudinalWeight" value="5" readonly>
+                                <div class="grade-weight">Ponderación: 5%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="table table-striped table-hover" id="studentsTable">
+                        <thead>
+                            <tr>
+                                <th>N°</th>
+                                <th>Cédula</th>
+                                <th>Nombres</th>
+                                <th>Apellidos</th>
+                                <th>E1</th>
+                                <th>Recuperativa</th>
+                                <th>E2</th>
+                                <th>Recuperativa</th>
+                                <th>E3</th>
+                                <th>Recuperativa</th>
+                                <th>60% (1-20 Ptos)</th>
+                                <th>E4</th>
+                                <th>Recuperativa</th>
+                                <th>E5</th>
+                                <th>Recuperativa</th>
+                                <th>Actitudinal</th>
+                                <th>40% (1-20 Ptos)</th>
+                                <th>Nota Final (100%)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentsTableBody">
+                            <!-- Los datos de los estudiantes se cargarán aquí -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="mt-4">
+                    <button class="btn btn-export" id="exportBtn">Exportar a Excel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let studentsData = [];
+        let originalData = [];
+
+        document.getElementById('importBtn').addEventListener('click', function() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                showNotification('Por favor, selecciona un archivo Excel', 'warning');
+                return;
+            }
+            
+            document.getElementById('loading').style.display = 'block';
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                    const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+                    
+                    // Guardar los datos originales para la exportación
+                    originalData = jsonData;
+                    
+                    // Extraer los datos de los estudiantes
+                    studentsData = [];
+                    for (let i = 8; i < jsonData.length; i++) {
+                        if (jsonData[i][0] && !isNaN(jsonData[i][0])) {
+                            studentsData.push({
+                                num: jsonData[i][0],
+                                cedula: jsonData[i][1],
+                                nombres: jsonData[i][2],
+                                apellidos: jsonData[i][3],
+                                e1: jsonData[i][4] || '',
+                                recuperativa1: jsonData[i][5] || '',
+                                e2: jsonData[i][6] || '',
+                                recuperativa2: jsonData[i][7] || '',
+                                e3: jsonData[i][8] || '',
+                                recuperativa3: jsonData[i][9] || '',
+                                primerCorte: jsonData[i][10] || 0,
+                                e4: jsonData[i][12] || '',
+                                recuperativa4: jsonData[i][13] || '',
+                                e5: jsonData[i][14] || '',
+                                recuperativa5: jsonData[i][15] || '',
+                                actitudinal: jsonData[i][16] || '',
+                                segundoCorte: jsonData[i][18] || 0,
+                                notaFinal: jsonData[i][20] || 0
+                            });
+                        }
+                    }
+                    
+                    populateTable();
+                    document.getElementById('dataCard').style.display = 'block';
+                    document.getElementById('loading').style.display = 'none';
+                    showNotification('Datos importados correctamente', 'success');
+                } catch (error) {
+                    console.error('Error al procesar el archivo:', error);
+                    document.getElementById('loading').style.display = 'none';
+                    showNotification('Error al procesar el archivo', 'danger');
+                }
+            };
+            
+            reader.readAsArrayBuffer(file);
+        });
+
+        function populateTable() {
+            const tableBody = document.getElementById('studentsTableBody');
+            tableBody.innerHTML = '';
+            
+            studentsData.forEach((student, index) => {
+                const row = document.createElement('tr');
+                
+                // Crear celdas para los datos del estudiante
+                row.innerHTML = `
+                    <td>${student.num}</td>
+                    <td>${student.cedula}</td>
+                    <td>${student.nombres}</td>
+                    <td>${student.apellidos}</td>
+                    <td class="grade-cell"><input type="number" class="form-control grade-input" data-student="${index}" data-field="e1" value="${student.e1}" min="0" max="20" step="0.01"></td>
+                    <td class="grade-cell"><input type="number" class="form-control grade-input" data-student="${index}" data-field="recuperativa1" value="${student.recuperativa1}" min="0" max="20" step="0.01"></td>
+                    <td class="grade-cell"><input type="number" class="form-control grade-input" data-student="${index}" data-field="e2" value="${student.e2}" min="0" max="20" step="0.01"></td>
+                    <td class="grade-cell"><input type="number" class="form-control grade-input" data-student="${index}" data-field="recuperativa2" value="${student.recuperativa2}" min="0" max="20" step="0.01"></td>
+                    <td class="grade-cell"><input type="number" class="form-control grade-input" data-student="${index}" data-field="e3" value="${student.e3}" min="0" max="20" step="0.01"></td>
+                    <td class="grade-cell"><input type="number" class="form-control grade-input" data-student="${index}" data-field="recuperativa3" value="${student.recuperativa3}" min="0" max="20" step="0.01"></td>
+                    <td class="grade-cell final-grade" id="primerCorte-${index}">${student.primerCorte.toFixed(2)}</td>
+                    <td class="grade-cell"><input type="number" class="form-control grade-input" data-student="${index}" data-field="e4" value="${student.e4}" min="0" max="20" step="0.01"></td>
+                    <td class="grade-cell"><input type="number" class="form-control grade-input" data-student="${index}" data-field="recuperativa4" value="${student.recuperativa4}" min="0" max="20" step="0.01"></td>
+                    <td class="grade-cell"><input type="number" class="form-control grade-input" data-student="${index}" data-field="e5" value="${student.e5}" min="0" max="20" step="0.01"></td>
+                    <td class="grade-cell"><input type="number" class="form-control grade-input" data-student="${index}" data-field="recuperativa5" value="${student.recuperativa5}" min="0" max="20" step="0.01"></td>
+                    <td class="grade-cell"><input type="number" class="form-control grade-input" data-student="${index}" data-field="actitudinal" value="${student.actitudinal}" min="0" max="20" step="0.01"></td>
+                    <td class="grade-cell final-grade" id="segundoCorte-${index}">${student.segundoCorte.toFixed(2)}</td>
+                    <td class="grade-cell final-grade" id="notaFinal-${index}">${student.notaFinal.toFixed(2)}</td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+            
+            // Agregar event listeners a los inputs de notas
+            document.querySelectorAll('.grade-input').forEach(input => {
+                input.addEventListener('input', calculateGrades);
+            });
+            
+            // Calcular las notas iniciales
+            calculateGrades();
+        }
+
+        function calculateGrades() {
+            studentsData.forEach((student, index) => {
+                // Obtener valores de las evaluaciones
+                const e1 = parseFloat(document.querySelector(`[data-student="${index}"][data-field="e1"]`).value) || 0;
+                const e2 = parseFloat(document.querySelector(`[data-student="${index}"][data-field="e2"]`).value) || 0;
+                const e3 = parseFloat(document.querySelector(`[data-student="${index}"][data-field="e3"]`).value) || 0;
+                const e4 = parseFloat(document.querySelector(`[data-student="${index}"][data-field="e4"]`).value) || 0;
+                const e5 = parseFloat(document.querySelector(`[data-student="${index}"][data-field="e5"]`).value) || 0;
+                const actitudinal = parseFloat(document.querySelector(`[data-student="${index}"][data-field="actitudinal"]`).value) || 0;
+                
+                // Calcular primer corte (60%)
+                const primerCorte = (e1 * 0.20 + e2 * 0.20 + e3 * 0.20) * 100 / 60;
+                
+                // Calcular segundo corte (40%)
+                const segundoCorte = (e4 * 0.20 + e5 * 0.15 + actitudinal * 0.05) * 100 / 40;
+                
+                // Calcular nota final
+                const notaFinal = primerCorte * 0.60 + segundoCorte * 0.40;
+                
+                // Actualizar los datos del estudiante
+                student.e1 = e1;
+                student.e2 = e2;
+                student.e3 = e3;
+                student.e4 = e4;
+                student.e5 = e5;
+                student.actitudinal = actitudinal;
+                student.primerCorte = primerCorte;
+                student.segundoCorte = segundoCorte;
+                student.notaFinal = notaFinal;
+                
+                // Actualizar la tabla
+                document.getElementById(`primerCorte-${index}`).textContent = primerCorte.toFixed(2);
+                document.getElementById(`segundoCorte-${index}`).textContent = segundoCorte.toFixed(2);
+                document.getElementById(`notaFinal-${index}`).textContent = notaFinal.toFixed(2);
+            });
+        }
+
+        document.getElementById('exportBtn').addEventListener('click', function() {
+            // Crear una copia de los datos originales
+            const exportData = JSON.parse(JSON.stringify(originalData));
+            
+            // Actualizar los datos de los estudiantes en la copia
+            studentsData.forEach((student, index) => {
+                const rowIndex = index + 8; // Los estudiantes empiezan en la fila 8
+                
+                // Actualizar las notas en el array de exportación
+                exportData[rowIndex][4] = student.e1;
+                exportData[rowIndex][5] = student.recuperativa1;
+                exportData[rowIndex][6] = student.e2;
+                exportData[rowIndex][7] = student.recuperativa2;
+                exportData[rowIndex][8] = student.e3;
+                exportData[rowIndex][9] = student.recuperativa3;
+                exportData[rowIndex][10] = student.primerCorte;
+                exportData[rowIndex][12] = student.e4;
+                exportData[rowIndex][13] = student.recuperativa4;
+                exportData[rowIndex][14] = student.e5;
+                exportData[rowIndex][15] = student.recuperativa5;
+                exportData[rowIndex][16] = student.actitudinal;
+                exportData[rowIndex][18] = student.segundoCorte;
+                exportData[rowIndex][20] = student.notaFinal;
+            });
+            
+            // Crear un nuevo libro de trabajo
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.aoa_to_sheet(exportData);
+            
+            // Agregar la hoja al libro
+            XLSX.utils.book_append_sheet(wb, ws, "AMB 3");
+            
+            // Descargar el archivo
+            XLSX.writeFile(wb, "HOJA_DE_ACTUACION_CRIM_II-2025_AMB_1.xlsx");
+            
+            showNotification('Archivo exportado correctamente', 'success');
+        });
+
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = 'notification';
+            notification.style.backgroundColor = type === 'success' ? '#28a745' : 
+                                                type === 'warning' ? '#ffc107' : 
+                                                type === 'danger' ? '#dc3545' : '#17a2b8';
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
