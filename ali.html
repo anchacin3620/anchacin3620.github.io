@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizador de Notas de Estudiantes</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f7f6;
+            color: #333;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #e8f4f8;
+        }
+        #downloadButton {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        #downloadButton:hover {
+            background-color: #27ae60;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Lista de Estudiantes y Notas</h1>
+    <p>A continuación se muestran los datos. Puedes descargarlos en un formato compatible con Excel haciendo clic en el botón.</p>
+    <button id="downloadButton">Descargar en Excel (CSV)</button>
+
+    <table id="dataTable">
+        <thead>
+            <!-- El encabezado se generará con JavaScript -->
+        </thead>
+        <tbody>
+            <!-- Las filas de datos se generarán con JavaScript -->
+        </tbody>
+    </table>
+
+    <script>
+        // Datos proporcionados en formato de array de objetos
+        const datos = [
+            { "Nombre": "José Lorenzo", "Apellido": "González Paz", "Cédula": "34115596", "Nota 1": "15", "Nota 2": "18", "Nota 3": "19" },
+            { "Nombre": "Darwin Alberto", "Apellido": "Guerra Añez", "Cédula": "32772622", "Nota 1": "19", "Nota 2": "15", "Nota 3": "17" },
+            { "Nombre": "Eidder Adrian", "Apellido": "Morales Parra", "Cédula": "34612362", "Nota 1": "13", "Nota 2": "17", "Nota 3": "20" },
+            { "Nombre": "David Daniel", "Apellido": "Piña Mercado", "Cédula": "34179042", "Nota 1": "16", "Nota 2": "18", "Nota 3": "19" },
+            { "Nombre": "Marielvis Paola", "Apellido": "Briñez García", "Cédula": "33152422", "Nota 1": "20", "Nota 2": "20", "Nota 3": "19" },
+            { "Nombre": "Jhonel Antonio", "Apellido": "Duran Barrenos", "Cédula": "33356364", "Nota 1": "16", "Nota 2": "18", "Nota 3": "19" },
+            { "Nombre": "Escarlet Chiquinquirá", "Apellido": "Mendoza Pérez", "Cédula": "32909423", "Nota 1": "19", "Nota 2": "18", "Nota 3": "20" },
+            { "Nombre": "Valeria Alejandra", "Apellido": "Hinestroza Barreto", "Cédula": "32741025", "Nota 1": "17", "Nota 2": "16", "Nota 3": "20" },
+            { "Nombre": "Omaryely Johana", "Apellido": "De La Cruz Suárez", "Cédula": "33946720", "Nota 1": "19", "Nota 2": "20", "Nota 3": "20" },
+            { "Nombre": "Eris Deivis", "Apellido": "León Ojeda", "Cédula": "32891250", "Nota 1": "16", "Nota 2": "18", "Nota 3": "19" },
+            { "Nombre": "Johandry De Jesús", "Apellido": "Chirinos Vera", "Cédula": "33967124", "Nota 1": "17", "Nota 2": "16", "Nota 3": "20" },
+            { "Nombre": "Liliana Carolina", "Apellido": "Molina Cardozo", "Cédula": "34056555", "Nota 1": "20", "Nota 2": "19", "Nota 3": "18" },
+            { "Nombre": "José Luis", "Apellido": "Soturno Montiel", "Cédula": "33152508", "Nota 1": "17", "Nota 2": "15", "Nota 3": "19" },
+            { "Nombre": "Maikol José", "Apellido": "Ríos Montiel", "Cédula": "34352259", "Nota 1": "20", "Nota 2": "12", "Nota 3": "16" }
+        ];
+
+        // Función para poblar la tabla en el HTML
+        function poblarTabla() {
+            const tableHead = document.querySelector("#dataTable thead");
+            const tableBody = document.querySelector("#dataTable tbody");
+
+            // Limpiar tabla por si acaso
+            tableHead.innerHTML = "";
+            tableBody.innerHTML = "";
+
+            // Crear encabezado
+            const headers = Object.keys(datos[0]);
+            const headerRow = document.createElement("tr");
+            headers.forEach(headerText => {
+                const th = document.createElement("th");
+                th.textContent = headerText;
+                headerRow.appendChild(th);
+            });
+            tableHead.appendChild(headerRow);
+
+            // Crear filas de datos
+            datos.forEach(obj => {
+                const row = document.createElement("tr");
+                headers.forEach(header => {
+                    const cell = document.createElement("td");
+                    cell.textContent = obj[header];
+                    row.appendChild(cell);
+                });
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Función para descargar los datos como CSV
+        function descargarCSV() {
+            const headers = Object.keys(datos[0]);
+            let csvContent = headers.join(',') + '\n';
+
+            datos.forEach(obj => {
+                const row = headers.map(header => obj[header]).join(',');
+                csvContent += row + '\n';
+            });
+
+            // Crear un Blob con los datos CSV
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            
+            // Crear un enlace de descarga
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", "datos_estudiantes.csv"); // Nombre del archivo
+            link.style.visibility = 'hidden';
+            
+            // Añadir el enlace al DOM, hacer clic y luego removerlo
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Asignar la función al botón de descarga
+        document.getElementById('downloadButton').addEventListener('click', descargarCSV);
+
+        // Poblar la tabla cuando la página se carga
+        document.addEventListener('DOMContentLoaded', poblarTabla);
+
+    </script>
+
+</body>
+</html>
