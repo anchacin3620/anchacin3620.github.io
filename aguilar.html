@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Reloj de Arena Roto: Juventud, Gerontocracia y la Explotación Criminal del Tiempo Social</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-bg: #f8f9fa;
+            --dark-text: #2c3e50;
+            --muted-text: #6c757d;
+        }
+        
+        body {
+            font-family: 'Georgia', serif;
+            line-height: 1.7;
+            color: var(--dark-text);
+            background-color: var(--light-bg);
+            padding-top: 60px;
+        }
+        
+        .navbar {
+            background-color: var(--primary-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .article-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .article-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .article-title {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+        
+        .article-author {
+            font-size: 1.1rem;
+            color: var(--muted-text);
+            margin-bottom: 0.5rem;
+        }
+        
+        .article-subtitle {
+            font-style: italic;
+            color: var(--muted-text);
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-title {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-top: 2.5rem;
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--secondary-color);
+        }
+        
+        .subsection-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .abstract-box {
+            background-color: #f1f8ff;
+            border-left: 4px solid var(--secondary-color);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .keywords {
+            font-style: italic;
+            color: var(--muted-text);
+        }
+        
+        .film-list {
+            background-color: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 6px;
+            margin: 1.5rem 0;
+        }
+        
+        .film-list h5 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+        
+        .film-list ol {
+            padding-left: 20px;
+        }
+        
+        .film-list li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .resistance-types {
+            background-color: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 6px;
+            margin: 1.5rem 0;
+        }
+        
+        .resistance-type {
+            margin-bottom: 1.5rem;
+            padding-left: 1rem;
+            border-left: 3px solid var(--secondary-color);
+        }
+        
+        .resistance-type h5 {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+        
+        .conclusion-points {
+            padding-left: 20px;
+        }
+        
+        .conclusion-point {
+            margin-bottom: 1rem;
+        }
+        
+        .bibliography {
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .bibliography h4 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+        
+        .bibliography ol {
+            padding-left: 20px;
+        }
+        
+        .bibliography li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--secondary-color);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+        
+        .back-to-top.visible {
+            opacity: 1;
+        }
+        
+        .table-of-contents {
+            background-color: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 6px;
+            margin: 2rem 0;
+        }
+        
+        .table-of-contents h4 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .table-of-contents ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        
+        .table-of-contents li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .table-of-contents a {
+            color: var(--secondary-color);
+            text-decoration: none;
+        }
+        
+        .table-of-contents a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .article-container {
+                padding: 1.5rem;
+            }
+            
+            .article-title {
+                font-size: 1.8rem;
+            }
+            
+            .section-title {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navegación -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">Artículo Académico</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#resumen">Resumen</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#introduccion">Introducción</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#metodologia">Metodología</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#conclusion">Conclusión</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#bibliografia">Bibliografía</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenido del artículo -->
+    <div class="container article-container">
+        <!-- Encabezado del artículo -->
+        <header class="article-header">
+            <h1 class="article-title">El Reloj de Arena Roto: Juventud, Gerontocracia y la Explotación Criminal del Tiempo Social</h1>
+            <p class="article-author">Por: Freddy Aguilar, Docente de la UNES</p>
+            <p class="article-subtitle">Áreas de Teatro y Formación Sociopolítica para Aspirantes a Investigadores Penales</p>
+        </header>
+
+        <!-- Tabla de contenidos -->
+        <div class="table-of-contents">
+            <h4><i class="fas fa-list"></i> Tabla de Contenidos</h4>
+            <ul>
+                <li><a href="#resumen">Resumen</a></li>
+                <li><a href="#introduccion">Introducción: La Praxis Teatral y la Cronopolítica del Crimen</a></li>
+                <li><a href="#metodologia">Metodología: Cine y Etnografía de la Explotación en Dos Escenarios</a></li>
+                <li><a href="#reloj-arena">La Corrupción del Ciclo: El Reloj de Arena como Máquina Criminal en América Latina</a></li>
+                <li><a href="#caso-epstein">El Caso Epstein: La Máquina Gerontocrática de Chantaje Sistémico</a></li>
+                <li><a href="#tipologias">Tipologías de Resistencia Temporal en el Corpus Latinoamericano</a></li>
+                <li><a href="#conclusion">Conclusión: Hacia una Cronopolítica de la Investigación Penal en Clave Latinoamericana</a></li>
+                <li><a href="#bibliografia">Bibliografía</a></li>
+            </ul>
+        </div>
+
+        <!-- Resumen -->
+        <section id="resumen">
+            <h2 class="section-title">Resumen</h2>
+            <div class="abstract-box">
+                <p>Este artículo, surgido de la praxis pedagógica en la Universidad Nacional Experimental de la Seguridad (UNES), propone un análisis desde la Antropología de las Edades para examinar la explotación criminal de adolescentes como un mecanismo de las élites gerontocráticas. Utilizando un corpus cinematográfico internacional y latinoamericano como evidencia etnográfica, argumentamos que este fenómeno representa una lucha por el control del tiempo social. Contrastamos el "Reloj de Arena" de Carles Feixa—modelo de transición cíclica y reproducción generacional—con el "Reloj Analógico"—que simboliza la ruptura y la creación de nuevos contenidos generacionales. Sostenemos que las redes criminales, como la de Epstein, representan una facción depredadora de un grupo etario mayor que, como analiza Zavaleta Alegría (2021), secuestra el poder y expolia el futuro en América Latina, corrompiendo activamente el tiempo juvenil para convertirlo en capital de chantaje. Para el investigador penal, esta perspectiva es crucial para desentrañar las lógicas temporales y generacionales que sostienen las economías criminales del poder.</p>
+                <p class="keywords"><strong>Palabras clave:</strong> Antropología de las Edades, criminología, gerontocracia, culturas juveniles, explotación, tiempo social, cine latinoamericano.</p>
+            </div>
+        </section>
+
+        <!-- Introducción -->
+        <section id="introduccion">
+            <h2 class="section-title">Introducción: La Praxis Teatral y la Cronopolítica del Crimen</h2>
+            <p>Este artículo surge de mi trabajo como docente en la Universidad Nacional Experimental de la Seguridad (UNES), donde dirijo áreas de Teatro y Formación Sociopolítica para aspirantes a Investigadores Penales. Mi enfoque pedagógico se centra en el uso de la dramaturgia como herramienta para visibilizar las estructuras de poder y la violencia que la ley a menudo oculta. Desde esta praxis, nos situamos en el campo de la Antropología de las Edades para analizar un fenómeno de urgente relevancia para la investigación penal: la explotación de cuerpos juveniles por élites envejecidas como un mecanismo estructural de perpetuación del poder.</p>
+            <p>Sostenemos que este crimen trasciende la transacción ilegal para convertirse en una distorsión del tiempo social. Para ello, articulamos el marco teórico de Carles Feixa (1998), quien conceptualiza la transición a la vida adulta a través de la metáfora del "Reloj de Arena"—un modelo cíclico donde la juventud reproduce el orden social anterior—y del "Reloj Analógico"—un modelo lineal de ruptura y creación generacional. Este análisis se enriquece con la crítica de Zavaleta Alegría (2021) a la gerontocracia latinoamericana como un secuestro de la esperanza, cuyo extremo criminal es la red de explotación que aquí analizamos. El objetivo es proveer al futuro investigador de un marco hermenéutico para leer estos crímenes no solo como actos delictivos, sino como sabotajes sistemáticos a los proyectos vitales de una generación, un fenómeno que el cine latinoamericano ha documentado con singular potencia.</p>
+        </section>
+
+        <!-- Metodología -->
+        <section id="metodologia">
+            <h2 class="section-title">Metodología: Cine y Etnografía de la Explotación en Dos Escenarios</h2>
+            <p>Nuestra metodología se basa en el análisis de un corpus cinematográfico bifronte que funciona como etnografía ficticia de alto valor criminológico. Estas películas son casos de estudio que exponen, con una claridad a menudo más potente que los casos reales, las estructuras, mecanismos y resistencias propias de estas economías criminales en contextos globales y específicamente latinoamericanos.</p>
+            
+            <div class="film-list">
+                <h5>Corpus Fílmico Internacional:</h5>
+                <ol>
+                    <li>Pretty Baby (Louis Malle, 1978)</li>
+                    <li>My Little Princess (Eva Ionesco, 2011)</li>
+                    <li>El tambor de hojalata (Volker Schlöndorff, 1979)</li>
+                    <li>L'immoralità (Massimo Pirri, 1978)</li>
+                </ol>
+            </div>
+            
+            <div class="film-list">
+                <h5>Corpus Fílmico Latinoamericano:</h5>
+                <ol>
+                    <li>Pixote: La Ley del Más Débil (Héctor Babenco, Brasil, 1981)</li>
+                    <li>La Vendedora de Rosas (Víctor Gaviria, Colombia, 1998)</li>
+                    <li>La Teta Asustada (Claudia Llosa, Perú, 2009)</li>
+                    <li>Roma (Alfonso Cuarón, México, 2018)</li>
+                    <li>La Ciénaga (Lucrecia Martel, Argentina, 2001)</li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- La Corrupción del Ciclo -->
+        <section id="reloj-arena">
+            <h2 class="section-title">1. La Corrupción del Ciclo: El Reloj de Arena como Máquina Criminal en América Latina</h2>
+            <p>La metáfora de Feixa del "Reloj de Arena" ilustra un modelo de transición donde la juventud es una moratoria que culmina en la reproducción del orden social. Sin embargo, cuando este modelo es secuestrado por una lógica criminal, se transforma en un "Reloj de Arena Viciado". Si en Pretty Baby el burdel era la institución socializadora, en América Latina esta función la cumplen la calle, el reformatorio y la estructura social misma.</p>
+            
+            <h3 class="subsection-title">Análisis Caso Latinoamericano</h3>
+            <h4 class="subsection-title">"Pixote" y "La Vendedora de Rosas" - La Pedagogía de la Calle</h4>
+            <p>El reformatorio en Pixote y las calles de Medellín en La Vendedora de Rosas funcionan como las instituciones sociales que educan para la autodestrucción. A diferencia de Violet, quien es instruida en las reglas de un burdel, Pixote y Mónica son "educados" por la ley del más fuerte, la economía del narcotráfico y la lógica del descarte social. Estas películas muestran el "Reloj de Arena Viciado" en su expresión más cruda: el sistema (económico, penal, social) no solo mercantiliza a las y los jóvenes, sino que los entrena para ser eslabones reproductores de la violencia que los consume, asegurando la renovación permanente de las fuerzas del crimen organizado y la mano de obra explotable. Es la conversión de la biografía en mercancía desechable.</p>
+        </section>
+
+        <!-- El Caso Epstein -->
+        <section id="caso-epstein">
+            <h2 class="section-title">El Caso Epstein: La Máquina Gerontocrática de Chantaje Sistémico</h2>
+            <p>Mientras el corpus fílmico latinoamericano expresa las distorsiones del tiempo social en el ámbito de la supervivencia y la identidad (el "Reloj de Arena Viciado" por la pobreza y el prejuicio), el caso Epstein revela la arquitectura criminal deliberada que sustenta el poder gerontocrático en su nivel más alto. Este no es un caso de explotación incidental, sino la operación de una maquinaria de poder en las sombras cuyo producto final no es solo el placer, sino, de manera fundamental, el capital de chantaje.</p>
+            <p>La red Epstein representa la facción más depredadora y sofisticada de la élite gerontocrática global. Su operación fue la de un sistema de ingeniería social criminal: una línea de producción diseñada para capturar "carne fresca" juvenil, corromper su tiempo futuro y transformarlo en el activo más valioso para un imperio de poder: información comprometedora e inmunidad forzada.</p>
+            <p>Como sostiene Zavaleta Alegría (2021), la gerontocracia latinoamericana secuestra la esperanza mediante el control de las instituciones. La red Epstein ejecutó este secuestro a nivel transnacional, pero con una metodología industrial:</p>
+            
+            <ol>
+                <li><strong>El Reclutamiento como Sabotaje Generacional:</strong> La captación de jóvenes y adolescentes no fue un acto de desire, sino de sabotaje planificado. Se trataba de identificar y destruir el "Reloj Analógico" de potencial y agencia de sus víctimas, para convertirlas en mercancía de un mercado oculto.</li>
+                <li><strong>La Explotación como Rito de Iniciación:</strong> La "isla del placer" funcionaba como un ritual de iniciación perverso para la élite. Participar no era solo un acto de inmoralidad, sino un pacto de silencio y complicidad. La "inmoralidad compartida" se convertía en el grillete que ataba a políticos, magnates y académicos a la red, garantizando lealtad a través del miedo mutuo.</li>
+                <li><strong>El Chantaje como Motor del Poder:</strong> Este es el núcleo de tu tesis. El verdadero producto no era el acceso sexual, sino el archivo de secretos que esto generaba. Cada acto de explotación era, en esencia, la fabricación de un arma de extorsión. Este capital de chantaje es lo que financiaba el imperio de Epstein y, lo que es más crucial, blindaba a toda la red gerontocrática que participaba en él. Era un sistema auto-perpetuante: cuanta más "carne fresca" se procesaba, más poder e impunidad se acumulaban.</li>
+            </ol>
+            
+            <p>Este modelo no es ajeno a Latinoamérica. Los datos de la ENCOVI (Freitez & España, 2023) sobre la diáspora juvenil y la vulnerabilidad crean un caldo de cultivo donde las lógicas epsteinianas pueden ser replicadas por élites locales. La diferencia de escala no niega la similitud estructural: la conversión del tiempo y el cuerpo juvenil en moneda de cambio para la perpetuación en el poder.</p>
+        </section>
+
+        <!-- Tipologías de Resistencia -->
+        <section id="tipologias">
+            <h2 class="section-title">Tipologías de Resistencia Temporal en el Corpus Latinoamericano:</h2>
+            
+            <div class="resistance-types">
+                <div class="resistance-type">
+                    <h5>• La Huelga de la Moral (Pixote, Los Olvidados):</h5>
+                    <p>La inmersión de Pixote en el crimen y la violencia de los jóvenes en Los Olvidados de Buñuel no es solo victimización. Es también una huelga de la moral burguesa. Su existencia en los márgenes es un rechazo tácito a un "Reloj de Arena" que nunca los incluyó. Su reloj está roto, y su resistencia es, trágicamente, la de sobrevivir en los escombros del ciclo vital tradicional.</p>
+                </div>
+                
+                <div class="resistance-type">
+                    <h5>• El Tiempo del Cuidado (Roma):</h5>
+                    <p>Cleo, en Roma, representa una resistencia silenciosa pero inquebrantable. Frente al abandono y la indiferencia de la estructura patriarcal y clasista, Cleo impone un "Tiempo del Cuidado". Su reloj no es el de la revolución violenta, sino el de la persistencia y la creación de vínculos afectivos reales en un mundo que la trata como un objeto desechable. Su capacidad de salvar a las niñas y niños que se le encomiendan es un acto de resistencia generacional que prioriza la vida sobre la explotación.</p>
+                </div>
+                
+                <div class="resistance-type">
+                    <h5>• El Juicio Pasivo y la Inversión por Omisión (La Ciénaga):</h5>
+                    <p>En la obra de Lucrecia Martel, las y los jóvenes y niñas y niños observan pasivamente la decadencia del mundo adulto. Su inacción y mirada crítica son un juicio constante. La película sugiere que el "Reloj Analógico" de la nueva generación se construye no replicando, sino dejando pudrir el modelo anterior. Es una resistencia pasivo-agresiva donde el sabotaje al ciclo corrupto se da mediante la negativa a participar en él activamente, una estrategia de deserción generacional.</p>
+                </div>
+                
+                <div class="resistance-type">
+                    <h5>• La Defensa de la Intimidad (La Teta Asustada):</h5>
+                    <p>Fausta sufre una explotación estética y cultural cuando su patrona se apropia de sus canciones íntimas y su dolor histórico. Su resistencia es la de proteger ese espacio interior. A diferencia de la venganza espectral en L'immoralità, la de Fausta es una lucha por mantener la soberanía sobre su memoria y su cuerpo frente a una élite que busca mercantilizar hasta su trauma.</p>
+                </div>
+                
+                <div class="resistance-type">
+                    <h5>• El Control Identitario como Explotación del Tiempo Futuro: Pelo Malo (Venezuela).</h5>
+                    <p>El cine venezolano aporta un matiz crucial a este análisis con 'Pelo Malo' (Rondón, 2013). La película desplaza el escenario de la explotación del ámbito sexual al terreno de la identidad y la norma social. Junior, un niño de 9 años, ve cómo su deseo de alisar su "pelo malo" -un acto de autodeterminación sobre su cuerpo y su futuro- es interpretado por su madre como una amenaza que debe ser corregida. Aquí, la madre actúa como agente de un Reloj de Arena Viciado por la precariedad y el prejuicio, buscando reprimir el 'Reloj Analógico' de su hijo para imponerle un modelo de supervivencia y normalidad que niega su identidad. La lucha no es por el cuerpo como mercancía sexual, sino por el cuerpo como territorio del futuro propio. La resistencia de Junior, silenciosa y persistente, encarna la lucha cronopolítica de las y los jóvenes por el derecho a definir su propio tiempo e identidad, incluso frente a la presión más íntima y familiar.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Conclusión -->
+        <section id="conclusion">
+            <h2 class="section-title">Conclusión: Hacia una Cronopolítica de la Investigación Penal en Clave Latinoamericana</h2>
+            <p>Para el aspirante a investigador penal, esta perspectiva no es un ejercicio académico abstracto, sino una herramienta fundamental. El corpus latinoamericano demuestra que las dinámicas de explotación gerontocrática y las resistencias juveniles adquieren matices específicos en la región, matizados por la historia colonial, la desigualdad estructural y la violencia política. Implica:</p>
+            
+            <div class="conclusion-points">
+                <div class="conclusion-point">
+                    <p><strong>1. Identificar la máquina, no solo los eslabones:</strong> La investigación penal debe trascender la persecución de individuos para desmantelar la lógica sistémica del chantaje gerontocrático. El crimen no es el acto aislado de explotación, sino la conversión industrializada de "carne fresca" juvenil en capital de chantaje para construir y mantener imperios de poder en las sombras. Frente a la distorsión del tiempo social que muestra el cine latinoamericano, el caso Epstein representa la weaponización deliberada del tiempo juvenil como arma de dominio. La pregunta forense crucial ya no es solo ¿quién lo hizo?, sino ¿para qué sistema de poder funciona esta explotación?.</p>
+                </div>
+                
+                <div class="conclusion-point">
+                    <p><strong>2. Desagregar el poder gerontocrático regional:</strong> Como muestra Zavaleta Alegría, la gerontocracia latinoamericana tiene características propias. La investigación penal de alto nivel debe rastrear cómo las redes criminales locales se articulan con las lógicas de poder gerontocrático y con circuitos transnacionales como la red Epstein.</p>
+                </div>
+                
+                <div class="conclusion-point">
+                    <p><strong>3. Entender las resistencias como síntomas, evidencias y estrategias:</strong> Los actos de rebelión cultural, el cuidado silencioso, la deserción o el juicio pasivo (como se ve en Roma y La Ciénaga) son la encarnación del "Reloj Analógico" en acción. Para el investigador, son indicadores de patrones delictivos y fuentes potenciales de inteligencia sobre la estructura de las redes explotadoras.</p>
+                </div>
+            </div>
+            
+            <p>En definitiva, la conciencia juvenil, tanto en la ficción como en el activismo real, se revela como una fuerza cronopolítica. Su lucha por desmantelar el capital de la decadencia es, en esencia, una lucha por devolverle la arena a su reloj y por el derecho a marcar su propia hora. La formación del investigador penal debe, por tanto, incorporar esta lente antropológica y este arsenal narrativo latinoamericano para poder enfrentar no solo a los criminales, sino a las máquinas temporales de explotación que estos construyen sobre el terreno específico de nuestras realidades.</p>
+        </section>
+
+        <!-- Bibliografía -->
+        <section id="bibliografia" class="bibliography">
+            <h4>Bibliografía</h4>
+            <ol>
+                <li>Babienco, H. (Director). (1981). Pixote: A Lei do Mais Fraco [Película]. Brasil.</li>
+                <li>Buñuel, L. (Director). (1950). Los Olvidados [Película]. México.</li>
+                <li>Cuarón, A. (Director). (2018). Roma [Película]. México.</li>
+                <li>Feixa, C. (1998). El reloj de arena: culturas juveniles en el siglo XX. Ariel.</li>
+                <li>Freitez, A., & España, L. P. (Coords.). (2023). Encuesta Nacional de Condiciones de Vida (ENCOVI). Informe de Resultados. Universidad Católica Andrés Bello.</li>
+                <li>Gaviria, V. (Director). (1998). La Vendedora de Rosas [Película]. Colombia.</li>
+                <li>Ionesco, E. (Directora). (2011). My Little Princess [Película]. Francia.</li>
+                <li>Llosa, C. (Directora). (2009). La Teta Asustada [Película]. Perú.</li>
+                <li>Malle, L. (Director). (1978). Pretty Baby [Película]. Estados Unidos.</li>
+                <li>Martel, L. (Directora). (2001). La Ciénaga [Película]. Argentina.</li>
+                <li>Pirri, M. (Director). (1978). L'immoralità [Película]. Italia.</li>
+                <li>Rondón, M. (Directora). (2013). Pelo Malo [Película]. Venezuela.</li>
+                <li>Schlöndorff, V. (Director). (1979). El tambor de hojalata [Película]. Alemania.</li>
+                <li>Wajcman, J. (2015). Pressed for Time: The Acceleration of Life in Digital Capitalism. University of Chicago Press.</li>
+                <li>Zavaleta Alegría, J. (2021). Gerontocracia: El secuestro de la esperanza. Cómo las élites envejecidas controlan el poder y expolian el futuro en América Latina.</li>
+            </ol>
+        </section>
+    </div>
+
+    <!-- Botón para volver arriba -->
+    <div class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Mostrar/ocultar botón de volver arriba
+        window.addEventListener('scroll', function() {
+            const backToTop = document.getElementById('backToTop');
+            if (window.pageYOffset > 300) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        });
+
+        // Funcionalidad del botón de volver arriba
+        document.getElementById('backToTop').addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Resaltar sección activa en la navegación
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= (sectionTop - 100)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').substring(1) === current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Suavizar el desplazamiento al hacer clic en los enlaces de navegación
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
