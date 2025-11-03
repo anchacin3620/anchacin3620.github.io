@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capítulo V - Tesis: Simulación Monte Carlo</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #0056b3;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+        }
+        h2 {
+            font-size: 1.8em;
+            margin-top: 40px;
+        }
+        p {
+            text-align: justify;
+            font-size: 1.1em;
+            margin-bottom: 1em;
+        }
+        #downloadBtn {
+            display: block;
+            width: 250px;
+            margin: 30px auto;
+            padding: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        #downloadBtn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>CAPÍTULO V</h1>
+        <h1>CONCLUSIÓN Y RECOMENDACIONES</h1>
+
+        <div id="content-to-download">
+            <h2>5.1 Conclusiones</h2>
+            <p>El presente trabajo de investigación tuvo como objetivo principal simular mediante el método Monte Carlo Cinético los procesos de deposición de películas delgadas de Cromo (Cr) y Hierro (Fe) sobre un sustrato de Magnesio (001), caracterizando los mecanismos de crecimiento y analizando cómo los parámetros del proceso afectan las propiedades morfológicas de las películas. Tras el análisis exhaustivo de los resultados obtenidos, se presentan las siguientes conclusiones:</p>
+            <p>1. <strong>Validación del Modelo de Simulación KMC:</strong> El modelo computacional implementado en Fortran 90, basado en la ecuación maestra probabilística y el método Monte Carlo Cinético, demostró ser una herramienta robusta y precisa para modelar los procesos de deposición de películas delgadas. Fue capaz de capturar la dinámica estocástica de la adsorción y la difusión superficial, permitiendo predecir con alto grado de detalle la morfología final de las películas en función de los parámetros intrínsecos de los materiales y las condiciones de deposición.</p>
+            <p>2. <strong>Diferenciación Morfológica Clave entre Materiales:</strong> A pesar de que ambos materiales, Cr y Fe, presentaron valores cuantitativamente similares de rugosidad (Fe: 6.87±2.56 capas, Cr: 6.78±2.52 capas) y espesor promedio (Fe: 9.35±5.30 capas, Cr: 9.21±5.23 capas) en modo térmico, sus patrones de crecimiento son fundamentalmente distintos. El Hierro (Fe), con su mayor energía de difusión (0.5-1.0 eV), favorece una mayor movilidad superficial, resultando en películas con una distribución de altura homogénea y transiciones suaves. Por el contrario, el Cromo (Cr), con menor energía de difusión (0.01-0.25 eV), genera estructuras más fragmentadas, con cambios bruscos de altura y una morfología más rígida y rugosa a escala nanométrica.</p>
+            <p>3. <strong>Influencia Determinante del Modo de Deposición:</strong> El modo de deposición demostró ser un factor crítico que modula significativamente las propiedades de las películas. <strong>Modo Térmico:</strong> Produce películas más uniformes y continuas, con un crecimiento vertical limitado (ningún material superó las 30 capas). La alta temperatura del sustrato (500 K) mitiga las diferencias energéticas entre los materiales, favoreciendo la coalescencia y la formación de películas maduras. Este modo es ideal para aplicaciones que requieren alta homogeneidad superficial. <strong>Modo Balístico:</strong> Genera películas significativamente más gruesas (+12.9% de espesor para Fe, +17.3% para Cr) y con mayor rugosidad (+6.6% para Fe, +10.3% para Cr). La mayor energía cinética de las partículas incidentes (5.0 eV) promueve un crecimiento vertical más pronunciado y la formación de nanoestructuras bien definidas (islas y columnas), permitiendo alcanzar alturas superiores a las 30 capas, algo imposible en modo térmico.</p>
+            <p>4. <strong>Respuesta Diferencial de los Materiales al Modo de Deposición:</strong> El Cromo (Cr) demostró ser más sensible al cambio del modo de deposición que el Hierro (Fe). Debido a su menor energía de difusión intrínseca, el Cr aprovecha más eficientemente las condiciones del modo balístico para alcanzar mayores incrementos en espesor y cobertura, formando nanoestructuras más pronunciadas. Esto subraya la importancia de no solo seleccionar el material adecuado, sino también optimizar el modo de deposición en función de la aplicación deseada.</p>
+            <p>5. <strong>Cumplimiento de los Objetivos:</strong> El estudio cumplió satisfactoriamente con los objetivos planteados. Se logró caracterizar los mecanismos de deposición, evidenciando una mayor tendencia al crecimiento vertical en modo balístico. Se estudiaron los efectos de la difusión superficial, confirmando que una menor energía de difusión (Cr) se traduce en una mayor rugosidad y heterogeneidad. Finalmente, se analizó el efecto del modo de deposición, cuantificando su impacto en las propiedades físicas de las películas y demostrando que es un parámetro de control tan importante como la propia selección del material.</p>
+            <p>En síntesis, esta investigación no solo proporciona una comprensión detallada de los procesos de deposición de Cr y Fe sobre Mg (001), sino que también establece la simulación Monte Carlo como una herramienta predictiva indispensable para el diseño y optimización de recubrimientos metálicos con propiedades a medida.</p>
+
+            <h2>5.2 Recomendaciones</h2>
+            <p>A partir de los hallazgos y las limitaciones encontradas durante el desarrollo de esta investigación, se proponen las siguientes recomendaciones para futuros trabajos:</p>
+            <p><strong>5.2.1 Para futuras investigaciones</strong></p>
+            <p>1. <strong>Explorar la influencia de la temperatura:</strong> El presente estudio se realizó a una temperatura de sustrato fija (500 K). Se recomienda realizar un estudio paramétrico sistemático variando la temperatura del sustrato en un rango más amplio (ej. 300 K - 800 K) para cuantificar su efecto en la movilidad superficial y los umbrales de transición entre los diferentes modos de crecimiento (capa-por-capa, isla, Stranski-Krastanov).</p>
+            <p>2. <strong>Incorporar más modos de deposición y parámetros:</strong> Además de los modos térmico y balístico, se podría simular un modo de deposición por sputtering reactivo o deposición asistida por haz de iones (IBAD), donde se incluyan procesos de erosión y redisposición explícitamente. Además, se podría variar el ángulo de incidencia de las partículas para estudiar su efecto en la anisotropía superficial.</p>
+            <p>3. <strong>Estudio de aleaciones y multicapas:</strong> Ampliar el modelo para simular la deposición de aleaciones (Fe-Cr) o estructuras de multicapas (Fe/Cr/Fe) sobre el sustrato de Mg. Esto permitiría investigar fenómenos de interfase y la posibilidad de diseñar materiales con propiedades magnéticas o mecánicas mejoradas.</p>
+            <p>4. <strong>Modelado de defectos del sustrato:</strong> Si bien se mencionó, el modelado de defectos más complejos en el sustrato de Mg (001), como escalones atómicos o vacancias, podría proporcionar una visión más realista de cómo la imperfección inicial del sustrato influye en la nucleación y el crecimiento de la película.</p>
+            <p><strong>5.2.2 Para la validación experimental</strong></p>
+            <p>1. <strong>Comparación con resultados experimentales:</strong> La simulación debe ser validada mediante la comparación con datos experimentales. Se recomienda realizar deposiciones físicas de Cr y Fe sobre sustratos de Mg (001) en las mismas condiciones simuladas (térmica y balística) y caracterizar las películas resultantes utilizando técnicas como Microscopía de Fuerza Atómica (AFM) para medir la rugosidad y morfología, Microscopía Electrónica de Barrido (SEM) para la topografía, y Difracción de Rayos X (XRD) para la estructura cristalina y el espesor.</p>
+            <p>2. <strong>Medición de propiedades funcionales:</strong> Más allá de la morfología, se recomienda medir propiedades funcionales de las películas depositadas experimentalmente, como la resistencia a la corrosión, la dureza o las propiedades magnéticas, y correlacionarlas con los patrones morfológicos predichos por la simulación.</p>
+            <p><strong>5.2.3 Para la optimización computacional</strong></p>
+            <p>1. <strong>Mejora del generador de números aleatorios:</strong> Aunque la subrutina `RANDOM_NUMBER` de Fortran 90 fue suficiente para este estudio, para simulaciones a mayor escala o que requieran una mayor precisión estadística, se recomienda implementar generadores de números aleatorios más robustos como el Mersenne Twister.</p>
+            <p>2. <strong>Paralelización del código:</strong> Para abordar sistemas más grandes (rejillas > 300x300x100) y tiempos de simulación más largos, se recomienda optimizar el código Fortran mediante técnicas de paralelización (ej. OpenMP o MPI), lo que reduciría drásticamente el tiempo de cómputo y permitiría explorar un espacio de parámetros mucho más amplio.</p>
+        </div>
+
+        <button id="downloadBtn">Descargar como RTF</button>
+    </div>
+
+    <script>
+        document.getElementById('downloadBtn').addEventListener('click', function() {
+            // 1. Obtener el contenido textual del div
+            const contentElement = document.getElementById('content-to-download');
+            let textContent = contentElement.innerText;
+
+            // 2. Crear el encabezado y pie de página del RTF
+            const rtfHeader = `{\\rtf1\\ansi\\ansicpg1252\\deff0\\deflang3082{\\fonttbl{\\f0\\fnil Times New Roman;}}\n`;
+            const rtfColors = `{\\colortbl ;\\red0\\green0\\blue0;}\n`;
+            let rtfContent = `\\fs24 `; // Tamaño de fuente base (24 = 12pt)
+
+            // 3. Convertir caracteres especiales a RTF
+            // Mapeo de caracteres comunes en español a su código RTF
+            const charMap = {
+                'á': '\\\'e1', 'é': '\\\'e9', 'í': '\\\'ed', 'ó': '\\\'f3', 'ú': '\\\'fa',
+                'Á': '\\\'c1', 'É': '\\\'c9', 'Í': '\\\'cd', 'Ó': '\\\'d3', 'Ú': '\\\'da',
+                'ñ': '\\\'f1', 'Ñ': '\\\'d1',
+                'ü': '\\\'fc', 'Ü': '\\\'dc',
+                '¿': '\\\'bf', '¡': '\\\'a1',
+                '«': '\\\'ab', '»': '\\\'bb',
+                '{': '\\{', '}': '\\}',
+                '\\': '\\\\'
+            };
+
+            // Reemplazar cada carácter especial en el texto
+            for (const char in charMap) {
+                const regex = new RegExp(char, 'g');
+                textContent = textContent.replace(regex, charMap[char]);
+            }
+            
+            // 4. Formatear párrafos y saltos de línea para RTF
+            // Reemplazar dobles saltos de línea (separación de párrafos) por \par
+            rtfContent += textContent.replace(/\n\s*\n/g, '\\par\n\\par\n');
+            // Reemplazar saltos de línea simples (dentro de un párrafo) por \line
+            rtfContent = rtfContent.replace(/\n/g, '\\line\n');
+            // Asegurar que el documento termine con un párrafo
+            rtfContent += '\\par\n}';
+            
+            // 5. Unir todas las partes para crear el documento RTF final
+            const finalRtf = rtfHeader + rtfColors + rtfContent;
+
+            // 6. Crear un Blob y un enlace de descarga
+            const blob = new Blob([finalRtf], { type: 'application/rtf' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Capitulo_V_Conclusiones_Recomendaciones.rtf';
+            document.body.appendChild(a);
+            a.click();
+            
+            // 7. Limpiar: remover el enlace y revocar el URL
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+    </script>
+
+</body>
+</html>
