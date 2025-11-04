@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Notas CSV - Ambiente 3</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f7f6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #0056b3;
+            text-align: center;
+        }
+        p {
+            margin-bottom: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 300px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            font-family: monospace;
+            box-sizing: border-box; /* Important for padding */
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #status {
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Generador de Notas CSV - Ambiente 3</h1>
+        <p>
+            <strong>Instrucciones:</strong> Pega la lista de estudiantes con sus notas en el cuadro de texto siguiente y haz clic en el botón para generar y descargar un archivo CSV con las notas colocadas en la hoja de cálculo del Ambiente 3.
+        </p>
+        <textarea id="inputList" placeholder="1)Mariangel sanchez 33.339.328&#10;Notas:15/15/19/20/&#10;2)Rowert Aular 30.494.851&#10;Notas:20/17/20/17&#10;..."></textarea>
+        <button onclick="generateAndDownloadCSV()">Generar y Descargar CSV</button>
+        <p id="status"></p>
+    </div>
+
+    <script>
+        // --- PLANTILLA DE LA HOJA DE CÁLCULO AMBIENTE 3 ---
+        // Se recrea la estructura exacta de las filas y columnas.
+        const spreadsheetTemplate = [
+            ["HEAD", "*", "*", "*", "*", "HOJA DE ACTUACIÓN DEL ESTUDIANTE", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "Plan Especial de Recuperación."],
+            ["0", "*", "*", "*", "*", "PNF: CRIMINALISTICA", "*", "*", "*", "*", "*", "*", "PROCESO: II-2025", "*", "*", "*", "*", "*", "TRAYECTO: INICIAL", "*", "*", "*", "*", "*", "*"],
+            ["1", "*", "*", "*", "*", "FECHA INICIO:", "*", "*", "*", "*", "*", "*", "FECHA DE CULMINACIÓN:", "*", "*", "*", "*", "*", "AMBIENTE: 3", "*", "*", "*", "*", "*", "*"],
+            ["2", "*", "*", "*", "*", "UNIDAD CURRICULAR:", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*"],
+            ["3", "JEFE/A DEL ÁREA DEL CONOCIMIENTO:", "*", "*", "*", "Actividad:", "*", "Actividad:", "*", "Actividad:", "*", "Evaluación Continua", "Firma de la o el Estudiante", "Actividad:", "*", "Actividad:", "*", "RESPONSABILIDAD", "*", "Evaluación Continua", "NOTA 100%", "*", "Firma de la o el Estudiante", "*"],
+            ["4", "TELÉFONO CONTACTO:", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*"],
+            ["5", "DOCENTE DE UC:", "*", "*", "*", "20%", "*", "20%", "*", "20%", "*", "1er CORTE DEL TRIMESTRE", "*", "20%", "*", "15%", "*", "5%", "*", "2do CORTE DEL TRIMESTRE", "*", "*", "*", "*"],
+            ["6", "TELÉFONO CONTACTO:", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*"],
+            ["N°", "Cédula", "Nombres", "Apellidos", "E1", "Recuperativa", "E2", "Recuperativa", "E3", "Recuperativa", "60% 1-20 Ptos", "*", "E4", "Recuperativa", "E5", "Recuperativa", "ACTITUDINAL", "*", "40% 1-20 Ptos", "*", "*", "*", "*"],
+            ["1", "31296486", "NEILYN CAROLINA", "FERRER GONZALES", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["2", "31833805", "JEFFERSOM ENRIQUE", "RAMOS VILLASMIL", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["3", "32035810", "AURIMAR DEL VALLE", "TORRES MONSALVE", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["4", "32090478", "MANUEL JOSÉ", "SIRA GARCIA", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["5", "32839367", "MAIKEL JOSE", "GONZALEZ GONZALEZ", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["6", "32890786", "JUAN MANUEL", "GARCIA LEON", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["7", "32909704", "ERICK JAVIER", "RIVERO MAVAREZ", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["8", "32940143", "DANIEL DAVID", "RAMIREZ DUARTE", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["9", "32940169", "FRANKLIN DAVID", "FLOREZ GONZALEZ", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["10", "32989162", "GERMARY KARIN", "URDANETA GARCÍA", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["11", "33018441", "MANUEL DAVID", "VILLALOBOS RAMIREZ", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["12", "33031696", "YORVILETH DEL CARMEN", "SEQUERA VILLASMIL", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["13", "33069148", "NAHOMY GLAIDITH", "GONZALEZ SEMPRUN", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["14", "33104062", "LUISBELY MARIA", "ACURERO BRICEÑO", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["15", "33124426", "KEIVER JOSE", "PALMAR ACOSTA", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["16", "33132326", "SARAY CHIQUINQUIRÁ", "POLANCO URARIYU", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["17", "33172713", "EUDIMAR MARÍA", "SIERRA MACHADO", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["18", "33172930", "BENITO JOSÉ", "LOPEZ CHACIN", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["19", "33178126", "ANDRES MIGUEL", "AYALA BARRIOS", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["20", "33191301", "JOHAILY ELIANA", "DIAZ RANGEL", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["21", "33211151", "MOISES ALBERTO", "FERRER MONTIEL", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["22", "33317461", "EIDRIAN CAROLINA", "NIEBLES MEJIA", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["23", "33322087", "VICTOR DAVID", "SALINAS FUENTES", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["24", "33323572", "YEISABEL DEL CARMEN", "RUIZ BRICEÑO", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["25", "33339328", "MARIANGEL JAIVELY", "SANCHEZ MARTINEZ", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["26", "33341614", "FRANYELIS SARAIS", "PALMAR PUSHAINA", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["27", "33357527", "ROSIBEL RAQUEL", "RINCON RODRIGUEZ", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["28", "33359437", "ISAAC DAVID", "HERNANDEZ FERNÁNDEZ", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["29", "33374838", "ERIANA FERNANDA", "GOMEZ CORZO", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["30", "33484060", "JIMAAI DAVID", "MAQUINA CARVAJAL", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["31", "33524963", "AIDER ENRRIQUE", "ATENCIO GONZÁLEZ", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["32", "33566332", "ELIMAR DE LOS ANGELES", "ARRAGA ARCILA", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["33", "33570558", "JOEL ALEJANDRO", "URDANETA FUENMAYOR", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["34", "33599962", "NISEILYS DEL VALLE", "LABARCA LABARCA", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["35", "33611238", "EDINEY ALEXANDRA", "VEGAS VALENCIA", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["36", "33674441", "EDGARY ALEXANDRA", "CARRUYO CAMPOS", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["37", "33739862", "YISNILY SUAIL", "MEJIA RIOS", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["38", "33747885", "JOYNER EDIXON", "MURILLO OQUENDO", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["39", "33946777", "ELIANNIS CAROLINA", "AVILA GONZÁLEZ", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["40", "34029293", "CARLOS DANIEL", "PERDOMO SANCHEZ", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["41", "34117146", "YOSSGLUIN ABRAHAM", "TORRES NUÑEZ", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["42", "34325163", "ADRIAN ALEJANDRO", "GARCIA ESTRADA", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["43", "34402035", "ANGELES DE JESÚS", "SANCHEZ LINAREZ", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["44", "34406049", "SAMUEL DAVID", "BELTRÁN ECHAVEZ", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["45", "34607656", "RUBESY MARIA", "GONZALEZ RAMIREZ", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["46", "35168858", "ALEXANDER JESUS", "GONZÁLEZ FERNÁNDEZ", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["47", "35187558", "GENESIS PAOLA", "BOHORQUEZ BARBOZA", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["48", "36284497", "MAYRIELIS ANDREINA", "MORAN ROMERO", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["49", "30494851", "ROWERT AMITH", "AULAR GOMEZ", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["50", "31440502", "YAIRNEL JESUS", "PRIETO SANCHEZ", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["DOCENTE DE LA UNIDAD CURRICULAR", "*", "*", "*", "JEFE DE LA UNIDAD REGIONAL DE GESTION CURRICULAR", "*", "*", "*", "*", "*", "COORDINADOR REGIONAL DE COORDIANCION ACADEMICA", "*", "*", "*", "*", "*", "*", "COORDINADORA REGIONAL DE CONTROL DE ESTUDIO", "*", "*", "*", "*"]
+        ];
+
+        function generateAndDownloadCSV() {
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = "Procesando...";
+
+            const inputText = document.getElementById('inputList').value;
+            if (!inputText.trim()) {
+                statusEl.textContent = "Error: El área de texto está vacía.";
+                statusEl.style.color = "red";
+                return;
+            }
+
+            // 1. Parsear la lista de entrada
+            const studentsData = parseInputList(inputText);
+            
+            // 2. Crear una copia de la plantilla para no modificarla
+            const outputData = spreadsheetTemplate.map(row => [...row]);
+
+            // 3. Mapear los índices de las columnas de notas
+            const gradeColumns = { E1: 4, E2: 6, E3: 8, E4: 12 };
+
+            // 4. Iterar y actualizar los datos
+            studentsData.forEach(student => {
+                // Limpiar cédula para comparación (quitar puntos y comas)
+                const cleanId = student.id.replace(/[.,]/g, '');
+
+                // Buscar al estudiante en la plantilla (empezando desde la fila 8, índice 7)
+                for (let i = 7; i < outputData.length - 1; i++) { // -1 para no incluir la fila de firmas
+                    const templateId = String(outputData[i][1]); // Asegurarse que es string para comparar
+                    
+                    if (templateId === cleanId) {
+                        // Encontrado, colocar las notas
+                        if (student.grades.length >= 1) outputData[i][gradeColumns.E1] = student.grades[0];
+                        if (student.grades.length >= 2) outputData[i][gradeColumns.E2] = student.grades[1];
+                        if (student.grades.length >= 3) outputData[i][gradeColumns.E3] = student.grades[2];
+                        if (student.grades.length >= 4) outputData[i][gradeColumns.E4] = student.grades[3];
+                        break; // Pasar al siguiente estudiante de la lista
+                    }
+                }
+            });
+
+            // 5. Generar y descargar el CSV
+            downloadCSV(outputData, 'notas_amb3_actualizadas.csv');
+            statusEl.textContent = "¡Archivo CSV generado y descargado con éxito!";
+            statusEl.style.color = "#28a745";
+        }
+
+        function parseInputList(text) {
+            const lines = text.split('\n');
+            const students = [];
+            let currentStudent = {};
+
+            const regex = /^\d+\)(.+?)\s+([\d.,]+)?\s*Notas:\s*(.*)$/i;
+
+            for (const line of lines) {
+                const trimmedLine = line.trim();
+                if (!trimmedLine) continue;
+
+                // Si la línea empieza con número, es un nuevo estudiante
+                if (/^\d+\)/.test(trimmedLine)) {
+                    if (currentStudent.id) { // Guardar el anterior si existe
+                        students.push(currentStudent);
+                    }
+                    const match = trimmedLine.match(regex);
+                    if (match) {
+                        currentStudent = {
+                            name: match[1].trim(),
+                            id: match[2] ? match[2].replace(/[.,]/g, '') : '', // Limpiar cédula
+                            grades: match[3] ? match[3].split('/').map(g => g.trim()).filter(g => g) : []
+                        };
+                    }
+                } else if (trimmedLine.toLowerCase().startsWith('notas:') && currentStudent.name) {
+                    // Si la línea empieza con "Notas:", pertenece al estudiante anterior (sin cédula)
+                    const gradesStr = trimmedLine.substring(6).trim();
+                    currentStudent.grades = gradesStr.split('/').map(g => g.trim()).filter(g => g);
+                }
+            }
+            // No olvidar el último estudiante
+            if (currentStudent.id || currentStudent.name) {
+                students.push(currentStudent);
+            }
+
+            return students;
+        }
+
+        function downloadCSV(data, filename) {
+            const csvContent = data.map(e => e.map(field => {
+                // Escapar comillas y envolver en comillas si contiene comas o comillas
+                const str = String(field);
+                if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+                    return `"${str.replace(/"/g, '""')}"`;
+                }
+                return str;
+            }).join(',')).join('\n');
+
+            const blob = new Blob(["\ufeff" + csvContent], { type: 'text/csv;charset=utf-8;' }); // \ufeff para UTF-8 BOM
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", filename);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+
+</body>
+</html>
