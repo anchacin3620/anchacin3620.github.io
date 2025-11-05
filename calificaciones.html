@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Evaluación - Documentos del Libertador | UNES Núcleo Zulia</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3 {
+            color: #1a5276;
+        }
+        .university-header {
+            background-color: #1a5276;
+            color: white;
+            padding: 20px;
+            border-radius: 8px 8px 0 0;
+            margin: -20px -20px 20px -20px;
+            text-align: center;
+        }
+        .university-header h1 {
+            margin: 0;
+            color: white;
+        }
+        .university-header p {
+            margin: 5px 0;
+            font-size: 16px;
+        }
+        .header-info {
+            background-color: #eaf2f8;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .header-info p {
+            margin: 5px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #1a5276;
+            color: white;
+            position: sticky;
+            top: 0;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #eaf2f8;
+        }
+        .chart-container {
+            width: 100%;
+            height: 400px;
+            margin-bottom: 30px;
+        }
+        .stats-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+        .stat-box {
+            background-color: #eaf2f8;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            width: 180px;
+            margin: 10px;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1a5276;
+        }
+        .alert {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .tab-container {
+            margin-bottom: 20px;
+        }
+        .tab-button {
+            background-color: #1a5276;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            margin-right: 5px;
+            border-radius: 5px 5px 0 0;
+        }
+        .tab-button.active {
+            background-color: #2980b9;
+        }
+        .tab-content {
+            display: none;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 0 5px 5px 5px;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .comparison-table {
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        .comparison-table th, .comparison-table td {
+            padding: 10px;
+            text-align: center;
+        }
+        .table-container {
+            max-height: 500px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+        footer {
+            background-color: #1a5276;
+            color: white;
+            padding: 20px;
+            border-radius: 0 0 8px 8px;
+            margin: 20px -20px -20px -20px;
+            text-align: center;
+        }
+        footer p {
+            margin: 5px 0;
+        }
+        .license {
+            font-size: 12px;
+            margin-top: 10px;
+            color: #aed6f1;
+        }
+        .summary-cards {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .summary-card {
+            background: linear-gradient(135deg, #1a5276, #2980b9);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            width: 30%;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .summary-card h4 {
+            margin: 0 0 10px 0;
+        }
+        .summary-card p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="university-header">
+            <h1>UNIVERSIDAD NACIONAL EXPERIMENTAL DE LA SEGURIDAD</h1>
+            <p>Núcleo Zulia</p>
+            <p>Unidad Curricular: Documentos del Libertador</p>
+            <p>Proceso: II-2025 | Trayecto: INICIAL</p>
+        </div>
+
+        <div class="summary-cards">
+            <div class="summary-card">
+                <h4>Ambiente 1 - Investigación Penal</h4>
+                <p>Total Estudiantes: 54</p>
+                <p>Docente: Ángel Chacín Ávila</p>
+            </div>
+            <div class="summary-card">
+                <h4>Ambiente 2 - Investigación Penal</h4>
+                <p>Total Estudiantes: 54</p>
+                <p>Docente: Ángel Chacín Ávila</p>
+            </div>
+            <div class="summary-card">
+                <h4>Ambiente 3 - Criminalística</h4>
+                <p>Total Estudiantes: 50</p>
+                <p>Docente: Ángel Chacín Ávila</p>
+            </div>
+        </div>
+
+        <div class="tab-container">
+            <button class="tab-button active" onclick="openTab(event, 'comparisonTab')">Comparación General</button>
+            <button class="tab-button" onclick="openTab(event, 'amb1Tab')">Ambiente 1</button>
+            <button class="tab-button" onclick="openTab(event, 'amb2Tab')">Ambiente 2</button>
+            <button class="tab-button" onclick="openTab(event, 'amb3Tab')">Ambiente 3</button>
+        </div>
+
+        <div id="comparisonTab" class="tab-content active">
+            <h3>Comparación de Ambientes</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Ambiente</th>
+                        <th>PNF</th>
+                        <th>Total Estudiantes</th>
+                        <th>Promedio</th>
+                        <th>Desviación Estándar</th>
+                        <th>Nota Máxima</th>
+                        <th>Nota Mínima</th>
+                        <th>Estudiantes en Alerta</th>
+                    </tr>
+                </thead>
+                <tbody id="comparisonTableBody">
+                </tbody>
+            </table>
+            
+            <div class="chart-container">
+                <canvas id="comparisonChart"></canvas>
+            </div>
+        </div>
+
+        <div id="amb1Tab" class="tab-content">
+            <div class="header-info">
+                <p><strong>PNF:</strong> INVESTIGACION PENAL</p>
+                <p><strong>AMBIENTE:</strong> 1</p>
+                <p><strong>JEFE/A DEL ÁREA DEL CONOCIMIENTO:</strong> Gerardo Gonzalez</p>
+                <p><strong>DOCENTE DE UC:</strong> Ángel Chacín Ávila</p>
+            </div>
+            
+            <div class="tab-container">
+                <button class="tab-button active" onclick="openSubTab(event, 'amb1Students')">Estudiantes</button>
+                <button class="tab-button" onclick="openSubTab(event, 'amb1Stats')">Estadísticas</button>
+                <button class="tab-button" onclick="openSubTab(event, 'amb1Chart')">Histograma</button>
+            </div>
+            
+            <div id="amb1Students" class="tab-content active">
+                <div class="table-container">
+                    <table id="amb1Table"></table>
+                </div>
+            </div>
+            
+            <div id="amb1Stats" class="tab-content">
+                <div class="stats-container" id="amb1StatsContainer"></div>
+                <div id="amb1Alerts"></div>
+            </div>
+            
+            <div id="amb1Chart" class="tab-content">
+                <div class="chart-container">
+                    <canvas id="amb1ChartCanvas"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div id="amb2Tab" class="tab-content">
+            <div class="header-info">
+                <p><strong>PNF:</strong> INVESTIGACION PENAL</p>
+                <p><strong>AMBIENTE:</strong> 2</p>
+                <p><strong>JEFE/A DEL ÁREA DEL CONOCIMIENTO:</strong> Gerardo González</p>
+                <p><strong>DOCENTE DE UC:</strong> Ángel Chacín Ávila</p>
+            </div>
+            
+            <div class="tab-container">
+                <button class="tab-button active" onclick="openSubTab(event, 'amb2Students')">Estudiantes</button>
+                <button class="tab-button" onclick="openSubTab(event, 'amb2Stats')">Estadísticas</button>
+                <button class="tab-button" onclick="openSubTab(event, 'amb2Chart')">Histograma</button>
+            </div>
+            
+            <div id="amb2Students" class="tab-content active">
+                <div class="table-container">
+                    <table id="amb2Table"></table>
+                </div>
+            </div>
+            
+            <div id="amb2Stats" class="tab-content">
+                <div class="stats-container" id="amb2StatsContainer"></div>
+                <div id="amb2Alerts"></div>
+            </div>
+            
+            <div id="amb2Chart" class="tab-content">
+                <div class="chart-container">
+                    <canvas id="amb2ChartCanvas"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div id="amb3Tab" class="tab-content">
+            <div class="header-info">
+                <p><strong>PNF:</strong> CRIMINALISTICA</p>
+                <p><strong>AMBIENTE:</strong> 3</p>
+                <p><strong>JEFE/A DEL ÁREA DEL CONOCIMIENTO:</strong> Gerardo González</p>
+                <p><strong>DOCENTE DE UC:</strong> Ángel Chacín Ávila</p>
+            </div>
+            
+            <div class="tab-container">
+                <button class="tab-button active" onclick="openSubTab(event, 'amb3Students')">Estudiantes</button>
+                <button class="tab-button" onclick="openSubTab(event, 'amb3Stats')">Estadísticas</button>
+                <button class="tab-button" onclick="openSubTab(event, 'amb3Chart')">Histograma</button>
+            </div>
+            
+            <div id="amb3Students" class="tab-content active">
+                <div class="table-container">
+                    <table id="amb3Table"></table>
+                </div>
+            </div>
+            
+            <div id="amb3Stats" class="tab-content">
+                <div class="stats-container" id="amb3StatsContainer"></div>
+                <div id="amb3Alerts"></div>
+            </div>
+            
+            <div id="amb3Chart" class="tab-content">
+                <div class="chart-container">
+                    <canvas id="amb3ChartCanvas"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p><strong>Elaborado por:</strong> Ángel Chacín Ávila</p>
+            <p>Licenciado en Física, Especialista en Ciencias Computacionales, Diplomado en Educación Policial</p>
+            <p class="license">Este software se publica bajo licencia GPL (General Public License)</p>
+        </footer>
+    </div>
+
+    <script>
+        // Datos de los tres ambientes
+        const amb1Data = [
+            { id: 1, cedula: "27849521", nombres: "NOELY", apellidos: "GONZÁLEZ GONZÁLEZ", e1: 18.000, e2: 20.000, e3: 20.000, e4: 17.000, e5: 20.000, actitudinal: 20.000, final: 19.200 },
+            { id: 2, cedula: "27876209", nombres: "JANDRY JOSÉ", apellidos: "PRIETO AZUAJE", e1: 17.000, e2: 16.000, e3: 17.000, e4: 19.000, e5: 20.000, actitudinal: 20.000, final: 17.867 },
+            { id: 3, cedula: "27886290", nombres: "LEONARDO ALBERTO", apellidos: "CONTRERAS TINOCO", e1: 16.000, e2: 16.000, e3: 17.000, e4: 19.000, e5: 20.000, actitudinal: 20.000, final: 17.667 },
+            { id: 4, cedula: "28146759", nombres: "CARLOS DAVID", apellidos: "FUENMAYOR OBRIAN", e1: 16.000, e2: 17.000, e3: 14.000, e4: 18.000, e5: 20.000, actitudinal: 20.000, final: 17.133 },
+            { id: 5, cedula: "28210809", nombres: "NAIROBI ALEJANDRA", apellidos: "GONZÁLEZ GONZÁLEZ", e1: 16.000, e2: 19.000, e3: 20.000, e4: 18.000, e5: 20.000, actitudinal: 20.000, final: 18.733 },
+            { id: 6, cedula: "28467864", nombres: "NECTARIO MARTÍN", apellidos: "MANZANERO OCHOA", e1: 19.000, e2: 18.000, e3: 18.000, e4: 17.000, e5: 20.000, actitudinal: 20.000, final: 18.600 },
+            { id: 7, cedula: "28486965", nombres: "JOSE DANIEL", apellidos: "NAVA SEMECO", e1: 19.000, e2: 16.000, e3: 18.000, e4: 17.000, e5: 20.000, actitudinal: 20.000, final: 18.200 },
+            { id: 8, cedula: "29543811", nombres: "FREDERSON DANIEL", apellidos: "GONZÁLEZ PERDOMO", e1: 17.000, e2: 17.000, e3: 15.000, e4: 17.000, e5: 20.000, actitudinal: 20.000, final: 17.400 },
+            { id: 9, cedula: "29562345", nombres: "JOSSAN MANUEL", apellidos: "RAMOS MACHADO", e1: 19.000, e2: 19.000, e3: 19.000, e4: 19.000, e5: 20.000, actitudinal: 20.000, final: 19.267 },
+            { id: 10, cedula: "29646927", nombres: "KALE JOSUE", apellidos: "SIBIRA ACOSTA", e1: 18.000, e2: 19.000, e3: 17.000, e4: 16.000, e5: 20.000, actitudinal: 20.000, final: 18.267 },
+            { id: 11, cedula: "29767066", nombres: "WILEYSKY ARIANNA", apellidos: "BRACHO FUENMAYOR", e1: 20.000, e2: 17.000, e3: 18.000, e4: 18.000, e5: 20.000, actitudinal: 20.000, final: 18.733 },
+            { id: 12, cedula: "29767883", nombres: "PEDRO LUIS", apellidos: "TRUJILLO PEÑA", e1: 16.000, e2: 20.000, e3: 17.000, e4: 18.000, e5: 20.000, actitudinal: 20.000, final: 18.333 },
+            { id: 13, cedula: "29819128", nombres: "JOSÉ LUIS", apellidos: "FERRER GARCÍA", e1: 15.000, e2: 16.000, e3: 16.000, e4: 18.000, e5: 20.000, actitudinal: 20.000, final: 17.133 },
+            { id: 14, cedula: "29926803", nombres: "DEIBER LENIN", apellidos: "REYES MELÉNDEZ", e1: 17.000, e2: 17.000, e3: 18.000, e4: 1.000, e5: 20.000, actitudinal: 20.000, final: 15.867, alert: true },
+            { id: 15, cedula: "29927615", nombres: "LUIS MARIO", apellidos: "MANJARRES ACOSTA", e1: 18.000, e2: 16.000, e3: 16.000, e4: 18.000, e5: 20.000, actitudinal: 20.000, final: 17.733 },
+            { id: 16, cedula: "29950705", nombres: "LUIS ANGEL", apellidos: "BRACHO HIGERA", e1: 18.000, e2: 17.000, e3: 16.000, e4: 14.000, e5: 20.000, actitudinal: 20.000, final: 17.400 },
+            { id: 17, cedula: "29963345", nombres: "JOSÉ ARMANDO", apellidos: "GLORIA CARRUYO", e1: 15.000, e2: 17.000, e3: 17.000, e4: 18.000, e5: 20.000, actitudinal: 20.000, final: 17.533 },
+            { id: 18, cedula: "30010735", nombres: "GÉNESIS ELIAINNY", apellidos: "BARBOZA PÉREZ", e1: 16.000, e2: 18.000, e3: 19.000, e4: 20.000, e5: 20.000, actitudinal: 20.000, final: 18.600 },
+            { id: 19, cedula: "30028811", nombres: "EUDOMAR ENRIQUE", apellidos: "CARMONA ROMERO", e1: 19.000, e2: 19.000, e3: 19.000, e4: 19.000, e5: 20.000, actitudinal: 20.000, final: 19.267 },
+            { id: 20, cedula: "30058678", nombres: "HEBERT JHOAN", apellidos: "INFANTE GONZÁLEZ", e1: 13.000, e2: 18.000, e3: 13.000, e4: 14.000, e5: 20.000, actitudinal: 20.000, final: 16.000 },
+            { id: 21, cedula: "30060528", nombres: "YULIESKA DEL CARMEN", apellidos: "PIMENTEL NAVA", e1: 15.000, e2: 17.000, e3: 20.000, e4: 19.000, e5: 20.000, actitudinal: 20.000, final: 18.267 },
+            { id: 22, cedula: "30101407", nombres: "ALBERT ENRIQUE", apellidos: "BRETTI URIANA", e1: 16.000, e2: 20.000, e3: 19.000, e4: 20.000, e5: 20.000, actitudinal: 20.000, final: 19.000 },
+            { id: 23, cedula: "30150126", nombres: "EDWIN JOSÉ", apellidos: "ESPINA FUENMAYOR", e1: 18.000, e2: 16.000, e3: 15.000, e4: 16.000, e5: 20.000, actitudinal: 20.000, final: 17.267 },
+            { id: 24, cedula: "30217735", nombres: "ENYERBER ENRIQUE", apellidos: "RAMOS FERRER", e1: 18.000, e2: 18.000, e3: 16.000, e4: 15.000, e5: 20.000, actitudinal: 20.000, final: 17.733 },
+            { id: 25, cedula: "30231863", nombres: "JOSE RAFAEL", apellidos: "LOPEZ FERNÁNDEZ", e1: 20.000, e2: 17.000, e3: 14.000, e4: 16.000, e5: 20.000, actitudinal: 20.000, final: 17.667 },
+            { id: 26, cedula: "30284462", nombres: "KERLY JHOANA", apellidos: "FERNÁNDEZ GONZÁLEZ", e1: 16.000, e2: 17.000, e3: 18.000, e4: 19.000, e5: 20.000, actitudinal: 20.000, final: 18.067 },
+            { id: 27, cedula: "30355017", nombres: "JOSHUA ABIEL", apellidos: "GONZÁLEZ MENDOZA", e1: 19.000, e2: 19.000, e3: 20.000, e4: 19.000, e5: 20.000, actitudinal: 20.000, final: 19.467 },
+            { id: 28, cedula: "30355196", nombres: "HENRY DAVID", apellidos: "PRIETO NAVARRO", e1: 15.000, e2: 17.000, e3: 18.000, e4: 19.000, e5: 20.000, actitudinal: 20.000, final: 17.867 },
+            { id: 29, cedula: "30425441", nombres: "FRANYER DAVID", apellidos: "PINEDA MORALES", e1: 14.000, e2: 14.000, e3: 15.000, e4: 18.000, e5: 20.000, actitudinal: 20.000, final: 16.333 },
+            { id: 30, cedula: "30472783", nombres: "YAIRY DEL CARMEN", apellidos: "MARQUEZ AÑEZ", e1: 19.000, e2: 19.000, e3: 20.000, e4: 19.000, e5: 20.000, actitudinal: 20.000, final: 19.467 },
+            { id: 31, cedula: "30503171", nombres: "RICHAIVERD ENRIQUE", apellidos: "RODRÍGUEZ LARA", e1: 17.000, e2: 19.000, e3: 20.000, e4: 19.000, e5: 20.000, actitudinal: 20.000, final: 19.067 },
+            { id: 32, cedula: "30567753", nombres: "ÓSCAR ENRIQUE", apellidos: "LEHR SANDREA", e1: 17.000, e2: 17.000, e3: 20.000, e4: 20.000, e5: 20.000, actitudinal: 20.000, final: 18.800 },
+            { id: 33, cedula: "30590791", nombres: "CARLOS LUIS", apellidos: "DUARTE MESA", e1: 19.000, e2: 20.000, e3: 20.000, e4: 19.000, e5: 20.000, actitudinal: 20.000, final: 19.667 },
+            { id: 34, cedula: "30599401", nombres: "JOSE DAVID", apellidos: "URDANETA MABO", e1: 20.000, e2: 20.000, e3: 19.000, e4: 19.000, e5: 20.000, actitudinal: 20.000, final: 19.667 },
+            { id: 35, cedula: "30605359", nombres: "MOISES RAMÓN", apellidos: "MORALES VALECILLOS", e1: 19.000, e2: 20.000, e3: 20.000, e4: 19.000, e5: 20.000, actitudinal: 20.000, final: 19.667 },
+            { id: 36, cedula: "30610980", nombres: "CARLOS EDUARDO", apellidos: "ROSADO ARAUJO", e1: 20.000, e2: 19.000, e3: 19.000, e4: 19.000, e5: 20.000, actitudinal: 20.000, final: 19.467 },
+            { id: 37, cedula: "30633638", nombres: "JOSE RAFAEL", apellidos: "PAZ GONZÁLEZ", e1: 15.000, e2: 15.000, e3: 17.000, e4: 18.000, e5: 20.000, actitudinal: 20.000, final: 17.133 },
+            { id: 38, cedula: "32978628", nombres: "LEANDRO AQUILES", apellidos: "GONZÁLEZ FERNÁNDEZ", e1: 19.000, e2: 19.000, e3: 18.000, e4: 17.000, e5: 20.000, actitudinal: 20.000, final: 18.800 },
+            { id: 39, cedula: "33178287", nombres: "ALEXANDER GABRIEL", apellidos: "ANDRADE FLORES", e1: 17.000, e2: 17.000, e3: 16.000, e4: 20.000, e5: 20.000, actitudinal: 20.000, final: 18.000 },
+            { id: 40, cedula: "33178336", nombres: "JIMI ALEJANDRO", apellidos: "PIRELA CHOURIO", e1: 18.000, e2: 18.000, e3: 17.000, e4: 20.000, e5: 20.000, actitudinal: 20.000, final: 18.600 },
+            { id: 41, cedula: "33325911", nombres: "YELIMAR ISABEL", apellidos: "COLINA SERRANO", e1: 17.000, e2: 18.000, e3: 18.000, e4: 19.000, e5: 20.000, actitudinal: 20.000, final: 18.467 },
+            { id: 42, cedula: "33339506", nombres: "ALEXANDER DAVID", apellidos: "HERNÁNDEZ CASTILLO", e1: 19.000, e2: 19.000, e3: 18.000, e4: 17.000, e5: 20.000, actitudinal: 20.000, final: 18.800 },
+            { id: 43, cedula: "33637909", nombres: "KEILIN CHIQUINQUIRA", apellidos: "POLANCO HERNANDEZ", e1: 18.000, e2: 17.000, e3: 15.000, e4: 16.000, e5: 20.000, actitudinal: 20.000, final: 17.467 },
+            { id: 44, cedula: "33663198", nombres: "KARIANNYS CHIQUINQUIRA DE JESÚS", apellidos: "ALBARÁN POLANCO", e1: 20.000, e2: 19.000, e3: 18.000, e4: 19.000, e5: 20.000, actitudinal: 20.000, final: 19.267 },
+            { id: 45, cedula: "33692315", nombres: "SANTIAGO ANDRÉS", apellidos: "GOMEZ TERÁN", e1: 17.000, e2: 18.000, e3: 19.000, e4: 20.000, e5: 20.000, actitudinal: 20.000, final: 18.800 },
+            { id: 46, cedula: "33763054", nombres: "NEYLIBETH CAROLINA", apellidos: "URDANETA CASTILLO", e1: 20.000, e2: 13.000, e3: 19.000, e4: 19.000, e5: 20.000, actitudinal: 20.000, final: 18.267 },
+            { id: 47, cedula: "33861131", nombres: "ELIANY ANABEL", apellidos: "PÉREZ IZARRA", e1: 20.000, e2: 19.000, e3: 19.000, e4: 20.000, e5: 20.000, actitudinal: 20.000, final: 19.600 },
+            { id: 48, cedula: "34407679", nombres: "LUIDER JOSUÉ", apellidos: "PEREZ ORTEGA", e1: 0, e2: 0, e3: 0, e4: 0, e5: 0, actitudinal: 0, final: 0 },
+            { id: 49, cedula: "34419879", nombres: "JAFET ALEJANDRO", apellidos: "MARRUFO ÁLVAREZ", e1: 17.000, e2: 18.000, e3: 19.000, e4: 20.000, e5: 20.000, actitudinal: 20.000, final: 18.800 },
+            { id: 50, cedula: "34455155", nombres: "GREISBETH ESTER", apellidos: "PALMAR FERNÁNDEZ", e1: 20.000, e2: 15.000, e3: 15.000, e4: 16.000, e5: 20.000, actitudinal: 20.000, final: 17.467 },
+            { id: 51, cedula: "36061995", nombres: "ENYERLIN NICOLL", apellidos: "PRADO RONDON", e1: 17.000, e2: 15.000, e3: 14.000, e4: 17.000, e5: 20.000, actitudinal: 20.000, final: 16.800 },
+            { id: 52, cedula: "36268716", nombres: "NEUMA ENRIQUE", apellidos: "AYALA ESPINA", e1: 16.000, e2: 12.000, e3: 11.000, e4: 12.000, e5: 20.000, actitudinal: 20.000, final: 14.733, alert: true },
+            { id: 53, cedula: "36501456", nombres: "NAYELIN PAOLA", apellidos: "PACHECO RIOS", e1: 20.000, e2: 20.000, e3: 19.000, e4: 19.000, e5: 20.000, actitudinal: 20.000, final: 19.667 },
+            { id: 54, cedula: "36840256", nombres: "JESÚS DAVID", apellidos: "SALAS BATISTA", e1: 20.000, e2: 13.000, e3: 15.000, e4: 14.000, e5: 20.000, actitudinal: 20.000, final: 16.800 }
+        ];
+
+        const amb2Data = [
+            { id: 1, cedula: "30722693", nombres: "ALEXANDRA SARAI", apellidos: "VERGARA LUZARDO", e1: 16.000, e2: 19.000, e3: 17.000, e4: 16.000, e5: 20.000, actitudinal: 20.000, final: 17.867 },
+            { id: 2, cedula: "30739179", nombres: "YERFENSO JOSE", apellidos: "CALDERA VALLES", e1: 10.000, e2: 11.000, e3: 10.000, e4: 12.000, e5: 20.000, actitudinal: 20.000, final: 13.133, alert: true },
+            { id: 3, cedula: "30763167", nombres: "LUIZANA DE LOS ANGELES", apellidos: "ABREU AVILA", e1: 18.000, e2: 17.000, e3: 17.000, e4: 17.000, e5: 20.000, actitudinal: 20.000, final: 18.000 },
+            { id: 4, cedula: "30770947", nombres: "ELIESER ENRIQUE", apellidos: "HERNÁNDEZ SEMPRÚN", e1: 15.000, e2: 15.000, e3: 19.000, e4: 18.000, e5: 20.000, actitudinal: 20.000, final: 17.533 },
+            { id: 5, cedula: "30809397", nombres: "JUAN CARLOS", apellidos: "PARRA HAGE", e1: 18.000, e2: 14.000, e3: 17.000, e4: 1.000, e5: 20.000, actitudinal: 20.000, final: 15.267, alert: true },
+            { id: 6, cedula: "30809461", nombres: "BRAYAN DANIEL", apellidos: "GOMEZ MARTINEZ", e1: 12.000, e2: 14.000, e3: 15.000, e4: 16.000, e5: 20.000, actitudinal: 20.000, final: 15.667 },
+            { id: 7, cedula: "30819650", nombres: "LUISANA DEL CARMEN", apellidos: "HERNANDEZ CHOURIO", e1: 17.000, e2: 17.000, e3: 12.000, e4: 13.000, e5: 20.000, actitudinal: 20.000, final: 16.267 },
+            { id: 8, cedula: "30835656", nombres: "GLEINER ALFREDO", apellidos: "TEJEDOR GONZALEZ", e1: 16.000, e2: 16.000, e3: 19.000, e4: 18.000, e5: 20.000, actitudinal: 20.000, final: 17.933 },
+            { id: 9, cedula: "30839305", nombres: "EULER GERARDO DE JESUS", apellidos: "NAVA DIAZ", e1: 18.000, e2: 19.000, e3: 19.000, e4: 17.000, e5: 20.000, actitudinal: 20.000, final: 18.800 },
+            { id: 10, cedula: "30860364", nombres: "JOSE GREGORIO", apellidos: "GARCES TORRES", e1: 20.000, e2: 16.000, e3: 19.000, e4: 20.000, e5: 20.000, actitudinal: 20.000, final: 19.000 },
+            { id: 11, cedula: "30876291", nombres: "ENMANUEL ALEJANDRO", apellidos: "MENDOZA MARTINEZ", e1: 17.000, e2: 12.000, e3: 17.000, e4: 12.000, e5: 20.000, actitudinal: 20.000, final: 16.133 },
+            { id: 12, cedula: "30902163", nombres: "BRAYAN JESUS", apellidos: "GONZALEZ ORTIZ", e1: 19.000, e2: 16.000, e3: 17.000, e4: 17.000, e5: 20.000, actitudinal: 20.000, final: 18.000 },
+            { id: 13, cedula: "30929716", nombres: "FLORIANGEL DEL VALLE", apellidos: "GONZALEZ URRIBARRI", e1: 13.000, e2: 16.000, e3: 20.000, e4: 17.000, e5: 20.000, actitudinal: 20.000, final: 17.400 },
+            { id: 14, cedula: "30951518", nombres: "EYLLEN BETZIBETH", apellidos: "LARES GRATEROL", e1: 18.000, e2: 17.000, e3: 17.000, e4: 16.000, e5: 20.000, actitudinal: 20.000, final: 17.867 },
+            { id: 15, cedula: "30973844", nombres: "ARIANNYS VALERIA", apellidos: "GUTIERREZ VICUÑA", e1: 15.000, e2: 19.000, e3: 19.000, e4: 18.000, e5: 20.000, actitudinal: 20.000, final: 18.333 },
+            { id: 16, cedula: "30973906", nombres: "LEONARDO JESUS", apellidos: "PERCHE GUERRERO", e1: 18.000, e2: 19.000, e3: 18.000, e4: 19.000, e5: 20.000, actitudinal: 20.000, final: 18.867 },
+            { id: 17, cedula: "30977076", nombres: "CARLOS DAVID", apellidos: "GUERRA PEREIRA", e1: 20.000, e2: 19.000, e3: 19.000, e4: 20.000, e5: 20.000, actitudinal: 20.000, final: 19.600 },
+            { id: 18, cedula: "31015839", nombres: "MARCO ANTONIO", apellidos: "SILVA BRAVO", e1: 12.000, e2: 12.000, e3: 10.000, e4: 14.000, e5: 20.000, actitudinal: 20.000, final: 14.000, alert: true },
+            { id: 19, cedula: "31049729", nombres: "VALENTINA KATIUSKA", apellidos: "HERNANEZ PICO", e1: 19.000, e2: 18.000, e3: 20.000, e4: 19.000, e5: 20.000, actitudinal: 20.000, final: 19.267 },
+            { id: 20, cedula: "31051024", nombres: "JOSE DANIEL", apellidos: "MONCADA LARREAL", e1: 12.000, e2: 13.000, e3: 14.000, e4: 16.000, e5: 20.000, actitudinal: 20.000, final: 15.267 },
+            { id: 21, cedula: "31084907", nombres: "OSCAR JUNIOR", apellidos: "GARCIA ARAGON", e1: 17.000, e2: 18.000, e3: 16.000, e4: 17.000, e5: 20.000, actitudinal: 20.000, final: 17.800 },
+            { id: 22, cedula: "31142878", nombres: "JOSE ANDRES", apellidos: "MOGUEA CAMACHO", e1: 14.000, e2: 16.000, e3: 20.000, e4: 19.000, e5: 20.000, actitudinal: 20.000, final: 17.867 },
+            { id: 23, cedula: "31147896", nombres: "GÉNESIS NICOLE", apellidos: "RUIZ MORONTA", e1: 20.000, e2: 18.000, e3: 19.000, e4: 20.000, e5: 20.000, actitudinal: 20.000, final: 19.400 },
+            { id: 24, cedula: "31172821", nombres: "ALAN ANDRES", apellidos: "PARRA GARCIA", e1: 16.000, e2: 15.000, e3: 20.000, e4: 18.000, e5: 20.000, actitudinal: 20.000, final: 17.933 },
+            { id: 25, cedula: "31188668", nombres: "EDDY ENRIQUE", apellidos: "AREVALO CARRILLO", e1: 16.000, e2: 18.000, e3: 16.000, e4: 16.000, e5: 20.000, actitudinal: 20.000, final: 17.467 },
+            { id: 26, cedula: "31189694", nombres: "JOSE GREGORIO", apellidos: "ATENCIO ATENCIO", e1: 14.000, e2: 13.000, e3: 12.000, e4: 14.000, e5: 20.000, actitudinal: 20.000, final: 15.000 },
+            { id: 27, cedula: "31206752", nombres: "GABRIEL DAVID", apellidos: "ACOSTA SERNA", e1: 15.000, e2: 16.000, e3: 18.000, e4: 19.000, e5: 20.000, actitudinal: 20.000, final: 17.667 },
+            { id: 28, cedula: "31220742", nombres: "RONALDO RAUL", apellidos: "ROMERO", e1: 18.000, e2: 18.000, e3: 17.000, e4: 17.000, e5: 20.000, actitudinal: 20.000, final: 18.200 },
+            { id: 29, cedula: "31249988", nombres: "ELIGIA MERCEDES", apellidos: "FERNANDEZ FERNÁNDEZ", e1: 16.000, e2: 17.000, e3: 19.000, e4: 19.000, e5: 20.000, actitudinal: 20.000, final: 18.267 },
+            { id: 30, cedula: "31262794", nombres: "KEILA ESTEFANY", apellidos: "GONZALEZ QUINTERO", e1: 16.000, e2: 16.000, e3: 17.000, e4: 17.000, e5: 20.000, actitudinal: 20.000, final: 17.400 },
+            { id: 31, cedula: "31282640", nombres: "EUDIMAR BEATRIZ", apellidos: "SANCHEZ PEREZ", e1: 19.000, e2: 19.000, e3: 19.000, e4: 20.000, e5: 20.000, actitudinal: 20.000, final: 19.400 },
+            { id: 32, cedula: "31282701", nombres: "MARIO REYES", apellidos: "VELÁZQUEZ ULACIO", e1: 12.000, e2: 14.000, e3: 15.000, e4: 17.000, e5: 20.000, actitudinal: 20.000, final: 15.800 },
+            { id: 33, cedula: "31324962", nombres: "JOELIMAR DEL CARMEN", apellidos: "PARADA VILLALOBOS", e1: 15.000, e2: 16.000, e3: 15.000, e4: 17.000, e5: 20.000, actitudinal: 20.000, final: 16.800 },
+            { id: 34, cedula: "31326568", nombres: "ÁNGEL ADELVIS", apellidos: "ARIAS NIETO", e1: 19.000, e2: 14.000, e3: 14.000, e4: 15.000, e5: 20.000, actitudinal: 20.000, final: 16.733 },
+            { id: 35, cedula: "31333499", nombres: "DANIELIS CAROLINA", apellidos: "CARROZ RINCÓN", e1: 16.000, e2: 16.000, e3: 16.000, e4: 17.000, e5: 20.000, actitudinal: 20.000, final: 17.200 },
+            { id: 36, cedula: "31354694", nombres: "HUGO ENRIQUE", apellidos: "FLORES RIVAS", e1: 14.000, e2: 17.000, e3: 17.000, e4: 14.000, e5: 20.000, actitudinal: 20.000, final: 16.800 },
+            { id: 37, cedula: "31382360", nombres: "EVELYN MARÍA", apellidos: "ARIZA MARTINEZ", e1: 20.000, e2: 20.000, e3: 20.000, e4: 20.000, e5: 20.000, actitudinal: 20.000, final: 20.000 },
+            { id: 38, cedula: "31387373", nombres: "JESÚS ALFREDO", apellidos: "RAMIRÉZ PADOVANO", e1: 20.000, e2: 19.000, e3: 18.000, e4: 17.000, e5: 20.000, actitudinal: 20.000, final: 19.000 },
+            { id: 39, cedula: "32851113", nombres: "MAIKELLYS PAOLA", apellidos: "COHEN COHEN", e1: 20.000, e2: 18.000, e3: 19.000, e4: 19.000, e5: 20.000, actitudinal: 20.000, final: 19.267 },
+            { id: 40, cedula: "33152417", nombres: "JULIO RAFAEL", apellidos: "PERALTA MORALES", e1: 20.000, e2: 15.000, e3: 16.000, e4: 15.000, e5: 20.000, actitudinal: 20.000, final: 17.533 },
+            { id: 41, cedula: "33172524", nombres: "ADRIAN DAVID", apellidos: "CARRANZA LANDAETA", e1: 12.000, e2: 16.000, e3: 16.000, e4: 16.000, e5: 20.000, actitudinal: 20.000, final: 16.267 },
+            { id: 42, cedula: "33178044", nombres: "KATHERINE ANDREINA", apellidos: "FERREBUS ROLDÁN", e1: 14.000, e2: 15.000, e3: 16.000, e4: 19.000, e5: 20.000, actitudinal: 20.000, final: 16.867 },
+            { id: 43, cedula: "33178435", nombres: "KATIANI CHIQUINQUIRA", apellidos: "QUINTERO PACHECO", e1: 19.000, e2: 16.000, e3: 19.000, e4: 19.000, e5: 20.000, actitudinal: 20.000, final: 18.667 },
+            { id: 44, cedula: "33178439", nombres: "JHON CARLOS", apellidos: "BRICEÑO TORRES", e1: 12.000, e2: 10.000, e3: 12.000, e4: 12.000, e5: 20.000, actitudinal: 20.000, final: 13.733, alert: true },
+            { id: 45, cedula: "33192186", nombres: "ENDERSON ANTONIO", apellidos: "VICIERRA HERRERA", e1: 16.000, e2: 19.000, e3: 19.000, e4: 16.000, e5: 20.000, actitudinal: 20.000, final: 18.267 },
+            { id: 46, cedula: "33193709", nombres: "ENDRY JOSE", apellidos: "FLEIRES BRILLEMBOURG", e1: 20.000, e2: 19.000, e3: 19.000, e4: 20.000, e5: 20.000, actitudinal: 20.000, final: 19.600 },
+            { id: 47, cedula: "33208229", nombres: "RAFAEL ANTONIO", apellidos: "CAÑIZALES REYES", e1: 16.000, e2: 17.000, e3: 16.000, e4: 17.000, e5: 20.000, actitudinal: 20.000, final: 17.400 },
+            { id: 48, cedula: "33967064", nombres: "DERWIN ENAIRO", apellidos: "SARCOS RINCON", e1: 17.000, e2: 19.000, e3: 19.000, e4: 12.000, e5: 20.000, actitudinal: 20.000, final: 17.933 },
+            { id: 49, cedula: "34179691", nombres: "JESÚS MANUEL", apellidos: "CABRERA MÉNDEZ", e1: 12.000, e2: 10.000, e3: 12.000, e4: 13.000, e5: 20.000, actitudinal: 20.000, final: 13.867, alert: true },
+            { id: 50, cedula: "34400179", nombres: "DIANGELO LUIS", apellidos: "PIRELA BALZAN", e1: 15.000, e2: 12.000, e3: 18.000, e4: 17.000, e5: 20.000, actitudinal: 20.000, final: 16.600 },
+            { id: 51, cedula: "34420312", nombres: "AYLEN JOSE", apellidos: "FONSECA GONZÁLEZ", e1: 15.000, e2: 18.000, e3: 15.000, e4: 15.000, e5: 20.000, actitudinal: 20.000, final: 16.933 },
+            { id: 52, cedula: "34532074", nombres: "SAMUEL DAVID", apellidos: "POLANCO", e1: 18.000, e2: 16.000, e3: 18.000, e4: 18.000, e5: 20.000, actitudinal: 20.000, final: 18.133 },
+            { id: 53, cedula: "34633013", nombres: "GABRIEL JOSE", apellidos: "RÍOS PALMAR", e1: 19.000, e2: 18.000, e3: 11.000, e4: 15.000, e5: 20.000, actitudinal: 20.000, final: 16.933, alert: true },
+            { id: 54, cedula: "34633013", nombres: "JOSÉ GABRIEL", apellidos: "RÍOS PALMAR", e1: 15.000, e2: 18.000, e3: 19.000, e4: 13.000, e5: 20.000, actitudinal: 20.000, final: 17.467 }
+        ];
+
+        const amb3Data = [
+            { id: 1, cedula: "31296486", nombres: "NEILYN CAROLINA", apellidos: "FERRER GONZALES", e1: 0, e2: 0, e3: 0, e4: 0, e5: 0, actitudinal: 0, final: 0 },
+            { id: 2, cedula: "31833805", nombres: "JEFFERSOM ENRIQUE", apellidos: "RAMOS VILLASMIL", e1: 15.000, e2: 18.000, e3: 20.000, e4: 16.000, e5: 20.000, actitudinal: 20.000, final: 18.067 },
+            { id: 3, cedula: "32035810", nombres: "AURIMAR DEL VALLE", apellidos: "TORRES MONSALVE", e1: 20.000, e2: 20.000, e3: 17.000, e4: 18.000, e5: 20.000, actitudinal: 20.000, final: 19.133 },
+            { id: 4, cedula: "32090478", nombres: "MANUEL JOSÉ", apellidos: "SIRA GARCIA", e1: 20.000, e2: 20.000, e3: 20.000, e4: 19.000, e5: 20.000, actitudinal: 20.000, final: 19.867 },
+            { id: 5, cedula: "32839367", nombres: "MAIKEL JOSE", apellidos: "GONZALEZ GONZALEZ", e1: 18.000, e2: 16.000, e3: 20.000, e4: 18.000, e5: 20.000, actitudinal: 20.000, final: 18.533 },
+            { id: 6, cedula: "32890786", nombres: "JUAN MANUEL", apellidos: "GARCIA LEON", e1: 17.000, e2: 16.000, e3: 19.000, e4: 20.000, e5: 20.000, actitudinal: 20.000, final: 18.400 },
+            { id: 7, cedula: "32909704", nombres: "ERICK JAVIER", apellidos: "RIVERO MAVAREZ", e1: 18.000, e2: 18.000, e3: 16.000, e4: 19.000, e5: 20.000, actitudinal: 20.000, final: 18.267 },
+            { id: 8, cedula: "32940143", nombres: "DANIEL DAVID", apellidos: "RAMIREZ DUARTE", e1: 20.000, e2: 20.000, e3: 20.000, e4: 19.000, e5: 20.000, actitudinal: 20.000, final: 19.867 },
+            { id: 9, cedula: "32940169", nombres: "FRANKLIN DAVID", apellidos: "FLOREZ GONZALEZ", e1: 18.000, e2: 20.000, e3: 18.000, e4: 19.000, e5: 20.000, actitudinal: 20.000, final: 19.067 },
+            { id: 10, cedula: "32989162", nombres: "GERMARY KARIN", apellidos: "URDANETA GARCÍA", e1: 19.000, e2: 20.000, e3: 20.000, e4: 19.000, e5: 20.000, actitudinal: 20.000, final: 19.667 },
+            { id: 11, cedula: "33018441", nombres: "MANUEL DAVID", apellidos: "VILLALOBOS RAMIREZ", e1: 16.000, e2: 17.000, e3: 17.000, e4: 18.000, e5: 20.000, actitudinal: 20.000, final: 17.733 },
+            { id: 12, cedula: "33031696", nombres: "YORVILETH DEL CARMEN", apellidos: "SEQUERA VILLASMIL", e1: 19.000, e2: 16.000, e3: 20.000, e4: 20.000, e5: 20.000, actitudinal: 20.000, final: 19.000 },
+            { id: 13, cedula: "33069148", nombres: "NAHOMY GLAIDITH", apellidos: "GONZALEZ SEMPRUN", e1: 20.000, e2: 20.000, e3: 18.000, e4: 19.000, e5: 20.000, actitudinal: 20.000, final: 19.467 },
+            { id: 14, cedula: "33104062", nombres: "LUISBELY MARIA", apellidos: "ACURERO BRICEÑO", e1: 19.000, e2: 17.000, e3: 19.000, e4: 20.000, e5: 20.000, actitudinal: 20.000, final: 19.000 },
+            { id: 15, cedula: "33124426", nombres: "KEIVER JOSE", apellidos: "PALMAR ACOSTA", e1: 20.000, e2: 20.000, e3: 20.000, e4: 19.000, e5: 20.000, actitudinal: 20.000, final: 19.733 },
+            { id: 16, cedula: "33132326", nombres: "SARAY CHIQUINQUIRÁ", apellidos: "POLANCO URARIYU", e1: 18.000, e2: 17.000, e3: 19.000, e4: 17.000, e5: 20.000, actitudinal: 20.000, final: 18.400 },
+            { id: 17, cedula: "33172713", nombres: "EUDIMAR MARÍA", apellidos: "SIERRA MACHADO", e1: 20.000, e2: 19.000, e3: 19.000, e4: 18.000, e5: 20.000, actitudinal: 20.000, final: 19.333 },
+            { id: 18, cedula: "33172930", nombres: "BENITO JOSÉ", apellidos: "LOPEZ CHACIN", e1: 13.000, e2: 15.000, e3: 16.000, e4: 16.000, e5: 20.000, actitudinal: 20.000, final: 16.267 },
+            { id: 19, cedula: "33178126", nombres: "ANDRES MIGUEL", apellidos: "AYALA BARRIOS", e1: 0, e2: 0, e3: 0, e4: 0, e5: 0, actitudinal: 0, final: 0 },
+            { id: 20, cedula: "33191301", nombres: "JOHAILY ELIANA", apellidos: "DIAZ RANGEL", e1: 19.000, e2: 18.000, e3: 18.000, e4: 18.000, e5: 20.000, actitudinal: 20.000, final: 18.733 },
+            { id: 21, cedula: "33211151", nombres: "MOISES ALBERTO", apellidos: "FERRER MONTIEL", e1: 0, e2: 0, e3: 0, e4: 0, e5: 0, actitudinal: 0, final: 0 },
+            { id: 22, cedula: "33317461", nombres: "EIDRIAN CAROLINA", apellidos: "NIEBLES MEJIA", e1: 18.000, e2: 19.000, e3: 20.000, e4: 20.000, e5: 20.000, actitudinal: 20.000, final: 19.400 },
+            { id: 23, cedula: "33322087", nombres: "VICTOR DAVID", apellidos: "SALINAS FUENTES", e1: 12.000, e2: 13.000, e3: 18.000, e4: 17.000, e5: 20.000, actitudinal: 20.000, final: 16.200 },
+            { id: 24, cedula: "33323572", nombres: "YEISABEL DEL CARMEN", apellidos: "RUIZ BRICEÑO", e1: 20.000, e2: 19.000, e3: 20.000, e4: 18.000, e5: 20.000, actitudinal: 20.000, final: 19.533 },
+            { id: 25, cedula: "33339328", nombres: "MARIANGEL JAIVELY", apellidos: "SANCHEZ MARTINEZ", e1: 20.000, e2: 19.000, e3: 18.000, e4: 20.000, e5: 20.000, actitudinal: 20.000, final: 19.400 },
+            { id: 26, cedula: "33341614", nombres: "FRANYELIS SARAIS", apellidos: "PALMAR PUSHAINA", e1: 15.000, e2: 15.000, e3: 17.000, e4: 19.000, e5: 20.000, actitudinal: 20.000, final: 17.267 },
+            { id: 27, cedula: "33357527", nombres: "ROSIBEL RAQUEL", apellidos: "RINCON RODRIGUEZ", e1: 20.000, e2: 20.000, e3: 18.000, e4: 17.000, e5: 20.000, actitudinal: 20.000, final: 19.200 },
+            { id: 28, cedula: "33359437", nombres: "ISAAC DAVID", apellidos: "HERNANDEZ FERNÁNDEZ", e1: 13.000, e2: 15.000, e3: 19.000, e4: 17.000, e5: 20.000, actitudinal: 20.000, final: 17.000 },
+            { id: 29, cedula: "33374838", nombres: "ERIANA FERNANDA", apellidos: "GOMEZ CORZO", e1: 0, e2: 0, e3: 0, e4: 0, e5: 0, actitudinal: 0, final: 0 },
+            { id: 30, cedula: "33484060", nombres: "JIMAAI DAVID", apellidos: "MAQUINA CARVAJAL", e1: 17.000, e2: 17.000, e3: 18.000, e4: 19.000, e5: 20.000, actitudinal: 20.000, final: 18.267 },
+            { id: 31, cedula: "33524963", nombres: "AIDER ENRRIQUE", apellidos: "ATENCIO GONZÁLEZ", e1: 19.000, e2: 18.000, e3: 10.000, e4: 20.000, e5: 20.000, actitudinal: 20.000, final: 17.400, alert: true },
+            { id: 32, cedula: "33566332", nombres: "ELIMAR DE LOS ANGELES", apellidos: "ARRAGA ARCILA", e1: 20.000, e2: 20.000, e3: 19.000, e4: 18.000, e5: 20.000, actitudinal: 20.000, final: 19.533 },
+            { id: 33, cedula: "33570558", nombres: "JOEL ALEJANDRO", apellidos: "URDANETA FUENMAYOR", e1: 0, e2: 0, e3: 0, e4: 0, e5: 0, actitudinal: 0, final: 0 },
+            { id: 34, cedula: "33599962", nombres: "NISEILYS DEL VALLE", apellidos: "LABARCA LABARCA", e1: 0, e2: 0, e3: 0, e4: 0, e5: 0, actitudinal: 0, final: 0 },
+            { id: 35, cedula: "33611238", nombres: "EDINEY ALEXANDRA", apellidos: "VEGAS VALENCIA", e1: 20.000, e2: 19.000, e3: 17.000, e4: 20.000, e5: 20.000, actitudinal: 20.000, final: 19.200 },
+            { id: 36, cedula: "33674441", nombres: "EDGARY ALEXANDRA", apellidos: "CARRUYO CAMPOS", e1: 20.000, e2: 19.000, e3: 20.000, e4: 15.000, e5: 20.000, actitudinal: 20.000, final: 19.133 },
+            { id: 37, cedula: "33739862", nombres: "YISNILY SUAIL", apellidos: "MEJIA RIOS", e1: 0, e2: 0, e3: 0, e4: 0, e5: 0, actitudinal: 0, final: 0 },
+            { id: 38, cedula: "33747885", nombres: "JOYNER EDIXON", apellidos: "MURILLO OQUENDO", e1: 18.000, e2: 18.000, e3: 15.000, e4: 1.000, e5: 20.000, actitudinal: 20.000, final: 15.667, alert: true },
+            { id: 39, cedula: "33946777", nombres: "ELIANNIS CAROLINA", apellidos: "AVILA GONZÁLEZ", e1: 20.000, e2: 20.000, e3: 19.000, e4: 15.000, e5: 20.000, actitudinal: 20.000, final: 19.133 },
+            { id: 40, cedula: "34029293", nombres: "CARLOS DANIEL", apellidos: "PERDOMO SANCHEZ", e1: 20.000, e2: 20.000, e3: 18.000, e4: 18.000, e5: 20.000, actitudinal: 20.000, final: 19.333 },
+            { id: 41, cedula: "34117146", nombres: "YOSSGLUIN ABRAHAM", apellidos: "TORRES NUÑEZ", e1: 0, e2: 0, e3: 0, e4: 0, e5: 0, actitudinal: 0, final: 0 },
+            { id: 42, cedula: "34325163", nombres: "ADRIAN ALEJANDRO", apellidos: "GARCIA ESTRADA", e1: 17.000, e2: 14.000, e3: 18.000, e4: 18.000, e5: 20.000, actitudinal: 20.000, final: 17.533 },
+            { id: 43, cedula: "34402035", nombres: "ANGELES DE JESÚS", apellidos: "SANCHEZ LINAREZ", e1: 0, e2: 0, e3: 0, e4: 0, e5: 0, actitudinal: 0, final: 0 },
+            { id: 44, cedula: "34406049", nombres: "SAMUEL DAVID", apellidos: "BELTRÁN ECHAVEZ", e1: 19.000, e2: 17.000, e3: 20.000, e4: 20.000, e5: 20.000, actitudinal: 20.000, final: 19.200 },
+            { id: 45, cedula: "34607656", nombres: "RUBESY MARIA", apellidos: "GONZALEZ RAMIREZ", e1: 0, e2: 0, e3: 0, e4: 0, e5: 0, actitudinal: 0, final: 0 },
+            { id: 46, cedula: "35168858", nombres: "ALEXANDER JESUS", apellidos: "GONZÁLEZ FERNÁNDEZ", e1: 17.000, e2: 17.000, e3: 17.000, e4: 20.000, e5: 20.000, actitudinal: 20.000, final: 18.200 },
+            { id: 47, cedula: "35187558", nombres: "GENESIS PAOLA", apellidos: "BOHORQUEZ BARBOZA", e1: 13.000, e2: 13.000, e3: 15.000, e4: 20.000, e5: 20.000, actitudinal: 20.000, final: 16.200 },
+            { id: 48, cedula: "36284497", nombres: "MAYRIELIS ANDREINA", apellidos: "MORAN ROMERO", e1: 20.000, e2: 20.000, e3: 19.000, e4: 20.000, e5: 20.000, actitudinal: 20.000, final: 19.800 },
+            { id: 49, cedula: "30494851", nombres: "ROWERT AMITH", apellidos: "AULAR GOMEZ", e1: 18.000, e2: 18.000, e3: 20.000, e4: 20.000, e5: 20.000, actitudinal: 20.000, final: 19.200 },
+            { id: 50, cedula: "31440502", nombres: "YAIRNEL JESUS", apellidos: "PRIETO SANCHEZ", e1: 20.000, e2: 20.000, e3: 20.000, e4: 19.000, e5: 20.000, actitudinal: 20.000, final: 19.867 }
+        ];
+
+        // Función para crear tabla de estudiantes
+        function createStudentsTable(data, tableId) {
+            let tableHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>N°</th>
+                            <th>Cédula</th>
+                            <th>Nombres</th>
+                            <th>Apellidos</th>
+                            <th>E1</th>
+                            <th>E2</th>
+                            <th>E3</th>
+                            <th>E4</th>
+                            <th>E5</th>
+                            <th>Actitudinal</th>
+                            <th>Nota Final</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            data.forEach(student => {
+                const alertClass = student.alert ? 'style="background-color: #f8d7da;"' : '';
+                tableHTML += `
+                    <tr ${alertClass}>
+                        <td>${student.id}</td>
+                        <td>${student.cedula}</td>
+                        <td>${student.nombres}</td>
+                        <td>${student.apellidos}</td>
+                        <td>${student.e1.toFixed(3)}</td>
+                        <td>${student.e2.toFixed(3)}</td>
+                        <td>${student.e3.toFixed(3)}</td>
+                        <td>${student.e4.toFixed(3)}</td>
+                        <td>${student.e5.toFixed(3)}</td>
+                        <td>${student.actitudinal.toFixed(3)}</td>
+                        <td><strong>${student.final.toFixed(3)}</strong></td>
+                    </tr>
+                `;
+            });
+
+            tableHTML += `
+                    </tbody>
+                </table>
+            `;
+
+            document.getElementById(tableId).innerHTML = tableHTML;
+        }
+
+        // Función para calcular estadísticas
+        function calculateStatistics(data) {
+            const validGrades = data.filter(s => s.final > 0).map(s => s.final);
+            
+            if (validGrades.length === 0) {
+                return {
+                    average: 0,
+                    stdDev: 0,
+                    maxNote: 0,
+                    minNote: 0,
+                    alertCount: 0,
+                    totalCount: data.length
+                };
+            }
+            
+            // Calcular promedio
+            const sum = validGrades.reduce((acc, grade) => acc + grade, 0);
+            const average = sum / validGrades.length;
+            
+            // Calcular desviación estándar
+            const squaredDiffs = validGrades.map(grade => Math.pow(grade - average, 2));
+            const avgSquaredDiff = squaredDiffs.reduce((acc, diff) => acc + diff, 0) / validGrades.length;
+            const stdDev = Math.sqrt(avgSquaredDiff);
+            
+            // Encontrar nota máxima y mínima
+            const maxNote = Math.max(...validGrades);
+            const minNote = Math.min(...validGrades);
+            
+            // Contar estudiantes en alerta
+            const alertCount = data.filter(s => s.alert).length;
+            
+            return {
+                average: average,
+                stdDev: stdDev,
+                maxNote: maxNote,
+                minNote: minNote,
+                alertCount: alertCount,
+                totalCount: data.length
+            };
+        }
+
+        // Función para mostrar estadísticas
+        function displayStatistics(stats, containerId, alertsId, data) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = `
+                <div class="stat-box">
+                    <p>Promedio</p>
+                    <p class="stat-value">${stats.average.toFixed(3)}</p>
+                </div>
+                <div class="stat-box">
+                    <p>Desviación Estándar</p>
+                    <p class="stat-value">${stats.stdDev.toFixed(3)}</p>
+                </div>
+                <div class="stat-box">
+                    <p>Nota Máxima</p>
+                    <p class="stat-value">${stats.maxNote.toFixed(3)}</p>
+                </div>
+                <div class="stat-box">
+                    <p>Nota Mínima</p>
+                    <p class="stat-value">${stats.minNote.toFixed(3)}</p>
+                </div>
+                <div class="stat-box">
+                    <p>Total Estudiantes</p>
+                    <p class="stat-value">${stats.totalCount}</p>
+                </div>
+                <div class="stat-box">
+                    <p>En Alerta</p>
+                    <p class="stat-value">${stats.alertCount}</p>
+                </div>
+            `;
+            
+            // Mostrar estudiantes en alerta
+            const alertStudents = data.filter(s => s.alert);
+            if (alertStudents.length > 0) {
+                let alertHTML = '<div class="alert"><h4>Estudiantes en Alerta:</h4><ul>';
+                alertStudents.forEach(student => {
+                    alertHTML += `<li>${student.nombres} ${student.apellidos} - Nota Final: ${student.final.toFixed(3)}</li>`;
+                });
+                alertHTML += '</ul></div>';
+                document.getElementById(alertsId).innerHTML = alertHTML;
+            } else {
+                document.getElementById(alertsId).innerHTML = '';
+            }
+        }
+
+        // Función para crear histograma
+        function createHistogram(data, canvasId) {
+            const validGrades = data.filter(s => s.final > 0).map(s => s.final);
+            
+            if (validGrades.length === 0) {
+                return;
+            }
+            
+            // Crear rangos para el histograma
+            const ranges = [
+                { min: 0, max: 10, label: '0-10', count: 0 },
+                { min: 10, max: 12, label: '10-12', count: 0 },
+                { min: 12, max: 14, label: '12-14', count: 0 },
+                { min: 14, max: 16, label: '14-16', count: 0 },
+                { min: 16, max: 18, label: '16-18', count: 0 },
+                { min: 18, max: 20, label: '18-20', count: 0 }
+            ];
+            
+            // Contar cuántas notas caen en cada rango
+            validGrades.forEach(grade => {
+                for (let range of ranges) {
+                    if (grade >= range.min && grade < range.max) {
+                        range.count++;
+                        break;
+                    }
+                }
+            });
+            
+            // Crear el gráfico
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ranges.map(r => r.label),
+                    datasets: [{
+                        label: 'Número de Estudiantes',
+                        data: ranges.map(r => r.count),
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.7)',
+                            'rgba(255, 159, 64, 0.7)',
+                            'rgba(255, 205, 86, 0.7)',
+                            'rgba(75, 192, 192, 0.7)',
+                            'rgba(54, 162, 235, 0.7)',
+                            'rgba(153, 102, 255, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(255, 205, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(153, 102, 255, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Número de Estudiantes'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Rango de Notas'
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Distribución de Notas Finales'
+                        }
+                    }
+                }
+            });
+        }
+
+        // Función para crear gráfico de comparación
+        function createComparisonChart() {
+            const ctx = document.getElementById('comparisonChart').getContext('2d');
+            
+            const stats1 = calculateStatistics(amb1Data);
+            const stats2 = calculateStatistics(amb2Data);
+            const stats3 = calculateStatistics(amb3Data);
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Promedio', 'Desviación Estándar', 'Nota Máxima', 'Nota Mínima'],
+                    datasets: [
+                        {
+                            label: 'Ambiente 1 - IP',
+                            data: [stats1.average, stats1.stdDev, stats1.maxNote, stats1.minNote],
+                            backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Ambiente 2 - IP',
+                            data: [stats2.average, stats2.stdDev, stats2.maxNote, stats2.minNote],
+                            backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Ambiente 3 - Criminalística',
+                            data: [stats3.average, stats3.stdDev, stats3.maxNote, stats3.minNote],
+                            backgroundColor: 'rgba(255, 159, 64, 0.7)',
+                            borderColor: 'rgba(255, 159, 64, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Valor'
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Comparación de Estadísticas por Ambiente'
+                        }
+                    }
+                }
+            });
+        }
+
+        // Función para crear tabla de comparación
+        function createComparisonTable() {
+            const stats1 = calculateStatistics(amb1Data);
+            const stats2 = calculateStatistics(amb2Data);
+            const stats3 = calculateStatistics(amb3Data);
+            
+            const tbody = document.getElementById('comparisonTableBody');
+            tbody.innerHTML = `
+                <tr>
+                    <td>Ambiente 1</td>
+                    <td>Investigación Penal</td>
+                    <td>${stats1.totalCount}</td>
+                    <td>${stats1.average.toFixed(3)}</td>
+                    <td>${stats1.stdDev.toFixed(3)}</td>
+                    <td>${stats1.maxNote.toFixed(3)}</td>
+                    <td>${stats1.minNote.toFixed(3)}</td>
+                    <td>${stats1.alertCount}</td>
+                </tr>
+                <tr>
+                    <td>Ambiente 2</td>
+                    <td>Investigación Penal</td>
+                    <td>${stats2.totalCount}</td>
+                    <td>${stats2.average.toFixed(3)}</td>
+                    <td>${stats2.stdDev.toFixed(3)}</td>
+                    <td>${stats2.maxNote.toFixed(3)}</td>
+                    <td>${stats2.minNote.toFixed(3)}</td>
+                    <td>${stats2.alertCount}</td>
+                </tr>
+                <tr>
+                    <td>Ambiente 3</td>
+                    <td>Criminalística</td>
+                    <td>${stats3.totalCount}</td>
+                    <td>${stats3.average.toFixed(3)}</td>
+                    <td>${stats3.stdDev.toFixed(3)}</td>
+                    <td>${stats3.maxNote.toFixed(3)}</td>
+                    <td>${stats3.minNote.toFixed(3)}</td>
+                    <td>${stats3.alertCount}</td>
+                </tr>
+            `;
+        }
+
+        // Función para cambiar entre pestañas principales
+        function openTab(evt, tabName) {
+            const tabContents = document.getElementsByClassName('tab-content');
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove('active');
+            }
+            
+            const tabButtons = document.getElementsByClassName('tab-button');
+            for (let i = 0; i < tabButtons.length; i++) {
+                tabButtons[i].classList.remove('active');
+            }
+            
+            document.getElementById(tabName).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+
+        // Función para cambiar entre sub-pestañas
+        function openSubTab(evt, tabName) {
+            const parent = evt.currentTarget.parentElement;
+            const tabContents = parent.parentElement.getElementsByClassName('tab-content');
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove('active');
+            }
+            
+            const tabButtons = parent.getElementsByClassName('tab-button');
+            for (let i = 0; i < tabButtons.length; i++) {
+                tabButtons[i].classList.remove('active');
+            }
+            
+            document.getElementById(tabName).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+
+        // Inicializar la página
+        window.onload = function() {
+            // Crear tablas de estudiantes
+            createStudentsTable(amb1Data, 'amb1Table');
+            createStudentsTable(amb2Data, 'amb2Table');
+            createStudentsTable(amb3Data, 'amb3Table');
+            
+            // Calcular y mostrar estadísticas
+            const stats1 = calculateStatistics(amb1Data);
+            const stats2 = calculateStatistics(amb2Data);
+            const stats3 = calculateStatistics(amb3Data);
+            
+            displayStatistics(stats1, 'amb1StatsContainer', 'amb1Alerts', amb1Data);
+            displayStatistics(stats2, 'amb2StatsContainer', 'amb2Alerts', amb2Data);
+            displayStatistics(stats3, 'amb3StatsContainer', 'amb3Alerts', amb3Data);
+            
+            // Crear histogramas
+            createHistogram(amb1Data, 'amb1ChartCanvas');
+            createHistogram(amb2Data, 'amb2ChartCanvas');
+            createHistogram(amb3Data, 'amb3ChartCanvas');
+            
+            // Crear tabla y gráfico de comparación
+            createComparisonTable();
+            createComparisonChart();
+        };
+    </script>
+</body>
+</html>
