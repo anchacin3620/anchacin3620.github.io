@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Las Reglas del Universo: UA, Año Luz y Pársec</title>
+    <style>
+        /* --- ESTILOS CSS --- */
+        body {
+            background-color: #0a0a0a;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .video-player {
+            width: 800px;
+            border: 1px solid #333;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 150, 255, 0.2);
+        }
+
+        .screen {
+            position: relative;
+            width: 800px;
+            height: 450px;
+            background-color: #000;
+        }
+
+        #spaceCanvas {
+            display: block;
+        }
+
+        .narration {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: #ffffff;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 18px;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background-color: #1a1a1a;
+        }
+
+        #playPauseBtn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 15px;
+        }
+
+        .progress-bar-container {
+            flex-grow: 1;
+            height: 8px;
+            background-color: #444;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: #00aaff;
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        #timeDisplay {
+            margin-left: 15px;
+            font-size: 14px;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="video-player">
+        <div class="screen">
+            <canvas id="spaceCanvas" width="800" height="450"></canvas>
+            <div id="narrationText" class="narration"></div>
+        </div>
+        <div class="controls">
+            <button id="playPauseBtn">▶️</button>
+            <div class="progress-bar-container">
+                <div id="progressBar" class="progress-bar"></div>
+            </div>
+            <span id="timeDisplay">0:00 / 2:30</span>
+        </div>
+    </div>
+
+    <script>
+    // --- CÓDIGO JAVASCRIPT ---
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- Elementos del DOM ---
+        const canvas = document.getElementById('spaceCanvas');
+        const ctx = canvas.getContext('2d');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const progressBar = document.getElementById('progressBar');
+        const timeDisplay = document.getElementById('timeDisplay');
+        const narrationText = document.getElementById('narrationText');
+
+        // --- Estado de la Animación ---
+        const VIDEO_DURATION = 150; // Duración total en segundos (2:30)
+        let currentTime = 0;
+        let isPlaying = false;
+        let timeInterval;
+
+        // --- Elementos del Espacio ---
+        let stars = [];
+        const AU = 50; // 1 Unidad Astronómica = 50 píxeles en nuestro lienzo
+
+        // --- INICIALIZACIÓN ---
+        function init() {
+            createStars();
+            drawFrame(0); // Dibuja el primer fotograma
+        }
+
+        // --- CREAR FONDO DE ESTRELLAS ---
+        function createStars() {
+            for (let i = 0; i < 300; i++) {
+                stars.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    radius: Math.random() * 1.5,
+                    opacity: Math.random()
+                });
+            }
+        }
+
+        // --- FUNCIONES DE DIBUJO PRINCIPALES ---
+        function drawBackground() {
+            ctx.fillStyle = '#000014';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            stars.forEach(star => {
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
+                ctx.fill();
+            });
+        }
+
+        function drawSun(x, y) {
+            ctx.beginPath();
+            ctx.arc(x, y, 20, 0, Math.PI * 2);
+            ctx.fillStyle = '#FDB813';
+            ctx.fill();
+            ctx.shadowBlur = 30;
+            ctx.shadowColor = '#FDB813';
+            ctx.fill();
+            ctx.shadowBlur = 0;
+        }
+
+        function drawEarth(x, y) {
+            ctx.beginPath();
+            ctx.arc(x, y, 8, 0, Math.PI * 2);
+            ctx.fillStyle = '#0077be';
+            ctx.fill();
+        }
+
+        function drawText(text, x, y, size = 24, color = '#ffffff') {
+            ctx.font = `bold ${size}px Arial`;
+            ctx.fillStyle = color;
+            ctx.textAlign = 'center';
+            ctx.fillText(text, x, y);
+        }
+        
+        // --- ESCENAS DE LA ANIMACIÓN ---
+        function drawScene(time) {
+            drawBackground();
+            
+            // ESCENA 1: INTRO (0-10s)
+            if (time < 10) {
+                drawText("LAS REGLAS DEL UNIVERSO", canvas.width / 2, canvas.height / 2 - 30, 40);
+                drawText("UA, Año Luz y Pársec", canvas.width / 2, canvas.height / 2 + 20, 28, '#aaaaaa');
+                setNarration("El espacio es inmenso. Para medirlo, necesitamos reglas especiales. Conoce las tres más importantes.");
+            }
+            // ESCENA 2: UNIDAD ASTRONÓMICA (10-35s)
+            else if (time >= 10 && time < 35) {
+                const sunX = canvas.width / 2;
+                const sunY = canvas.height / 2;
+                drawSun(sunX, sunY);
+                drawEarth(sunX + AU, sunY);
+                
+                ctx.beginPath();
+                ctx.moveTo(sunX, sunY);
+                ctx.lineTo(sunX + AU, sunY);
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                
+                drawText("1 UA", sunX + AU / 2, sunY - 20, 20);
+                drawText("Unidad Astronómica", canvas.width / 2, 50, 30);
+                drawText("La distancia Tierra-Sol", canvas.width / 2, 80, 20, '#aaaaaa');
+                setNarration("La Unidad Astronómica, o UA, es nuestra regla para el Sistema Solar. Mide la distancia de la Tierra al Sol. Júpiter está a 5 UA, Neptuno a 30.");
+            }
+            // ESCENA 3: AÑO LUZ (35-65s)
+            else if (time >= 35 && time < 65) {
+                drawText("AÑO LUZ", canvas.width / 2, 50, 30);
+                const lightStart = 100;
+                const lightEnd = 700;
+                const progress = (time - 35) / 10; // Animación de 10s
+                
+                if (progress < 1) {
+                    const currentX = lightStart + (lightEnd - lightStart) * progress;
+                    ctx.beginPath();
+                    ctx.moveTo(lightStart, canvas.height / 2);
+                    ctx.lineTo(currentX, canvas.height / 2);
+                    ctx.strokeStyle = '#ffff00';
+                    ctx.lineWidth = 3;
+                    ctx.stroke();
+                } else {
+                    ctx.beginPath();
+                    ctx.moveTo(lightStart, canvas.height / 2);
+                    ctx.lineTo(lightEnd, canvas.height / 2);
+                    ctx.strokeStyle = '#ffff00';
+                    ctx.lineWidth = 3;
+                    ctx.stroke();
+                    drawText("Distancia que recorre la luz en un año", canvas.width / 2, canvas.height / 2 - 30, 22, '#aaaaaa');
+                }
+                setNarration("Para las estrellas, usamos el Año Luz. No es tiempo, es distancia. ¡La que recorre la luz en un año! La estrella más cercana está a 4.2 años luz. Verla es como mirar 4.2 años al pasado.");
+            }
+            // ESCENA 4: PARSEC (65-100s)
+            else if (time >= 65 && time < 100) {
+                drawText("PARSEC", canvas.width / 2, 50, 30);
+                const centerX = canvas.width / 2;
+                const centerY = canvas.height / 2;
+                const orbitRadius = 80;
+                
+                // Dibuja la órbita de la Tierra
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, orbitRadius, 0, Math.PI * 2);
+                ctx.strokeStyle = '#444';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+                
+                // Dibuja el Sol
+                drawSun(centerX, centerY);
+                
+                // Posición de la Tierra (varía con el tiempo para mostrar el paralaje)
+                const angle = ((time - 65) / 5) * Math.PI; // Gira en 5 segundos
+                const earthX = centerX + Math.cos(angle) * orbitRadius;
+                const earthY = centerY + Math.sin(angle) * orbitRadius;
+                drawEarth(earthX, earthY);
+                
+                // Estrella lejana (fija)
+                const starX = centerX + 250;
+                const starY = centerY - 100;
+                drawStar(starX, starY, 10, '#ffaaaa');
+                
+                // Líneas de visión
+                ctx.beginPath();
+                ctx.moveTo(earthX, earthY);
+                ctx.lineTo(starX, starY);
+                ctx.strokeStyle = 'rgba(255, 100, 100, 0.5)';
+                ctx.stroke();
+
+                drawText("Basado en el paralaje", canvas.width / 2, canvas.height - 80, 20, '#aaaaaa');
+                drawText("1 Pársec ≈ 3.26 Años Luz", canvas.width / 2, canvas.height - 50, 22, '#ffaaaa');
+                setNarration("El Pársec es la herramienta de los astrónomos. Se basa en el 'paralaje': el cambio de posición de una estrella visto desde la Tierra en diferentes épocas del año. Un Pársec equivale a unos 3.26 años luz.");
+            }
+            // ESCENA 5: RESUMEN (100-120s)
+            else if (time >= 100 && time < 120) {
+                drawText("RESUMEN", canvas.width / 2, 80, 35);
+                drawText("UA: Para el Sistema Solar.", canvas.width / 2, 180, 24, '#0077be');
+                drawText("Año Luz: Para las estrellas y galaxias.", canvas.width / 2, 230, 24, '#ffff00');
+                drawText("Pársec: La unidad de los profesionales.", canvas.width / 2, 280, 24, '#ffaaaa');
+                setNarration("En resumen: la UA para nuestro vecindario, el Año Luz para las grandes distancias y el tiempo, y el Pársec para la medición científica precisa.");
+            }
+            // ESCENA FINAL (120s en adelante)
+            else {
+                drawText("El universo es vasto, pero ahora tenemos las reglas para medirlo.", canvas.width / 2, canvas.height / 2, 24, '#ffffff');
+                setNarration("");
+            }
+        }
+        
+        function drawStar(cx, cy, spikes, color) {
+            let rot = Math.PI / 2 * 3;
+            let x = cx;
+            let y = cy;
+            const step = Math.PI / spikes;
+            ctx.beginPath();
+            ctx.moveTo(cx, cy - spikes);
+            for (let i = 0; i < spikes; i++) {
+                x = cx + Math.cos(rot) * spikes;
+                y = cy + Math.sin(rot) * spikes;
+                ctx.lineTo(x, y);
+                rot += step;
+                x = cx + Math.cos(rot) * (spikes / 2);
+                y = cy + Math.sin(rot) * (spikes / 2);
+                ctx.lineTo(x, y);
+                rot += step;
+            }
+            ctx.lineTo(cx, cy - spikes);
+            ctx.closePath();
+            ctx.fillStyle = color;
+            ctx.fill();
+        }
+
+        function setNarration(text) {
+            narrationText.textContent = text;
+        }
+
+        // --- BUCLE PRINCIPAL Y CONTROLES ---
+        function drawFrame() {
+            drawScene(currentTime);
+            updateUI();
+        }
+
+        function updateUI() {
+            progressBar.style.width = `${(currentTime / VIDEO_DURATION) * 100}%`;
+            timeDisplay.textContent = `${formatTime(currentTime)} / ${formatTime(VIDEO_DURATION)}`;
+        }
+        
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function play() {
+            isPlaying = true;
+            playPauseBtn.textContent = '⏸️';
+            timeInterval = setInterval(() => {
+                currentTime += 0.1;
+                if (currentTime >= VIDEO_DURATION) {
+                    pause();
+                    currentTime = VIDEO_DURATION;
+                }
+                drawFrame();
+            }, 100); // Actualiza cada 100ms
+        }
+
+        function pause() {
+            isPlaying = false;
+            playPauseBtn.textContent = '▶️';
+            clearInterval(timeInterval);
+        }
+
+        playPauseBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                pause();
+            } else {
+                play();
+            }
+        });
+
+        // --- INICIAR TODO ---
+        init();
+    });
+    </script>
+</body>
+</html>
