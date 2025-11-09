@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>¿Qué es la nube de datos?</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+    h1, h2 {
+      color: #0057b8;
+    }
+    .section {
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .tab-button {
+      background: #0057b8;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin: 5px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .tab-button.active {
+      background: #003f8a;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .safe {
+      color: green;
+      font-weight: bold;
+    }
+    .warning {
+      color: orange;
+      font-weight: bold;
+    }
+    .danger {
+      color: red;
+      font-weight: bold;
+    }
+    input[type="file"] {
+      margin-top: 10px;
+    }
+    #uploadResult {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    /* --- Estilos para el Footer --- */
+    footer {
+      background-color: #003f8a; /* Un azul más oscuro para el pie de página */
+      color: white;
+      padding: 30px 20px;
+      margin-top: 40px;
+      border-radius: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      text-align: left;
+    }
+
+    .author-info h3 {
+      margin-top: 0;
+      border-bottom: 2px solid #ffffff55; /* Línea sutil */
+      padding-bottom: 5px;
+    }
+
+    .author-info p {
+      font-size: 1.2em;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+
+    .author-info ul {
+      list-style-type: none; /* Quita las viñetas */
+      padding-left: 0;
+      margin: 0;
+      font-size: 0.9em;
+    }
+
+    .legal-info {
+      text-align: right;
+    }
+
+    .legal-info p {
+      margin: 5px 0;
+    }
+
+    /* --- Diseño Responsable para el Footer --- */
+    @media (max-width: 768px) {
+      footer {
+        flex-direction: column; /* Apila los elementos en pantallas pequeñas */
+        text-align: center;
+      }
+      .legal-info {
+        text-align: center;
+        margin-top: 20px; /* Añade espacio en la parte superior */
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>☁️ Todo sobre la nube de datos</h1>
+
+  <div>
+    <button class="tab-button active" onclick="showTab('que-es')">¿Qué es?</button>
+    <button class="tab-button" onclick="showTab('como-funciona')">¿Cómo funciona?</button>
+    <button class="tab-button" onclick="showTab('seguridad')">¿Es segura?</button>
+    <button class="tab-button" onclick="showTab('tipos')">Tipos de nube</button>
+    <button class="tab-button" onclick="showTab('otros-usos')">Otros usos y riesgos</button>
+    <button class="tab-button" onclick="showTab('simulador')">Simulador</button>
+  </div>
+
+  <!-- ¿Qué es? -->
+  <div id="que-es" class="tab-content active section">
+    <h2>¿Qué es la nube de datos?</h2>
+    <p>La nube es un conjunto de servidores conectados a internet que almacenan datos y ejecutan aplicaciones. En lugar de guardar tus archivos en tu computadora, los guardas en servidores remotos que puedes acceder desde cualquier lugar.</p>
+    <p>Ejemplos: Google Drive, Dropbox, iCloud, OneDrive.</p>
+  </div>
+
+  <!-- ¿Cómo funciona? -->
+  <div id="como-funciona" class="tab-content section">
+    <h2>¿Cómo funciona?</h2>
+    <ol>
+      <li>Subes un archivo desde tu dispositivo.</li>
+      <li>El archivo viaja por internet hasta un servidor remoto.</li>
+      <li>El servidor lo guarda de forma segura.</li>
+      <li>Puedes acceder al archivo desde cualquier dispositivo con internet.</li>
+    </ol>
+    <p>Además, la nube permite hacer copias de seguridad automáticas, colaborar en tiempo real y ahorrar espacio en tu dispositivo.</p>
+  </div>
+
+  <!-- Seguridad -->
+  <div id="seguridad" class="tab-content section">
+    <h2>¿Es segura la nube?</h2>
+    <p><span class="safe">✅ Sí, en general es segura</span>, siempre que uses servicios confiables y sigas buenas prácticas:</p>
+    <ul>
+      <li>Usa contraseñas fuertes y autenticación de dos factores (2FA).</li>
+      <li>Los datos suelen estar cifrados (encriptados) durante la transferencia y el almacenamiento.</li>
+      <li>Las empresas hacen copias de seguridad automáticas.</li>
+    </ul>
+    <p><span class="warning">⚠️ Pero cuidado:</span> Si pierdes tu contraseña o caes en un ataque de phishing, podrías perder acceso a tus datos.</p>
+    <p><span class="danger">❌ Peligro real:</span> Tu seguridad también depende de ti. Si tu dispositivo tiene un virus o usas la misma contraseña en varios sitios, tus datos en la nube pueden estar en riesgo, incluso si el proveedor es seguro.</p>
+  </div>
+
+  <!-- Tipos -->
+  <div id="tipos" class="tab-content section">
+    <h2>Tipos de nube</h2>
+    <ul>
+      <li><strong>Pública:</strong> Servicios como Google Drive o Dropbox. Compartes recursos con otros usuarios.</li>
+      <li><strong>Privada:</strong> Usada por empresas o gobiernos. Solo ellos tienen acceso y control total sobre la infraestructura.</li>
+      <li><strong>Híbrida:</strong> Combina lo público y lo privado. Por ejemplo, una empresa guarda datos sensibles en privado y usa lo público para colaborar.</li>
+      <li><strong>Multinube:</strong> Estrategia que consiste en usar servicios de varios proveedores de nube pública (como AWS, Azure y Google Cloud) a la vez para evitar depender de uno solo y optimizar costos.</li>
+    </ul>
+  </div>
+
+  <!-- Otros usos y riesgos -->
+  <div id="otros-usos" class="tab-content section">
+    <h2>Otros usos y riesgos de la nube</h2>
+    <p>La nube no solo se usa para fines legítimos. También es la infraestructura detrás de muchas actividades anónimas y, a menudo, ilegales.</p>
+    
+    <h3>Alojamiento para sitios desconocidos</h3>
+    <p>Existen servicios de alojamiento (hosting) que priorizan el anonimato del propietario de una web. Estos sitios pueden usar:</p>
+    <ul>
+      <li>Dominios registrados con datos falsos o privados.</li>
+      <li>Métodos de pago anónimos como criptomonedas.</li>
+    </ul>
+    <p><span class="warning">⚠️ Riesgo:</span> Estos alojamientos son frecuentemente utilizados para páginas de phishing, estafas, distribución de malware o venta de productos falsificados. Al interactuar con ellos, pones en riesgo tu información personal y la seguridad de tu dispositivo.</p>
+
+    <h3>La Dark Web y la "Nube Oscura"</h3>
+    <p>La Dark Web es una parte de internet oculta que requiere software especial (como Tor) para acceder. Aquí, el anonimato es extremo. También existen servicios de "nube" en este entorno:</p>
+    <ul>
+      <li><strong>Almacenamiento de archivos:</strong> Para compartir información de forma anónima, a menudo ilegal.</li>
+      <li><strong>Mercados (Marketplaces):</strong> Plataformas que funcionan como "nubes" para transacciones de bienes y servicios ilícitos.</li>
+    </ul>
+    <p><span class="danger">❌ Peligro extremo:</span> Acceder a la Dark Web es muy arriesgado. Estás expuesto a contenido ilegal, estafas, virus y la vigilancia de las autoridades. <strong>No se recomienda su exploración sin un conocimiento técnico y legal profundo.</strong></p>
+  </div>
+
+  <!-- Simulador -->
+  <div id="simulador" class="tab-content section">
+    <h2>Simulador de carga a la nube</h2>
+    <p>Selecciona un archivo para simular cómo se sube a la nube:</p>
+    <input type="file" id="fileInput" onchange="simulateUpload()" />
+    <div id="uploadResult"></div>
+  </div>
+
+  <!-- Footer con información del autor -->
+  <footer>
+    <div class="author-info">
+      <h3>Autor</h3>
+      <p>Profesor Ángel Chacín Ávila</p>
+      <ul>
+        <li>Licenciado en Física</li>
+        <li>Especialista en Ciencias Computacionales</li>
+        <li>Diplomado en Inteligencia Artificial en la Seguridad Ciudadana</li>
+        <li>Docente e Investigador de la Universidad Nacional Experimental de la Seguridad Núcleo Zulia</li>
+      </ul>
+    </div>
+    <div class="legal-info">
+      <p>Elaborado Ángel Chacín Ávila @2025</p>
+      <p>Se publica con licencia GPL</p>
+    </div>
+  </footer>
+
+  <script>
+    function showTab(id) {
+      const tabs = document.querySelectorAll('.tab-content');
+      const buttons = document.querySelectorAll('.tab-button');
+      tabs.forEach(tab => tab.classList.remove('active'));
+      buttons.forEach(btn => btn.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    function simulateUpload() {
+      const fileInput = document.getElementById('fileInput');
+      const result = document.getElementById('uploadResult');
+      const file = fileInput.files[0];
+      if (!file) return;
+
+      result.innerHTML = `<span class="warning">📤 Subiendo...</span>`;
+      setTimeout(() => {
+        result.innerHTML = `<span class="safe">✅ Archivo "${file.name}" subido con éxito a la nube.</span>`;
+      }, 1500);
+    }
+  </script>
+
+</body>
+</html>
