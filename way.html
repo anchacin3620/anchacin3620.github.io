@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyecto Jalá'iyaa - Propuesta de Investigación</title>
+    <style>
+        :root {
+            --primary-color: #005a9c;
+            --secondary-color: #f9a825;
+            --accent-color: #e57373;
+            --background-color: #f4f7f6;
+            --text-color: #333;
+            --light-gray: #e0e0e0;
+            --white: #ffffff;
+            --shadow: 0 4px 8px rgba(0,0,0,0.1);
+            --font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), #003d6b);
+            color: var(--white);
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        header .author {
+            margin-top: 10px;
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            background-color: var(--white);
+            border-radius: 10px 10px 0 0;
+            box-shadow: var(--shadow);
+            padding: 0 10px;
+        }
+
+        .tab-button {
+            background-color: transparent;
+            border: none;
+            padding: 15px 20px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            color: #666;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab-button:hover {
+            color: var(--primary-color);
+            background-color: var(--background-color);
+        }
+
+        .tab-button.active {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--secondary-color);
+        }
+
+        .content-area {
+            background-color: var(--white);
+            padding: 30px;
+            border-radius: 0 0 10px 10px;
+            box-shadow: var(--shadow);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        h3 {
+            color: var(--primary-color);
+        }
+
+        ul, ol {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        blockquote {
+            border-left: 5px solid var(--secondary-color);
+            margin: 1.5em 0;
+            padding: 0.5em 20px;
+            background-color: var(--background-color);
+            font-style: italic;
+        }
+
+        code {
+            background-color: var(--light-gray);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        
+        strong {
+            color: var(--primary-color);
+        }
+
+        .phase-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .phase-table th, .phase-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .phase-table th {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .phase-table tr:nth-child(even) {
+            background-color: var(--background-color);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #333;
+            color: var(--white);
+            border-radius: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .tabs {
+                justify-content: center;
+            }
+            .tab-button {
+                font-size: 0.9em;
+                padding: 10px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Proyecto "Jalá'iyaa" (Conocimiento)</h1>
+            <p class="author">
+                <strong>Autor:</strong> Prof. Ángel Chacín Ávila<br>
+                <em>Licenciado en Física, Especialista en Ciencias Computacionales, Docente e Investigador de la Universidad Nacional Experimental de la Seguridad Núcleo Zulia</em>
+            </p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="showTab('resumen')">1. Resumen Ejecutivo</button>
+            <button class="tab-button" onclick="showTab('justificacion')">2. Justificación y Ética</button>
+            <button class="tab-button" onclick="showTab('metodologia')">3. Metodología</button>
+            <button class="tab-button" onclick="showTab('marco-tecnico')">4. Marco Técnico y Z.ai</button>
+            <button class="tab-button" onclick="showTab('cronograma')">5. Cronograma y Recursos</button>
+            <button class="tab-button" onclick="showTab('impacto')">6. Impacto Esperado</button>
+        </div>
+
+        <div class="content-area">
+            <!-- Resumen Ejecutivo -->
+            <div id="resumen" class="tab-content active">
+                <h2>Resumen Ejecutivo</h2>
+                <p>El presente anteproyecto, denominado <strong>"Jalá'iyaa"</strong>, propone el desarrollo de un modelo de inteligencia artificial especializado en el aprendizaje, procesamiento y preservación de la lengua Wayúunaiki, hablada por el pueblo Wayúu en Venezuela y Colombia. La lengua Wayúunaiki, al ser una lengua de "bajos recursos" en el ámbito digital, enfrenta riesgos de erosión lingüística y cultural ante la globalización.</p>
+                <p>La propuesta se basa en la técnica de <strong>fine-tuning (aje fino)</strong> sobre un modelo de lenguaje grande preexistente (como GLM-4.6), lo que permite una adaptación eficiente y especializada al Wayúnaiki sin necesidad de entrenar un modelo desde cero. Este enfoque es viable gracias a la colaboración estratégica con <strong>Z.ai</strong>, empresa desarrolladora del modelo base.</p>
+                <p>El objetivo final es crear un conjunto de herramientas tecnológicas (traductor, asistente de aprendizaje, teclado predictivo) que no solo faciliten la comunicación y el aprendizaje del Wayúnaiki, sino que empoderen a la comunidad Wayúu, fortalezcan su identidad cultural y establezcan un precedente para la preservación de otras lenguas indígenas.</p>
+            </div>
+
+            <!-- Justificación y Ética -->
+            <div id="justificacion" class="tab-content">
+                <h2>Justificación y Ética</h2>
+                <h3>Justificación</h3>
+                <ul>
+                    <li><strong>Cultural:</strong> El Wayúunaiki es el pilar de la cosmovisión Wayúu. Preservar la lengua es preservar la cultura, la historia y el conocimiento ancestral.</li>
+                    <li><strong>Social:</strong> Promueve la inclusión digital de una de las etnias más grandes de Venezuela, garantizando el acceso a la tecnología en su propia lengua.</li>
+                    <li><strong>Educativo:</strong> Ofrece herramientas pedagógicas innovadoras para la enseñanza bilingüe y la revitalización lingüística en las nuevas generaciones.</li>
+                    <li><strong>Tecnológico:</strong> Aborda un desafío de frontera en la IA: el procesamiento de lenguas con pocos recursos digitales, generando conocimiento valioso para el campo.</li>
+                </ul>
+                
+                <h3>Marco Ético y Colaboración Comunitaria</h3>
+                <blockquote>
+                    Este proyecto no es "para" la comunidad Wayúu, sino "con" la comunidad Wayúu. La soberanía de los datos y el beneficio compartido son pilares irrenunciables.
+                </blockquote>
+                <ol>
+                    <li><strong>Consejo Asesor Wayúu:</strong> Creación de un consejo con ancianos, lingüistas y líderes comunitarios para guiar el proyecto.</li>
+                    <li><strong>Consentimiento Informado:</strong> Todos los participantes serán informados sobre los objetivos del proyecto, y su participación será voluntaria y consentida.</li>
+                    <li><strong>Soberanía de los Datos:</strong> Los datos recopilados (grabaciones, textos) son propiedad intelectual de la comunidad Wayúu. Se establecerán protocolos claros de acceso y uso.</li>
+                    <li><strong>Beneficio Compartido:</strong> Las herramientas y recursos generados serán de libre acceso para la comunidad Wayúu.</li>
+                </ol>
+            </div>
+
+            <!-- Metodología -->
+            <div id="metodologia" class="tab-content">
+                <h2>Metodología: Fases del Proyecto</h2>
+                <p>El proyecto se estructurará en cuatro fases secuenciales e iterativas.</p>
+                
+                <table class="phase-table">
+                    <thead>
+                        <tr>
+                            <th>Fase</th>
+                            <th>Actividades Clave</th>
+                            <th>Entregables</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>0. Fundacional</strong></td>
+                            <td>Formar consejo asesor, acuerdos éticos y de soberanía de datos.</td>
+                            <td>Marco ético y legal del proyecto.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>1. Recopilación de Datos</strong></td>
+                            <td>Colaboración con académicos, talleres de transcripción, desarrollo de app móvil para recolección, digitalización de textos.</td>
+                            <td>Corpus digital de texto y audio de alta calidad (objetivo: 100k frases paralelas, 500h de audio).</td>
+                        </tr>
+                        <tr>
+                            <td><strong>2. Desarrollo Técnico</strong></td>
+                            <td>Preprocesamiento (limpieza, tokenización), selección del modelo base (GLM-4.6), entrenamiento mediante fine-tuning.</td>
+                            <td>Modelo de IA especializado en Wayúnaiki.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>3. Evaluación y Refinamiento</strong></td>
+                            <td>Pruebas automáticas (métricas BLEU), y sobre todo, evaluación humana con hablantes nativos para asegurar naturalidad y precisión cultural.</td>
+                            <td>Modelo refinado y validado por la comunidad.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>4. Despliegue de Herramientas</strong></td>
+                            <td>Desarrollo y lanzamiento de un traductor web, un asistente de aprendizaje móvil y un teclado predictivo.</td>
+                            <td>Aplicaciones funcionales y accesibles para la comunidad Wayúu.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Marco Técnico y Z.ai -->
+            <div id="marco-tecnico" class="tab-content">
+                <h2>Marco Técnico y Colaboración con Z.ai</h2>
+                
+                <h3>Estrategia de Fine-Tuning</h3>
+                <p>En lugar de entrenar un modelo desde cero (proceso costoso y que requiere enormes cantidades de datos), la propuesta es utilizar <strong>Transfer Learning</strong> a través del <strong>Fine-Tuning</strong>. Este proceso consiste en:</p>
+                <ol>
+                    <li><strong>Partir del Modelo Base GLM-4.6:</strong> Utilizar la arquitectura y conocimientos pre-entrenados del modelo GLM-4.6, desarrollado por Z.ai.</li>
+                    <li><strong>Entrenamiento Específico:</strong> Exponer el modelo base exclusivamente al corpus de datos en Wayúnaiki y español recopilado en la Fase 1.</li>
+                    <li><strong>Ajuste de Parámetros:</strong> El modelo ajustará sus "pesos" internos para especializarse en las reglas gramaticales, el vocabulario y la sintaxis del Wayúnaiki.</li>
+                </ol>
+
+                <h3>Modelo de Colaboración con Z.ai</h3>
+                <p>La colaboración con Z.ai es fundamental y se propone en los siguientes términos:</p>
+                <ul>
+                    <li><strong>Acceso al Modelo Base:</strong> Obtener acceso a la versión de código abierto del modelo GLM-4.6 o un acuerdo de colaboración para su uso académico sin fines de lucro.</li>
+                    <li><strong>Asesoría Técnica:</strong> Contar con el apoyo de ingenieros de Z.ai para optimizar el proceso de fine-tuning y adaptar el tokenizador a las particularidades del Wayúnaiki.</li>
+                    <li><strong>Infraestructura:</strong> Explorar el uso de la infraestructura computacional de Z.ai (o sus alianzas) para las fases de entrenamiento, que son intensivas en recursos.</li>
+                    <li><strong>Alianza Estratégica:</strong> Formalizar una alianza que posicione este proyecto como un caso de estudio de IA aplicada a la preservación cultural.</li>
+                </ul>
+            </div>
+
+            <!-- Cronograma y Recursos -->
+            <div id="cronograma" class="tab-content">
+                <h2>Cronograma y Recursos</h2>
+                
+                <h3>Cronograma Estimado (24 Meses)</h3>
+                <ul>
+                    <li><strong>Meses 1-3:</strong> Fase 0. Fundacional (Formación del consejo, acuerdos).</li>
+                    <li><strong>Meses 4-12:</strong> Fase 1. Recopilación de Datos (Talleres, desarrollo de app, transcripción).</li>
+                    <li><strong>Meses 10-15:</strong> Fase 2. Desarrollo Técnico (Preprocesamiento y fine-tuning).</li>
+                    <li><strong>Meses 14-18:</strong> Fase 3. Evaluación y Refinamiento (Pruebas con la comunidad).</li>
+                    <li><strong>Meses 16-24:</strong> Fase 4. Despliegue de Herramientas (Desarrollo y lanzamiento de apps).</li>
+                </ul>
+                <p><em>Nota: Las fases 2, 3 y 4 tendrán una superposición deliberada para agilizar el proceso.</em></p>
+
+                <h3>Recursos Necesarios</h3>
+                <ul>
+                    <li><strong>Humanos:</strong> Investigador principal, lingüistas Wayúnaiki, ingenieros de software/IA, antropólogos, desarrolladores web/móvil, comunidad Wayúu.</li>
+                    <li><strong>Técnicos:</strong> Infraestructura de computación en la nube (GPUs/TPUs), software de gestión de datos, plataformas de desarrollo.</li>
+                    <li><strong>Financieros:</strong> Financiamiento para cubrir costos de personal, infraestructura, viajes a las comunidades, desarrollo de software y compensación a los participantes de la comunidad.</li>
+                </ul>
+            </div>
+
+            <!-- Impacto Esperado -->
+            <div id="impacto" class="tab-content">
+                <h2>Impacto Esperado</h2>
+                <p>El éxito del proyecto "Jalá'iyaa" generará un impacto multidimensional y duradero.</p>
+                
+                <h3>Impacto Cultural</h3>
+                <ul>
+                    <li><strong>Preservación:</strong> Creación de un archivo digital vivo y una tecnología que ayuda a mantener viva la lengua Wayúnaiki para las futuras generaciones.</li>
+                    <li><strong>Fortalecimiento de Identidad:</strong> Herramientas que refuerzan el orgullo y el uso cotidiano de la lengua, especialmente entre los jóvenes.</li>
+                </ul>
+
+                <h3>Impacto Social y Educativo</h3>
+                <ul>
+                    <li><strong>Inclusión Digital:</strong> La comunidad Wayúu podrá acceder a la información y la tecnología en su lengua materna, rompiendo barreras digitales.</li>
+                    <li><strong>Herramientas Pedagógicas:</strong> Recursos innovadores para educadores bilingües que facilitan la enseñanza y el aprendizaje del Wayúnaiki en las escuelas.</li>
+                </ul>
+
+                <h3>Impacto Tecnológico y Científico</h3>
+                <ul>
+                    <li><strong>Precedente Metodológico:</strong> Establecerá un modelo replicable para la preservación de otras lenguas indígenas y minoritarias en el mundo.</li>
+                    <li><strong>Avance en IA:</strong> Contribuirá al campo de la NLP (Procesamiento de Lenguaje Natural) al resolver los desafíos técnicos de las lenguas de bajos recursos.</li>
+                    <li><strong>Generación de Conocimiento:</strong> El corpus de datos y el modelo entrenado serán un activo de investigación para lingüistas y científicos de la computación.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Elaborado por Ángel Chacín Ávila @2025</p>
+        <p>Se publica con licencia GPL</p>
+    </footer>
+
+    <script>
+        function showTab(tabName) {
+            // Ocultar todo el contenido
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            // Desactivar todos los botones
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(button => button.classList.remove('active'));
+
+            // Mostrar el contenido de la pestaña seleccionada
+            document.getElementById(tabName).classList.add('active');
+
+            // Activar el botón de la pestaña seleccionada
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
