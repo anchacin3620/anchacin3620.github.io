@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Índice de Tesis - Formato LUZ/APA</title>
+    <style>
+        /* --- Estilos Generales --- */
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 14pt;
+            line-height: 1.5;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* --- Contenedor Principal --- */
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 40px 60px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            border-radius: 5px;
+        }
+
+        /* --- Título y Botón --- */
+        h1 {
+            text-align: center;
+            font-size: 18pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-top: 0;
+            margin-bottom: 30px;
+        }
+
+        .copy-button-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        #copyButton {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14pt;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #copyButton:hover {
+            background-color: #0056b3;
+        }
+
+        #copyButton.copied {
+            background-color: #28a745;
+        }
+
+        /* --- Estilos del Índice --- */
+        .index-entry {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 5px;
+        }
+
+        .index-text {
+            /* El borde inferior crea los puntos líderes */
+            border-bottom: 1px dotted #666;
+            flex-grow: 1;
+            margin-bottom: 3px; /* Alinea los puntos con el texto */
+            height: 1.1em; /* Ajusta la altura de la línea de puntos */
+            overflow: hidden;
+        }
+
+        .page-number {
+            margin-left: 10px;
+            white-space: nowrap; /* Evita que el número de página se separe */
+        }
+
+        /* --- Niveles de Jerarquía --- */
+        .level-main { /* Para RESUMEN, ABSTRACT, CAPÍTULOS, etc. */
+            font-weight: bold;
+            text-transform: uppercase;
+            padding-left: 0;
+        }
+        .level-main .index-text { font-weight: bold; }
+        .level-main .page-number { font-weight: bold; }
+
+        .level-1 { /* Para Introducción, Ecuación Maestra, etc. */
+            font-weight: bold;
+            padding-left: 20px;
+        }
+        .level-1 .index-text { font-weight: bold; }
+        .level-1 .page-number { font-weight: bold; }
+
+        .level-2 { /* Para Películas Delgadas, Simulación Estocástica, etc. */
+            padding-left: 40px;
+        }
+
+        .level-3 { /* Para 2.4.1, 3.4.1, etc. */
+            padding-left: 60px;
+        }
+        
+        .level-4 { /* Para un nivel extra si fuera necesario */
+            padding-left: 80px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Índice General</h1>
+
+        <div class="copy-button-container">
+            <button id="copyButton">Copiar Índice Formateado</button>
+        </div>
+
+        <div id="indexContent">
+            <!-- El contenido del índice será generado por JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var indexData = [
+                { text: "ÍNDICE DE TABLAS", page: "ii", level: "main" },
+                { text: "ÍNDICE DE FIGURAS", page: "iii", level: "main" },
+                { text: "RESUMEN", page: "iv", level: "main" },
+                { text: "ABSTRACT", page: "v", level: "main" },
+                { text: "CAPÍTULO I", page: "1", level: "main" },
+                { text: "INTRODUCCIÓN", page: "1", level: "1" },
+                { text: "Películas Delgadas", page: "1", level: "2" },
+                { text: "Simulación Estocástica", page: "1", level: "2" },
+                { text: "CAPÍTULO II", page: "12", level: "main" },
+                { text: "ECUACIÓN MAESTRA PROBABILÍSTICA", page: "12", level: "1" },
+                { text: "Introducción", page: "13", level: "2" },
+                { text: "Fundamentos de la Ecuación Maestra Probabilística", page: "14", level: "2" },
+                { text: "Aplicación al Modelo de Deposición de Películas Delgadas", page: "16", level: "2" },
+                { text: "Derivación de las Tasas de Transición", page: "17", level: "2" },
+                { text: "Difusión Superficial", page: "18", level: "3" },
+                { text: "Adsorción", page: "19", level: "3" },
+                { text: "Implementación en el Algoritmo KMC", page: "20", level: "2" },
+                { text: "CAPÍTULO III", page: "23", level: "main" },
+                { text: "MÉTODO DE MONTE CARLO", page: "23", level: "1" },
+                { text: "Introducción", page: "24", level: "2" },
+                { text: "Método de Monte Carlo y su Aplicación en Deposición de Películas Delgadas", page: "26", level: "2" },
+                { text: "Ventajas del Uso en Simulaciones de Deposición de Películas Delgadas", page: "28", level: "2" },
+                { text: "Construcción del Algoritmo KMC Implementado", page: "30", level: "2" },
+                { text: "Algoritmo KMC General", page: "31", level: "3" },
+                { text: "Implementación en el Sustrato de Mg(001)", page: "33", level: "3" },
+                { text: "Selección del Material y Modo de Deposición", page: "35", level: "3" },
+                { text: "Procesos Simulados: Deposición y Difusión", page: "37", level: "3" },
+                { text: "Cálculo de Métricas y Avanzadas", page: "39", level: "3" },
+                { text: "Almacenamiento de Resultados", page: "41", level: "3" },
+                { text: "Adaptación a Simulaciones en 2D y 3D", page: "43", level: "2" },
+                { text: "Simulaciones 2D", page: "44", level: "3" },
+                { text: "Simulaciones 3D", page: "45", level: "3" },
+                { text: "Justificación del Uso de la Subrutina de Números Aleatorios de Fortran 90", page: "47", level: "2" },
+                { text: "CAPÍTULO IV", page: "49", level: "main" },
+                { text: "ANÁLISIS Y DISCUSIÓN DE RESULTADOS", page: "49", level: "1" },
+                { text: "Análisis del Modo Térmico", page: "50", level: "2" },
+                { text: "CAPÍTULO V", page: "55", level: "main" },
+                { text: "CONCLUSIÓN Y RECOMENDACIONES", page: "55", level: "1" },
+                { text: "Conclusiones", page: "55", level: "2" },
+                { text: "Recomendaciones", page: "57", level: "2" },
+                { text: "APÉNDICES", page: "59", level: "main" },
+                { text: "Apéndice A: Código Fortran del Programa de Simulación", page: "60", level: "1" },
+                { text: "REFERENCIAS BIBLIOGRÁFICAS", page: "75", level: "main" }
+            ];
+
+            var indexContentDiv = document.getElementById('indexContent');
+            var copyButton = document.getElementById('copyButton');
+
+            // --- Función para renderizar el índice en la página ---
+            function renderIndex() {
+                indexContentDiv.innerHTML = ''; // Limpiar contenido previo
+                for (var i = 0; i < indexData.length; i++) {
+                    var item = indexData[i];
+                    var entry = document.createElement('div');
+                    entry.className = 'index-entry level-' + item.level;
+
+                    var textSpan = document.createElement('span');
+                    textSpan.className = 'index-text';
+                    textSpan.textContent = item.text;
+
+                    var pageSpan = document.createElement('span');
+                    pageSpan.className = 'page-number';
+                    pageSpan.textContent = item.page;
+
+                    entry.appendChild(textSpan);
+                    entry.appendChild(pageSpan);
+                    indexContentDiv.appendChild(entry);
+                }
+            }
+
+            // --- Función para generar el texto plano para copiar ---
+            function generatePlainText() {
+                var maxLineWidth = 75;
+                var plainText = "ÍNDICE GENERAL\n\n";
+
+                for (var i = 0; i < indexData.length; i++) {
+                    var item = indexData[i];
+                    var indent = '';
+                    var text = item.text;
+                    var page = item.page;
+
+                    switch (item.level) {
+                        case '1': indent = '    '; break;
+                        case '2': indent = '        '; break;
+                        case '3': indent = '            '; break;
+                        case 'main':
+                        default: indent = ''; break;
+                    }
+                    
+                    var textLength = indent.length + text.length;
+                    var pageLength = page.length;
+                    var dotsLength = maxLineWidth - textLength - pageLength - 2;
+                    var dots = '.'.repeat(Math.max(1, dotsLength));
+                    
+                    plainText += indent + text + ' ' + dots + ' ' + page + '\n';
+                }
+                return plainText;
+            }
+
+            // --- Función de respaldo para copiar (compatible con todos los navegadores) ---
+            function fallbackCopyTextToClipboard(text) {
+                var textArea = document.createElement("textarea");
+                textArea.value = text;
+                
+                textArea.style.position = "fixed";
+                textArea.style.top = "0";
+                textArea.style.left = "0";
+
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+
+                try {
+                    var successful = document.execCommand('copy');
+                    if (successful) {
+                        handleCopySuccess();
+                    } else {
+                        handleCopyError();
+                    }
+                } catch (err) {
+                    console.error('Error al copiar: ', err);
+                    handleCopyError();
+                }
+
+                document.body.removeChild(textArea);
+            }
+
+            function handleCopySuccess() {
+                var originalText = copyButton.textContent;
+                copyButton.textContent = '¡Copiado!';
+                copyButton.classList.add('copied');
+
+                setTimeout(function() {
+                    copyButton.textContent = originalText;
+                    copyButton.classList.remove('copied');
+                }, 2000);
+            }
+            
+            function handleCopyError() {
+                alert('No se pudo copiar el texto. Por favor, seleccione y copie manualmente.');
+            }
+
+            // --- Event Listener para el botón de copiar ---
+            copyButton.addEventListener('click', function() {
+                var textToCopy = generatePlainText();
+                fallbackCopyTextToClipboard(textToCopy);
+            });
+
+            // Renderizar el índice al cargar la página
+            renderIndex();
+        });
+    </script>
+
+</body>
+</html>
