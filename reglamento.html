@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reglamento LUZ - Presentación de Trabajos</title>
+    
+    <!-- Google Fonts: Lato -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- General Setup & Accessibility --- */
+        :root {
+            --primary-color: #0056b3;
+            --secondary-color: #004494;
+            --accent-color: #ffc107;
+            --background-color: #f8f9fa;
+            --text-color: #212529;
+            --sidebar-bg: #e9ecef;
+            --border-color: #dee2e6;
+            --highlight-bg: #fff3cd;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            line-height: 1.7;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Skip to main content link for screen readers */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--primary-color);
+            color: white;
+            padding: 8px;
+            z-index: 100;
+            transition: top 0.3s;
+        }
+        .skip-link:focus {
+            top: 0;
+        }
+
+        /* --- Header --- */
+        header {
+            background-color: var(--primary-color);
+            color: #fff;
+            padding: 1rem 2rem;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.8em;
+            font-weight: 700;
+        }
+
+        /* --- Mobile Menu Button --- */
+        .menu-toggle {
+            display: none;
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5em;
+            cursor: pointer;
+            padding: 5px;
+        }
+        .menu-toggle:focus {
+            outline: 2px solid var(--accent-color);
+        }
+
+        /* --- Layout Container --- */
+        .container {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: #fff;
+            min-height: calc(100vh - 70px); /* Full height minus header */
+        }
+
+        /* --- Sidebar Navigation --- */
+        .sidebar {
+            flex: 0 0 280px;
+            background-color: var(--sidebar-bg);
+            padding: 20px;
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .sidebar .sticky {
+            position: sticky;
+            top: 20px;
+        }
+
+        #search-box {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 1em;
+        }
+        #search-box:focus {
+            outline: 2px solid var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        #toc ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        #toc li {
+            margin-bottom: 8px;
+        }
+        #toc a {
+            text-decoration: none;
+            color: var(--primary-color);
+            display: block;
+            padding: 6px 10px;
+            border-radius: 4px;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        #toc a:hover, #toc a:focus {
+            background-color: #d0ebff;
+            color: var(--secondary-color);
+        }
+        #toc .toc-h2 { font-weight: 700; margin-top: 15px; }
+        #toc .toc-h3 { padding-left: 25px; font-weight: 400; }
+
+        /* --- Main Content --- */
+        main {
+            flex: 1;
+            padding: 2rem 3rem;
+            overflow-y: auto;
+        }
+        
+        main h1, main h2, main h3, main h4, main h5 {
+            scroll-margin-top: 20px; /* Prevents title from being hidden under fixed header on scroll */
+        }
+
+        main h1 {
+            font-size: 2.2em;
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--accent-color);
+            padding-bottom: 10px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        main h2 {
+            font-size: 1.8em;
+            color: var(--secondary-color);
+            margin-top: 2.5em;
+            margin-bottom: 1.2em;
+        }
+        main h3 {
+            font-size: 1.3em;
+            font-style: italic;
+            color: #495057;
+            margin-top: 2em;
+            margin-bottom: 1em;
+        }
+        main h4 {
+            font-size: 1.2em;
+            font-weight: 700;
+            margin-top: 1.8em;
+            margin-bottom: 1em;
+        }
+        main h5 {
+            font-size: 1.1em;
+            font-weight: 700;
+            font-style: italic;
+            margin-top: 1.5em;
+            margin-bottom: 0.8em;
+        }
+        main p {
+            text-align: justify;
+            margin-bottom: 1rem;
+        }
+        
+        /* --- Utility Buttons --- */
+        .action-buttons {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+        }
+        .action-button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .action-button:hover {
+            background-color: var(--secondary-color);
+            transform: scale(1.1);
+        }
+        .action-button:focus {
+            outline: 2px solid var(--accent-color);
+        }
+        #back-to-top {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+        #back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* --- Highlighting for Search --- */
+        .highlight {
+            background-color: var(--highlight-bg);
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 280px;
+                height: 100%;
+                z-index: 1000;
+                transform: translateX(-100%);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            main {
+                padding: 1rem;
+            }
+            .container {
+                min-height: calc(100vh - 70px);
+            }
+        }
+
+        /* --- Print Styles --- */
+        @media print {
+            body, .container {
+                background: #fff;
+                color: #000;
+            }
+            .sidebar, .menu-toggle, .action-buttons, header {
+                display: none;
+            }
+            main {
+                padding: 0;
+                margin: 0;
+                width: 100%;
+            }
+            a {
+                text-decoration: none;
+                color: #000;
+            }
+            h1, h2, h3, h4, h5 {
+                page-break-after: avoid;
+                color: #000 !important;
+                border: none !important;
+            }
+            p {
+                orphans: 3;
+                widows: 3;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <a href="#content" class="skip-link">Saltar al contenido principal</a>
+
+    <header>
+        <button class="menu-toggle" id="menu-toggle" aria-label="Alternar menú de navegación" aria-expanded="false">☰</button>
+        <h1>Reglamento para la Presentación de Trabajos en la Universidad del Zulia</h1>
+    </header>
+
+    <div class="container">
+        <nav class="sidebar" id="sidebar" role="navigation" aria-label="Tabla de Contenidos">
+            <div class="sticky">
+                <input type="search" id="search-box" placeholder="Buscar en el reglamento..." aria-label="Buscar en el reglamento">
+                <div id="toc"></div>
+            </div>
+        </nav>
+
+        <main id="content" role="main">
+            <h2>REPÚBLICA BOLIVARIANA DE VENEZUELA</h2>
+            <h2>UNIVERSIDAD DEL ZULIA</h2>
+            <h2>CONSEJO UNIVERSITARIO</h2>
+            <p>En uso de la facultad que le confiere la atribución 21 del artículo 26 de la Ley de Universidades, dicta el siguiente:</p>
+            
+            <h1 id="reglamento-para-la-presentacion-de-trabajos-en-la-universidad-del-zulia">REGLAMENTO PARA LA PRESENTACIÓN DE TRABAJOS EN LA UNIVERSIDAD DEL ZULIA</h1>
+            
+            <h2 id="capitulo-i">Capítulo I</h2>
+            <h3>DISPOSICIONES GENERALES</h3>
+            
+            <h4 id="articulo-1">ARTÍCULO 1.</h4>
+            <p>Este reglamento regula la presentación escrita de los trabajos realizados por docentes, investigadores, estudiantes y personal administrativo de la Universidad del Zulia, en cuanto sea aplicable. El proceso de elaboración es privativo de cada disciplina.</p>
+            
+            <h4 id="articulo-2">ARTÍCULO 2.</h4>
+            <p>El presente reglamento se dicta con el propósito de lograr la uniformidad en cuanto a coherencia y consistencia en la presentación y evaluación de los trabajos en la Universidad del Zulia.</p>
+            
+            <h4 id="articulo-3">ARTÍCULO 3.</h4>
+            <p>Los docentes, investigadores, tutores, jurados y asesores que evalúan los trabajos en la Universidad del Zulia, deberán adaptar sus criterios de valoración a lo establecido en este reglamento.</p>
+            
+            <h4 id="articulo-4">ARTÍCULO 4.</h4>
+            <p>Para la presentación de los trabajos en la Universidad del Zulia se tomará en cuenta la estructura del contenido, las formas de citar y los aspectos formales. En cuanto al proceso de su elaboración, éste se regirá por los lineamientos establecidos en cada área del conocimiento.</p>
+            
+            <h2 id="capitulo-ii">Capitulo II</h2>
+            <h3>DE LOS TRABAJOS EN LA UNIVERSIDAD DEL ZULIA</h3>
+            
+            <h4 id="articulo-5">ARTÍCULO 5.</h4>
+            <p>Los trabajos se agrupan en dos categorías: Proyectos e Informes y tendrán la estructura establecida en esta normativa.</p>
+            
+            <h4 id="articulo-6">ARTÍCULO 6.</h4>
+            <p>El Proyecto es el documento que define los elementos científicos, técnicos y administrativos de la planificación del trabajo de investigación.</p>
+            
+            <h4 id="articulo-7">ARTÍCULO 7.</h4>
+            <p>Se incluyen en la categoría de proyectos, los siguientes trabajos: proyectos de trabajo especial de grado, proyectos de trabajo de grado, proyectos de tesis, proyectos de investigación, proyectos de extensión y/ o cualquier otro trabajo que refleje la planificación de una actividad académica y administrativa.</p>
+            
+            <h4 id="articulo-8">ARTÍCULO 8.</h4>
+            <p>El informe, es el documento que presenta los resultados totales o parciales, de un proceso de investigación científica o técnica, o de una actividad académica o administrativa.</p>
+            
+            <h4 id="articulo-9">ARTÍCULO 9.</h4>
+            <p>Se incluyen en la categoría de informes los siguientes documentos: trabajos especiales de grado, trabajos de grado, tesis doctorales, trabajos de ascenso, monografías, trabajos presentados en las diferentes cátedras y/o unidades curriculares, guías de estudio, memorias descriptivas y cualquier otro trabajo que refleje los resultados de un proceso de investigación o de una actividad académica o administrativa.</p>
+            
+            <h2 id="capitulo-iii">Capítulo III</h2>
+            <h3>DE LA ESTRUCTURA DEL CONTENIDO</h3>
+            
+            <h4 id="articulo-10">ARTÍCULO 10.</h4>
+            <p>La estructura del contenido de los trabajos constará de las siguientes partes: Secciones preliminares, Cuerpo y Secciones de referencia.</p>
+            
+            <h4 id="articulo-11">ARTÍCULO 11.</h4>
+            <p>Las secciones preliminares constituyen las partes iniciales de los trabajos y anteceden al cuerpo o contenido de los mismos tienen como objetivo resaltar la identificación de la institución, del autor y de su obra.</p>
+            
+            <h4 id="articulo-12">ARTÍCULO 12.</h4>
+            <p>Los trabajos deben contener las siguientes secciones preliminares: cubierta o carátula, guarda (opcional), portada, frontispicio, página de evaluación, dedicatoria (opcional), reconocimiento (opcional), agradecimiento (opcional), índice de contenido, resumen y "abstract".</p>
+            
+            <h4 id="articulo-13">ARTÍCULO 13.</h4>
+            <p>La cubierta o carátula constituye la parte externa (anterior y posterior) del trabajo y debe ser elaborada en un material diferente al papel utilizado en el cuerpo del trabajo. Cuando se entregue en versión preliminar, podrá presentarse dentro de una carpeta sujeto en la parte izquierda. La versión ya corregida, deberá encuadernarse, anillarse o empastarse, según sea el caso.</p>
+            <h5>PARÁGRAFO PRIMERO.</h5>
+            <p>Los trabajos que han sido sometidos a evaluación por un jurado, tales como trabajos de ascenso y aquellos presentados para obtener títulos o grados, una vez aprobados, deberán presentarse empastados siguiendo las especificaciones que al respecto exija cada Facultad.</p>
+            <h5>PARÁGRAFO SEGUNDO</h5>
+            <p>La cubierta debe contener los siguientes elementos: El logo de la Universidad, identificación del país, nombre de la Institución, nombre de la facultad a la cual está adscrito el autor, nombre de la dependencia, de la cátedra o de la unidad curricular, si fuere el caso, el título del trabajo, la identificación del tipo de trabajo, nombre y apellidos del o de los autores, el nombre y el apellido del tutor y del cotutor, si los hubiere, el nombre de la ciudad y el mes y año de la presentación. Los anteriores elementos deberán distribuirse de manera armónica y conservar los espacios y márgenes establecidos en estas disposiciones.</p>
+            
+            <h4 id="articulo-14">ARTÍCULO 14.</h4>
+            <p>La guarda es una página en blanco, denominada también página de respeto, que se coloca después de la cubierta anterior y antes de la posterior (Opcional).</p>
+            
+            <h4 id="articulo-15">ARTÍCULO 15.</h4>
+            <p>La portada es la página donde se escriben los mismos elementos de la cubierta. En ella está permitido el uso de imágenes alusivas al tema tratado.</p>
+            
+            <h4 id="articulo-16">ARTÍCULO 16.</h4>
+            <p>El frontispicio es una página que contiene los siguientes elementos: título del trabajo, apellido(s), nombre(s), firma(s), número(s) de cédula de identidad dirección, teléfono y correo electrónico, del (de los) autor(es) y nombre, apellido y firma autógrafa del tutor. Estos requerimientos demuestran la autenticidad del trabajo y la conformidad del tutor con su contenido.</p>
+            
+            <h4 id="articulo-17">ARTÍCULO 17.</h4>
+            <p>Dependiendo de la finalidad para la cual se presenta el trabajo, se incluirá una página de evaluación o una de veredicto.</p>
+            <h5>PARÁGRAFO PRIMERO</h5>
+            <p>La página de evaluación se exigirá para los trabajos que se presenten en las unidades curriculares tanto del pregrado como del postgrado. Debe contener los siguientes elementos: título del trabajo, nombre, apellido y cédula de identidad del (de los) autor(es), espacio para asentar la calificación obtenida (escrita en número y en letras), observaciones, identificación del (de los) evaluador(es) y su firma, lugar y fecha de evaluación.</p>
+            <h5>PARÁGRAFO SEGUNDO</h5>
+            <p>La página de veredicto se exigirá en la versión final, ya aprobada, de los trabajos de ascenso y de los presentados para la obtención de títulos o grados. Esta página deberá ser provista oportunamente por el coordinador del jurado. Consistirá en un acta que contendrá los siguientes datos: la palabra "veredicto", identificación de los miembros del jurado (nombre, apellidos y números de cédulas de identidad), nombre de la instancia que designó el jurado, naturaleza del trabajo, título del trabajo, identificación del autor (nombre, apellido y cédula), grado, título o finalidad para la cual se presenta el trabajo, lugar y fecha de la discusión del trabajo (día, mes y año), señalar el soporte legal, calificación y firma(s) de los integrantes del jurado.</p>
+            
+            <h4 id="articulo-18">ARTÍCULO 18.</h4>
+            <p>La dedicatoria, el reconocimiento y el agradecimiento, se expresarán en una breve nota, redactada en estilo sobrio y académico, dirigida a entes, personas o instituciones a las cuales se les ofrece el trabajo o a aquellas que hicieron aportes al mismo. Estas páginas son opcionales y a juicio del autor podrán fusionarse en una sola.</p>
+            <h5>PARÁGRAFO ÚNICO</h5>
+            <p>En los proyectos no deben incluirse estas páginas.</p>
+            
+            <h4 id="articulo-19">ARTÍCULO 19.</h4>
+            <p>En los trabajos de ascenso, en los presentados para optar a títulos y grados, en los proyectos y en los informes finales de investigación se incluirá la página de resumen, en la cual de manera precisa y concisa, se expresan los aspectos relevantes del contenido del trabajo, estructurado por los siguientes elementos: La descripción, la palabra resumen, el texto, las palabras claves y la dirección electrónica del autor.</p>
+            <h5>PARÁGRAFO PRIMERO</h5>
+            <p>La descripción contiene los siguientes datos: apellido(s), nombre(s) del (de los) autor(es), título del trabajo, descripción de la naturaleza y finalidad del trabajo, identificación de la universidad y de la facultad, nombre de la dependencia, ciudad, país, año y número de páginas seguido de la letra p. A tres espacios de esta referencia, se escribirá centrada y en mayúscula, la palabra resumen.</p>
+            <h5>PARÁGRAFO SEGUNDO</h5>
+            <p>El texto del resumen del informe expresa: objetivos, metodología, resultados, discusión y conclusiones. Debe escribirse en bloque, sin dejar sangría ni espacios, en no más de 300 palabras.</p>
+            <h5>PARÁGRAFO TERCERO</h5>
+            <p>El texto del resumen del proyecto expresa los objetivos, la justificación y la metodología. Debe escribirse en bloque, sin dejar sangría y en no más de 100 palabras.</p>
+            <h5>PARÁGRAFO CUARTO</h5>
+            <p>A tres espacios de la última línea del texto, de ambos resúmenes, se escribirán de tres a cinco palabras claves o conceptos básicos que describen el contenido del trabajo y facilitan la búsqueda de información. En la línea siguiente, podrá escribirse la dirección del correo electrónico del autor.</p>
+            
+            <h4 id="articulo-20">ARTÍCULO 20.</h4>
+            <p>Todo trabajo en el cual se incluya un resumen también deberá contener una página denominada "abstract", la cual consiste en la traducción del resumen al idioma inglés. El nombre de la institución y del autor(es) deben escribirse en el idioma Español.</p>
+            
+            <h4 id="articulo-21">ARTÍCULO 21.</h4>
+            <p>El contenido del cuerpo del trabajo, varía de acuerdo con su naturaleza. Si el trabajo es un proyecto debe contener los siguientes elementos: planteamiento del problema, justificación, marco teórico, objetivos, hipótesis (si aplica), metodología, marco administrativo (recursos humanos, materiales y financieros), viabilidad, resultados que se esperan lograr, cronograma de actividades, y los demás elementos que señale el Consejo de Desarrollo Científico y Humanístico (CONDES) o cualquier organismo ante el cual se presentará el proyecto. Si se trata de un informe, debe contener: introducción o visión general del trabajo, desarrollo del texto o contenido, conclusiones y recomendaciones.</p>
+            
+            <h4 id="articulo-22">ARTÍCULO 22.</h4>
+            <p>Bajo el concepto: secciones de referencia, se incluyen los soportes complementarios del texto del trabajo, constituidos por los índices y los anexos. Éstos refieren al lector a una parte del trabajo fuera de él, con el propósito de ilustrar las ideas expuestas en el texto, ampliar, aclarar o complementar lo allí explicado.</p>
+            
+            <h4 id="articulo-23">ARTÍCULO 23.</h4>
+            <p>Los índices constituyen listas pormenorizadas, especializadas y puntuales de aspectos relevantes del trabajo (contenido, fuentes consultadas, nombres, conceptos e ilustraciones, entre otros) que se incluyen en el trabajo para facilitar su comprensión.</p>
+            
+            <h4 id="articulo-24">ARTÍCULO 24.</h4>
+            <p>De acuerdo con la naturaleza del trabajo se incluirán las siguientes secciones de referencia: índice general o de contenido, índice de referencias, índice de fuentes documentales también llamado índice bibliográfico, índice analítico, índice de ilustraciones o figuras, índice de anexos e índice onomástico, y cualquier otro que sea necesario incluir.</p>
+            
+            <h4 id="articulo-25">ARTÍCULO 25.</h4>
+            <p>El índice general o de contenido constituye la lista de títulos y subtítulos que estructuran el trabajo. Incluye desde el resumen y el "abstract", si los hubiere; en caso contrario, desde la introducción, hasta los demás índices y anexos y señala a la derecha, el número de la página donde se encuentra cada contenido. Su inclusión es de carácter obligatorio.</p>
+            
+            <h4 id="articulo-26">ARTÍCULO 26.</h4>
+            <p>El índice de referencias o de fuentes citadas consiste en la lista de la descripción de las referencias documentales que hayan sido citadas en el cuerpo del trabajo, organizadas bien sea alfabéticamente o por orden de aparición. En este último caso, la referencia estará precedida de un número en forma consecutiva. Su inclusión es de carácter obligatorio.</p>
+            
+            <h4 id="articulo-27">ARTÍCULO 27.</h4>
+            <p>El índice de fuentes documentales, conocido también como bibliografía, constituye la lista de la descripción de las referencias, bibliográficas o no, ordenada alfabéticamente, aun cuando no hayan sido citadas en el cuerpo del trabajo.</p>
+            
+            <h4 id="articulo-28">ARTÍCULO 28.</h4>
+            <p>Las referencias que constituyen los índices contenidos en los artículos 26 y 27 del presente reglamento, variarán en su estructura y contenido de acuerdo con la naturaleza de la fuente descrita.</p>
+            
+            <h4 id="articulo-29">ARTÍCULO 29.</h4>
+            <p>Cuando se trate de libros, los elementos de la referencia serán los siguientes: identificación del (los) autor(es), año de publicación, título y subtítulo si lo hubiere, número de la edición, número de tomo o volumen y traductor si existiesen, ciudad donde fue editado, país, editorial y páginas consultadas.</p>
+            <h5>PARÁGRAFO PRIMERO</h5>
+            <p>Si se trata de un libro que tiene dos o más autores, se escribe el apellido y el nombre de todos los autores separándolos con punto y coma.</p>
+            <h5>PARÁGRAFO SEGUNDO</h5>
+            <p>Cuando se trate de autor corporativo, se escribe el nombre de la institución u organización. En caso de documentos generados en cuerpos colegiados, como las leyes, debe escribirse como autor, el órgano del cual haya emanado la ley o instrumento legal.</p>
+            <h5>PARÁGRAFO TERCERO</h5>
+            <p>Cuando se trate de una compilación, recopilación y antología, debe escribirse el nombre del autor o autores del artículo consultado en la obra, seguido del año de publicación y del título del artículo. Se escribirá a continuación la preposición EN: seguida del nombre de la obra y la frase, compilado por: o, recopilado por: y a continuación el nombre y el apellido de la persona que compiló o recopiló. Por último, se escribirán los datos indicados en el encabezado del presente artículo.</p>
+            
+            <h4 id="articulo-30">ARTÍCULO 30.</h4>
+            <p>Cuando se trate de publicaciones periódicas, los elementos son los siguientes: apellido (s), nombre (s) del autor o autores, año de publicación, 'título del artículo", nombre de la publicación, volumen, número del ejemplar consultado y de la primera y última página donde se encuentra el artículo referido.</p>
+            <h5>PARÁGRAFO ÚNICO</h5>
+            <p>Cuando se trate de referir publicaciones diarias, los datos son los siguientes: apellido(s), nombre(s) del autor o autores, año de publicación, título del artículo, nombre de la publicación, ciudad y país, fecha completa incluyendo: día, mes y año de publicación, cuerpo, columna y página, seguido del número del ejemplar consultado.</p>
+            
+            <h4 id="articulo-31">ARTÍCULO 31.</h4>
+            <p>Cuando se trate de instrumentos legales, los elementos de la referencia son los siguientes: nombre del órgano donde se generó el documento, título del documento, año de publicación, nombre de la ciudad y país, nombre del órgano divulgativo, número y fecha de publicación.</p>
+            
+            <h4 id="articulo-32">ARTÍCULO 32.</h4>
+            <p>Cuando se trate de fuentes cuyas características no sean las anteriormente descritas y se ubiquen en áreas tales como: arte, arquitectura, ingeniería y comunicación, entre otras, los datos son los siguientes: identificación del (los) autor(es), año, título o nombre de la obra tipo de formato, materiales, y elementos usados en su elaboración, técnica, forma, color, dimensiones y cualquier otro dato que permita la localización de la fuente referida.</p>
+            
+            <h4 id="articulo-33">ARTÍCULO 33.</h4>
+            <p>Cuando se trate de información obtenida por medios electrónicos, la referencia deberá contener, en cuanto se adapten, los mismos elementos señalados en los artículos anteriores, agregando el tipo de medio electrónico o soporte físico, la dirección electrónica o página web, la fecha de recuperación y cualquier otro dato que se considere útil para la plena identificación de la referencia.</p>
+            <h5>PARÁGRAFO ÚNICO</h5>
+            <p>Con el fin de lograr la máxima validez y confiabilidad de la fuente consultada en medios electrónicos, no se aceptarán referencias cuyo único dato sea la dirección electrónica.</p>
+            
+            <h4 id="articulo-34">ARTÍCULO 34.</h4>
+            <p>El índice analítico es la lista de términos desglosados y ordenados alfabéticamente, con indicación del número de las páginas donde fueron mencionados o tratados. Permite al lector enterarse de las diferentes acepciones que dentro de un mismo texto, puede tener un concepto.</p>
+            
+            <h4 id="articulo-35">ARTÍCULO 35.</h4>
+            <p>El índice de ilustraciones o figuras constituye la lista, organizada por orden de aparición de: figuras, gráficos, cuadros, tablas, fotografías, dibujos, estampas, grabados y otros que han sido incorporados al trabajo para complementar su contenido.</p>
+            
+            <h4 id="articulo-36">ARTÍCULO 36.</h4>
+            <p>Los anexos constituyen elementos complementarios del texto que refieren al lector a una parte del trabajo o fuera de él, con el propósito de ilustrar las ideas expuestas en el texto, ampliar, aclarar o complementar lo allí expresado.</p>
+            
+            <h4 id="articulo-37">ARTÍCULO 37.</h4>
+            <p>El índice de anexos es la lista de documentos complementarios que se agregan al final del trabajo con el fin de dar soporte al contenido.</p>
+            
+            <h4 id="articulo-38">ARTÍCULO 38.</h4>
+            <p>El índice onomástico es una lista de nombres propios de: personas, ciudades, objetos, monumentos o cualquier otro elemento, señalados durante el desarrollo del trabajo, con la indicación del número de la página donde fueron nombrados.</p>
+            
+            <h2 id="capitulo-iv">Capítulo IV</h2>
+            <h3>DE LAS FORMAS DE CITAR</h3>
+            
+            <h4 id="articulo-39">ARTÍCULO 39.</h4>
+            <p>La incorporación de las ideas o datos tomados de autores o fuentes consultadas se realizará de acuerdo con la naturaleza del trabajo y el área del conocimiento del cual se trate, bien sea de las Ciencias Naturales y Exactas y de las Ciencias Humanas o Sociales. En todo caso, la modalidad seleccionada debe mantenerse a lo largo de todo el trabajo y guardarse la fidelidad de la misma.</p>
+            
+            <h4 id="articulo-40">ARTÍCULO 40.</h4>
+            <p>De acuerdo con el artículo anterior, en la incorporación al texto de las ideas o datos de autores o fuentes consultados, podrán utilizarse las modalidades: autor-fecha o sistema numeral. La modalidad seleccionada deberá usarse a lo largo de todo el trabajo.</p>
+            
+            <h4 id="articulo-41">ARTÍCULO 41.</h4>
+            <p>En la modalidad autor-fecha se incorpora la idea, dato o tenor extraído de la fuente en el texto o párrafo que se está escribiendo y a continuación entre paréntesis, se anota el apellido del autor consultado o el nombre corporativo, según el caso, seguido de una coma y del año de publicación; si se trata de dos autores, deberá escribirse el apellido de ambos seguido del año de publicación; cuando se trate de más de dos autores, se escribe el apellido del primero seguido de la frase y col. (que significa y colaboradores) y a continuación el año de publicación.</p>
+            
+            <h4 id="articulo-42">ARTÍCULO 42.</h4>
+            <p>En la modalidad sistema numeral se incorpora la idea o dato, igual que en el caso anterior, omitiendo el apellido de autor o autores siendo reemplazado por el número o números que le(s) corresponde al autor(es) en el índice de referencias. Bajo esta modalidad se presentan dos tipos: la cita parentética y la cita con supraíndice. La cita seleccionada deberá mantenerse a lo largo de todo el trabajo.</p>
+            <h5>PARÁGRAFO PRIMERO</h5>
+            <p>La cita parentética consiste en colocar, al finalizar el texto, entre paréntesis, el número que le correspondió al autor citado. En caso de varias referencias se separarán con una coma. Cuando las citas son consecutivas y mayores de dos, se colocará un guión entre la primera y la última.</p>
+            <h5>PARÁGRAFO SEGUNDO</h5>
+            <p>En la cita con supraíndice se procede como en el caso anterior sólo que se colocan los números que corresponden, como supraíndice sin paréntesis.</p>
+            
+            <h4 id="articulo-43">ARTÍCULO 43.</h4>
+            <p>De acuerdo con la naturaleza de la cita, ésta puede ser textual o directa e ideológica o indirecta.</p>
+            <h5>PARÁGRAFO PRIMERO</h5>
+            <p>En la cita textual o directa se transcribe, entre comillas, la idea tal como está expresada en la fuente consultada. Si en ésta se encuentra entre comillas, se utilizará la doble comilla.</p>
+            <h5>PARÁGRAFO SEGUNDO</h5>
+            <p>En la cita ideológica o indirecta la idea se incorpora de manera parafraseada, resumida o comentada y no se encierra entre comillas.</p>
+            
+            <h4 id="articulo-44">ARTÍCULO 44.</h4>
+            <p>Las modalidades descritas en el artículo anterior, se utilizan indistintamente en las Ciencias Humanas o Sociales y en las Ciencias Naturales y Exactas. La segunda modalidad, es decir la ideológica o indirecta, se utiliza preferentemente en los trabajos presentados en las Ciencias Naturales y Exactas.</p>
+            
+            <h4 id="articulo-45">ARTÍCULO 45.</h4>
+            <p>La incorporación del texto, dato o tenor seleccionado de los autores consultados puede hacerse en cualquier parte del párrafo.</p>
+            
+            <h4 id="articulo-46">ARTÍCULO 46.</h4>
+            <p>Cuando la idea o dato incorporado en forma textual excede las 40 palabras, debe escribirse en párrafo aparte, en bloque, con sangría de cinco espacios, entre comillas y a un espacio entre líneas. Cuando es menor de 40 palabras, se incorporará en cualquier parte del texto, conservando el interlineado dentro del párrafo y encerrándolo entre comillas.</p>
+            
+            <h4 id="articulo-47">ARTÍCULO 47.</h4>
+            <p>Las citas de citas deben evitarse. Cuando sea necesario utilizar esta modalidad, se incorporará el texto seleccionado de acuerdo con lo descrito en los artículos anteriores y a continuación del tenor se escribe entre paréntesis, el apellido del autor de la fuente primaria y se agrega la frase: citado por, seguido de la referencia del autor consultado o fuente secundaria.</p>
+            
+            <h4 id="articulo-48">ARTÍCULO 48.</h4>
+            <p>Se permite el uso de notas de referencias de envío y aclaratorias. En caso de ser necesaria su inclusión, deberá colocarse al pie de la página identificada con un asterisco, el cual remite al lector al pie de la página o a cualquier otra parte del trabajo.</p>
+            
+            <h2 id="capitulo-v">Capítulo V</h2>
+            <h3>DE LOS ASPECTOS FORMALES</h3>
+            
+            <h4 id="articulo-49">ARTÍCULO 49.</h4>
+            <p>El trabajo se regirá para su escritura, estilo y redacción, por las normas de ortografía dictadas por la Real Academia de la Lengua Española.</p>
+            
+            <h4 id="articulo-50">ARTÍCULO 50.</h4>
+            <p>Para la presentación del documento se utilizará como soporte, papel tipo bond 20, de textura uniforme, color blanco, tamaño carta (21,5 x 28 cms.). Se exceptúan las presentaciones de ilustraciones y otras, que debido a sus características, no puedan ser reducidos a tamaño carta, en este caso, los documentos deberán ser plegados. Se exceptúan de esta norma también, aquellos trabajos que por su naturaleza o especialidad requieran una presentación diferente.</p>
+            
+            <h4 id="articulo-51">ARTÍCULO 51.</h4>
+            <p>En el papel se escribirá en posición vertical, a excepción de los trabajos, que por su especialidad y naturaleza, requieran de una posición diferente.</p>
+            
+            <h4 id="articulo-52">ARTÍCULO 52.</h4>
+            <p>La impresión del texto se hará en negro, en forma nítida y homogénea. Se permitirá el uso de otros colores cuando la presentación de ilustraciones así lo requiera. Podrá utilizarse para la impresión ambas caras del papel.</p>
+            
+            <h4 id="articulo-53">ARTÍCULO 53.</h4>
+            <p>Para el texto del trabajo se utilizará alguno de los siguientes tipos de letras: Times New Roman, Verdana, Arial con tamaño mínimo de 10 y máximo de 12; el tipo seleccionado deberá emplearse a lo largo de todo el trabajo. Para las ilustraciones, títulos y datos de la cubierta y portada podrán utilizarse tipos de letras diferentes al seleccionado para el texto. En el caso de las ilustraciones deberá utilizarse el mismo tipo para todas ellas.</p>
+            
+            <h4 id="articulo-54">ARTÍCULO 54.</h4>
+            <p>Los títulos se escribirán en letras mayúsculas en negrilla y centrados; los subtítulos con las primeras letras en mayúscula, sin negrilla y alineados a la izquierda de la página.</p>
+            
+            <h4 id="articulo-55">ARTÍCULO 55.</h4>
+            <p>Los espacios a utilizar en la transcripción del trabajo serán los siguientes: A un espacio: entre las líneas de: los datos institucionales de la cubierta y portada así como del título y del subtitulo en la portada; la descripción documental y el texto del resumen y del "abstract"; la información de las ilustraciones; la descripción documental del índice de referencias y las citas textuales mayores de cuarenta palabras. A espacio y medio: entre líneas de: cada párrafo en todo el texto del trabajo y en el texto de la dedicatoria, agradecimientos y reconocimientos y las citas textuales menores de cuarenta palabras. A dos espacios: entre el título y el inicio del contenido del párrafo, entre párrafos, entre fuente y fuente en el índice de referencias, entre títulos y subtítulos en el texto del trabajo y en el índice de contenido. A tres espacios: entre el final del párrafo y el título siguiente, entre la descripción documental y la palabra resumen o "abstract"; entre las palabras resumen o "abstract" y el texto, entre el texto y las palabras claves y entre éstas y la dirección electrónica. En la carátula y portada: entre la identificación del tipo de trabajo y el nombre completo y los apellidos del autor o autores, y el nombre del tutor, si lo hubiere. A nueve espacios entre la referencia institucional en la carátula y portada y el título del trabajo.</p>
+            
+            <h4 id="articulo-56">ARTÍCULO 56.</h4>
+            <p>Para la identificación de la autoría, en la parte superior de cada página y en el pié de ésta, podrán utilizarse frases cortas que identifiquen al autor y al trabajo.</p>
+            
+            <h4 id="articulo-57">ARTÍCULO 57.</h4>
+            <p>Los márgenes que se utilizarán en el texto son los siguientes: cuando la impresión se hace por una cara del papel los márgenes serán: Izquierdo: tres centímetros, derecho, superior e inferior: dos centímetros. En las páginas capitulares el margen superior será de libre elección, siempre y cuando no exceda de cuatro centímetros.</p>
+            <h5>PARÁGRAFO PRIMERO</h5>
+            <p>Cuando se opte por el uso de escribir por ambas caras, en el lado reverso de la hoja se utilizarán los siguientes márgenes: superior, izquierdo e inferior: dos centímetros. derecho: tres centímetros.</p>
+            <h5>PARÁGRAFO SEGUNDO</h5>
+            <p>Cuando se use encabezado, el margen superior debe ubicarse a tres punto cinco (3,5) centímetros del borde y el encabezado a dos (2) centímetros del mismo.</p>
+            
+            <h4 id="articulo-58">ARTÍCULO 58.</h4>
+            <p>La escritura del texto se hará en bloque, es decir justificado o alineado a la derecha y a la izquierda. Podrá utilizarse sangría hasta de cinco espacios. En cualquier caso deberá mantenerse a lo largo de todo el trabajo.</p>
+            
+            <h4 id="articulo-59">ARTÍCULO 59.</h4>
+            <p>La paginación del trabajo se hará en números arábigos de la siguiente manera: el número de la página, cuando se imprima por una sola cara, se colocará en la parte superior derecha dentro del margen utilizado. Cuando se escriba por ambas caras, en las páginas reversas se colocará en el lado superior izquierdo.</p>
+            <h5>PARÁGRAFO ÚNICO</h5>
+            <p>A las páginas que constituyen las secciones preliminares, las capitulares y las de referencia, no se les colocará número pero serán tomadas en cuenta a los efectos del conteo de las páginas totales del trabajo.</p>
+            
+            <h4 id="articulo-60">ARTÍCULO 60.</h4>
+            <p>El número se escribirá a partir de la segunda página del cuerpo del trabajo.</p>
+            
+            <h2 id="capitulo-vi">Capítulo VI</h2>
+            <h3>PRESENTACIÓN DEL TRABAJO</h3>
+            
+            <h4 id="articulo-61">ARTÍCULO 61.</h4>
+            <p>Cuando el trabajo va a ser sometido a consideración de un jurado, podrá presentarse en carpeta de Manila tamaño carta, sujeta con un gancho en el lado izquierdo, cumpliendo con las especificaciones descritas en el presente reglamento.</p>
+            
+            <h4 id="articulo-62">ARTÍCULO 62.</h4>
+            <p>Una vez aprobado el trabajo, el autor deberá entregar al Consejo de la Facultad o Núcleo, la versión definitiva empastada, en la cual incorporó las correcciones de forma y fondo señaladas por el jurado. El Consejo de la Facultad o Núcleo distribuirá el trabajo a las instancias pertinentes.</p>
+            
+            <h4 id="articulo-63">ARTÍCULO 63.</h4>
+            <p>Para la entrega con fines de evaluación deberá consignarse los siguientes números de copias según sea el caso: trabajos de cátedra o de unidades curriculares. Un original para el profesor y una copia para el estudiante, en la cual se deberá asentar el nombre, apellido y firma de la persona que lo recibió, así como la fecha y hora de la consignación. Trabajos de ascenso. Tres ejemplares originales para el jurado. Trabajos de pre y postgrado. Tres o cinco ejemplares dependiendo del número de personas que constituyan el jurado.</p>
+            
+            <h4 id="articulo-64">ARTÍCULO 64.</h4>
+            <p>Cuando se trate de trabajos que se presenten en forma diferente al escrito es decir: maquetas, modelos u otros, deberán acompañarse de la respectiva memoria descriptiva, como soporte escrito del trabajo, y deberá entregarse el número de ejemplares establecido en el artículo anterior.</p>
+            
+            <h4 id="articulo-65">ARTÍCULO 65.</h4>
+            <p>Los trabajos de ascenso y de grado deberán presentarse en soporte escrito y en disco compacto en formato y la versión que para el momento esté utilizando SERBILUZ. La Universidad garantizará los derechos de autor respectivos de acuerdo con la reglamentación vigente.</p>
+            
+            <h2 id="capitulo-vii">Capítulo VII</h2>
+            <h3>Disposiciones Finales</h3>
+            
+            <h4 id="articulo-66">ARTÍCULO 66.</h4>
+            <p>Con la publicación de este reglamento quedan derogadas las Normas Mínimas para la Presentación de Trabajos en la Universidad del Zulia del 1-10-87 y las que internamente se estén utilizando dentro de la Institución y que colidan con el presente instrumento reglamentario.</p>
+            
+            <h4 id="articulo-67">ARTÍCULO 67.</h4>
+            <p>Lo no previsto en este reglamento será resuelto por el Consejo Universitario.</p>
+
+        </main>
+    </div>
+
+    <div class="action-buttons">
+        <button class="action-button" id="print-button" aria-label="Imprimir documento" title="Imprimir">🖨️</button>
+        <button class="action-button" id="back-to-top" aria-label="Volver al inicio" title="Volver arriba">⬆️</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const content = document.getElementById('content');
+            const tocContainer = document.getElementById('toc');
+            const searchBox = document.getElementById('search-box');
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const backToTopButton = document.getElementById('back-to-top');
+            const printButton = document.getElementById('print-button');
+
+            // --- Generar Tabla de Contenidos ---
+            const headings = content.querySelectorAll('h1, h2, h3, h4, h5');
+            const tocList = document.createElement('ul');
+            let currentH2List = null;
+
+            headings.forEach(heading => {
+                if (!heading.id) {
+                    heading.id = heading.textContent.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]/g, '');
+                }
+
+                const listItem = document.createElement('li');
+                const link = document.createElement('a');
+                link.href = `#${heading.id}`;
+                link.textContent = heading.textContent;
+                listItem.appendChild(link);
+
+                if (heading.tagName === 'H1') {
+                    listItem.classList.add('toc-h1');
+                    tocList.appendChild(listItem);
+                    currentH2List = null;
+                } else if (heading.tagName === 'H2') {
+                    listItem.classList.add('toc-h2');
+                    tocList.appendChild(listItem);
+                    currentH2List = document.createElement('ul');
+                    listItem.appendChild(currentH2List);
+                } else if (heading.tagName === 'H3' && currentH2List) {
+                    listItem.classList.add('toc-h3');
+                    currentH2List.appendChild(listItem);
+                } else {
+                    if(currentH2List) {
+                        currentH2List.appendChild(listItem);
+                    } else {
+                        tocList.appendChild(listItem);
+                    }
+                }
+            });
+            tocContainer.appendChild(tocList);
+
+            // --- Smooth Scrolling for TOC links ---
+            document.querySelectorAll('#toc a').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        // Close mobile menu if open
+                        if (window.innerWidth <= 768) {
+                            sidebar.classList.remove('open');
+                            menuToggle.setAttribute('aria-expanded', 'false');
+                        }
+                    }
+                });
+            });
+
+            // --- Mobile Menu Toggle ---
+            menuToggle.addEventListener('click', () => {
+                const isOpen = sidebar.classList.toggle('open');
+                menuToggle.setAttribute('aria-expanded', isOpen);
+            });
+
+            // --- Search Functionality ---
+            searchBox.addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+                const allElements = content.querySelectorAll('p, h1, h2, h3, h4, h5, li');
+
+                allElements.forEach(el => {
+                    el.innerHTML = el.innerHTML.replace(/<span class="highlight">(.*?)<\/span>/g, '$1');
+                });
+
+                if (searchTerm.length < 2) return;
+
+                const regex = new RegExp(`(${searchTerm})`, 'gi');
+                let firstMatchFound = false;
+
+                allElements.forEach(el => {
+                    if (el.textContent.toLowerCase().includes(searchTerm)) {
+                        el.innerHTML = el.innerHTML.replace(regex, '<span class="highlight">$1</span>');
+                        if (!firstMatchFound) {
+                            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            firstMatchFound = true;
+                        }
+                    }
+                });
+            });
+
+            // --- Back to Top Button ---
+            window.addEventListener('scroll', () => {
+                if (window.pageYOffset > 300) {
+                    backToTopButton.classList.add('visible');
+                } else {
+                    backToTopButton.classList.remove('visible');
+                }
+            });
+
+            backToTopButton.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            // --- Print Button ---
+            printButton.addEventListener('click', () => {
+                window.print();
+            });
+
+        });
+    </script>
+</body>
+</html>
