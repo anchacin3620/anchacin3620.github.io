@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Trayectoria Balística - RK4</title>
+    <style>
+        /* --- Estilos CSS3 --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 1200px;
+            margin: 40px auto;
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 30px;
+            flex-grow: 1; /* Permite que el contenedor crezca para empujar el footer hacia abajo */
+        }
+
+        h1 {
+            grid-column: 1 / -1;
+            text-align: center;
+            color: #1a237e;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-size: 0.9em;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .control-group label {
+            margin-bottom: 5px;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .control-group input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        .control-group input[type="range"] {
+            cursor: pointer;
+        }
+
+        .range-value {
+            text-align: center;
+            font-weight: bold;
+            color: #1a237e;
+        }
+
+        #simulateBtn {
+            grid-column: 1 / -1;
+            padding: 15px;
+            background-color: #3949ab;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #simulateBtn:hover {
+            background-color: #303f9f;
+        }
+
+        .visualization {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        #trajectoryCanvas {
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            width: 100%;
+            background-color: #fafafa;
+        }
+
+        .results {
+            background-color: #e8eaf6;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 5px solid #3949ab;
+        }
+
+        .results h3 {
+            margin-top: 0;
+            color: #1a237e;
+        }
+
+        .results p {
+            margin: 5px 0;
+            font-family: "Courier New", Courier, monospace;
+        }
+        
+        /* --- Estilos para el Footer --- */
+        footer {
+            background-color: #2c3e50; /* Un color oscuro y profesional */
+            color: #ecf0f1;           /* Texto claro para contraste */
+            text-align: center;
+            padding: 20px;
+            margin-top: auto;          /* Mágicamente empuja el footer al fondo */
+            font-size: 0.9em;
+        }
+
+        footer p {
+            margin: 5px 0;
+            line-height: 1.5;
+        }
+
+        footer a {
+            color: #3498db; /* Un color azul para los enlaces */
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                margin: 20px auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Simulador de Trayectoria Balística</h1>
+        <p class="subtitle">Método de Integración Numérica Runge-Kutta de Cuarto Orden (RK4)</p>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="mass">Masa (m) [kg]</label>
+                <input type="number" id="mass" value="0.01" step="0.001" min="0.001">
+            </div>
+            <div class="control-group">
+                <label for="velocity">Velocidad Inicial (v₀) [m/s]</label>
+                <input type="number" id="velocity" value="300" step="1" min="1">
+            </div>
+            <div class="control-group">
+                <label for="angle">Ángulo de Lanzamiento (θ) [grados]</label>
+                <input type="range" id="angle" value="30" min="0" max="90">
+                <div class="range-value" id="angleValue">30°</div>
+            </div>
+            <div class="control-group">
+                <label for="dragCoeff">Coeficiente de Arrastre (C<sub>D</sub>)</label>
+                <input type="number" id="dragCoeff" value="0.295" step="0.01" min="0">
+            </div>
+            <div class="control-group">
+                <label for="area">Área Transversal (A) [m²]</label>
+                <input type="number" id="area" value="0.000034" step="0.000001" min="0.000001">
+            </div>
+            <div class="control-group">
+                <label for="density">Densidad del Aire (ρ) [kg/m³]</label>
+                <input type="number" id="density" value="1.225" step="0.01" min="0.1">
+            </div>
+            <button id="simulateBtn">Simular Trayectoria</button>
+        </div>
+
+        <div class="visualization">
+            <canvas id="trajectoryCanvas" width="700" height="400"></canvas>
+            <div class="results">
+                <h3>Resultados de la Simulación</h3>
+                <p><strong>Alcance Máximo (R):</strong> <span id="rangeResult">-</span> m</p>
+                <p><strong>Altura Máxima (H<sub>max</sub>):</strong> <span id="heightResult">-</span> m</p>
+                <p><strong>Tiempo de Vuelo (t):</strong> <span id="timeResult">-</span> s</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pie de página con la información solicitada -->
+    <footer>
+        <p><strong>Elaborado por el Profesor Ángel Chacín Ávila</strong></p>
+        <p>Licenciado en Física, Especialista en Ciencias Computacionales, Diplomado en Educación Policial</p>
+        <p>Docente e Investigador de la Universidad Nacional Experimental de la Seguridad Núcleo Zulia</p>
+        <p>@2025 - Se publica bajo licencia <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank" rel="noopener noreferrer">GPLv3</a></p>
+    </footer>
+
+    <script>
+        // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+        // --- LÓGICA Y ALGORITMOS (JavaScript) - Corazón del Simulador
+        // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+        // Constantes físicas y de simulación
+        const g = 9.81; // Aceleración gravitacional [m/s²]
+        const dt = 0.01; // Paso de tiempo (Δt) para la integración [s]
+
+        // Referencias a elementos del DOM
+        const canvas = document.getElementById('trajectoryCanvas');
+        const ctx = canvas.getContext('2d');
+        const angleSlider = document.getElementById('angle');
+        const angleValueDisplay = document.getElementById('angleValue');
+        const simulateBtn = document.getElementById('simulateBtn');
+
+        // --- Funciones Auxiliares y de Cálculo ---
+
+        /**
+         * Convierte grados a radianes.
+         * @param {number} degrees - El ángulo en grados.
+         * @returns {number} El ángulo en radianes.
+         */
+        function toRadians(degrees) {
+            return degrees * (Math.PI / 180);
+        }
+
+        /**
+         * Calcula las derivadas del sistema de EDOs.
+         * Representa el modelo físico: dx/dt = vx, dy/dt = vy, dvx/dt = ax, dvy/dt = ay.
+         * @param {object} state - El estado actual del sistema {x, y, vx, vy}.
+         * @param {object} params - Los parámetros físicos {m, Cd, A, rho}.
+         * @returns {object} Un objeto con las derivadas {dxdt, dydt, dvxdt, dvydt}.
+         */
+        function derivatives(state, params) {
+            const { x, y, vx, vy } = state;
+            const { m, Cd, A, rho } = params;
+
+            const v = Math.sqrt(vx * vx + vy * vy); // Magnitud de la velocidad
+
+            // Para evitar división por cero si v=0
+            if (v === 0) {
+                return { dxdt: 0, dydt: 0, dvxdt: 0, dvydt: -g };
+            }
+
+            // Magnitud de la fuerza de arrastre: F_D = 0.5 * rho * Cd * A * v^2
+            const Fd = 0.5 * rho * Cd * A * v * v;
+
+            // Componentes de la aceleración debida al arrastre (F=ma -> a=F/m)
+            // La aceleración es opuesta a la velocidad
+            const ax = -(Fd / m) * (vx / v);
+            const ay = -g - (Fd / m) * (vy / v);
+
+            return {
+                dxdt: vx,
+                dydt: vy,
+                dvxdt: ax,
+                dvydt: ay
+            };
+        }
+
+        /**
+         * Realiza un único paso de integración utilizando el método RK4.
+         * @param {object} state - El estado actual del sistema.
+         * @param {object} params - Los parámetros físicos.
+         * @param {number} h - El paso de tiempo (dt).
+         * @returns {object} El siguiente estado del sistema.
+         */
+        function rk4Step(state, params, h) {
+            const k1 = derivatives(state, params);
+            
+            const state2 = {
+                x: state.x + 0.5 * h * k1.dxdt,
+                y: state.y + 0.5 * h * k1.dydt,
+                vx: state.vx + 0.5 * h * k1.dvxdt,
+                vy: state.vy + 0.5 * h * k1.dvydt,
+            };
+            const k2 = derivatives(state2, params);
+
+            const state3 = {
+                x: state.x + 0.5 * h * k2.dxdt,
+                y: state.y + 0.5 * h * k2.dydt,
+                vx: state.vx + 0.5 * h * k2.dvxdt,
+                vy: state.vy + 0.5 * h * k2.dvydt,
+            };
+            const k3 = derivatives(state3, params);
+
+            const state4 = {
+                x: state.x + h * k3.dxdt,
+                y: state.y + h * k3.dydt,
+                vx: state.vx + h * k3.dvxdt,
+                vy: state.vy + h * k3.dvydt,
+            };
+            const k4 = derivatives(state4, params);
+
+            return {
+                x: state.x + (h / 6.0) * (k1.dxdt + 2 * k2.dxdt + 2 * k3.dxdt + k4.dxdt),
+                y: state.y + (h / 6.0) * (k1.dydt + 2 * k2.dydt + 2 * k3.dydt + k4.dydt),
+                vx: state.vx + (h / 6.0) * (k1.dvxdt + 2 * k2.dvxdt + 2 * k3.dvxdt + k4.dvxdt),
+                vy: state.vy + (h / 6.0) * (k1.dvydt + 2 * k2.dvydt + 2 * k3.dvydt + k4.dvydt),
+            };
+        }
+
+        /**
+         * Calcula la trayectoria completa del proyectil.
+         * @param {object} params - Parámetros de la simulación.
+         * @returns {Array<object>} Un arreglo de puntos {x, y} de la trayectoria.
+         */
+        function calculateTrajectory(params) {
+            const trajectory = [];
+            const angleRad = toRadians(params.angle);
+
+            let state = {
+                x: 0,
+                y: 0,
+                vx: params.v0 * Math.cos(angleRad),
+                vy: params.v0 * Math.sin(angleRad)
+            };
+
+            let time = 0;
+            let maxHeight = 0;
+
+            // Bucle principal de la simulación
+            while (state.y >= 0) {
+                trajectory.push({ x: state.x, y: state.y });
+                if (state.y > maxHeight) {
+                    maxHeight = state.y;
+                }
+                state = rk4Step(state, params, dt);
+                time += dt;
+                // Condición de seguridad para evitar bucles infinitos
+                if (time > 100) break;
+            }
+            
+            // Añadir el último punto donde y=0 (o muy cercano) para una visualización limpia
+            if (trajectory.length > 0 && state.y < 0) {
+                const lastPoint = trajectory[trajectory.length - 1];
+                const prevPoint = trajectory[trajectory.length - 2];
+                // Interpolación lineal simple para encontrar el punto de impacto en x
+                const t = prevPoint.y / (prevPoint.y - state.y);
+                const impactX = prevPoint.x + t * (state.x - prevPoint.x);
+                trajectory.push({ x: impactX, y: 0 });
+            }
+
+            return { points: trajectory, maxHeight: maxHeight, time: time };
+        }
+
+        /**
+         * Dibuja la trayectoria calculada en el elemento <canvas>.
+         * @param {Array<object>} trajectory - Arreglo de puntos {x, y}.
+         */
+        function drawTrajectory(trajectory) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (trajectory.length < 2) return;
+
+            // Encontrar los valores máximos para escalar el gráfico
+            const maxX = Math.max(...trajectory.map(p => p.x));
+            const maxY = Math.max(...trajectory.map(p => p.y));
+
+            const padding = 40;
+            const scaleX = (canvas.width - 2 * padding) / maxX;
+            const scaleY = (canvas.height - 2 * padding) / maxY;
+            const scale = Math.min(scaleX, scaleY); // Usar la menor escala para mantener la proporción
+
+            // Función para mapear coordenadas del mundo real al canvas
+            const toCanvasCoords = (x, y) => {
+                return {
+                    x: padding + x * scale,
+                    y: canvas.height - padding - y * scale // Invertir eje Y
+                };
+            };
+
+            // Dibujar ejes
+            ctx.strokeStyle = '#ccc';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(padding, canvas.height - padding);
+            ctx.lineTo(canvas.width - padding, canvas.height - padding);
+            ctx.moveTo(padding, canvas.height - padding);
+            ctx.lineTo(padding, padding);
+            ctx.stroke();
+
+            // Dibujar la trayectoria
+            ctx.strokeStyle = '#3949ab';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            const startCoords = toCanvasCoords(trajectory[0].x, trajectory[0].y);
+            ctx.moveTo(startCoords.x, startCoords.y);
+
+            for (let i = 1; i < trajectory.length; i++) {
+                const coords = toCanvasCoords(trajectory[i].x, trajectory[i].y);
+                ctx.lineTo(coords.x, coords.y);
+            }
+            ctx.stroke();
+        }
+
+        /**
+         * Función principal que se ejecuta al presionar el botón de simulación.
+         */
+        function runSimulation() {
+            // 1. Leer parámetros de la UI
+            const params = {
+                m: parseFloat(document.getElementById('mass').value),
+                v0: parseFloat(document.getElementById('velocity').value),
+                angle: parseFloat(document.getElementById('angle').value),
+                Cd: parseFloat(document.getElementById('dragCoeff').value),
+                A: parseFloat(document.getElementById('area').value),
+                rho: parseFloat(document.getElementById('density').value)
+            };
+            
+            // 2. Calcular la trayectoria
+            const result = calculateTrajectory(params);
+            
+            // 3. Dibujar en el canvas
+            drawTrajectory(result.points);
+
+            // 4. Mostrar los resultados numéricos
+            const finalX = result.points[result.points.length - 1].x;
+            document.getElementById('rangeResult').textContent = finalX.toFixed(2);
+            document.getElementById('heightResult').textContent = result.maxHeight.toFixed(2);
+            document.getElementById('timeResult').textContent = result.time.toFixed(2);
+        }
+
+        // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+        // --- MANEJO DE EVENTOS DE LA INTERFAZ DE USUARIO (UI)
+        // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+        // Actualizar el valor del ángulo mostrado al mover el slider
+        angleSlider.addEventListener('input', (event) => {
+            angleValueDisplay.textContent = `${event.target.value}°`;
+        });
+
+        // Asignar la función principal al botón de simulación
+        simulateBtn.addEventListener('click', runSimulation);
+
+        // Ejecutar una simulación inicial con los valores por defecto
+        window.onload = runSimulation;
+
+    </script>
+</body>
+</html>
