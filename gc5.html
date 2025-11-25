@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Herramienta de Análisis Estadístico - UNES Zulia</title>
+    
+    <!-- CDN para Chart.js (Gráficos) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- CDN para SheetJS (xlsx) (Leer y Crear Excel) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <style>
+        /* --- TODO EL CSS ESTÁ AQUÍ DENTRO --- */
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --gray-color: #6c757d;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: var(--dark-color); background-color: var(--light-color); }
+        header { background-color: var(--primary-color); color: white; padding: 1rem 2rem; text-align: center; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); }
+        main { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+        section { background-color: white; border-radius: 8px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); }
+        .upload-section { text-align: center; }
+        .file-input-container { margin-bottom: 1.5rem; position: relative; }
+        #excelFiles { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
+        .file-input-label { display: inline-block; padding: 0.75rem 1.5rem; background-color: var(--primary-color); color: white; border-radius: 4px; cursor: pointer; transition: background-color 0.3s; }
+        .file-input-label:hover { background-color: #2980b9; }
+        #fileName { display: block; margin-top: 0.5rem; color: var(--gray-color); }
+        button { background-color: var(--secondary-color); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-size: 1rem; transition: background-color 0.3s; margin: 0.5rem; }
+        button:hover { background-color: #27ae60; }
+        button:disabled { background-color: var(--gray-color); cursor: not-allowed; }
+        .hidden { display: none; }
+        #loadingSection { text-align: center; }
+        .spinner { border: 4px solid rgba(0, 0, 0, 0.1); border-radius: 50%; border-top: 4px solid var(--primary-color); width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 1rem; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .stats-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+        .stat-card { background-color: white; border-radius: 8px; padding: 1.5rem; text-align: center; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); border-left: 4px solid var(--primary-color); }
+        .stat-card h3 { margin-bottom: 0.5rem; color: var(--gray-color); font-size: 0.9rem; text-transform: uppercase; }
+        .stat-card p { font-size: 2rem; font-weight: bold; color: var(--dark-color); }
+        .charts-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 2rem; margin-bottom: 2rem; }
+        .chart-container { background-color: white; border-radius: 8px; padding: 1.5rem; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); }
+        .chart-container h3 { margin-bottom: 1rem; text-align: center; }
+        .students-table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background-color: var(--light-color); font-weight: bold; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        .estado-aprobado { color: var(--secondary-color); font-weight: bold; }
+        .estado-reprobado { color: var(--danger-color); font-weight: bold; }
+        footer { text-align: center; padding: 1rem; color: var(--gray-color); margin-top: 2rem; font-size: 0.8em; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Herramienta de Análisis Estadístico de la Coordinación Académica de UNES Núcleo Zulia</h1>
+        <p>Sistema para el procesamiento y consolidación de hojas de actuación estudiantil.</p>
+    </header>
+
+    <main>
+        <section class="upload-section">
+            <h2>1. Cargar Hojas de Actuación</h2>
+            <p>Selecciona todos los archivos Excel que deseas analizar.</p>
+            <form id="uploadForm">
+                <div class="file-input-container">
+                    <input type="file" id="excelFiles" name="excelFiles" accept=".xlsx, .xls" multiple required>
+                    <label for="excelFiles" class="file-input-label">Seleccionar archivos Excel</label>
+                    <span id="fileName">Ningún archivo seleccionado</span>
+                </div>
+                <button type="submit" id="uploadButton">2. Analizar Archivos</button>
+            </form>
+        </section>
+
+        <section id="loadingSection" class="hidden">
+            <div class="spinner"></div>
+            <p>Procesando archivos, por favor espera...</p>
+        </section>
+
+        <section id="dashboard" class="hidden">
+            <h2>3. Resultados del Análisis</h2>
+            
+            <div class="stats-container">
+                <div class="stat-card"><h3>Total Estudiantes</h3><p id="totalEstudiantes">-</p></div>
+                <div class="stat-card"><h3>Aprobados</h3><p id="aprobados">-</p></div>
+                <div class="stat-card"><h3>Reprobados</h3><p id="reprobados">-</p></div>
+                <div class="stat-card"><h3>Sin Información</h3><p id="sinInformacion">-</p></div>
+            </div>
+
+            <div class="charts-container">
+                <div class="chart-container"><h3>Aprobados y Reprobados por Programa</h3><canvas id="programChart"></canvas></div>
+                <div class="chart-container"><h3>Modalidad de Aprobación</h3><canvas id="modalityChart"></canvas></div>
+            </div>
+
+            <div class="students-table-container">
+                <h3>Muestra de Estudiantes Analizados</h3>
+                <table id="studentsTable"><thead><tr><th>Cédula</th><th>Nombres</th><th>Apellidos</th><th>Nota Final</th><th>Estado</th></tr></thead><tbody></tbody></table>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <button id="downloadButton">4. Descargar Reporte Completo en Excel</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Elaborado por el Profesor Ángel Chacín Ávila</p>
+        <p>Licenciado en Física, Especialista en Ciencias Computacionales, Diplomado en Educación Policial</p>
+        <p>Docente e Investigador de la Universidad Nacional Experimental de la Seguridad Núcleo Zulia</p>
+        <p>Se publica con licencia GPL @2025</p>
+    </footer>
+
+    <script>
+    // --- VERSIÓN DEFINITIVA: ADAPTADA PARA MÚLTIPLES FORMATOS DE EXCEL ---
+
+    // Variable global para almacenar los datos procesados
+    let datosProcesados = null;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const fileInput = document.getElementById('excelFiles');
+        const fileNameSpan = document.getElementById('fileName');
+        const uploadForm = document.getElementById('uploadForm');
+        const loadingSection = document.getElementById('loadingSection');
+        const dashboardSection = document.getElementById('dashboard');
+        const downloadButton = document.getElementById('downloadButton');
+
+        uploadForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (!fileInput.files || fileInput.files.length === 0) {
+                alert('Por favor, seleccione al menos un archivo Excel.');
+                return;
+            }
+            
+            loadingSection.classList.remove('hidden');
+            dashboardSection.classList.add('hidden');
+            procesarArchivosLocales(fileInput.files);
+        });
+
+        fileInput.addEventListener('change', function() {
+            if (this.files && this.files.length > 0) {
+                fileNameSpan.textContent = `${this.files.length} archivo(s) seleccionado(s).`;
+            } else {
+                fileNameSpan.textContent = 'Ningún archivo seleccionado';
+            }
+        });
+
+        downloadButton.addEventListener('click', generarYDescargarReporte);
+    });
+
+    async function procesarArchivosLocales(files) {
+        console.log(`Iniciando procesamiento de ${files.length} archivo(s).`);
+        let allStudents = [];
+        for (const file of files) {
+            console.log(`--- Leyendo archivo: ${file.name} ---`);
+            try {
+                const data = await leerArchivo(file);
+                const studentsFromSheet = extraerEstudiantesDeHoja(data);
+                if (studentsFromSheet.length > 0) {
+                    console.log(`Se encontraron ${studentsFromSheet.length} estudiantes en ${file.name}.`);
+                    allStudents = allStudents.concat(studentsFromSheet);
+                } else {
+                    console.warn(`No se encontraron estudiantes válidos en ${file.name}. Revisa su estructura y los mensajes de la consola.`);
+                }
+            } catch (error) {
+                console.error(`Error procesando el archivo ${file.name}:`, error);
+                alert(`Ocurrió un error al procesar el archivo ${file.name}. Revisa la consola para más detalles.`);
+            }
+        }
+        
+        console.log(`\nTotal de estudiantes consolidados: ${allStudents.length}`);
+        if (allStudents.length === 0) {
+            alert("No se pudo extraer información de ningún estudiante. Por favor, verifica la estructura de los archivos y revisa la consola para ver los errores específicos.");
+            document.getElementById('loadingSection').classList.add('hidden');
+            return;
+        }
+
+        datosProcesados = generarEstadisticasFinales(allStudents);
+        console.log("Estadísticas generadas:", datosProcesados);
+        
+        document.getElementById('loadingSection').classList.add('hidden');
+        renderizarEstadisticas(datosProcesados);
+        document.getElementById('dashboard').classList.remove('hidden');
+    }
+
+    function leerArchivo(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const sheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[sheetName];
+                    resolve(XLSX.utils.sheet_to_json(worksheet, { header: 1 }));
+                } catch (error) {
+                    reject(error);
+                }
+            };
+            reader.onerror = reject;
+            reader.readAsArrayBuffer(file);
+        });
+    }
+
+    // --- FUNCIÓN CLAVE: REESCRITA PARA MANEJAR MÚLTIPLES ESTRUCTURAS ---
+    function extraerEstudiantesDeHoja(data) {
+        if (!data || data.length === 0) {
+            console.warn("El archivo está vacío o no se pudo leer.");
+            return [];
+        }
+
+        // 1. Encontrar la fila de encabezados de forma más robusta
+        let headerRowIndex = -1;
+        for (let i = 0; i < Math.min(20, data.length); i++) {
+            const row = data[i];
+            // Busca una fila que contenga Cédula, Nombres y Apellidos para mayor precisión
+            if (row && 
+                row.some(cell => cell && cell.toString().toLowerCase().includes('cédula')) &&
+                row.some(cell => cell && cell.toString().toLowerCase().includes('nombres')) &&
+                row.some(cell => cell && cell.toString().toLowerCase().includes('apellidos'))
+               ) {
+                headerRowIndex = i;
+                break;
+            }
+        }
+
+        if (headerRowIndex === -1) {
+            console.error("No se encontró una fila de encabezados válida (que contenga 'Cédula', 'Nombres' y 'Apellidos').");
+            return [];
+        }
+        console.log(`Fila de encabezados encontrada en el índice: ${headerRowIndex + 1}`);
+
+        const headers = data[headerRowIndex];
+        
+        // 2. Encontrar índices de columnas básicas
+        const cedulaIndex = headers.findIndex(h => h && (h.toString().toLowerCase().includes('cédula') || h.toString().toLowerCase().includes('cedula')));
+        const nombresIndex = headers.findIndex(h => h && h.toString().toLowerCase().includes('nombres'));
+        const apellidosIndex = headers.findIndex(h => h && h.toString().toLowerCase().includes('apellidos'));
+
+        if (cedulaIndex === -1 || nombresIndex === -1 || apellidosIndex === -1) {
+            console.error("No se pudieron encontrar las columnas de estudiante (Cédula, Nombres, Apellidos).");
+            console.error("Encabezados encontrados:", headers);
+            return []; 
+        }
+
+        // 3. Encontrar la columna de la NOTA FINAL (LA PARTE CRÍTICA)
+        let notaFinalIndex = -1;
+        let searchMethod = "";
+        
+        // MODO 1: Buscar por nombre de columna (ej. "NOTA 100%")
+        const possibleFinalGradeHeaders = ['nota 100%', 'nota final', 'nota definitiva'];
+        for (const header of possibleFinalGradeHeaders) {
+            const foundIndex = headers.findIndex(h => h && h.toString().toLowerCase().includes(header));
+            if (foundIndex !== -1) {
+                notaFinalIndex = foundIndex;
+                searchMethod = `por nombre de columna ('${header}')`;
+                break;
+            }
+        }
+        
+        if (notaFinalIndex === -1) {
+            // MODO 2: Buscar por posición relativa (la columna después de "40%")
+            const cuarentaPorcientoIndex = headers.findIndex(h => h && h.toString().trim().includes('40%'));
+            if (cuarentaPorcientoIndex !== -1 && cuarentaPorcientoIndex + 1 < headers.length) {
+                const nextColumnHeader = headers[cuarentaPorcientoIndex + 1];
+                 if (nextColumnHeader && 
+                    !nextColumnHeader.toString().toLowerCase().includes('firma') &&
+                    !nextColumnHeader.toString().toLowerCase().includes('actitudinal')
+                   ) {
+                    notaFinalIndex = cuarentaPorcientoIndex + 1;
+                    searchMethod = "por posición (la columna después de '40%')";
+                }
+            }
+        }
+
+        if (notaFinalIndex === -1) {
+            console.error("No se pudo encontrar la columna de la Nota Final ni por nombre ni por posición relativa a '40%'.");
+            console.error("Encabezados encontrados:", headers);
+            return []; 
+        }
+        console.log(`Columna de Nota Final encontrada ${searchMethod} en el índice: ${notaFinalIndex}`);
+
+        // 4. Extraer los datos de los estudiantes
+        const students = [];
+        const startRow = headerRowIndex + 1; 
+
+        for (let i = startRow; i < data.length; i++) {
+            const row = data[i];
+            if (!row || row.length === 0) continue;
+
+            const cedula = row[cedulaIndex];
+            if (!cedula || cedula.toString().trim() === '') continue;
+
+            const nombres = row[nombresIndex] || 'N/A';
+            const apellidos = row[apellidosIndex] || 'N/A';
+            
+            // CORRECCIÓN: Normalizar el valor de la nota antes de parsear
+            let notaFinalStr = String(row[notaFinalIndex] || '').trim();
+            notaFinalStr = notaFinalStr.replace(',', '.'); // Reemplazar coma por punto
+            const notaFinal = parseFloat(notaFinalStr) || null;
+            
+            students.push({ cedula, nombres, apellidos, notaFinal });
+        }
+        return students;
+    }
+
+    function generarEstadisticasFinales(allStudents) {
+        let aprobados = 0, reprobados = 0, sinInformacion = 0;
+        const programas = {}; // Usaremos el nombre del PNF si lo encontramos
+        
+        for (const estudiante of allStudents) {
+            const { notaFinal } = estudiante;
+            if (notaFinal === null || isNaN(notaFinal)) { sinInformacion++; continue; }
+            const aprobo = notaFinal >= 10;
+            if (aprobo) { aprobados++; } else { reprobados++; }
+            
+            // Hardcodeamos el programa por ahora, pero se podría extraer del archivo
+            const programa = "Criminalística"; 
+            if (!programas[programa]) { programas[programa] = { aprobados: 0, reprobados: 0 }; }
+            if (aprobo) { programas[programa].aprobados++; } else { programas[programa].reprobados++; }
+        }
+        return { allStudents, totalEstudiantes: allStudents.length, aprobados, reprobados, sinInformacion, programas };
+    }
+    
+    function renderizarEstadisticas(datos) {
+        document.getElementById('totalEstudiantes').textContent = datos.totalEstudiantes;
+        document.getElementById('aprobados').textContent = datos.aprobados;
+        document.getElementById('reprobados').textContent = datos.reprobados;
+        document.getElementById('sinInformacion').textContent = datos.sinInformacion;
+        renderizarGraficoProgramas(datos.programas);
+        renderizarTablaEstudiantes(datos.allStudents);
+    }
+
+    function renderizarGraficoProgramas(programas) {
+        const ctx = document.getElementById('programChart').getContext('2d');
+        const labels = Object.keys(programas);
+        const aprobadosData = labels.map(p => programas[p].aprobados);
+        const reprobadosData = labels.map(p => programas[p].reprobados);
+        if (window.programChartInstance) window.programChartInstance.destroy();
+        window.programChartInstance = new Chart(ctx, { type: 'bar', data: { labels, datasets: [{ label: 'Aprobados', data: aprobadosData, backgroundColor: 'rgba(46, 204, 113, 0.7)' }, { label: 'Reprobados', data: reprobadosData, backgroundColor: 'rgba(231, 76, 60, 0.7)' }] }, options: { responsive: true, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } } });
+    }
+
+    function renderizarTablaEstudiantes(estudiantes) {
+        const tbody = document.querySelector('#studentsTable tbody');
+        tbody.innerHTML = '';
+        estudiantes.slice(0, 10).forEach(e => {
+            const row = tbody.insertRow();
+            row.insertCell(0).textContent = e.cedula;
+            row.insertCell(1).textContent = e.nombres;
+            row.insertCell(2).textContent = e.apellidos;
+            row.insertCell(3).textContent = e.notaFinal !== null ? e.notaFinal.toFixed(2) : 'N/A';
+            const estadoCell = row.insertCell(4);
+            if (e.notaFinal === null) {
+                estadoCell.textContent = 'Sin Info';
+                estadoCell.className = 'estado-reprobado';
+            } else {
+                estadoCell.textContent = e.notaFinal >= 10 ? 'Aprobado' : 'Reprobado';
+                estadoCell.className = e.notaFinal >= 10 ? 'estado-aprobado' : 'estado-reprobado';
+            }
+        });
+    }
+    
+    // --- FUNCIÓN PARA GENERAR Y DESCARGAR EL REPORTE ---
+    function generarYDescargarReporte() {
+        if (!datosProcesados) {
+            alert("No hay datos para generar el reporte.");
+            return;
+        }
+
+        const wb = XLSX.utils.book_new();
+
+        const resumenData = [
+            ['Métrica', 'Valor'],
+            ['Total de Estudiantes Analizados', datosProcesados.totalEstudiantes],
+            ['Total de Aprobados', datosProcesados.aprobados],
+            ['Total de Reprobados', datosProcesados.reprobados],
+            ['Estudiantes sin Información de Nota', datosProcesados.sinInformacion],
+        ];
+        const wsResumen = XLSX.utils.aoa_to_sheet(resumenData);
+        XLSX.utils.book_append_sheet(wb, wsResumen, "Resumen");
+
+        const estudiantesData = datosProcesados.allStudents.map(est => [
+            est.cedula,
+            est.nombres,
+            est.apellidos,
+            est.notaFinal !== null ? est.notaFinal.toFixed(2) : 'N/A',
+            est.notaFinal !== null && est.notaFinal >= 10 ? 'Aprobado' : (est.notaFinal !== null ? 'Reprobado' : 'Sin Info')
+        ]);
+        estudiantesData.unshift(['Cédula', 'Nombres', 'Apellidos', 'Nota Final', 'Estado']);
+
+        const wsEstudiantes = XLSX.utils.aoa_to_sheet(estudiantesData);
+        XLSX.utils.book_append_sheet(wb, wsEstudiantes, "Todos los Estudiantes");
+
+        const nombreArchivo = `Reporte_de_Notas_${new Date().toISOString().slice(0,10)}.xlsx`;
+        XLSX.writeFile(wb, nombreArchivo);
+    }
+
+    </script>
+</body>
+</html>
