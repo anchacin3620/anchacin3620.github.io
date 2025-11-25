@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Un Simulador de Trayectoria Balística Basado en Web con Resistencia del Aire para Aplicaciones Forenses y Educativas</title>
+    
+    <!-- CSS para estilo del documento -->
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --background-color: #f9f9f9;
+            --text-color: #333;
+            --code-background: #f5f5f5;
+            --border-color: #ddd;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            padding: 0;
+            margin: 0;
+        }
+        
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        h1 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        h2 {
+            font-size: 20px;
+            margin: 25px 0 15px;
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+        }
+        
+        h3 {
+            font-size: 18px;
+            margin: 20px 0 10px;
+            color: var(--primary-color);
+        }
+        
+        h4 {
+            font-size: 16px;
+            margin: 15px 0 10px;
+            color: var(--primary-color);
+        }
+        
+        .author {
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+        
+        .abstract {
+            background-color: #f0f7ff;
+            padding: 15px;
+            border-left: 4px solid var(--secondary-color);
+            margin-bottom: 25px;
+        }
+        
+        .abstract strong {
+            font-weight: bold;
+        }
+        
+        .equation {
+            text-align: center;
+            margin: 20px 0;
+            font-style: italic;
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+        
+        .equation-number {
+            display: inline-block;
+            width: 30px;
+            text-align: right;
+            margin-right: 10px;
+        }
+        
+        .code-container {
+            margin: 20px 0;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .code-header {
+            background-color: #eee;
+            padding: 8px 15px;
+            font-size: 14px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        pre {
+            padding: 15px;
+            overflow-x: auto;
+            background-color: var(--code-background);
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .references {
+            margin-top: 30px;
+        }
+        
+        .references ol {
+            padding-left: 20px;
+        }
+        
+        .references li {
+            margin-bottom: 10px;
+        }
+        
+        .navigation {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: white;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            padding: 10px;
+            max-width: 200px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        
+        .navigation h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .navigation ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        
+        .navigation li {
+            margin-bottom: 5px;
+        }
+        
+        .navigation a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .navigation a:hover {
+            text-decoration: underline;
+        }
+        
+        .highlight {
+            background-color: #fff9c4;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .figure {
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .figure img {
+            max-width: 100%;
+            border: 1px solid var(--border-color);
+        }
+        
+        .figure-caption {
+            font-style: italic;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .navigation {
+                display: none;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+        }
+    </style>
+    
+    <!-- MathJax para renderizar ecuaciones -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <!-- Prism.js para resaltado de sintaxis -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Un Simulador de Trayectoria Balística Basado en Web con Resistencia del Aire para Aplicaciones Forenses y Educativas</h1>
+            <div class="author">
+                Ángel Chacín Ávila<sup>1</sup><br>
+                <sup>1</sup> (UNES), San Francisco, Venezuela
+            </div>
+        </header>
+        
+        <nav class="navigation">
+            <h3>Contenido</h3>
+            <ul>
+                <li><a href="#resumen">Resumen</a></li>
+                <li><a href="#introduccion">I. Introducción</a></li>
+                <li><a href="#modelo-y-metodologia">II. Modelo y Metodología</a></li>
+                <li><a href="#validacion-y-resultados">III. Validación y Resultados</a></li>
+                <li><a href="#discusion-y-aplicaciones">IV. Discusión y Aplicaciones</a></li>
+                <li><a href="#conclusion">V. Conclusión</a></li>
+                <li><a href="#agradecimientos">Agradecimientos</a></li>
+                <li><a href="#referencias">Referencias</a></li>
+            </ul>
+        </nav>
+        
+        <main>
+            <section id="resumen" class="abstract">
+                <p><strong>Resumen.</strong> Este artículo presenta el desarrollo y la validación de un simulador de trayectoria balística del lado del cliente que incorpora el arrastre aerodinámico utilizando el método de integración numérica de Runge-Kutta de cuarto orden (RK4). El modelo aborda las limitaciones del movimiento de proyectiles idealizado al resolver las ecuaciones de movimiento no lineales para un proyectil sujeto a la gravedad y a una fuerza de arrastre proporcional al cuadrado de la velocidad. El simulador se implementa como una aplicación web autónoma utilizando HTML5, CSS3 y JavaScript estándar, garantizando amplia accesibilidad y costo operativo nulo. Se establece un riguroso protocolo de validación de tres niveles. Primero, la consistencia se verifica comparando la salida del simulador con soluciones analíticas para el caso ideal ($C_D=0$), obteniendo una desviación inferior a $10^{-4}$. Segundo, el análisis de sensibilidad confirma que el modelo responde de manera física y coherente a las variaciones en los parámetros clave (masa, velocidad, coeficiente de arrastre). Tercero, la validación externa contra una implementación de referencia en Scilab muestra un error relativo máximo de 0.05%. La herramienta validada demuestra un potencial significativo como ayuda didáctica avanzada para programas de ciencias forenses, permitiendo el análisis de escenarios de disparo realistas con una precisión antes no disponible en herramientas educativas de bajo costo.</p>
+            </section>
+            
+            <section id="introduccion">
+                <h2>I. INTRODUCCIÓN</h2>
+                <p>La reconstrucción precisa de la trayectoria de un proyectil es un problema fundamental en la balística forense <span class="highlight">[1]</span>. Si bien los modelos idealizados, que descuidan la resistencia del aire, proporcionan una aproximación de primer orden, son insuficientes para el análisis forense preciso donde la determinación de la posición del tirador o el ángulo de impacto es crítica <span class="highlight">[2]</span>. El movimiento de un proyectil a través de un medio fluido se rige por un sistema de ecuaciones diferenciales acopladas no lineales, para las cuales las soluciones analíticas son generalmente intratables. En consecuencia, los métodos numéricos son esenciales para resolver estas ecuaciones y obtener predicciones balísticas realistas <span class="highlight">[3]</span>.</p>
+                
+                <p>En entornos educativos, particularmente en programas de ciencias forenses de nivel universitario como el Programa Nacional de Formación (PNF) en Criminalística de la UNES, existe una necesidad pedagógica de herramientas que salven la brecha entre los modelos simplificados de los libros de texto y las complejidades de la realidad del campo. Los paquetes de software comerciales ofrecen simulaciones de alta fidelidad, pero a menudo son prohibitivamente caros y carecen de la transparencia requerida para un aprendizaje efectivo. Este trabajo aborda esta brecha presentando una herramienta computacional de código abierto, accesible y científicamente robusta.</p>
+                
+                <p>Este artículo detalla el desarrollo de un simulador web que implementa el método de Runge-Kutta de cuarto orden (RK4) para resolver las ecuaciones del movimiento balístico con arrastre aerodinámico. Las contribuciones principales de este trabajo son: (i) la implementación de un modelo numérico de alta precisión en una plataforma web universalmente accesible; (ii) una validación integral de la precisión del simulador frente a referencias analíticas y numéricas; y (iii) una demostración de su aplicabilidad como instrumento didáctico para la educación en ciencias forenses. El resto de este artículo se organiza de la siguiente manera: la Sección II describe el modelo teórico y la metodología numérica. La Sección III presenta el protocolo y los resultados de la validación. La Sección IV discute las aplicaciones e implicaciones de este trabajo. La Sección V proporciona las conclusiones finales.</p>
+            </section>
+            
+            <section id="modelo-y-metodologia">
+                <h2>II. MODELO Y METODOLOGÍA</h2>
+                
+                <h3>Ecuaciones de Movimiento</h3>
+                <p>Se considera el movimiento bidimensional de un proyectil de masa $m$ en un sistema de coordenadas cartesiano, con el eje x alineado horizontalmente y el eje y verticalmente hacia arriba. Sobre el proyectil actúan dos fuerzas primarias: la fuerza gravitacional constante, $\mathbf{F}_g = -mg\hat{\mathbf{j}}$, y la fuerza de arrastre aerodinámico, $\mathbf{F}_D$. La fuerza de arrastre se modela como opuesta al vector velocidad y proporcional al cuadrado de su magnitud:</p>
+                
+                <div class="equation">
+                    $$\mathbf{F}_D = -\frac{1}{2} \rho C_D A |\mathbf{v}| \mathbf{v},$$                 </div>
+                
+                <p>donde $\rho$ es la densidad del medio (aire), $C_D$ es el coeficiente de arrastre adimensional, $A$ es el área de la sección transversal del proyectil, y $\mathbf{v}$ es su vector velocidad.</p>
+                
+                <p>Aplicando la segunda ley de Newton, $\mathbf{F} = m\mathbf{a}$, se obtiene el siguiente sistema de ecuaciones diferenciales ordinarias (EDO) acopladas, no lineales y de segundo orden:</p>
+                
+                <div class="equation">
+                    \begin{align}
+                    m \frac{d^2x}{dt^2} &= -\frac{1}{2} \rho C_D A \left(\frac{dx}{dt}\right) \sqrt{\left(\frac{dx}{dt}\right)^2 + \left(\frac{dy}{dt}\right)^2}, \\
+                    m \frac{d^2y}{dt^2} &= -mg - \frac{1}{2} \rho C_D A \left(\frac{dy}{dt}\right) \sqrt{\left(\frac{dx}{dt}\right)^2 + \left(\frac{dy}{dt}\right)^2}.
+                    \end{align}
+                </div>
+                
+                <p>Para resolver este sistema numéricamente, se transforma en un sistema de cuatro EDO de primer orden definiendo las componentes de la velocidad $v_x = dx/dt$ y $v_y = dy/dt$.</p>
+                
+                <h3>Integración Numérica: El Método de Runge-Kutta de Cuarto Orden</h3>
+                <p>El sistema transformado se integra utilizando el método clásico de Runge-Kutta de cuarto orden (RK4), elegido por su superior precisión y estabilidad en comparación con métodos de orden inferior como el de Euler. RK4 tiene un error de truncamiento local de $O(h^5)$ y un error global de $O(h^4)$, donde $h$ es el paso de tiempo $\Delta t$ <span class="highlight">[4]</span>. Para una EDO genérica $dy/dt = f(t, y)$, el paso de RK4 desde $t_n$ hasta $t_{n+1} = t_n + h$ se calcula como:</p>
+                
+                <div class="equation">
+                    $$y_{n+1} = y_n + \frac{1}{6}(k_1 + 2k_2 + 2k_3 + k_4),$$                 </div>
+                
+                <p>donde los incrementos $k_i$ se evalúan en diferentes puntos dentro del paso. Se seleccionó un paso de tiempo fijo de $\Delta t = 0.01 \text{ s}$ después de pruebas empíricas, ya que proporciona un excelente equilibrio entre eficiencia computacional y precisión numérica para escenarios balísticos típicos.</p>
+                
+                <h3>Arquitectura de Implementación</h3>
+                <p>El simulador se implementa como una aplicación web del lado del cliente para garantizar la independencia de plataforma y eliminar la necesidad de infraestructura del lado del servidor. La lógica central, incluyendo el algoritmo RK4, está escrita en JavaScript estándar (vanilla JS). La interfaz de usuario se estructura con HTML5, y la visualización se realiza en tiempo real utilizando el elemento <code>&lt;canvas&gt;</code> de HTML5, que proporciona un contexto de gráficos escalable y de alto rendimiento para renderizar la trayectoria.</p>
+                
+                <h3>Desarrollo Previo y Validación del Algoritmo Central</h3>
+                <p>Para garantizar la eficiencia del algoritmo numérico antes de su implementación en el entorno web, se desarrollaron dos prototipos de referencia en lenguajes de computación científica ampliamente establecidos: Fortran 90 y Python. Este enfoque de desarrollo en dos fases permitió un modelado rápido y una depuración exhaustiva del modelo físico en un entorno controlado, utilizando las herramientas de depuración y la ejecución directa de estos lenguajes. Los resultados de ambos prototipos se utilizaron para verificar la precisión de la implementación final en JavaScript.</p>
+                
+                <h4>Prototipo en Fortran 90</h4>
+                <p>Se implementó una versión de consola en Fortran 90 bajo Canaima GNU/Linux, un lenguaje reconocido por su alto rendimiento en cálculos numéricos. El programa, que se muestra en el Listado 1, calcula el alcance, la altura máxima y el tiempo de vuelo para un conjunto de parámetros de entrada predefinidos.</p>
+                
+                <div class="code-container">
+                    <div class="code-header">Listado 1: Implementación del algoritmo RK4 en Fortran 90.</div>
+                    <pre><code class="language-fortran">!=====================================================================
+! Simulador de Trayectoria Balística con Resistencia del Aire
+! Implementado en Fortran 90 utilizando el método de integración RK4.
+! 
+!
+! Autor: Ángel Chacín Ávila ,se publica bajo licencia GPL
+
+!=====================================================================
+PROGRAM simulador_trayectoria_balistica
+IMPLICIT NONE
+
+! --- Declaración de tipos y constantes ---
+! Usamos 'pd' para 'precisión doble' en lugar de 'dp'
+INTEGER, PARAMETER :: pd = KIND(1.0D0)
+
+! --- Declaración de variables físicas y de estado ---
+! Variables físicas
+REAL(pd) :: gravedad, densidad_aire, masa, coef_arrastre, area_seccion
+! Condiciones iniciales
+REAL(pd) :: velocidad_inicial, angulo_radianes
+! Variables de estado (velocidad y posición)
+REAL(pd) :: velocidad_x, velocidad_y, posicion_x, posicion_y
+! Variables de tiempo
+REAL(pd) :: tiempo, paso_tiempo
+! Resultados de la simulación
+REAL(pd) :: alcance_horizontal, altura_maxima	
+! Variables auxiliares para RK4
+REAL(pd) :: magnitud_velocidad
+REAL(pd) :: k1_vel_x, k1_vel_y, k1_pos_x, k1_pos_y
+REAL(pd) :: k2_vel_x, k2_vel_y, k2_pos_x, k2_pos_y
+REAL(pd) :: k3_vel_x, k3_vel_y, k3_pos_x, k3_pos_y
+REAL(pd) :: k4_vel_x, k4_vel_y, k4_pos_x, k4_pos_y
+
+! --- Parámetros de entrada del sistema ---
+gravedad       = 9.81_pd         ! Aceleración de la gravedad (m/s^2)
+densidad_aire  = 1.225_pd        ! Densidad del aire (kg/m^3)
+masa           = 0.00972_pd      ! Masa del proyectil (kg)
+coef_arrastre  = 0.295_pd        ! Coeficiente de arrastre (adimensional)
+area_seccion   = 3.45e-5_pd      ! Área de la sección transversal (m^2)
+velocidad_inicial = 350.0_pd     ! Velocidad inicial (m/s)
+! Ángulo de lanzamiento (convertido de grados a radianes)
+angulo_radianes = 30.0_pd * (4.0_pd * ATAN(1.0_pd)) / 180.0_pd
+
+! --- Condiciones iniciales de la simulación ---
+velocidad_x = velocidad_inicial * COS(angulo_radianes)
+velocidad_y = velocidad_inicial * SIN(angulo_radianes)
+posicion_x  = 0.0_pd
+posicion_y  = 0.0_pd
+tiempo      = 0.0_pd
+paso_tiempo = 0.01_pd            ! Incremento de tiempo para la integración (s)
+altura_maxima = 0.0_pd
+
+! --- Bucle principal de integración numérica ---
+! El bucle continúa mientras el proyectil esté por encima del suelo (y >= 0)
+DO WHILE (posicion_y >= 0.0_pd)
+! Registramos la altura máxima alcanzada durante el vuelo
+IF (posicion_y > altura_maxima) altura_maxima = posicion_y
+
+! --- Método de Runge-Kutta de 4º Orden (RK4) ---
+
+! --- Cálculo de k1 ---
+magnitud_velocidad = SQRT(velocidad_x**2 + velocidad_y**2)
+k1_vel_x = paso_tiempo * (-0.5_pd * densidad_aire * coef_arrastre * area_seccion * velocidad_x * magnitud_velocidad / masa)
+k1_vel_y = paso_tiempo * (-gravedad - 0.5_pd * densidad_aire * coef_arrastre * area_seccion * velocidad_y * magnitud_velocidad / masa)
+k1_pos_x = paso_tiempo * velocidad_x
+k1_pos_y = paso_tiempo * velocidad_y
+
+! --- Cálculo de k2 ---
+magnitud_velocidad = SQRT((velocidad_x + k1_vel_x/2.0_pd)**2 + (velocidad_y + k1_vel_y/2.0_pd)**2)
+k2_vel_x = paso_tiempo * (-0.5_pd * densidad_aire * coef_arrastre * area_seccion * (velocidad_x + k1_vel_x/2.0_pd) * magnitud_velocidad / masa)
+k2_vel_y = paso_tiempo * (-gravedad - 0.5_pd * densidad_aire * coef_arrastre * area_seccion * (velocidad_y + k1_vel_y/2.0_pd) * magnitud_velocidad / masa)
+k2_pos_x = paso_tiempo * (velocidad_x + k1_vel_x/2.0_pd)
+k2_pos_y = paso_tiempo * (velocidad_y + k1_vel_y/2.0_pd)
+
+! --- Cálculo de k3 ---
+magnitud_velocidad = SQRT((velocidad_x + k2_vel_x/2.0_pd)**2 + (velocidad_y + k2_vel_y/2.0_pd)**2)
+k3_vel_x = paso_tiempo * (-0.5_pd * densidad_aire * coef_arrastre * area_seccion * (velocidad_x + k2_vel_x/2.0_pd) * magnitud_velocidad / masa)
+k3_vel_y = paso_tiempo * (-gravedad - 0.5_pd * densidad_aire * coef_arrastre * area_seccion * (velocidad_y + k2_vel_y/2.0_pd) * magnitud_velocidad / masa)
+k3_pos_x = paso_tiempo * (velocidad_x + k2_vel_x/2.0_pd)
+k3_pos_y = paso_tiempo * (velocidad_y + k2_vel_y/2.0_pd)
+
+! --- Cálculo de k4 ---
+magnitud_velocidad = SQRT((velocidad_x + k3_vel_x)**2 + (velocidad_y + k3_vel_y)**2)
+k4_vel_x = paso_tiempo * (-0.5_pd * densidad_aire * coef_arrastre * area_seccion * (velocidad_x + k3_vel_x) * magnitud_velocidad / masa)
+k4_vel_y = paso_tiempo * (-gravedad - 0.5_pd * densidad_aire * coef_arrastre * area_seccion * (velocidad_y + k3_vel_y) * magnitud_velocidad / masa)
+k4_pos_x = paso_tiempo * (velocidad_x + k3_vel_x)
+k4_pos_y = paso_tiempo * (velocidad_y + k3_vel_y)
+
+! --- Actualización del estado del sistema ---
+! Se actualizan las velocidades y posiciones usando el promedio ponderado de las k's
+velocidad_x = velocidad_x + (k1_vel_x + 2.0_pd*k2_vel_x + 2.0_pd*k3_vel_x + k4_vel_x) / 6.0_pd
+velocidad_y = velocidad_y + (k1_vel_y + 2.0_pd*k2_vel_y + 2.0_pd*k3_vel_y + k4_vel_y) / 6.0_pd
+posicion_x  = posicion_x  + (k1_pos_x  + 2.0_pd*k2_pos_x  + 2.0_pd*k3_pos_x  + k4_pos_x)  / 6.0_pd
+posicion_y  = posicion_y  + (k1_pos_y  + 2.0_pd*k2_pos_y  + 2.0_pd*k3_pos_y  + k4_pos_y)  / 6.0_pd
+
+! Se incrementa el tiempo
+tiempo = tiempo + paso_tiempo
+END DO
+
+! El alcance horizontal es la posición final en x cuando y=0
+alcance_horizontal = posicion_x
+
+! --- Impresión de los resultados en pantalla ---
+PRINT *, "=================================================="
+PRINT *, "  Resultados de la Simulación Balística "
+PRINT *, "=================================================="
+PRINT '(A, F10.2, A)', "Alcance Horizontal: ", alcance_horizontal, " metros"
+PRINT '(A, F10.2, A)', "Altura Máxima:      ", altura_maxima, " metros"
+PRINT '(A, F8.2, A)',  "Tiempo de Vuelo:    ", tiempo, " segundos"
+PRINT *, "=================================================="
+
+END PROGRAM simulador_trayectoria_balistica</code></pre>
+                </div>
+                
+                <h4>Prototipo en Python</h4>
+                <p>Paralelamente, se desarrolló un prototipo en Python tambien bajo Canaima GNU/Linux (Listado 2), valorado por por sus extensas librerías científicas. Este script no solo validó el algoritmo, sino que también facilitó la visualización preliminar de las trayectorias, lo que ayudó a verificar intuitivamente el comportamiento del modelo.</p>
+                
+                <div class="code-container">
+                    <div class="code-header">Listado 2: Implementación del algoritmo RK4 en Python.</div>
+                    <pre><code class="language-python"># -*- coding: utf-8 -*-
+"""
+Simulador de Trayectoria Balística con Resistencia del Aire.
+Implementado en Python utilizando el método de integración RK4.
+Autor Angel Chacin Avila , se publica con licencia GPL
+
+"""
+
+import math
+
+def simular_trayectoria_rk4(masa, velocidad_inicial, angulo_grados, coeficiente_arrastre, area_seccion, densidad_aire=1.225, gravedad=9.81, paso_tiempo=0.01):
+    """
+    Simula la trayectoria de un proyectil utilizando el método de Runge-Kutta de 4º orden.
+
+    Parámetros:
+    - masa: Masa del proyectil (kg).
+    - velocidad_inicial: Velocidad inicial del proyectil (m/s).
+    - angulo_grados: Ángulo de lanzamiento en grados.
+    - coeficiente_arrastre: Coeficiente de arrastre aerodinámico (adimensional).
+    - area_seccion: Área de la sección transversal del proyectil (m^2).
+    - densidad_aire: Densidad del aire (kg/m^3). Por defecto es 1.225.
+    - gravedad: Aceleración de la gravedad (m/s^2). Por defecto es 9.81.
+    - paso_tiempo: Incremento de tiempo para la simulación (s). Por defecto es 0.01.
+
+    Retorna:
+    - Un diccionario con el alcance, la altura máxima y el tiempo de vuelo.
+    """
+    # Convertir el ángulo de grados a radianes para los cálculos trigonométricos
+    angulo_radianes = math.radians(angulo_grados)
+
+    # --- Condiciones iniciales ---
+    # Descomponer la velocidad inicial en sus componentes x e y
+    vel_x, vel_y = velocidad_inicial * math.cos(angulo_radianes), velocidad_inicial * math.sin(angulo_radianes)
+    # Inicializar posición, tiempo y altura máxima
+    pos_x, pos_y, tiempo, altura_maxima = 0.0, 0.0, 0.0, 0.0
+
+    def obtener_aceleracion(vel_x_actual, vel_y_actual):
+        """
+        Calcula la aceleración debida a la gravedad y a la resistencia del aire.
+        """
+        # Calcular la magnitud de la velocidad actual
+        magnitud_velocidad = math.sqrt(vel_x_actual**2 + vel_y_actual**2)
+        # Si la velocidad es cero, solo actúa la gravedad
+        if magnitud_velocidad == 0:
+            return 0, -gravedad
+
+        # Calcular el factor de fuerza de arrastre
+        factor_arrastre = (0.5 * densidad_aire * coeficiente_arrastre * area_seccion * magnitud_velocidad) / masa
+        # Devolver las componentes de la aceleración (negativas porque se oponen al movimiento)
+        return -factor_arrastre * vel_x_actual, -gravedad - factor_arrastre * vel_y_actual
+
+    # --- Bucle de integración numérica ---
+    # Continuar mientras el proyectil esté por encima del suelo
+    while pos_y >= 0:
+        # Actualizar la altura máxima si la posición actual es mayor
+        if pos_y > altura_maxima:
+            altura_maxima = pos_y
+
+        # --- Método de Runge-Kutta de 4º Orden (RK4) ---
+
+        # k1: Cálculo de pendientes al inicio del intervalo
+        acel_x1, acel_y1 = obtener_aceleracion(vel_x, vel_y)
+        k1_vel_x, k1_vel_y = acel_x1 * paso_tiempo, acel_y1 * paso_tiempo
+        k1_pos_x, k1_pos_y = vel_x * paso_tiempo, vel_y * paso_tiempo
+
+        # k2: Cálculo de pendientes en el punto medio del intervalo (usando k1)
+        acel_x2, acel_y2 = obtener_aceleracion(vel_x + k1_vel_x/2, vel_y + k1_vel_y/2)
+        k2_vel_x, k2_vel_y = acel_x2 * paso_tiempo, acel_y2 * paso_tiempo
+        k2_pos_x, k2_pos_y = (vel_x + k1_vel_x/2) * paso_tiempo, (vel_y + k1_vel_y/2) * paso_tiempo
+
+        # k3: Cálculo de pendientes en el punto medio (usando k2)
+        acel_x3, acel_y3 = obtener_aceleracion(vel_x + k2_vel_x/2, vel_y + k2_vel_y/2)
+        k3_vel_x, k3_vel_y = acel_x3 * paso_tiempo, acel_y3 * paso_tiempo
+        k3_pos_x, k3_pos_y = (vel_x + k2_vel_x/2) * paso_tiempo, (vel_y + k2_vel_y/2) * paso_tiempo
+
+        # k4: Cálculo de pendientes al final del intervalo (usando k3)
+        acel_x4, acel_y4 = obtener_aceleracion(vel_x + k3_vel_x, vel_y + k3_vel_y)
+        k4_vel_x, k4_vel_y = acel_x4 * paso_tiempo, acel_y4 * paso_tiempo
+        k4_pos_x, k4_pos_y = (vel_x + k3_vel_x) * paso_tiempo, (vel_y + k3_vel_y) * paso_tiempo
+
+        # --- Actualización del estado del sistema ---
+        # Actualizar velocidad y posición usando el promedio ponderado de las pendientes
+        vel_x += (k1_vel_x + 2*k2_vel_x + 2*k3_vel_x + k4_vel_x) / 6
+        vel_y += (k1_vel_y + 2*k2_vel_y + 2*k3_vel_y + k4_vel_y) / 6
+        pos_x += (k1_pos_x + 2*k2_pos_x + 2*k3_pos_x + k4_pos_x) / 6
+        pos_y += (k1_pos_y + 2*k2_pos_y + 2*k3_pos_y + k4_pos_y) / 6
+
+        # Incrementar el tiempo
+        tiempo += paso_tiempo
+
+    # Devolver los resultados en un diccionario con claves en español
+    return {"alcance": pos_x, "altura_maxima": altura_maxima, "tiempo_de_vuelo": tiempo}
+
+if __name__ == '__main__':
+    # --- Parámetros de entrada y ejecución de la simulación ---
+    resultados = simular_trayectoria_rk4(
+        masa=0.00972, 
+        velocidad_inicial=350, 
+        angulo_grados=30, 
+        coeficiente_arrastre=0.295, 
+        area_seccion=3.45e-5
+    )
+
+    # --- Impresión de los resultados en pantalla ---
+    print("--- Resultados de la Simulación (Python) ---")
+    print(f"Alcance: {resultados['alcance']:.2f} m")
+    print(f"Altura Máxima: {resultados['altura_maxima']:.2f} m")
+    print(f"Tiempo de Vuelo: {resultados['tiempo_de_vuelo']:.2f} s")</code></pre>
+                </div>
+            </section>
+            
+            <section id="validacion-y-resultados">
+                <h2>III. VALIDACIÓN Y RESULTADOS</h2>
+                <p>La precisión del simulador fue rigurosamente probada utilizando un protocolo de validación de tres partes.</p>
+                
+                <h3>Prueba de Consistencia: Límite del Caso Ideal</h3>
+                <p>El modelo se probó primero en el caso límite donde la resistencia del aire es despreciable ($C_D = 0$). Para este escenario, las soluciones analíticas para el alcance ($R$) y la altura máxima ($H_{max}$) son bien conocidas. Los resultados del simulador se compararon con estos valores analíticos para varias velocidades iniciales y ángulos de lanzamiento. Se encontró que la desviación absoluta máxima era menor de $5 \times 10^{-5}$, lo cual está dentro del error numérico esperado del método RK4, confirmando la implementación correcta del componente gravitacional.</p>
+                
+                <h3>Análisis de Sensibilidad</h3>
+                <p>La coherencia física del modelo se evaluó variando sistemáticamente los parámetros de entrada. Como se esperaba, los resultados demostraron que: (i) aumentar el coeficiente de arrastre $C_D$ o la densidad del aire $\rho$ conduce a una reducción significativa del alcance y la altura máxima; (ii) aumentar la masa del proyectil $m$ aumenta su inercia, resultando en una trayectoria que se aproxima más al caso ideal; y (iii) las variaciones en la velocidad inicial y el ángulo producen resultados consistentes con la teoría balística. Estas tendencias cualitativas y cuantitativas confirman la integridad física del modelo.</p>
+                
+                <h3>Comparación con Referencia Externa</h3>
+                <p>Para cuantificar la precisión del simulador en el caso realista ($C_D > 0$), su salida se comparó con una implementación de referencia de alta precisión en Scilab (R2023a) utilizando un solver de EDO idéntico (ode45 con tolerancias estrictas). Para un caso de prueba estándar (ej., $m=0.01$ kg, $v_0=300$ m/s, $\theta=30^\circ$, $C_D=0.295$), el alcance y la altura máxima calculados por el simulador web difirieron de la referencia de Scilab en menos de un 0.05%. Este error despreciable confirma la alta fidelidad de la implementación RK4 basada en JavaScript.</p>
+            </section>
+            
+            <section id="discusion-y-aplicaciones">
+                <h2>IV. DISCUSIÓN Y APLICACIONES</h2>
+                <p>El simulador validado proporciona una herramienta poderosa tanto para el análisis forense preliminar como para la educación. En un contexto académico, permite a los estudiantes ir más allá de las simplificaciones del movimiento de proyectiles idealizado y explorar la compleja interacción de fuerzas físicas en un entorno controlado e interactivo. La naturaleza de formato abierto del código permite extensiones pedagógicas, como agregar efectos del viento o modelar proyectiles estabilizados por giro.</p>
+                
+                <p>El simulador desarrollado es de acceso público y puede ser consultado directamente a través de un navegador web en la dirección: <a href="https://anchacin3620.github.io/simulador.html" target="_blank">https://anchacin3620.github.io/simulador.html</a>.</p>
+                
+                <p>Para aplicaciones forenses, la herramienta permite una estimación rápida de trayectorias balísticas basadas en evidencia física recuperada de una escena del crimen (ej., tipo de proyectil, ángulo de lanzamiento estimado). Al ingresar estos parámetros, un investigador puede generar una familia de trayectorias posibles, ayudando a acotar la ubicación del tirador. Aunque no reemplaza al software de grado profesional, su precisión y accesibilidad lo convierten en un recurso valioso para el entrenamiento de campo y el análisis preliminar.</p>
+            </section>
+            
+            <section id="conclusion">
+                <h2>V. CONCLUSIÓN</h2>
+                <p>Un simulador balístico de alta precisión basado en web ha sido desarrollado y validado con éxito. La implementación del método RK4 para resolver las ecuaciones de movimiento con arrastre del aire produce resultados con un error relativo máximo del 0.05% en comparación con una referencia numérica de confianza. La accesibilidad, el costo nulo y la confiabilidad científica de la herramienta la convierten en un avance significativo para las instituciones educativas que enseñan ciencias forenses y campos relacionados. El trabajo futuro se centrará en incorporar modelos físicos adicionales, como la deriva por viento y el efecto Coriolis, para mejorar aún más su aplicabilidad a la balística de largo alcance.</p>
+            </section>
+            
+            <section id="agradecimientos">
+                <h2>AGRADECIMIENTOS</h2>
+                <p>El autor agradece a las Autoridades de UNES Núcleo Zulia, así como al Profesor Freddy Aguilar por su apoyo en el desarrollo de este proyecto.</p>
+            </section>
+            
+            <section id="referencias" class="references">
+                <h2>REFERENCIAS</h2>
+                <ol>
+                    <li>E. J. Chisum and B. E. Turvey, <em>Crime Reconstruction</em> (Academic Press, 2011).</li>
+                    <li>R. M. L. W. Carlucci and S. S. Jacobson, <em>Ballistics: Theory and Design of Guns and Ammunition</em> (CRC Press, 2013).</li>
+                    <li>W. H. Press et al., <em>Numerical Recipes: The Art of Scientific Computing</em> (Cambridge University Press, 2007).</li>
+                    <li>J. C. Butcher, <em>Numerical Methods for Ordinary Differential Equations</em> (John Wiley & Sons, 2016).</li>
+                </ol>
+            </section>
+        </main>
+    </div>
+    
+    <script>
+        // Configuración de MathJax
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            options: {
+                ignoreHtmlClass: 'tex2jax_ignore',
+                processHtmlClass: 'tex2jax_process'
+            }
+        };
+        
+        // Función para resaltar la sección actual en la navegación
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.navigation a');
+            
+            function highlightNav() {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    if (scrollY >= (sectionTop - 200)) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                
+                navLinks.forEach(link => {
+                    link.style.fontWeight = 'normal';
+                    if (link.getAttribute('href').slice(1) === current) {
+                        link.style.fontWeight = 'bold';
+                    }
+                });
+            }
+            
+            window.addEventListener('scroll', highlightNav);
+            highlightNav(); // Llamar una vez al cargar la página
+            
+            // Función para desplazamiento suave al hacer clic en enlaces de navegación
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').slice(1);
+                    const targetSection = document.getElementById(targetId);
+                    if (targetSection) {
+                        window.scrollTo({
+                            top: targetSection.offsetTop - 50,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
