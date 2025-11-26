@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultados Numéricos - Modos Térmico y Balístico</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .tables-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+        }
+        
+        .table-wrapper {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            width: 100%;
+            max-width: 550px;
+            transition: transform 0.3s ease;
+        }
+        
+        .table-wrapper:hover {
+            transform: translateY(-5px);
+        }
+        
+        .table-header {
+            background: #2c3e50;
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+        }
+        
+        .table-header h2 {
+            font-size: 1.8rem;
+            margin: 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            background-color: #34495e;
+            color: white;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        tr:hover {
+            background-color: #e9f7fe;
+        }
+        
+        .element-header {
+            font-weight: bold;
+            text-align: center;
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .parameter {
+            font-weight: 600;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: white;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        @media (max-width: 768px) {
+            .tables-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .table-wrapper {
+                max-width: 100%;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Resultados Numéricos</h1>
+            <p class="subtitle">Comparación entre Modo Térmico y Modo Balístico</p>
+        </header>
+        
+        <div class="tables-container">
+            <!-- Tabla Modo Térmico -->
+            <div class="table-wrapper">
+                <div class="table-header">
+                    <h2>Modo Térmico</h2>
+                </div>
+                <table id="thermal-table">
+                    <thead>
+                        <tr>
+                            <th>Parámetro</th>
+                            <th class="element-header">Fe</th>
+                            <th class="element-header">Cr</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Los datos se llenarán con JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Tabla Modo Balístico -->
+            <div class="table-wrapper">
+                <div class="table-header">
+                    <h2>Modo Balístico</h2>
+                </div>
+                <table id="ballistic-table">
+                    <thead>
+                        <tr>
+                            <th>Parámetro</th>
+                            <th class="element-header">Fe</th>
+                            <th class="element-header">Cr</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Los datos se llenarán con JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Análisis de resultados de simulación para Fe y Cr</p>
+        </div>
+    </div>
+
+    <script>
+        // Datos para las tablas
+        const thermalData = [
+            { parameter: "Rugosidad (capas)", Fe: "6.83 ± 2.54", Cr: "6.83 ± 2.56" },
+            { parameter: "Espesor (capas)", Fe: "9.32 ± 5.29", Cr: "9.22 ± 5.25" },
+            { parameter: "Altura máxima (capas)", Fe: "24.45 ± 6.69", Cr: "24.52 ± 6.83" },
+            { parameter: "Cobertura (>10 capas)", Fe: "40.96%", Cr: "40.28%" },
+            { parameter: "Cobertura (>20 capas)", Fe: "15.40%", Cr: "15.13%" },
+            { parameter: "Coalescencia", Fe: "33.33%", Cr: "33.33%" },
+            { parameter: "Crecimiento", Fe: "66.67%", Cr: "66.67%" }
+        ];
+
+        const ballisticData = [
+            { parameter: "Rugosidad (capas)", Fe: "7.28 ± 2.62", Cr: "7.53 ± 2.68" },
+            { parameter: "Espesor (capas)", Fe: "10.52 ± 5.63", Cr: "10.81 ± 5.71" },
+            { parameter: "Altura máxima (capas)", Fe: "27.83 ± 7.01", Cr: "28.22 ± 7.12" },
+            { parameter: "Cobertura (>10 capas)", Fe: "46.35%", Cr: "47.92%" },
+            { parameter: "Cobertura (>20 capas)", Fe: "20.83%", Cr: "21.67%" },
+            { parameter: "Cobertura (>30 capas)", Fe: "2.50%", Cr: "3.33%" },
+            { parameter: "Coalescencia", Fe: "30.00%", Cr: "30.00%" },
+            { parameter: "Crecimiento", Fe: "70.00%", Cr: "70.00%" }
+        ];
+
+        // Función para llenar una tabla con datos
+        function populateTable(tableId, data) {
+            const tableBody = document.querySelector(`#${tableId} tbody`);
+            
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                
+                const paramCell = document.createElement('td');
+                paramCell.textContent = item.parameter;
+                paramCell.className = 'parameter';
+                row.appendChild(paramCell);
+                
+                const feCell = document.createElement('td');
+                feCell.textContent = item.Fe;
+                row.appendChild(feCell);
+                
+                const crCell = document.createElement('td');
+                crCell.textContent = item.Cr;
+                row.appendChild(crCell);
+                
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Llenar las tablas cuando la página cargue
+        document.addEventListener('DOMContentLoaded', () => {
+            populateTable('thermal-table', thermalData);
+            populateTable('ballistic-table', ballisticData);
+        });
+    </script>
+</body>
+</html>
