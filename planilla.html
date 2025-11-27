@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Fichas Académicas (Frontend)</title>
+    
+    <!-- Librerías para generar PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        /* --- Estilos Generales --- */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #0056b3;
+            border-bottom: 2px solid #0056b3;
+            padding-bottom: 10px;
+        }
+        .form-section, .student-list {
+            margin-bottom: 30px;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="number"], input[type="email"], textarea, select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .btn {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.3s;
+        }
+        .btn:hover { background-color: #0056b3; }
+        .btn-danger { background-color: #dc3545; }
+        .btn-danger:hover { background-color: #c82333; }
+        .btn-success { background-color: #28a745; }
+        .btn-success:hover { background-color: #218838; }
+        .form-actions { margin-top: 20px; }
+
+        /* --- Estilos de la Tabla de Estudiantes --- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        .actions a { margin-right: 10px; }
+
+        /* --- ESTILOS PARA EL REPORTE (Plantilla) --- */
+        #reportContainer {
+            position: absolute;
+            left: -9999px; /* Oculto de la vista pero renderizado */
+            width: 210mm; /* Ancho de página A4 */
+            padding: 15mm;
+            background-color: white;
+            font-family: 'Times New Roman', serif;
+            font-size: 12px;
+        }
+        .report-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .report-header h1 {
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            padding: 0;
+            color: black;
+        }
+        .report-section-title {
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid black;
+            padding-bottom: 5px;
+        }
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .report-table td {
+            border: 1px solid black;
+            padding: 5px;
+            vertical-align: top;
+        }
+        .report-label {
+            font-weight: bold;
+            width: 30%;
+        }
+        .report-signatures {
+            margin-top: 50px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .signature-box {
+            text-align: center;
+        }
+        .signature-line {
+            border-top: 1px solid black;
+            margin-top: 40px;
+            padding-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Sistema de Fichas Académicas</h1>
+
+    <!-- Formulario para ingresar datos -->
+    <div class="form-section">
+        <h2>Ingresar Datos del Estudiante</h2>
+        <form id="studentForm">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="cedula">Cédula:</label>
+                    <input type="text" id="cedula" required>
+                </div>
+                <div class="form-group">
+                    <label for="nombres">Nombres:</label>
+                    <input type="text" id="nombres" required>
+                </div>
+                <div class="form-group">
+                    <label for="apellidos">Apellidos:</label>
+                    <input type="text" id="apellidos" required>
+                </div>
+                <div class="form-group">
+                    <label for="edad">Edad:</label>
+                    <input type="number" id="edad">
+                </div>
+                <div class="form-group">
+                    <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
+                    <input type="date" id="fecha_nacimiento">
+                </div>
+                <div class="form-group">
+                    <label for="lugar_nacimiento">Lugar de Nacimiento:</label>
+                    <input type="text" id="lugar_nacimiento">
+                </div>
+                <div class="form-group">
+                    <label for="telefono">Teléfono:</label>
+                    <input type="text" id="telefono">
+                </div>
+                <div class="form-group">
+                    <label for="correo">Correo:</label>
+                    <input type="email" id="correo">
+                </div>
+                <div class="form-group">
+                    <label for="pnf">PNF:</label>
+                    <input type="text" id="pnf">
+                </div>
+                <div class="form-group">
+                    <label for="periodo">Período:</label>
+                    <input type="text" id="periodo">
+                </div>
+            </div>
+            
+            <h3>Apreciación Cuantitativa</h3>
+            <div class="form-grid">
+                <div class="form-group"><label for="promedio_academico">Promedio Académico:</label><input type="number" id="promedio_academico" step="0.01"></div>
+                <div class="form-group"><label for="promedio_conducta">Promedio Conducta:</label><input type="number" id="promedio_conducta" step="0.01"></div>
+                <div class="form-group"><label for="promedio_aptitud_policial">Prom. Aptitud Policial:</label><input type="number" id="promedio_aptitud_policial" step="0.01"></div>
+                <div class="form-group"><label for="promedio_fisico_deportivo">Prom. Físico-Deportivo:</label><input type="number" id="promedio_fisico_deportivo" step="0.01"></div>
+                <div class="form-group"><label for="promedio_general">Promedio General:</label><input type="number" id="promedio_general" step="0.01"></div>
+                <div class="form-group"><label for="promedio_updf">Promedio UPDF:</label><input type="number" id="promedio_updf" step="0.01"></div>
+                <div class="form-group"><label for="orden_merito">Orden de Mérito:</label><input type="text" id="orden_merito"></div>
+                <div class="form-group"><label for="area_sobresaliente">Área Sobresaliente:</label><input type="text" id="area_sobresaliente"></div>
+            </div>
+
+            <h3>Apreciación Cualitativa y Observaciones</h3>
+            <div class="form-group">
+                <label for="apreciacion_cualitativa">Apreciación Cualitativa:</label>
+                <textarea id="apreciacion_cualitativa"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="observaciones">Observaciones Generales:</label>
+                <textarea id="observaciones"></textarea>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-success">Guardar Estudiante</button>
+                <button type="button" class="btn" onclick="clearForm()">Limpiar Formulario</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Lista de estudiantes guardados -->
+    <div class="student-list">
+        <h2>Estudiantes Registrados</h2>
+        <table id="studentTable">
+            <thead>
+                <tr>
+                    <th>Cédula</th>
+                    <th>Nombres</th>
+                    <th>Apellidos</th>
+                    <th>PNF</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="studentTableBody">
+                <!-- Las filas se agregarán aquí con JavaScript -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Plantilla del Reporte (Oculta) -->
+<div id="reportContainer">
+    <div class="report-header">
+        <h1>FICHA ACADÉMICA DEL ALUMNO</h1>
+    </div>
+    
+    <div class="report-section-title">DATOS PERSONALES</div>
+    <table class="report-table">
+        <tr><td class="report-label">NOMBRES:</td><td>{{nombres}}</td><td class="report-label">APELLIDOS:</td><td>{{apellidos}}</td></tr>
+        <tr><td class="report-label">CI.V-</td><td>{{cedula}}</td><td class="report-label">EDAD:</td><td>{{edad}} AÑOS</td></tr>
+        <tr><td class="report-label">FECHA DE NACIMIENTO:</td><td>{{fecha_nacimiento}}</td><td class="report-label">LUGAR DE NACIMIENTO:</td><td>{{lugar_nacimiento}}</td></tr>
+        <tr><td class="report-label">TELÉFONO:</td><td>{{telefono}}</td><td class="report-label">CORREO:</td><td>{{correo}}</td></tr>
+        <tr><td class="report-label">PNF:</td><td>{{pnf}}</td><td class="report-label">PERÍODO:</td><td>{{periodo}}</td></tr>
+    </table>
+
+    <div class="report-section-title">APRECIACIÓN ACADÉMICA CUANTITATIVA</div>
+    <table class="report-table">
+        <tr><td class="report-label">PROMEDIO ACADÉMICO:</td><td>{{promedio_academico}}</td><td class="report-label">PROMEDIO DE CONDUCTA:</td><td>{{promedio_conducta}}</td></tr>
+        <tr><td class="report-label">PROMEDIO DE APTITUD POLICIAL:</td><td>{{promedio_aptitud_policial}}</td><td class="report-label">PROMEDIO FÍSICO – DEPORTIVO:</td><td>{{promedio_fisico_deportivo}}</td></tr>
+        <tr><td class="report-label">PROMEDIO GENERAL:</td><td>{{promedio_general}}</td><td class="report-label">PROMEDIO UPDF:</td><td>{{promedio_updf}}</td></tr>
+        <tr><td class="report-label">ORDEN DE MÉRITO:</td><td>{{orden_merito}} DE</td><td class="report-label">ÁREA SOBRESALIENTE:</td><td>{{area_sobresaliente}}</td></tr>
+    </table>
+
+    <div class="report-section-title">APRECIACIÓN CUALITATIVA</div>
+    <p>{{apreciacion_cualitativa}}</p>
+
+    <div class="report-section-title">OBSERVACIONES GENERALES</div>
+    <p>{{observaciones}}</p>
+
+    <div class="report-signatures">
+        <div class="signature-box">
+            <div>_________________________________</div>
+            <div class="signature-line">DRA. MIGDALIS GONZÁLEZ CELIS</div>
+            <div>COORDINADORA ACADÉMICA (E)</div>
+        </div>
+        <div class="signature-box">
+            <div>_________________________________</div>
+            <div class="signature-line">MGS. MARÍA JOSÉ GUTIERREZ ROMERO</div>
+            <div>COORDINADORA DE CONTROL DE ESTUDIOS</div>
+        </div>
+        <div class="signature-box">
+            <div>_________________________________</div>
+            <div class="signature-line">D/J YORDY JOSÉ SIRIT CRESPO</div>
+            <div>COORDINADOR DE CREACIÓN INTELECTUAL Y VINCULACIÓN SOCIAL</div>
+        </div>
+        <div class="signature-box">
+            <div>_________________________________</div>
+            <div class="signature-line">C/J (CICPC) FELIPE S. SANCHEZ PÉREZ</div>
+            <div>COMANDANTE DEL CUERPO DE ALUMNOS</div>
+        </div>
+    </div>
+    <div style="text-align: center; margin-top: 30px;">
+        <strong>CNEL. FRETZER EDUARDO BORGES YÁNEZ</strong><br>
+        DECANO DEL NÚCLELO ZULIA DE LA UNES
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const studentForm = document.getElementById('studentForm');
+        const studentTableBody = document.getElementById('studentTableBody');
+
+        loadStudents();
+
+        studentForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            saveStudent();
+        });
+    });
+
+    function saveStudent() {
+        const cedula = document.getElementById('cedula').value;
+        const studentData = {
+            cedula, nombres: document.getElementById('nombres').value, apellidos: document.getElementById('apellidos').value,
+            edad: document.getElementById('edad').value, fecha_nacimiento: document.getElementById('fecha_nacimiento').value,
+            lugar_nacimiento: document.getElementById('lugar_nacimiento').value, telefono: document.getElementById('telefono').value,
+            correo: document.getElementById('correo').value, pnf: document.getElementById('pnf').value, periodo: document.getElementById('periodo').value,
+            promedio_academico: document.getElementById('promedio_academico').value, promedio_conducta: document.getElementById('promedio_conducta').value,
+            promedio_aptitud_policial: document.getElementById('promedio_aptitud_policial').value, promedio_fisico_deportivo: document.getElementById('promedio_fisico_deportivo').value,
+            promedio_general: document.getElementById('promedio_general').value, promedio_updf: document.getElementById('promedio_updf').value,
+            orden_merito: document.getElementById('orden_merito').value, area_sobresaliente: document.getElementById('area_sobresaliente').value,
+            apreciacion_cualitativa: document.getElementById('apreciacion_cualitativa').value, observaciones: document.getElementById('observaciones').value
+        };
+
+        let students = JSON.parse(localStorage.getItem('students')) || [];
+        const existingIndex = students.findIndex(s => s.cedula === cedula);
+
+        if (existingIndex !== -1) {
+            if (confirm('El estudiante ya existe. ¿Desea actualizar sus datos?')) {
+                students[existingIndex] = studentData;
+            } else {
+                return;
+            }
+        } else {
+            students.push(studentData);
+        }
+
+        localStorage.setItem('students', JSON.stringify(students));
+        clearForm();
+        loadStudents();
+        alert('Estudiante guardado correctamente.');
+    }
+
+    function loadStudents() {
+        const students = JSON.parse(localStorage.getItem('students')) || [];
+        studentTableBody.innerHTML = '';
+        students.forEach(student => {
+            const row = studentTableBody.insertRow();
+            row.innerHTML = `
+                <td>${student.cedula}</td>
+                <td>${student.nombres}</td>
+                <td>${student.apellidos}</td>
+                <td>${student.pnf}</td>
+                <td class="actions">
+                    <a href="#" class="btn" onclick="generatePDFReport('${student.cedula}')">Generar PDF</a>
+                    <a href="#" class="btn" onclick="generateHTMLReport('${student.cedula}')">Ver HTML</a>
+                    <a href="#" class="btn btn-danger" onclick="deleteStudent('${student.cedula}')">Eliminar</a>
+                </td>`;
+        });
+    }
+    
+    function deleteStudent(cedula) {
+        if (confirm('¿Está seguro de que desea eliminar a este estudiante?')) {
+            let students = JSON.parse(localStorage.getItem('students')) || [];
+            students = students.filter(s => s.cedula !== cedula);
+            localStorage.setItem('students', JSON.stringify(students));
+            loadStudents();
+            alert('Estudiante eliminado.');
+        }
+    }
+
+    function loadStudentIntoForm(cedula) {
+        const students = JSON.parse(localStorage.getItem('students')) || [];
+        const student = students.find(s => s.cedula === cedula);
+        if (student) {
+            Object.keys(student).forEach(key => {
+                const element = document.getElementById(key);
+                if (element) {
+                    element.value = student[key] || '';
+                }
+            });
+        }
+    }
+
+    function clearForm() {
+        document.getElementById('studentForm').reset();
+    }
+    
+    function populateReportTemplate(student) {
+        const reportContainer = document.getElementById('reportContainer');
+        let reportHTML = reportContainer.innerHTML;
+        Object.keys(student).forEach(key => {
+            const regex = new RegExp(`{{${key}}}`, 'g');
+            reportHTML = reportHTML.replace(regex, student[key] || '');
+        });
+        return reportHTML;
+    }
+
+    function generateHTMLReport(cedula) {
+        const students = JSON.parse(localStorage.getItem('students')) || [];
+        const student = students.find(s => s.cedula === cedula);
+        if (!student) { alert('Estudiante no encontrado.'); return; }
+
+        const reportHTML = `
+            <!DOCTYPE html>
+            <html>
+            <head><title>Ficha de ${student.nombres} ${student.apellidos}</title>
+            <style>body { font-family: 'Times New Roman', serif; margin: 20px; }</style>
+            </head>
+            <body>${populateReportTemplate(student)}</body>
+            </html>
+        `;
+        const newWindow = window.open();
+        newWindow.document.write(reportHTML);
+        newWindow.document.close();
+        newWindow.print();
+    }
+
+    function generatePDFReport(cedula) {
+        const students = JSON.parse(localStorage.getItem('students')) || [];
+        const student = students.find(s => s.cedula === cedula);
+        if (!student) { alert('Estudiante no encontrado.'); return; }
+
+        const reportContainer = document.getElementById('reportContainer');
+        reportContainer.innerHTML = populateReportTemplate(student);
+        reportContainer.style.position = 'absolute'; // Hacerlo visible para html2canvas
+        reportContainer.style.left = '0';
+
+        html2canvas(reportContainer, {
+            scale: 2, // Mayor calidad
+            useCORS: true,
+            logging: false
+        }).then(canvas => {
+            reportContainer.style.position = 'absolute'; // Ocultarlo de nuevo
+            reportContainer.style.left = '-9999px';
+
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
+            const imgWidth = 210; // Ancho A4 en mm
+            const pageHeight = 295; // Alto A4 en mm
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            let heightLeft = imgHeight;
+            let position = 0;
+
+            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+
+            while (heightLeft >= 0) {
+                position = heightLeft - imgHeight;
+                pdf.addPage();
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+            }
+
+            pdf.save(`Ficha_${student.nombres}_${student.apellidos}.pdf`);
+        });
+    }
+</script>
+
+</body>
+</html>
