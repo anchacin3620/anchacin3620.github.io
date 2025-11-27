@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Análisis de Mérito por PNF</title>
+    
+    <!-- Librería SheetJS para leer archivos Excel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f2f5;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #1a73e8;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .instructions {
+            background-color: #e8f0fe;
+            border-left: 5px solid #1a73e8;
+            padding: 15px;
+            margin-bottom: 25px;
+            border-radius: 5px;
+        }
+        .file-input-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px;
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            transition: border-color 0.3s;
+        }
+        .file-input-wrapper:hover {
+            border-color: #1a73e8;
+        }
+        input[type="file"] {
+            margin: 10px 0;
+        }
+        .btn {
+            background-color: #1a73e8;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #155ab6;
+        }
+        .results-container {
+            margin-top: 30px;
+        }
+        .pnf-section {
+            margin-bottom: 40px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fafafa;
+        }
+        .pnf-title {
+            font-size: 1.5rem;
+            color: #d93025;
+            border-bottom: 2px solid #d93025;
+            padding-bottom: 5px;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f1f3f4;
+            font-weight: bold;
+            color: #202124;
+        }
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        tr:hover {
+            background-color: #e9ecef;
+        }
+        .error-message {
+            color: #d93025;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Sistema de Análisis de Mérito Académico</h1>
+    
+    <div class="instructions">
+        <p><strong>Instrucciones:</strong></p>
+        <ul>
+            <li>Selecciona uno o varios archivos Excel (formato .xlsx) que contengan las calificaciones de los estudiantes.</li>
+            <li>El sistema leerá los archivos, agrupará a los estudiantes por su PNF (Programa Nacional de Formación) y calculará el orden de mérito basado en la calificación final.</li>
+        </ul>
+    </div>
+
+    <div class="file-input-wrapper">
+        <input type="file" id="fileInput" multiple accept=".xlsx">
+        <button class="btn" onclick="processFiles()">Analizar Archivos</button>
+    </div>
+
+    <div id="resultsContainer" class="results-container"></div>
+</div>
+
+<script>
+    function processFiles() {
+        const fileInput = document.getElementById('fileInput');
+        const resultsContainer = document.getElementById('resultsContainer');
+        
+        // Limpiar resultados anteriores
+        resultsContainer.innerHTML = '';
+        
+        if (fileInput.files.length === 0) {
+            resultsContainer.innerHTML = '<p class="error-message">Por favor, selecciona al menos un archivo Excel.</p>';
+            return;
+        }
+
+        const allStudents = [];
+        let processedFiles = 0;
+
+        Array.from(fileInput.files).forEach(file => {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    
+                    // Asumimos que los datos están en la primera hoja
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    
+                    // Extraer PNF desde la celda A1 (ajustar si es necesario)
+                    const pnfCell = worksheet['A1'];
+                    const pnf = pnfCell ? pnfCell.v.split(':')[1].trim() : 'PNF No Identificado';
+
+                    // Convertir la hoja a un array de arrays
+                    const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+                    
+                    // Iterar sobre las filas de estudiantes (empezando en la fila 8, índice 7)
+                    for (let i = 7; i < jsonData.length; i++) {
+                        const row = jsonData[i];
+                        if (row[1] && row[2] && row[3] && row[19]) { // Asegurarse que los datos clave existan
+                            const student = {
+                                pnf: pnf,
+                                cedula: row[1],
+                                nombres: row[2],
+                                apellidos: row[3],
+                                calificacionFinal: parseFloat(row[19])
+                            };
+                            allStudents.push(student);
+                        }
+                    }
+
+                } catch (error) {
+                    console.error("Error procesando el archivo:", file.name, error);
+                    resultsContainer.innerHTML += `<p class="error-message">Error al leer el archivo: ${file.name}. Asegúrate de que el formato sea correcto.</p>`;
+                }
+                
+                processedFiles++;
+                if (processedFiles === fileInput.files.length) {
+                    // Una vez que todos los archivos se han procesado, clasificar y mostrar
+                    displayResults(classifyAndRank(allStudents));
+                }
+            };
+            
+            reader.readAsArrayBuffer(file);
+        });
+    }
+
+    function classifyAndRank(students) {
+        // Clasificar por PNF
+        const groupedByPnf = students.reduce((acc, student) => {
+            const pnf = student.pnf;
+            if (!acc[pnf]) {
+                acc[pnf] = [];
+            }
+            acc[pnf].push(student);
+            return acc;
+        }, {});
+
+        // Ordenar por calificación final y asignar rango
+        for (const pnf in groupedByPnf) {
+            groupedByPnf[pnf].sort((a, b) => b.calificacionFinal - a.calificacionFinal);
+            groupedByPnf[pnf].forEach((student, index) => {
+                student.ranking = index + 1;
+            });
+        }
+
+        return groupedByPnf;
+    }
+
+    function displayResults(rankedData) {
+        const resultsContainer = document.getElementById('resultsContainer');
+        resultsContainer.innerHTML = ''; // Limpiar mensaje de carga
+
+        if (Object.keys(rankedData).length === 0) {
+            resultsContainer.innerHTML = '<p class="error-message">No se encontraron datos válidos en los archivos.</p>';
+            return;
+        }
+
+        for (const pnf in rankedData) {
+            const students = rankedData[pnf];
+            
+            const pnfSection = document.createElement('div');
+            pnfSection.className = 'pnf-section';
+            
+            const pnfTitle = document.createElement('h2');
+            pnfTitle.className = 'pnf-title';
+            pnfTitle.textContent = `PNF: ${pnf}`;
+            pnfSection.appendChild(pnfTitle);
+
+            const table = document.createElement('table');
+            const thead = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+            headerRow.innerHTML = `
+                <th>Orden de Mérito</th>
+                <th>Cédula</th>
+                <th>Nombres</th>
+                <th>Apellidos</th>
+                <th>Calificación Final</th>
+            `;
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+
+            const tbody = document.createElement('tbody');
+            students.forEach(student => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${student.ranking}</td>
+                    <td>${student.cedula}</td>
+                    <td>${student.nombres}</td>
+                    <td>${student.apellidos}</td>
+                    <td>${student.calificacionFinal.toFixed(2)}</td>
+                `;
+                tbody.appendChild(row);
+            });
+            table.appendChild(tbody);
+            pnfSection.appendChild(table);
+            resultsContainer.appendChild(pnfSection);
+        }
+    }
+</script>
+
+</body>
+</html>
