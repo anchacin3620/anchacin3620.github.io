@@ -1,0 +1,1926 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis de Calificaciones Estudiantiles por Programa de Formación</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --light-bg: #ecf0f1;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        
+        .main-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2rem 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            margin-bottom: 2rem;
+        }
+        
+        .author-info {
+            text-align: right;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .section-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        
+        .section-card:hover {
+            transform: translateY(-3px);
+        }
+        
+        .section-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 1.2rem 1.5rem;
+            border-bottom: 3px solid var(--secondary-color);
+        }
+        
+        .section-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .section-body {
+            padding: 1.5rem;
+        }
+        
+        .student-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .student-item {
+            background: #f8f9fa;
+            border-left: 4px solid var(--secondary-color);
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+            border-radius: 0 8px 8px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .student-item:hover {
+            background: #e9ecef;
+            border-left-width: 6px;
+        }
+        
+        .student-rank {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--secondary-color);
+            color: white;
+            font-weight: bold;
+            margin-right: 1rem;
+            font-size: 1.1rem;
+        }
+        
+        .rank-1 { background: linear-gradient(135deg, #ffd700, #ffed4e); color: #333; }
+        .rank-2 { background: linear-gradient(135deg, #c0c0c0, #e8e8e8); color: #333; }
+        .rank-3 { background: linear-gradient(135deg, #cd7f32, #e6a85c); }
+        
+        .student-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+        }
+        
+        .student-id {
+            color: #666;
+            font-size: 0.9rem;
+            margin-left: 0.5rem;
+        }
+        
+        .student-details {
+            margin-top: 0.8rem;
+            padding-left: 3.5rem;
+        }
+        
+        .detail-item {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .detail-label {
+            font-weight: 500;
+            min-width: 150px;
+            color: #555;
+        }
+        
+        .detail-value {
+            color: #333;
+        }
+        
+        .program-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin: 0.2rem;
+        }
+        
+        .badge-emergency {
+            background: #e3f2fd;
+            color: #1565c0;
+            border: 1px solid #90caf9;
+        }
+        
+        .badge-penitentiary {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #a5d6a7;
+        }
+        
+        .badge-police {
+            background: #fff3e0;
+            color: #e65100;
+            border: 1px solid #ffcc80;
+        }
+        
+        .distribution-box {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .distribution-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem;
+            margin-bottom: 0.5rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .distribution-bar {
+            height: 8px;
+            background: var(--secondary-color);
+            border-radius: 4px;
+            margin-top: 0.5rem;
+        }
+        
+        .observation-box {
+            background: #fff9c4;
+            border-left: 4px solid #fbc02d;
+            padding: 1rem;
+            margin-top: 1.5rem;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .observation-box h5 {
+            color: #f57f17;
+            margin-bottom: 0.8rem;
+        }
+        
+        .nav-pills .nav-link {
+            color: var(--primary-color);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-pills .nav-link:hover {
+            background: rgba(52, 152, 219, 0.1);
+        }
+        
+        .nav-pills .nav-link.active {
+            background: var(--secondary-color);
+            color: white;
+        }
+        
+        .subject-item {
+            background: white;
+            padding: 0.5rem 0.8rem;
+            margin: 0.3rem 0;
+            border-radius: 6px;
+            border-left: 3px solid var(--success-color);
+        }
+        
+        .score-highlight {
+            font-weight: 700;
+            color: var(--success-color);
+            font-size: 1.1rem;
+        }
+        
+        footer {
+            background: var(--primary-color);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+            text-align: center;
+        }
+        
+        .tab-content {
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .student-details {
+                padding-left: 1rem;
+            }
+            
+            .detail-label {
+                min-width: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="mb-2">Análisis de Calificaciones Estudiantiles por Programa de Formación</h1>
+                    <p class="mb-0 opacity-90">Informe académico detallado de desempeño estudiantil</p>
+                </div>
+                <div class="col-md-4 author-info">
+                    <p class="mb-1">Elaborado por:</p>
+                    <p class="mb-0 fw-bold">Profesor Ángel Chacín Ávila</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <ul class="nav nav-pills flex-column flex-md-row" id="analysisTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="tab1" data-bs-toggle="pill" data-bs-target="#analysis1" type="button">
+                            <i class="bi bi-clipboard-data me-2"></i>Análisis General
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="tab2" data-bs-toggle="pill" data-bs-target="#analysis2" type="button">
+                            <i class="bi bi-file-earmark-excel me-2"></i>Análisis por Documentos
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="tab3" data-bs-toggle="pill" data-bs-target="#analysis3" type="button">
+                            <i class="bi bi-calculator me-2"></i>Análisis con Componentes
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="tab4" data-bs-toggle="pill" data-bs-target="#analysis4" type="button">
+                            <i class="bi bi-trophy me-2"></i>Análisis PNB
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="tab5" data-bs-toggle="pill" data-bs-target="#analysis5" type="button">
+                            <i class="bi bi-award me-2"></i>Análisis Policial Detallado
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="analysisTabsContent">
+                    <!-- Análisis 1 -->
+                    <div class="tab-pane fade show active" id="analysis1" role="tabpanel">
+                        <div class="section-card">
+                            <div class="section-header">
+                                <h2><i class="bi bi-list-ol me-2"></i>Top 10 Estudiantes con Mayores Calificaciones</h2>
+                            </div>
+                            <div class="section-body">
+                                <p class="mb-3">Tras analizar todas las hojas de cálculo proporcionadas, he identificado los 10 estudiantes con las calificaciones más altas y sus respectivos programas de formación (PNF). Los resultados se presentan ordenados de mayor a menor calificación promedio:</p>
+                                
+                                <ul class="student-list">
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank rank-1">1</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">MORAIMA JACQUELINE CHOURIO LUGO</span>
+                                                <span class="student-id">(ID: 32228961)</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Calificación promedio:</span>
+                                                        <span class="detail-value score-highlight">18.48</span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-emergency">EMERGENCIA PRE-HOSPITALARIA</span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank rank-2">2</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">EDWIN JESUS CORTEZ ALMEA</span>
+                                                <span class="student-id">(ID: 26154568)</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Calificación:</span>
+                                                        <span class="detail-value score-highlight">18.00</span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-penitentiary">SERVICIO PENITENCIARIO</span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank rank-3">3</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">NERVIN ENRIQUE CHACON RIVAS</span>
+                                                <span class="student-id">(ID: 30771907)</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Calificación promedio:</span>
+                                                        <span class="detail-value score-highlight">17.90</span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-emergency">EMERGENCIA PRE-HOSPITALARIA</span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank">4</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">RENZO JOSE SCANDELA ESLAVA</span>
+                                                <span class="student-id">(ID: 19485345)</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Calificación:</span>
+                                                        <span class="detail-value score-highlight">17.00</span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-penitentiary">SERVICIO PENITENCIARIO</span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank">5</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">RUT ESTER VALBUENA GONZALEZ</span>
+                                                <span class="student-id">(ID: 26816691)</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Calificación promedio:</span>
+                                                        <span class="detail-value score-highlight">16.85</span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-emergency">EMERGENCIA PRE-HOSPITALARIA</span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank">6</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">MARIA ISABEL REYES ROMERO</span>
+                                                <span class="student-id">(ID: 29877116)</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Calificación promedio:</span>
+                                                        <span class="detail-value score-highlight">16.65</span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-emergency">EMERGENCIA PRE-HOSPITALARIA</span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank">7</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">EVASANDRY GONZALEZ GONZALEZ</span>
+                                                <span class="student-id">(ID: 33890219)</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Calificación promedio:</span>
+                                                        <span class="detail-value">3.84</span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-emergency">EMERGENCIA PRE-HOSPITALARIA</span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank">8</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">ABEL JESUE REYES OCHOA</span>
+                                                <span class="student-id">(ID: 26056544)</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Calificación promedio:</span>
+                                                        <span class="detail-value">0.93</span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-emergency">EMERGENCIA PRE-HOSPITALARIA</span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank">9</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">AMAURY MARTIN RODRIGUEZ TRESPACIOS</span>
+                                                <span class="student-id">(ID: 30139756)</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Calificación promedio:</span>
+                                                        <span class="detail-value">0.93</span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-emergency">EMERGENCIA PRE-HOSPITALARIA</span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank">10</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">ANDREA SARAI BURGOS AGUILAR</span>
+                                                <span class="student-id">(ID: 31559018)</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Calificación promedio:</span>
+                                                        <span class="detail-value">0.93</span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-emergency">EMERGENCIA PRE-HOSPITALARIA</span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                                
+                                <div class="distribution-box">
+                                    <h4 class="mb-3"><i class="bi bi-pie-chart me-2"></i>Distribución por Programa de Formación:</h4>
+                                    <div class="distribution-item">
+                                        <div>
+                                            <strong>PNF: EMERGENCIA PRE-HOSPITALARIA</strong>
+                                            <div class="distribution-bar" style="width: 80%;"></div>
+                                        </div>
+                                        <span class="badge bg-primary fs-6">8 estudiantes</span>
+                                    </div>
+                                    <div class="distribution-item">
+                                        <div>
+                                            <strong>PNF: SERVICIO PENITENCIARIO</strong>
+                                            <div class="distribution-bar" style="width: 20%;"></div>
+                                        </div>
+                                        <span class="badge bg-success fs-6">2 estudiantes</span>
+                                    </div>
+                                    <div class="distribution-item">
+                                        <div>
+                                            <strong>PNF: SERVICIO POLICIAL</strong>
+                                            <div class="distribution-bar" style="width: 0%; background: #e74c3c;"></div>
+                                        </div>
+                                        <span class="badge bg-danger fs-6">Ningún estudiante en el top 10 (todos tienen calificaciones de 0.00)</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="observation-box">
+                                    <h5><i class="bi bi-info-circle me-2"></i>Observación Importante:</h5>
+                                    <p>Los estudiantes del PNF de Emergencia Pre-Hospitalaria dominan claramente la lista de los mejores desempeños académicos, con MORAIMA JACQUELINE CHOURIO LUGO obteniendo el promedio más alto de 18.48 puntos.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Análisis 2 -->
+                    <div class="tab-pane fade" id="analysis2" role="tabpanel">
+                        <div class="section-card">
+                            <div class="section-header">
+                                <h2><i class="bi bi-file-earmark-excel me-2"></i>Los 10 estudiantes con mayores calificaciones</h2>
+                            </div>
+                            <div class="section-body">
+                                <p class="mb-3">Basado en el análisis de todas las hojas de Excel proporcionadas, he identificado los 10 estudiantes con las calificaciones más altas y sus respectivos programas de formación (PNF):</p>
+                                
+                                <ul class="student-list">
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank rank-1">1</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">MORAIMA JACQUELINE CHOURIO LUGO</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Calificación:</span>
+                                                        <span class="detail-value score-highlight">19.250 puntos</span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-emergency">EMERGENCIA PRE-HOSPITALARIA</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Documento:</span>
+                                                        <span class="detail-value text-monospace">HOJA%20DE%20ACTUACION%20BEPH%20I-2025%20PSI.xlsx</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank rank-2">2</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">NERVIN ENRIQUE CHACON RIVAS</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Calificación:</span>
+                                                        <span class="detail-value score-highlight">19.250 puntos</span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-emergency">EMERGENCIA PRE-HOSPITALARIA</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Documento:</span>
+                                                        <span class="detail-value text-monospace">HOJA%20DE%20ACTUACION%20BEPH%20I-2025%20PSI.xlsx</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank rank-3">3</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">EDWIN JESUS CORTEZ ALMEA</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Calificación:</span>
+                                                        <span class="detail-value score-highlight">19.200 puntos</span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-penitentiary">SERVICIO PENITENCIARIO</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Documento:</span>
+                                                        <span class="detail-value text-monospace">FUNDAMENTOS%20JURIDICOS%20%20PENITEN%20I-2025.xlsx</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank">4</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">RUT ESTER VALBUENA GONZALEZ</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Calificación:</span>
+                                                        <span class="detail-value score-highlight">18.050 puntos</span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-emergency">EMERGENCIA PRE-HOSPITALARIA</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Documento:</span>
+                                                        <span class="detail-value text-monospace">HOJA%20DE%20ACTUACION%20BEPH%20I-2025%20PSI.xlsx</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank">5</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">MARIA ISABEL REYES ROMERO</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Calificación:</span>
+                                                        <span class="detail-value score-highlight">18.050 puntos</span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-emergency">EMERGENCIA PRE-HOSPITALARIA</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Documento:</span>
+                                                        <span class="detail-value text-monospace">HOJA%20DE%20ACTUACION%20BEPH%20I-2025%20PSI.xlsx</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank">6</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">RENZO JOSE SCANDELA ESLAVA</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Calificación:</span>
+                                                        <span class="detail-value score-highlight">18.000 puntos</span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-penitentiary">SERVICIO PENITENCIARIO</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Documento:</span>
+                                                        <span class="detail-value text-monospace">FUNDAMENTOS%20JURIDICOS%20%20PENITEN%20I-2025.xlsx</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank">7</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">EDWIN JESUS CORTEZ ALMEA</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Calificación:</span>
+                                                        <span class="detail-value score-highlight">17.600 puntos</span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-penitentiary">SERVICIO PENITENCIARIO</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Documento:</span>
+                                                        <span class="detail-value text-monospace">FORMACION%20SOCIOPOLITICA%20PENIT%20%20PENITEN%20I-2025.xlsx</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank">8</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">RENZO JOSE SCANDELA ESLAVA</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Calificación:</span>
+                                                        <span class="detail-value score-highlight">17.400 puntos</span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-penitentiary">SERVICIO PENITENCIARIO</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Documento:</span>
+                                                        <span class="detail-value text-monospace">FORMACION%20SOCIOPOLITICA%20PENIT%20%20PENITEN%20I-2025.xlsx</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank">9</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">RENZO JOSE SCANDELA ESLAVA</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Calificación:</span>
+                                                        <span class="detail-value score-highlight">17.400 puntos</span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-penitentiary">SERVICIO PENITENCIARIO</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Documento:</span>
+                                                        <span class="detail-value text-monospace">INTERVENCION%20Y%20MANJ%20DE%20CRISIS%20%20PENITEN%20I-2025.xlsx</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank">10</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">EDWIN JESUS CORTEZ ALMEA</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Calificación:</span>
+                                                        <span class="detail-value score-highlight">16.600 puntos</span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-penitentiary">SERVICIO PENITENCIARIO</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Documento:</span>
+                                                        <span class="detail-value text-monospace">INTERVENCION%20Y%20MANJ%20DE%20CRISIS%20%20PENITEN%20I-2025.xlsx</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                                
+                                <div class="distribution-box">
+                                    <h4 class="mb-3"><i class="bi bi-pie-chart me-2"></i>Distribución por programa de formación:</h4>
+                                    <div class="distribution-item">
+                                        <div>
+                                            <strong>EMERGENCIA PRE-HOSPITALARIA</strong>
+                                            <div class="distribution-bar" style="width: 50%;"></div>
+                                        </div>
+                                        <span class="badge bg-primary fs-6">5 estudiantes</span>
+                                    </div>
+                                    <div class="distribution-item">
+                                        <div>
+                                            <strong>SERVICIO PENITENCIARIO</strong>
+                                            <div class="distribution-bar" style="width: 50%;"></div>
+                                        </div>
+                                        <span class="badge bg-success fs-6">5 estudiantes</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="observation-box">
+                                    <h5><i class="bi bi-info-circle me-2"></i>Observaciones:</h5>
+                                    <ul class="mb-0">
+                                        <li>Es interesante notar que algunos estudiantes como RENZO JOSE SCANDELA ESLAVA y EDWIN JESUS CORTEZ ALMEA aparecen múltiples veces en diferentes unidades curriculares del mismo programa de formación.</li>
+                                        <li>Las calificaciones más altas se distribuyen equitativamente entre los programas de EMERGENCIA PRE-HOSPITALARIA y SERVICIO PENITENCIARIO.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Análisis 3 -->
+                    <div class="tab-pane fade" id="analysis3" role="tabpanel">
+                        <div class="section-card">
+                            <div class="section-header">
+                                <h2><i class="bi bi-calculator me-2"></i>Los 10 estudiantes con mayores calificaciones</h2>
+                            </div>
+                            <div class="section-body">
+                                <p class="mb-3">Basado en el análisis de todas las hojas de Excel proporcionadas, he identificado los 10 estudiantes con las calificaciones más altas y sus respectivos programas de formación (PNF):</p>
+                                
+                                <ul class="student-list">
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank rank-1">1</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">YULIBETH DE CHIQUINQUIRA SUAREZ ANAYA</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-police">SERVICIO POLICIAL (CONV. MCPAL)</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Calificación:</span>
+                                                        <span class="detail-value score-highlight">19.4 puntos</span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Componentes:</span>
+                                                        <span class="detail-value">
+                                                            <span class="badge bg-info me-2">60%: 19 puntos</span>
+                                                            <span class="badge bg-success">40%: 20 puntos</span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank rank-2">2</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">CATHERINE VALERIA MORA AVILA</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-police">SERVICIO POLICIAL</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Calificación:</span>
+                                                        <span class="detail-value score-highlight">19.000 puntos</span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Componentes:</span>
+                                                        <span class="detail-value">
+                                                            <span class="badge bg-info me-2">60%: 19.000 puntos</span>
+                                                            <span class="badge bg-success">40%: 19.000 puntos</span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank rank-3">3</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">LEIVERSON ALFONSO MORALES HERNANDEZ</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-police">SERVICIO POLICIAL</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Calificación:</span>
+                                                        <span class="detail-value score-highlight">19.000 puntos</span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Componentes:</span>
+                                                        <span class="detail-value">
+                                                            <span class="badge bg-info me-2">60%: 19.000 puntos</span>
+                                                            <span class="badge bg-success">40%: 19.000 puntos</span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank">4</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">YON AXEL VARGAS AGUILAR</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-police">SERVICIO POLICIAL (CONV. MCPAL)</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Calificación:</span>
+                                                        <span class="detail-value score-highlight">18.8 puntos</span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Componentes:</span>
+                                                        <span class="detail-value">
+                                                            <span class="badge bg-info me-2">60%: 18 puntos</span>
+                                                            <span class="badge bg-success">40%: 20 puntos</span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank">5</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">RAFAEL GREGORIO OCAMPO CAMBAR</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-police">SERVICIO POLICIAL (CONV. MCPAL)</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Calificación:</span>
+                                                        <span class="detail-value score-highlight">18.6 puntos</span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Componentes:</span>
+                                                        <span class="detail-value">
+                                                            <span class="badge bg-info me-2">60%: 19 puntos</span>
+                                                            <span class="badge bg-success">40%: 18 puntos</span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank">6</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">KEINOL JOSE TORRES ATENCIO</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-police">SERVICIO POLICIAL</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Calificación:</span>
+                                                        <span class="detail-value score-highlight">18.350 puntos</span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Componentes:</span>
+                                                        <span class="detail-value">
+                                                            <span class="badge bg-info me-2">60%: 18.000 puntos</span>
+                                                            <span class="badge bg-success">40%: 18.875 puntos</span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank">7</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">YUSNAIDY PAOLA FERRER FERNANDEZ</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-police">SERVICIO POLICIAL</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Calificación:</span>
+                                                        <span class="detail-value score-highlight">18.200 puntos</span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Componentes:</span>
+                                                        <span class="detail-value">
+                                                            <span class="badge bg-info me-2">60%: 17.667 puntos</span>
+                                                            <span class="badge bg-success">40%: 19.000 puntos</span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank">8</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">MIGUEL ANGEL PEREZ MONTIEL</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-police">SERVICIO POLICIAL</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Calificación:</span>
+                                                        <span class="detail-value score-highlight">18.000 puntos</span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Componentes:</span>
+                                                        <span class="detail-value">
+                                                            <span class="badge bg-info me-2">60%: 18.000 puntos</span>
+                                                            <span class="badge bg-success">40%: 18.000 puntos</span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank">9</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">OSWALDO DAVID PALMAR GARCIA</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-police">SERVICIO POLICIAL</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Calificación:</span>
+                                                        <span class="detail-value score-highlight">18.000 puntos</span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Componentes:</span>
+                                                        <span class="detail-value">
+                                                            <span class="badge bg-info me-2">60%: 18.000 puntos</span>
+                                                            <span class="badge bg-success">40%: 18.000 puntos</span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank">10</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">FRANYER DAVID FLORES VILCHEZ</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-police">SERVICIO POLICIAL (CONV. MCPAL)</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Calificación:</span>
+                                                        <span class="detail-value score-highlight">17.7998 puntos</span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Componentes:</span>
+                                                        <span class="detail-value">
+                                                            <span class="badge bg-info me-2">60%: 16.333 puntos</span>
+                                                            <span class="badge bg-success">40%: 20.000 puntos</span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                                
+                                <div class="distribution-box">
+                                    <h4 class="mb-3"><i class="bi bi-pie-chart me-2"></i>Distribución por programa de formación:</h4>
+                                    <div class="distribution-item">
+                                        <div>
+                                            <strong>SERVICIO POLICIAL</strong>
+                                            <div class="distribution-bar" style="width: 60%;"></div>
+                                        </div>
+                                        <span class="badge bg-primary fs-6">6 estudiantes</span>
+                                    </div>
+                                    <div class="distribution-item">
+                                        <div>
+                                            <strong>SERVICIO POLICIAL (CONV. MCPAL)</strong>
+                                            <div class="distribution-bar" style="width: 40%;"></div>
+                                        </div>
+                                        <span class="badge bg-warning fs-6">4 estudiantes</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="observation-box">
+                                    <h5><i class="bi bi-info-circle me-2"></i>Observaciones:</h5>
+                                    <ul class="mb-0">
+                                        <li>La mayoría de los estudiantes con las calificaciones más altas pertenecen al programa de SERVICIO POLICIAL, con especial mención a los del convenio municipal.</li>
+                                        <li>Los puntajes se calcularon según la fórmula estándar: 60% del primer componente + 40% del segundo componente.</li>
+                                        <li>Se encontraron algunas inconsistencias en los cálculos automáticos de las hojas de Excel, por lo que se realizó una verificación manual de los puntajes.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Análisis 4 -->
+                    <div class="tab-pane fade" id="analysis4" role="tabpanel">
+                        <div class="section-card">
+                            <div class="section-header">
+                                <h2><i class="bi bi-trophy me-2"></i>Top 10 Estudiantes con Mejores Calificaciones</h2>
+                            </div>
+                            <div class="section-body">
+                                <p class="mb-3">Basado en el análisis de las hojas de Excel proporcionadas, he identificado los 10 estudiantes con las calificaciones más altas:</p>
+                                
+                                <ul class="student-list">
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank rank-1">1</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">CATHERINE VALERIA MORA AVILA</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-police">SERVICIO POLICIAL (PNB)</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Asignaturas:</span>
+                                                        <div class="detail-value">
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                                                <strong>Soporte Básico de Vida:</strong> 20.000
+                                                            </div>
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                                                <strong>Cultura de Paz:</strong> 20.000
+                                                            </div>
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                                                <strong>Policía Comunal:</strong> 20.000
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank rank-2">2</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">LEIVERSON ALFONSO MORALES HERNANDEZ</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-police">SERVICIO POLICIAL (PNB)</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Asignaturas:</span>
+                                                        <div class="detail-value">
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                                                <strong>Soporte Básico de Vida:</strong> 20.000
+                                                            </div>
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                                                <strong>Cultura de Paz:</strong> 20.000
+                                                            </div>
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                                                <strong>Policía Comunal:</strong> 20.000
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank rank-3">3</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">ANDREINA PAOLA PARRA LEAL</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-police">SERVICIO POLICIAL (PNB)</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Asignaturas:</span>
+                                                        <div class="detail-value">
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                                                <strong>Soporte Básico de Vida:</strong> 20.000
+                                                            </div>
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                                                <strong>Cultura de Paz:</strong> 20.000
+                                                            </div>
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                                                <strong>Policía Comunal:</strong> 20.000
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank">4</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">OSWALDO DAVID PALMAR GARCIA</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-police">SERVICIO POLICIAL (PNB)</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Asignaturas:</span>
+                                                        <div class="detail-value">
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                                                <strong>Soporte Básico de Vida:</strong> 20.000
+                                                            </div>
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                                                <strong>Cultura de Paz:</strong> 20.000
+                                                            </div>
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                                                <strong>Policía Comunal:</strong> 20.000
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank">5</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">KEINOL JOSE TORRES ATENCIO</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-police">SERVICIO POLICIAL (PNB)</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Asignaturas:</span>
+                                                        <div class="detail-value">
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                                                <strong>Soporte Básico de Vida:</strong> 20.000
+                                                            </div>
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                                                <strong>Policía Comunal:</strong> 20.000
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank">6</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">ALEXANDER ESMITH COHEN GONZALEZ</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-police">SERVICIO POLICIAL (PNB)</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Asignaturas:</span>
+                                                        <div class="detail-value">
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                                                <strong>Soporte Básico de Vida:</strong> 20.000
+                                                            </div>
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                                                <strong>Policía Comunal:</strong> 20.000
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank">7</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">YOSIBELYS EDIANYS MACHADO BARBOZA</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-police">SERVICIO POLICIAL (PNB)</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Asignaturas:</span>
+                                                        <div class="detail-value">
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                                                <strong>Soporte Básico de Vida:</strong> 20.000
+                                                            </div>
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                                                <strong>Policía Comunal:</strong> 20.000
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank">8</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">ALEJANDRA ELENA FUENMAYOR VOLCAN</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-police">SERVICIO POLICIAL (PNB)</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Asignaturas:</span>
+                                                        <div class="detail-value">
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                                                <strong>Soporte Básico de Vida:</strong> 20.000
+                                                            </div>
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                                                <strong>Policía Comunal:</strong> 20.000
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank">9</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">KENY SAMUEL FERNANDEZ PAZ</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-police">SERVICIO POLICIAL (PNB)</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Asignaturas:</span>
+                                                        <div class="detail-value">
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                                                <strong>Soporte Básico de Vida:</strong> 20.000
+                                                            </div>
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                                                <strong>Policía Comunal:</strong> 20.000
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank">10</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">FABIOLA CAROLINA QUINTERO LOPEZ</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-police">SERVICIO POLICIAL (PNB)</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Asignaturas:</span>
+                                                        <div class="detail-value">
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                                                <strong>Policía Comunal:</strong> 20.000
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                                
+                                <div class="distribution-box">
+                                    <h4 class="mb-3"><i class="bi bi-pie-chart me-2"></i>Programa de Formación:</h4>
+                                    <div class="alert alert-info">
+                                        <i class="bi bi-info-circle me-2"></i>
+                                        <strong>Todos los estudiantes identificados pertenecen al PNF: SERVICIO POLICIAL (PNB)</strong>, que es el programa de formación común en todas las hojas de Excel analizadas.
+                                    </div>
+                                </div>
+                                
+                                <div class="observation-box">
+                                    <h5><i class="bi bi-info-circle me-2"></i>Observaciones Importantes:</h5>
+                                    <p class="mb-2">Este programa parece estar dividido en diferentes unidades curriculares como:</p>
+                                    <ul class="mb-0">
+                                        <li>ACREDITABLE CULTURA DE PAZ</li>
+                                        <li>SOPORTE BASICO DE VIDA</li>
+                                        <li>PSI</li>
+                                        <li>EDUCACION FISICA</li>
+                                        <li>TECNICAS BASICAS DE OPERACIONES POLICIALES</li>
+                                        <li>POLICIA COMUNAL</li>
+                                    </ul>
+                                    <p class="mt-2 mb-0">Los estudiantes con las calificaciones más altas se destacan especialmente en las unidades de SOPORTE BASICO DE VIDA y PSI, donde varios alcanzaron la calificación perfecta de 20 puntos.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Análisis 5 -->
+                    <div class="tab-pane fade" id="analysis5" role="tabpanel">
+                        <div class="section-card">
+                            <div class="section-header">
+                                <h2><i class="bi bi-award me-2"></i>Los 10 estudiantes con mejores calificaciones</h2>
+                            </div>
+                            <div class="section-body">
+                                <p class="mb-3">Basado en el análisis de las hojas de Excel proporcionadas, he identificado los 10 estudiantes con las calificaciones más altas y su programa de formación:</p>
+                                
+                                <ul class="student-list">
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank rank-1">1</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">MARIA CLARA CASTILLO MENGUAL</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-police">SERVICIO POLICIAL</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Asignaturas y Calificaciones:</span>
+                                                        <div class="detail-value">
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-star-fill text-warning me-2"></i>
+                                                                <strong>SOPORTE BASICO DE VIDA:</strong> 20.000
+                                                            </div>
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-star-fill text-warning me-2"></i>
+                                                                <strong>PSI PNB AMB. 01:</strong> 20
+                                                            </div>
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-star-fill text-warning me-2"></i>
+                                                                <strong>ACREDITABLE CULTURA DE PAZ:</strong> 19.200
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank rank-2">2</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">YULEIDY DEL CARMEN MOSQUERA PIÑANGO</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-police">SERVICIO POLICIAL</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Asignaturas y Calificaciones:</span>
+                                                        <div class="detail-value">
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-star-fill text-warning me-2"></i>
+                                                                <strong>SOPORTE BASICO DE VIDA:</strong> 20.000
+                                                            </div>
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-star-fill text-warning me-2"></i>
+                                                                <strong>PSI PNB AMB. 01:</strong> 20
+                                                            </div>
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-star-fill text-warning me-2"></i>
+                                                                <strong>PSI PNB I-2025:</strong> 19.800
+                                                            </div>
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-star-fill text-warning me-2"></i>
+                                                                <strong>ACREDITABLE CULTURA DE PAZ:</strong> 18.000
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank rank-3">3</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">ALEJANDRO JOSE GAONA LAMEDA</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-police">SERVICIO POLICIAL</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Asignaturas y Calificaciones:</span>
+                                                        <div class="detail-value">
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-star-fill text-warning me-2"></i>
+                                                                <strong>SOPORTE BASICO DE VIDA:</strong> 20.000
+                                                            </div>
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-star-fill text-warning me-2"></i>
+                                                                <strong>PSI PNB AMB. 01:</strong> 20
+                                                            </div>
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-star-fill text-warning me-2"></i>
+                                                                <strong>ACREDITABLE CULTURA DE PAZ:</strong> 19.800
+                                                            </div>
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-star-fill text-warning me-2"></i>
+                                                                <strong>PSI PNB I-2025:</strong> 19.800
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank">4</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">MARIANGEL NOEMI ROSALES MENDOZA</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-police">SERVICIO POLICIAL</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Asignaturas y Calificaciones:</span>
+                                                        <div class="detail-value">
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-star-fill text-warning me-2"></i>
+                                                                <strong>PSI PNB AMB. 01:</strong> 20
+                                                            </div>
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-star-fill text-warning me-2"></i>
+                                                                <strong>SOPORTE BASICO DE VIDA:</strong> 20.000
+                                                            </div>
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-star-fill text-warning me-2"></i>
+                                                                <strong>PSI PNB I-2025:</strong> 19.800
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank">5</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">JHONMAR EDUARDO ADAN LUZARDO</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-police">SERVICIO POLICIAL</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Asignaturas y Calificaciones:</span>
+                                                        <div class="detail-value">
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-star-fill text-warning me-2"></i>
+                                                                <strong>SOPORTE BASICO DE VIDA:</strong> 20.000
+                                                            </div>
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-star-fill text-warning me-2"></i>
+                                                                <strong>ACREDITABLE CULTURA DE PAZ:</strong> 19.000
+                                                            </div>
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-star-fill text-warning me-2"></i>
+                                                                <strong>PSI PNB I-2025:</strong> 18.800
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank">6</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">DAIMAR ISABEL BRACHO FERNANDEZ</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-police">SERVICIO POLICIAL</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Asignaturas y Calificaciones:</span>
+                                                        <div class="detail-value">
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-star-fill text-warning me-2"></i>
+                                                                <strong>SOPORTE BASICO DE VIDA:</strong> 20.000
+                                                            </div>
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-star-fill text-warning me-2"></i>
+                                                                <strong>ACREDITABLE CULTURA DE PAZ:</strong> 19.800
+                                                            </div>
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-star-fill text-warning me-2"></i>
+                                                                <strong>PSI PNB I-2025:</strong> 19.800
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank">7</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">ANY LUCIA GONZALEZ HERNADNEZ</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-police">SERVICIO POLICIAL</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Asignaturas y Calificaciones:</span>
+                                                        <div class="detail-value">
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-star-fill text-warning me-2"></i>
+                                                                <strong>SOPORTE BASICO DE VIDA:</strong> 20.000
+                                                            </div>
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-star-fill text-warning me-2"></i>
+                                                                <strong>ACREDITABLE CULTURA DE PAZ:</strong> 19.000
+                                                            </div>
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-star-fill text-warning me-2"></i>
+                                                                <strong>PSI PNB I-2025:</strong> 19.000
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank">8</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">RAMON ANTONIO CURBATA HERNADNEZ</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-police">SERVICIO POLICIAL</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Asignaturas y Calificaciones:</span>
+                                                        <div class="detail-value">
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-star-fill text-warning me-2"></i>
+                                                                <strong>SOPORTE BASICO DE VIDA:</strong> 20.000
+                                                            </div>
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-star-fill text-warning me-2"></i>
+                                                                <strong>ACREDITABLE CULTURA DE PAZ:</strong> 19.000
+                                                            </div>
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-star-fill text-warning me-2"></i>
+                                                                <strong>PSI PNB I-2025:</strong> 19.000
+                                                            </div>
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-star-fill text-warning me-2"></i>
+                                                                <strong>EDU FISICA:</strong> 18.750
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank">9</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">ERIANNIS KAROLINA GUIZADO DELGADO</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-police">SERVICIO POLICIAL</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Asignaturas y Calificaciones:</span>
+                                                        <div class="detail-value">
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-star-fill text-warning me-2"></i>
+                                                                <strong>SOPORTE BASICO DE VIDA:</strong> 20.000
+                                                            </div>
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-star-fill text-warning me-2"></i>
+                                                                <strong>ACREDITABLE CULTURA DE PAZ:</strong> 18.800
+                                                            </div>
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-star-fill text-warning me-2"></i>
+                                                                <strong>PSI PNB I-2025:</strong> 19.400
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="student-item">
+                                        <div class="d-flex align-items-start">
+                                            <span class="student-rank">10</span>
+                                            <div class="flex-grow-1">
+                                                <span class="student-name">CATHERINE VALERIA MORA AVILA</span>
+                                                <div class="student-details">
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">PNF:</span>
+                                                        <span class="detail-value">
+                                                            <span class="program-badge badge-police">SERVICIO POLICIAL</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Asignaturas y Calificaciones:</span>
+                                                        <div class="detail-value">
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-star-fill text-warning me-2"></i>
+                                                                <strong>TECNICAS BASICAS DE OPERACIONES POLICIALES:</strong> 19.000
+                                                            </div>
+                                                            <div class="subject-item">
+                                                                <i class="bi bi-star-fill text-warning me-2"></i>
+                                                                <strong>POLICIA COMUNAL:</strong> 19.400
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                                
+                                <div class="distribution-box">
+                                    <h4 class="mb-3"><i class="bi bi-pie-chart me-2"></i>Programa de Formación:</h4>
+                                    <div class="alert alert-info">
+                                        <i class="bi bi-info-circle me-2"></i>
+                                        <strong>Todos los estudiantes identificados pertenecen al PNF: SERVICIO POLICIAL</strong>, que es el programa de formación común en todas las hojas de Excel analizadas.
+                                    </div>
+                                </div>
+                                
+                                <div class="observation-box">
+                                    <h5><i class="bi bi-info-circle me-2"></i>Observaciones del Programa:</h5>
+                                    <p class="mb-2">Este programa parece estar dividido en diferentes unidades curriculares como:</p>
+                                    <ul class="mb-0">
+                                        <li><strong>ACREDITABLE CULTURA DE PAZ</strong></li>
+                                        <li><strong>SOPORTE BASICO DE VIDA</strong></li>
+                                        <li><strong>PSI</strong> (PSI PNB AMB. 01, PSI PNB I-2025)</li>
+                                        <li><strong>EDUCACION FISICA</strong></li>
+                                        <li><strong>TECNICAS BASICAS DE OPERACIONES POLICIALES</strong></li>
+                                        <li><strong>POLICIA COMUNAL</strong></li>
+                                    </ul>
+                                    <p class="mt-3 mb-0">Los estudiantes con las calificaciones más altas se destacan especialmente en las unidades de SOPORTE BASICO DE VIDA y PSI, donde varios alcanzaron la calificación perfecta de 20 puntos.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p class="mb-0">© 2025 Análisis de Calificaciones Estudiantiles | Elaborado por el Profesor Ángel Chacín Ávila</p>
+            <p class="mb-0 mt-2 small opacity-75">Informe académico basado en el análisis de hojas de cálculo proporcionadas</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
