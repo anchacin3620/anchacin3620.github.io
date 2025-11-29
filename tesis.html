@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valor Probatorio de la Cadena de Custodia - Esquema de Trabajo</title>
+    <style>
+        /* --- ESTILOS CSS --- */
+        :root {
+            --primary-color: #003366; /* Azul oscuro profesional */
+            --secondary-color: #004080; /* Azul más claro */
+            --background-color: #f4f4f9;
+            --text-color: #333;
+            --border-color: #ddd;
+            --hover-bg-color: #e9ecef;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px 50px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        /* --- Tipografía y Jerarquía --- */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Georgia', serif;
+            color: var(--primary-color);
+            margin-top: 1.5em;
+            margin-bottom: 0.8em;
+        }
+
+        h1 {
+            font-size: 2.2em;
+            text-align: center;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            text-align: center;
+            font-style: italic;
+            color: var(--secondary-color);
+            font-weight: normal;
+        }
+
+        h3 {
+            font-size: 1.4em;
+            cursor: pointer;
+            padding: 10px 15px;
+            background-color: var(--background-color);
+            border-left: 5px solid var(--primary-color);
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        h3:hover {
+            background-color: var(--hover-bg-color);
+        }
+        
+        h3::after {
+            content: '▼'; /* Icono de flecha */
+            font-size: 0.8em;
+            transition: transform 0.3s ease;
+        }
+
+        h3.collapsed::after {
+            transform: rotate(-90deg);
+        }
+
+        h4 {
+            font-size: 1.2em;
+            margin-top: 1.2em;
+            color: var(--secondary-color);
+        }
+
+        h5 {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-top: 1em;
+        }
+
+        p, li {
+            text-align: justify;
+        }
+
+        strong, b {
+            color: var(--primary-color);
+        }
+
+        ul {
+            padding-left: 25px;
+            list-style-type: square;
+        }
+
+        li {
+            margin-bottom: 0.5em;
+        }
+        
+        /* --- Secciones Especiales --- */
+        .preliminares, .finales {
+            background-color: #f9f9f9;
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 2em;
+        }
+        
+        .preliminares h4, .finales h4 {
+            margin-top: 0;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        /* --- Contenido Colapsable --- */
+        .chapter-content {
+            max-height: 5000px; /* Altura suficiente para mostrar todo el contenido */
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out, opacity 0.3s ease-in-out;
+            opacity: 1;
+        }
+
+        .chapter-content.collapsed {
+            max-height: 0;
+            opacity: 0;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Valor Probatorio de la Cadena de Custodia como Garantía Legal de los Derechos del Imputado en la Sentencia Penal</h1>
+            <h2>Un Análisis en el Marco Jurídico Venezolano</h2>
+        </header>
+
+        <main>
+            <section class="preliminares">
+                <h4>Páginas Preliminares</h4>
+                <ul>
+                    <li>Portada</li>
+                    <li>Aprobación del Tutor</li>
+                    <li>Dedicatoria</li>
+                    <li>Agradecimiento</li>
+                    <li>Resumen</li>
+                    <li>Índice General</li>
+                </ul>
+            </section>
+
+            <div class="chapter">
+                <h3 class="chapter-title">CAPÍTULO I: MARCO CONTEXTUAL Y FUNDAMENTACIÓN JURÍDICA DE LA CADENA DE CUSTODIA EN VENEZUELA</h3>
+                <div class="chapter-content">
+                    <h4>1.1. Planteamiento del Problema:</h4>
+                    <ul>
+                        <li><strong>Situación Problemática:</strong> Análisis de las consecuencias de la vulneración de la cadena de custodia en el proceso penal venezolano, su impacto en la fiabilidad de la prueba y la afectación de las garantías constitucionales del imputado.</li>
+                        <li><strong>Formulación del Problema:</strong> ¿De qué manera el valor probatorio otorgado por los tribunales venezolanos a la cadena de custodia se constituye en una garantía legal efectiva para proteger los derechos al debido proceso y a la presunción de inocencia del imputado, conforme a la Constitución y el Código Orgánico Procesal Penal?</li>
+                    </ul>
+
+                    <h4>1.2. Justificación e Importancia de la Investigación:</h4>
+                    <ul>
+                        <li><strong>Relevancia Jurídica:</strong> Necesidad de consolidar la cadena de custodia como pilar del sistema acusatorio venezolano para evitar sentencias basadas en prueba ilícita.</li>
+                        <li><strong>Relevancia Práctica:</strong> Importancia para la gestión jurídica de fiscales del Ministerio Público, defensores públicos y abogados litigantes en la etapa de investigación y juicio.</li>
+                    </ul>
+
+                    <h4>1.3. Objetivos de la Investigación:</h4>
+                    <ul>
+                        <li><strong>Objetivo General:</strong> Analizar el valor probatorio de la cadena de custodia como garantía legal de los derechos del imputado en la sentencia penal, dentro del ordenamiento jurídico venezolano.</li>
+                        <li><strong>Objetivos Específicos:</strong>
+                            <ul>
+                                <li>Definir el concepto y regulación de la cadena de custodia en el Código Orgánico Procesal Penal (COPP).</li>
+                                <li>Identificar los derechos fundamentales del imputado (Art. 49 CRBV) que se vinculan directamente con la integridad de la evidencia.</li>
+                                <li>Examinar la jurisprudencia del Tribunal Supremo de Justicia (TSJ) sobre la nulidad y exclusión de pruebas por ruptura de la cadena de custodia.</li>
+                                <li>Proponer lineamientos para optimizar la gestión de la cadena de custodia por parte de los operadores de justicia.</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <h4>1.4. Marco Teórico:</h4>
+                    <ul>
+                        <li>La Cadena de Custodia: Definición, principios (inmutabilidad, preservación, registro) y fases.</li>
+                        <li>El Sistema Acusatorio Venezolano y el Principio de Oralidad.</li>
+                        <li>El Valor Probatorio de la Evidencia Física: Pertinencia, licitud y necesidad.</li>
+                        <li>Garantías del Imputado: Debido proceso, presunción de inocencia, derecho a la defensa y a un juicio justo.</li>
+                    </ul>
+
+                    <h4>1.5. Marco Jurídico Nacional:</h4>
+                    <ul>
+                        <li><strong>Constitución de la República Bolivariana de Venezuela (CRBV):</strong> Artículo 49 (Derecho al debido proceso).</li>
+                        <li><strong>Código Orgánico Procesal Penal (COPP):</strong> Artículos relativos a los actos de investigación, los medios de prueba, y específicamente las disposiciones sobre el aseguramiento y la cadena de custodia de evidencia física (ej. Arts. 187, 197, 200, 201).</li>
+                        <li><strong>Leyes Especiales:</strong> Mención a normativas como la Ley Orgánica contra la Delincuencia Organizada y Financiamiento al Terrorismo.</li>
+                        <li><strong>Doctrina Jurídica Venezolana:</strong> Aportes de juristas nacionales sobre prueba penal y garantías constitucionales.</li>
+                    </ul>
+
+                    <h4>1.6. Metodología de la Investigación:</h4>
+                    <ul>
+                        <li><strong>Tipo de Investigación:</strong> Jurídica, documental y analítica.</li>
+                        <li><strong>Técnicas de Recolección de Información:</strong> Revisión bibliográfica de textos y artículos especializados, y análisis de jurisprudencia.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="chapter">
+                <h3 class="chapter-title">CAPÍTULO II: ANÁLISIS JURISPRUDENCIAL Y PRÁCTICA DE LA CADENA DE CUSTODIA EN VENEZUELA</h3>
+                <div class="chapter-content">
+                    <h4>2.1. El Procedimiento de la Cadena de Custodia en la Práctica Forense Venezolana:</h4>
+                    <ul>
+                        <li><strong>Actores Involucrados:</strong> Cuerpo de Investigaciones Científicas, Penales y Criminalísticas (CICPC), Ministerio Público, Defensa, Órganos de Jurisdicción.</li>
+                        <li><strong>Fases Críticas:</strong> Desde el hallazgo en el lugar del hecho hasta su presentación en la audiencia de juicio oral.</li>
+                    </ul>
+
+                    <h4>2.2. Análisis de la Jurisprudencia del Tribunal Supremo de Justicia (TSJ):</h4>
+                    <ul>
+                        <li><strong>Criterios de la Sala Constitucional:</strong> Sobre la nulidad de pruebas obtenidas con violación de garantías constitucionales.</li>
+                        <li><strong>Criterios de la Sala de Casación Penal:</strong> Interpretación de los requisitos de la cadena de custodia y sus consecuencias procesales (exclusión de la prueba, valoración residual).</li>
+                        <li>Estudio de casos paradigmáticos donde se declaró la ilicitud de la evidencia.</li>
+                    </ul>
+
+                    <h4>2.3. La Ruptura de la Cadena de Custodia como Vulneración de Derechos Fundamentales:</h4>
+                    <ul>
+                        <li>Impacto directo en la presunción de inocencia (Art. 49.2 CRBV).</li>
+                        <li>Violación del derecho a la defensa al impedir al imputado controvertir una prueba manipulada o no garantizada.</li>
+                        <li>El principio de "libertad de prueba" y su límite en la licitud (Art. 197 COPP).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="chapter">
+                <h3 class="chapter-title">CAPÍTULO III: LA CADENA DE CUSTODIA COMO HERRAMIENTA DE GESTIÓN JURÍDICA PARA UNA SENTENCIA JUSTA</h3>
+                <div class="chapter-content">
+                    <h4>3.1. Discusión y Contrastación de Resultados:</h4>
+                    <p>Confrontación entre la regulación del COPP (Cap. I) y la aplicación práctica y jurisprudencial (Cap. II). Identificación de vacíos, contradicciones o áreas de mejora en el sistema actual.</p>
+
+                    <h4>3.2. Propuestas para el Fortalecimiento de la Cadena de Custodia desde la Gestión Jurídica:</h4>
+                    <ul>
+                        <li><strong>Protocolos y Buenas Prácticas:</strong> Sugerencias para estandarizar y digitalizar los registros de la cadena de custodia.</li>
+                        <li><strong>Capacitación:</strong> Propuestas de formación continua para fiscales, defensores y jueces sobre la importancia técnica y jurídica del procedimiento.</li>
+                        <li><strong>Reformas Legislativas (si aplica):</strong> Sugerencias para modificar o aclarar artículos del COPP para hacer el control más estricto.</li>
+                    </ul>
+
+                    <h4>3.3. El Rol del Juez de Control y de Juicio en la Tutela de la Integridad de la Evidencia:</h4>
+                    <ul>
+                        <li>Deberes del Juez de Control en la audiencia preliminar para verificar la licitud de la prueba.</li>
+                        <li>Responsabilidad del Juez de Juicio en la valoración de la cadena de custodia al momento de sentenciar, asegurando que la condena se base en prueba válida.</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <section class="finales">
+                <h4>Secciones Finales</h4>
+                <ul>
+                    <li><strong>Conclusiones y Recomendaciones:</strong> Síntesis de los hallazgos y recomendaciones dirigidas al TSJ, Ministerio Público, Defensoría Pública y escuelas de formación judicial.</li>
+                    <li><strong>Referencias Bibliográficas</strong></li>
+                    <li><strong>Anexos</strong> (Ej. Copia de sentencias del TSJ, formato del "Acta de Cadena de Custodia", glosario de términos).</li>
+                </ul>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // --- CÓDIGO JAVASCRIPT ---
+        document.addEventListener('DOMContentLoaded', function() {
+            const chapterTitles = document.querySelectorAll('.chapter-title');
+
+            chapterTitles.forEach(title => {
+                title.addEventListener('click', function() {
+                    // Alternar la clase 'collapsed' en el título para cambiar el icono
+                    this.classList.toggle('collapsed');
+                    
+                    // Encontrar el contenido del capítulo (siguiente elemento hermano)
+                    const content = this.nextElementSibling;
+                    
+                    // Alternar la clase 'collapsed' en el contenido para mostrarlo/ocultarlo
+                    content.classList.toggle('collapsed');
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
