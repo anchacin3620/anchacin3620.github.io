@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orden de Mérito - PNF Criminalística</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f7f6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 950px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        }
+        h1, h2, h3 {
+            color: #0056b3;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 2.2em;
+        }
+        h2 {
+            font-size: 1.8em;
+            margin-top: 40px;
+        }
+        h3 {
+            font-size: 1.4em;
+            margin-top: 30px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        thead th {
+            background-color: #0056b3;
+            color: #ffffff;
+            font-weight: bold;
+        }
+        tbody tr:nth-of-type(even) {
+            background-color: #f9f9f9;
+        }
+        tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        li {
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="%230056b3" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>') no-repeat left center;
+            padding-left: 30px;
+            margin-bottom: 10px;
+        }
+        .resumen-section {
+            margin-top: 40px;
+        }
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #e9ecef;
+            color: #6c757d;
+            font-size: 0.9em;
+            border-top: 1px solid #dee2e6;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Análisis de Rendimiento Académico</h1>
+        <h2>Tabla de Mérito - Top 10 Estudiantes</h2>
+        
+        <!-- La tabla será generada por JavaScript aquí -->
+        <div id="tabla-container"></div>
+
+        <div class="resumen-section">
+            <h2>Resumen Ejecutivo</h2>
+            
+            <h3>Metodología</h3>
+            <p id="metodologia-texto"></p>
+
+            <h3>Análisis del Rendimiento por Ambiente</h3>
+            <p id="analisis-ambiente-texto"></p>
+
+            <h3>Observaciones Relevantes</h3>
+            <ul id="observaciones-list"></ul>
+
+            <h3>Recomendaciones</h3>
+            <ul id="recomendaciones-list"></ul>
+        </div>
+    </div>
+
+    <footer>
+        <p>Elaborado por el Profesor Ángel Chacín Ávila @2025</p>
+        <p>Se publica con licencia GPL</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- DATOS ---
+            const estudiantes = [
+                { posicion: 1, nombre: "ANA KARINA CASTILLO FERNANDEZ", cedula: "32030992", calificacion: "18.17", ambiente: "2" },
+                { posicion: 2, nombre: "JORDIARIS DEL CARMEN RIOS BARRAZA", cedula: "31883937", calificacion: "18.15", ambiente: "2" },
+                { posicion: 3, nombre: "YENIFER SARAY TISOY TANDIOY", cedula: "32271472", calificacion: "18.12", ambiente: "2" },
+                { posicion: 4, nombre: "JUAN CARLOS BELTRAN GONZALEZ", cedula: "32166141", calificacion: "18.08", ambiente: "2" },
+                { posicion: 5, nombre: "FRANYELI STEFANIA RODRIGUEZ QUINTERO", cedula: "32331483", calificacion: "18.05", ambiente: "2" },
+                { posicion: 6, nombre: "MERLIANNY DANIELA FERNANDEZ GONZALEZ", cedula: "31901539", calificacion: "18.00", ambiente: "2" },
+                { posicion: 7, nombre: "WILENDRY JAVIER DELGADO RINCON", cedula: "32316810", calificacion: "17.97", ambiente: "2" },
+                { posicion: 8, nombre: "KEILA PATRICIA BRICEÑO GONZALEZ", cedula: "31832234", calificacion: "17.95", ambiente: "2" },
+                { posicion: 9, nombre: "NELZIRE ANDREINA CASTRO VILCHEZ", cedula: "33788772", calificacion: "17.90", ambiente: "2" },
+                { posicion: 10, nombre: "YASMELY SARAY HERNANDEZ SANCHEZ", cedula: "31702573", calificacion: "17.88", ambiente: "2" }
+            ];
+
+            const metodologia = "Se analizaron a los estudiantes enlistados en las hojas de Excel suministradas, considerando las siguientes unidades curriculares: Inspecciones Técnicas, Formación Sociopolítica, Acreditable Cuadrantes de Paz, Educación Física, Técnicas de Investigación Penal y Ciencias Básicas. Para cada estudiante se calculó el promedio de todas las materias cursadas, dando igual peso a cada unidad curricular. Se excluyeron del ranking los estudiantes con calificaciones incompletas o inferiores a 10 puntos.";
+            
+            // Nuevo texto para la sección de análisis
+            const analisisPorAmbiente = "El análisis de los datos revela un hallazgo significativo: los diez estudiantes con los más altos promedios generales pertenecen exclusivamente al Ambiente 2. Este resultado se obtuvo tras calcular un promedio general para cada estudiante a partir de todas las unidades curriculares, sin importar su ambiente de origen. Posteriormente, al ordenar a todos los estudiantes de forma descendente, se observó que las primeras diez posiciones del ranking están ocupadas por estudiantes de este mismo ambiente. Esto indica un rendimiento académico colectivo excepcional por parte del grupo del Ambiente 2 en comparación con los demás.";
+
+            const observaciones = [
+                "Rendimiento General: El rendimiento académico de los estudiantes del programa es notablemente alto, con el top 10 obteniendo promedios superiores a 17.8 puntos sobre 20.",
+                "Empates: No se encontraron empates exactos en las calificaciones finales del top 10, lo que facilitó el establecimiento del orden de mérito sin necesidad de aplicar criterios de desempate.",
+                "Consistencia: Los estudiantes mejor posicionados muestran un rendimiento consistente across todas las materias, con variaciones mínimas entre sus calificaciones más altas y más bajas.",
+                "Materias con Mayor Impacto: Las materias de Ciencias Básicas y Educación Física parecen tener un impacto positivo en el rendimiento general de los estudiantes mejor posicionados."
+            ];
+
+            const recomendaciones = [
+                "Se sugiere investigar los factores que contribuyen al alto rendimiento del Ambiente 2 para poder replicar estas condiciones en otros ambientes.",
+                "Se recomienda reconocer públicamente a los estudiantes del top 10 como incentivo para mantener su excelencia académica.",
+                "Sería beneficioso analizar las estrategias de estudio de los estudiantes mejor posicionados para compartirlas con el resto del programa."
+            ];
+
+            // --- FUNCIONES PARA GENERAR EL CONTENIDO ---
+
+            function generarTabla(datos) {
+                const container = document.getElementById('tabla-container');
+                let tablaHTML = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Posición</th>
+                                <th>Nombre Completo</th>
+                                <th>Cédula</th>
+                                <th>Calificación Final</th>
+                                <th>Ambiente</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+                datos.forEach(est => {
+                    tablaHTML += `
+                        <tr>
+                            <td>${est.posicion}°</td>
+                            <td>${est.nombre}</td>
+                            <td>${est.cedula}</td>
+                            <td>${est.calificacion}</td>
+                            <td>${est.ambiente}</td>
+                        </tr>
+                    `;
+                });
+
+                tablaHTML += `</tbody></table>`;
+                container.innerHTML = tablaHTML;
+            }
+
+            function generarLista(items, elementId) {
+                const listElement = document.getElementById(elementId);
+                let listaHTML = '';
+                items.forEach(item => {
+                    listaHTML += `<li>${item}</li>`;
+                });
+                listElement.innerHTML = listaHTML;
+            }
+
+            function generarTexto(texto, elementId) {
+                const textElement = document.getElementById(elementId);
+                textElement.textContent = texto;
+            }
+
+            // --- EJECUCIÓN ---
+            generarTabla(estudiantes);
+            generarTexto(metodologia, 'metodologia-texto');
+            generarTexto(analisisPorAmbiente, 'analisis-ambiente-texto'); // Nueva llamada a la función
+            generarLista(observaciones, 'observaciones-list');
+            generarLista(recomendaciones, 'recomendaciones-list');
+        });
+    </script>
+
+</body>
+</html>
