@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ranking Académico PNF Emergencia Prehospitalaria</title>
+    <style>
+        /* --- Estilos Generales --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        /* --- Contenedor Principal --- */
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        /* --- Encabezados --- */
+        h1 {
+            color: #0056b3;
+            text-align: center;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #007bff;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            border-left: 5px solid #007bff;
+            padding-left: 15px;
+        }
+
+        h3 {
+            color: #343a40;
+            margin-top: 25px;
+        }
+
+        /* --- Tabla de Ranking --- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 0.95em;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        thead th {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.85em;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        tbody tr:hover {
+            background-color: #e9ecef;
+        }
+        
+        td:first-child {
+            font-weight: bold;
+        }
+
+        /* --- Resumen Ejecutivo --- */
+        .summary-section ul {
+            list-style-type: disc;
+            margin-left: 20px;
+        }
+
+        .summary-section li {
+            margin-bottom: 10px;
+        }
+
+        /* --- Footer --- */
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Análisis de Rendimiento Académico - PNF Emergencia Prehospitalaria</h1>
+        </header>
+
+        <main>
+            <section id="ranking-section">
+                <h2>Ranking de Mérito (Top 10)</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Posición</th>
+                            <th>Nombre Completo</th>
+                            <th>Cédula</th>
+                            <th>Calificación Final</th>
+                            <th>Ambiente</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ranking-table-body">
+                        <!-- Las filas de la tabla serán generadas por JavaScript -->
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="summary-section" class="summary-section">
+                <h2>Resumen Ejecutivo</h2>
+                
+                <h3>Observaciones Relevantes</h3>
+                <ul>
+                    <li><strong>Rendimiento destacado:</strong> Los primeros cuatro estudiantes mantienen un rendimiento académico superior con promedios por encima de 17 puntos, destacándose MORAIMA JACQUELINE CHOURIO LUGO con el promedio más alto (18.250).</li>
+                    <li><strong>Situación de ALERTA:</strong> Cuatro estudiantes presentan un rendimiento crítico con promedios de 1.000, lo que indica que se encuentran en situación de ALERTA en la mayoría de las materias.</li>
+                    <li><strong>Distribución de ambientes:</strong> Todos los estudiantes evaluados pertenecen al Ambiente 1 del Trayecto I.</li>
+                    <li><strong>Calificaciones sobresalientes:</strong> MORAIMA JACQUELINE CHOURIO LUGO obtuvo las calificaciones más altas en las materias de Farmacología (19.000) y Preparación contra Incendios (19.200).</li>
+                    <li><strong>Desempeño por materia:</strong> Farmacología presenta el mayor rango de calificaciones (desde 1.000 hasta 19.600), mientras que Educación Física muestra las calificaciones más bajas en general.</li>
+                </ul>
+
+                <h3>Criterios Aplicados</h3>
+                <ul>
+                    <li><strong>Ordenamiento principal:</strong> Promedio general de todas las materias cursadas.</li>
+                    <li><strong>Criterios de desempate:</strong> No se aplicaron al no existir empates en los promedios finales.</li>
+                    <li><strong>Exclusiones:</strong> No se excluyeron estudiantes con calificaciones inferiores al mínimo aprobatorio, ya que no se especificó un criterio de exclusión en las instrucciones.</li>
+                </ul>
+
+                <h3>Recomendaciones</h3>
+                <ul>
+                    <li>Se sugiere implementar un plan de recuperación para los estudiantes en situación de ALERTA (promedio 1.000).</li>
+                    <li>Considerar un programa de tutorías para fortalecer las áreas con menor rendimiento general.</li>
+                    <li>Realizar un seguimiento especializado a los estudiantes con rendimiento intermedio para potenciar su desarrollo académico.</li>
+                </ul>
+            </section>
+        </main>
+
+        <footer>
+            Elaborado por el Profesor Ángel Chacín Ávila, @2025 se publica con licencia GPL
+        </footer>
+    </div>
+
+    <script>
+        // --- Datos de los estudiantes ---
+        const estudiantes = [
+            { posicion: 1, nombre: "MORAIMA JACQUELINE CHOURIO LUGO", cedula: "32228961", calificacion: 18.250, ambiente: "Ambiente 1" },
+            { posicion: 2, nombre: "NERVIN ENRIQUE CHACON RIVAS", cedula: "30771907", calificacion: 17.786, ambiente: "Ambiente 1" },
+            { posicion: 3, nombre: "RUT ESTER VALBUENA GONZALEZ", cedula: "26816691", calificacion: 17.064, ambiente: "Ambiente 1" },
+            { posicion: 4, nombre: "MARIA ISABEL REYES ROMERO", cedula: "29877116", calificacion: 17.029, ambiente: "Ambiente 1" },
+            { posicion: 5, nombre: "EVASANDRY GONZALEZ GONZALEZ", cedula: "33890219", calificacion: 2.786, ambiente: "Ambiente 1" },
+            { posicion: 6, nombre: "ABEL JESUE REYES OCHOA", cedula: "26056544", calificacion: 1.000, ambiente: "Ambiente 1" },
+            { posicion: 7, nombre: "AMAURY MARTIN RODRIGUEZ TRESPACIOS", cedula: "30139756", calificacion: 1.000, ambiente: "Ambiente 1" },
+            { posicion: 8, nombre: "ANDREA SARAI BURGOS AGUILAR", cedula: "31559018", calificacion: 1.000, ambiente: "Ambiente 1" },
+            { posicion: 9, nombre: "ELIAS SAMUEL CASANOVA NAVA", cedula: "31722855", calificacion: 1.000, ambiente: "Ambiente 1" }
+        ];
+
+        // --- Función para poblar la tabla ---
+        function cargarRanking() {
+            const tableBody = document.getElementById('ranking-table-body');
+            // Limpiar el cuerpo de la tabla antes de agregar nuevos datos
+            tableBody.innerHTML = '';
+
+            estudiantes.forEach(estudiante => {
+                // Crear una nueva fila
+                const row = document.createElement('tr');
+
+                // Asignar el HTML interno de la fila con los datos del estudiante
+                row.innerHTML = `
+                    <td>${estudiante.posicion}°</td>
+                    <td>${estudiante.nombre}</td>
+                    <td>${estudiante.cedula}</td>
+                    <td>${estudiante.calificacion.toFixed(3)}</td>
+                    <td>${estudiante.ambiente}</td>
+                `;
+
+                // Agregar la fila al cuerpo de la tabla
+                tableBody.appendChild(row);
+            });
+        }
+
+        // --- Ejecutar la función cuando el contenido de la página se haya cargado ---
+        document.addEventListener('DOMContentLoaded', cargarRanking);
+
+    </script>
+
+</body>
+</html>
