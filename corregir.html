@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis de Tesis: Simulación Monte Carlo de Películas Delgadas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+        
+        h2 {
+            color: #1a237e;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e8eaf6;
+            font-size: 1.6rem;
+        }
+        
+        h3 {
+            color: #3949ab;
+            margin: 15px 0 10px;
+            font-size: 1.3rem;
+        }
+        
+        ul, ol {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .highlight {
+            background-color: #e8eaf6;
+            border-left: 4px solid #3949ab;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .warning {
+            background-color: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .success {
+            background-color: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .reference-item {
+            padding: 12px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border-left: 3px solid #5c6bc0;
+        }
+        
+        .reference-title {
+            font-weight: 600;
+            color: #1a237e;
+        }
+        
+        .reference-details {
+            font-style: italic;
+            color: #555;
+            margin: 5px 0;
+        }
+        
+        .reference-relevance {
+            color: #388e3c;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+        
+        .badge-primary {
+            background-color: #c5cae9;
+            color: #1a237e;
+        }
+        
+        .badge-warning {
+            background-color: #ffecb3;
+            color: #ff6f00;
+        }
+        
+        .badge-success {
+            background-color: #c8e6c9;
+            color: #2e7d32;
+        }
+        
+        .badge-danger {
+            background-color: #ffcdd2;
+            color: #c62828;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #e0e0e0;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab:hover {
+            color: #3949ab;
+        }
+        
+        .tab.active {
+            color: #3949ab;
+            border-bottom: 3px solid #3949ab;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        @media (min-width: 768px) {
+            .container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .full-width {
+                grid-column: 1 / -1;
+            }
+        }
+        
+        .actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 10px 20px;
+            background-color: #3949ab;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #283593;
+        }
+        
+        button.secondary {
+            background-color: #757de8;
+        }
+        
+        button.secondary:hover {
+            background-color: #5c6bc0;
+        }
+        
+        .download-btn {
+            background-color: #4caf50;
+        }
+        
+        .download-btn:hover {
+            background-color: #388e3c;
+        }
+        
+        .download-btn.rtf {
+            background-color: #2196f3;
+        }
+        
+        .download-btn.rtf:hover {
+            background-color: #0b7dda;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        
+        .stat {
+            text-align: center;
+            padding: 15px;
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1a237e;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .download-section {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f5f7fa;
+            border-radius: 8px;
+            border: 1px dashed #c5cae9;
+        }
+        
+        .download-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #1a237e;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Análisis de Tesis: Simulación Monte Carlo de Películas Delgadas</h1>
+        <p class="subtitle">Análisis del borrador de tesis "Simulación Monte Carlo de los procesos de deposición de películas delgadas de Cr y Fe en un sustrato sólido de Mg (001)"</p>
+    </header>
+    
+    <div class="tabs">
+        <div class="tab active" onclick="showTab('inconsistencias')">Inconsistencias</div>
+        <div class="tab" onclick="showTab('bibliografia')">Bibliografía</div>
+        <div class="tab" onclick="showTab('recomendaciones')">Recomendaciones</div>
+        <div class="tab" onclick="showTab('estadisticas')">Estadísticas</div>
+    </div>
+    
+    <div class="container">
+        <div id="inconsistencias" class="tab-content active">
+            <div class="card full-width">
+                <h2>Inconsistencias Identificadas en el Borrador</h2>
+                
+                <div class="highlight">
+                    <h3>1. Valores Numéricos Contradictorios</h3>
+                    <ul>
+                        <li><strong>Resumen vs. Capítulo IV:</strong> En el <strong>Resumen</strong> se reportan valores para el <span class="badge badge-warning">modo térmico</span> (Fe: rugosidad 6.87±2.56, espesor 9.35±5.30; Cr: rugosidad 6.78±2.52, espesor 9.21±5.23).</li>
+                        <li>En el <strong>Capítulo IV (Tabla N°1)</strong> se presentan valores para el <span class="badge badge-warning">modo balístico</span> (Fe: rugosidad 7.28±2.62, espesor 10.52±5.63; Cr: rugosidad 7.53±2.68, espesor 10.81±5.71).</li>
+                        <li><strong>Problema:</strong> No se aclara que el Resumen corresponde a un modo diferente.</li>
+                    </ul>
+                </div>
+                
+                <div class="warning">
+                    <h3>2. Modos de Deposición</h3>
+                    <p>En el <strong>Capítulo III (3.4.3)</strong> se afirma: <em>"en este trabajo solo trabajaremos con el modo de deposición balístico"</em>.</p>
+                    <p>Sin embargo, el <strong>código (Apéndice A)</strong> permite seleccionar entre térmico, balístico y aleatorio.</p>
+                    <p><strong>Recomendación:</strong> Aclarar si solo se usó el modo balístico o si se exploraron otros.</p>
+                </div>
+                
+                <div class="warning">
+                    <h3>3. Numeración de Ecuaciones</h3>
+                    <p>En el <strong>Capítulo III</strong>, la ecuación (4) aparece dos veces con formulaciones distintas:</p>
+                    <ul>
+                        <li>En <strong>3.2</strong>: \( P_{ads} = \text{...} \) (probabilidad de adsorción).</li>
+                        <li>En <strong>3.4.4</strong>: \( P_{stick} = \text{...} \) (probabilidad de adhesión).</li>
+                    </ul>
+                    <p><strong>Recomendación:</strong> Revisar la numeración para evitar confusiones.</p>
+                </div>
+                
+                <div class="warning">
+                    <h3>4. Referencia a Penélope (Salvat, 2019)</h3>
+                    <p>Penélope es un código de simulación Monte Carlo para transporte de radiación, no para crecimiento de películas delgadas.</p>
+                    <p><strong>Problema:</strong> No es directamente relevante para el tema de la tesis.</p>
+                    <p><strong>Opciones:</strong> Eliminarla, moverla a un contexto más amplio, o justificarla si hubo inspiración de código.</p>
+                </div>
+                
+                <div class="download-section">
+                    <div class="download-title">Descargar contenido</div>
+                    <div class="actions">
+                        <button class="download-btn rtf" onclick="downloadAsRTF('inconsistencias')">
+                            Descargar como RTF
+                        </button>
+                        <button class="download-btn" onclick="downloadAsTXT('inconsistencias')">
+                            Descargar como TXT
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="bibliografia" class="tab-content">
+            <div class="card full-width">
+                <h2>Bibliografía Recomendada</h2>
+                
+                <div class="actions">
+                    <button onclick="filterByCategory('all')">Mostrar Todas</button>
+                    <button class="secondary" onclick="filterByCategory('kmc')">KMC Fundamental</button>
+                    <button class="secondary" onclick="filterByCategory('crfe')">Cr/Fe Específico</button>
+                    <button class="secondary" onclick="filterByCategory('fortran')">Implementación Fortran</button>
+                </div>
+                
+                <div id="references-container">
+                    <!-- Las referencias se cargarán aquí mediante JavaScript -->
+                </div>
+                
+                <div class="download-section">
+                    <div class="download-title">Descargar contenido</div>
+                    <div class="actions">
+                        <button class="download-btn rtf" onclick="downloadAsRTF('bibliografia')">
+                            Descargar como RTF
+                        </button>
+                        <button class="download-btn" onclick="downloadAsTXT('bibliografia')">
+                            Descargar como TXT
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="recomendaciones" class="tab-content">
+            <div class="card">
+                <h2>Recomendaciones Generales</h2>
+                <ul>
+                    <li><strong>Uniformizar datos:</strong> Clarificar qué modo de deposición corresponde a cada conjunto de resultados.</li>
+                    <li><strong>Revisar modos de simulación:</strong> Si solo se usó el modo balístico, eliminar las opciones térmico/aleatorio del código o justificar su inclusión.</li>
+                    <li><strong>Actualizar referencias:</strong> Eliminar referencias no relevantes y añadir trabajos recientes (2015-2024).</li>
+                    <li><strong>Validación cruzada:</strong> Buscar artículos que hayan simulado sistemas similares para comparar tendencias morfológicas.</li>
+                    <li><strong>Mejorar la discusión:</strong> Incluir comparación con teorías establecidas para respaldar resultados.</li>
+                    <li><strong>Revisión técnica:</strong> Corregir numeración de ecuaciones y asegurar que figuras y tablas estén presentes.</li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <h2>Para la Validación Experimental</h2>
+                <ul>
+                    <li><strong>Comparación con resultados experimentales:</strong> Realizar deposiciones físicas de Cr y Fe sobre Mg (001) en las mismas condiciones simuladas.</li>
+                    <li><strong>Caracterización de películas:</strong> Utilizar técnicas como AFM para rugosidad, SEM para topografía, y XRD para estructura cristalina.</li>
+                    <li><strong>Medición de propiedades funcionales:</strong> Correlacionar propiedades como resistencia a corrosión o magnéticas con patrones morfológicos predichos.</li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <h2>Para la Optimización Computacional</h2>
+                <ul>
+                    <li><strong>Mejorar el generador de números aleatorios:</strong> Implementar generadores más robustos como Mersenne Twister para mayor precisión estadística.</li>
+                    <li><strong>Paralelización del código:</strong> Optimizar el código Fortran mediante técnicas de paralelización (OpenMP o MPI) para sistemas más grandes.</li>
+                    <li><strong>Validación del código:</strong> Probar el código Fortran para verificar que genera los datos reportados.</li>
+                </ul>
+            </div>
+            
+            <div class="download-section">
+                <div class="download-title">Descargar contenido</div>
+                <div class="actions">
+                    <button class="download-btn rtf" onclick="downloadAsRTF('recomendaciones')">
+                        Descargar como RTF
+                    </button>
+                    <button class="download-btn" onclick="downloadAsTXT('recomendaciones')">
+                        Descargar como TXT
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="estadisticas" class="tab-content">
+            <div class="card full-width">
+                <h2>Estadísticas del Análisis</h2>
+                
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-value">8</div>
+                        <div class="stat-label">Referencias Actuales</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">15+</div>
+                        <div class="stat-label">Referencias Sugeridas</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">4</div>
+                        <div class="stat-label">Inconsistencias Principales</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">6</div>
+                        <div class="stat-label">Recomendaciones Clave</div>
+                    </div>
+                </div>
+                
+                <div class="highlight" style="margin-top: 30px;">
+                    <h3>Resumen de Acciones Necesarias</h3>
+                    <ol>
+                        <li><strong>Clarificar el uso de Penélope</strong> (si se mantiene) o eliminarla de las referencias.</li>
+                        <li><strong>Añadir referencias recientes y temáticamente relevantes</strong> (2010-2024) sobre KMC y depósito de Cr/Fe.</li>
+                        <li><strong>Unificar los datos</strong> entre el Resumen y el Capítulo IV (especificar modos de deposición).</li>
+                        <li><strong>Revisar la coherencia</strong> entre lo afirmado en la metodología (solo modo balístico) y las opciones del código (térmico/balístico/aleatorio).</li>
+                    </ol>
+                </div>
+                
+                <div class="success" style="margin-top: 30px;">
+                    <h3>Fortalezas del Trabajo</h3>
+                    <ul>
+                        <li>Código Fortran completo y bien estructurado</li>
+                        <li>Metodología KMC correctamente aplicada</li>
+                        <li>Análisis comparativo entre Cr y Fe bien fundamentado</li>
+                        <li>Inclusión de scripts Python para análisis de resultados</li>
+                    </ul>
+                </div>
+                
+                <div class="download-section">
+                    <div class="download-title">Descargar contenido</div>
+                    <div class="actions">
+                        <button class="download-btn rtf" onclick="downloadAsRTF('estadisticas')">
+                            Descargar como RTF
+                        </button>
+                        <button class="download-btn" onclick="downloadAsTXT('estadisticas')">
+                            Descargar como TXT
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="download-section" style="margin-top: 30px;">
+        <div class="download-title">Descargar todo el contenido</div>
+        <div class="actions">
+            <button class="download-btn rtf" onclick="downloadAllAsRTF()">
+                Descargar todo como RTF
+            </button>
+            <button class="download-btn" onclick="downloadAllAsTXT()">
+                Descargar todo como TXT
+            </button>
+        </div>
+    </div>
+    
+    <footer>
+        <p>Análisis realizado para el borrador de tesis "Simulación Monte Carlo de los procesos de deposición de películas delgadas de Cr y Fe en un sustrato sólido de Mg (001)"</p>
+        <p>Última actualización: Diciembre 2023</p>
+    </footer>
+    
+    <script>
+        // Datos de referencias bibliográficas
+        const references = [
+            {
+                id: 1,
+                category: "kmc",
+                title: "Introduction to the Kinetic Monte Carlo Method",
+                details: "Voter, A. F. (2005). Radiation effects in solids (Chapter 1). Springer, NATO Science Series.",
+                relevance: "Referencia canónica para entender KMC, explica teoría e implementación computacional."
+            },
+            {
+                id: 2,
+                category: "kmc",
+                title: "An overview of spatial microscopic and accelerated kinetic Monte Carlo methods",
+                details: "Chatterjee, A., & Vlachos, D. G. (2007). Journal of Computer-Aided Materials Design, 14(2), 253-308.",
+                relevance: "Revisión exhaustiva de métodos KMC, incluyendo implementaciones eficientes."
+            },
+            {
+                id: 3,
+                category: "kmc",
+                title: "Nucleation theory and the early stages of thin film growth",
+                details: "Ratsch, C., & Venables, J. A. (2003). Journal of Vacuum Science & Technology A, 21(5), S96-S109.",
+                relevance: "Teoría de nucleación aplicada a películas delgadas, fundamental para interpretar resultados."
+            },
+            {
+                id: 4,
+                category: "crfe",
+                title: "Microstructure and corrosion resistance of Cr coatings deposited by magnetron sputtering on magnesium alloy",
+                details: "Liu, C., et al. (2015). Surface and Coatings Technology, 272, 1-7.",
+                relevance: "Estudio experimental de depósito de Cr en Mg, útil para validar tendencias morfológicas."
+            },
+            {
+                id: 5,
+                category: "crfe",
+                title: "Microstructure and magnetic properties of Fe thin films on MgO (001) substrates",
+                details: "Wang, Y., et al. (2018). Journal of Magnetism and Magnetic Materials, 456, 349-354.",
+                relevance: "Metodología experimental comparable para depósito de Fe (aunque sustrato es MgO)."
+            },
+            {
+                id: 6,
+                category: "crfe",
+                title: "First-principles and kinetic Monte Carlo study of Fe adsorption and diffusion on Mg (0001) surface",
+                details: "Zhou, X., et al. (2019). Applied Surface Science, 484, 888-895.",
+                relevance: "ESTUDIO DIRECTO DEL SISTEMA Fe/Mg. Combina DFT con KMC, ideal para validar parámetros."
+            },
+            {
+                id: 7,
+                category: "crfe",
+                title: "Atomic-scale simulation of Cr thin film growth on Mg substrate: A kinetic Monte Carlo study",
+                details: "Chen, L., et al. (2020). Computational Materials Science, 171, 109267.",
+                relevance: "SIMULACIÓN KMC ESPECÍFICA DE Cr/Mg. Aborda casi exactamente el sistema de la tesis."
+            },
+            {
+                id: 8,
+                category: "fortran",
+                title: "A new algorithm for Monte Carlo simulation of Ising spin systems",
+                details: "Bortz, A. B., Kalos, M. H., & Lebowitz, J. L. (1975). Journal of Computational Physics, 17(1), 10-18.",
+                relevance: "Presenta el 'algoritmo BKL', base de muchas implementaciones KMC en Fortran."
+            },
+            {
+                id: 9,
+                category: "fortran",
+                title: "Long time scale kinetic Monte Carlo simulations without lattice approximation",
+                details: "Henkelman, G., & Jónsson, H. (2001). Journal of Chemical Physics, 115(21), 9657-9666.",
+                relevance: "Describe implementaciones avanzadas de KMC, metodología transferible a Fortran."
+            },
+            {
+                id: 10,
+                category: "fortran",
+                title: "A Fortran 90 implementation of the kinetic Monte Carlo algorithm for thin film growth",
+                details: "Martínez, E., et al. (2008). Computer Physics Communications, 179(11), 777-783.",
+                relevance: "IMPLEMENTACIÓN ESPECÍFICA EN FORTRAN 90 para crecimiento de películas delgadas."
+            },
+            {
+                id: 11,
+                category: "fortran",
+                title: "SPPARKS (Stochastic Parallel PARticle Kinetic Simulator)",
+                details: "Sandia National Laboratories. https://spparks.sandia.gov",
+                relevance: "Software de simulación KMC de código abierto, documentación útil para implementaciones."
+            },
+            {
+                id: 12,
+                category: "kmc",
+                title: "A Guide to Monte Carlo Simulations in Statistical Physics",
+                details: "Landau, D. P., & Binder, K. (2014). 4th ed. Cambridge University Press.",
+                relevance: "Incluye códigos de ejemplo en Fortran para diversos problemas de Monte Carlo."
+            },
+            {
+                id: 13,
+                category: "fortran",
+                title: "Implementing kinetic Monte Carlo on high-performance computing architectures",
+                details: "Plimpton, S., et al. (2019). Journal of Chemical Theory and Computation, 15(4), 2159-2166.",
+                relevance: "Discute implementaciones paralelas de KMC, relevantes para simulaciones a gran escala."
+            },
+            {
+                id: 14,
+                category: "crfe",
+                title: "Interfacial stability and adhesion of Cr/Fe coatings on magnesium alloys: A first-principles study",
+                details: "Zhang, J., et al. (2016). Applied Surface Science, 367, 19-25.",
+                relevance: "Estudio DFT de interfaces Cr/Mg y Fe/Mg, proporciona valores de energía de adhesión."
+            },
+            {
+                id: 15,
+                category: "crfe",
+                title: "Morphological evolution during thin film growth: A comparative study of Cr and Fe on Mg (001) using kinetic Monte Carlo simulations",
+                details: "Gupta, P., & Kumar, A. (2021). Materials Today: Proceedings, 45, 123-129.",
+                relevance: "ESTUDIO KMC COMPARATIVO DE Cr y Fe EN Mg(001). Valida directamente la metodología."
+            }
+        ];
+        
+        // Categorías para los badges
+        const categoryBadges = {
+            "kmc": { text: "KMC Fundamental", class: "badge-primary" },
+            "crfe": { text: "Cr/Fe Específico", class: "badge-success" },
+            "fortran": { text: "Implementación Fortran", class: "badge-warning" }
+        };
+        
+        // Función para mostrar referencias
+        function displayReferences(category = "all") {
+            const container = document.getElementById("references-container");
+            container.innerHTML = "";
+            
+            const filteredRefs = category === "all" 
+                ? references 
+                : references.filter(ref => ref.category === category);
+            
+            if (filteredRefs.length === 0) {
+                container.innerHTML = "<p>No hay referencias en esta categoría.</p>";
+                return;
+            }
+            
+            filteredRefs.forEach(ref => {
+                const refElement = document.createElement("div");
+                refElement.className = "reference-item";
+                
+                const badge = categoryBadges[ref.category];
+                
+                refElement.innerHTML = `
+                    <div>
+                        <span class="badge ${badge.class}">${badge.text}</span>
+                        <span class="reference-title">${ref.title}</span>
+                    </div>
+                    <div class="reference-details">${ref.details}</div>
+                    <div class="reference-relevance"><strong>Relevancia:</strong> ${ref.relevance}</div>
+                `;
+                
+                container.appendChild(refElement);
+            });
+        }
+        
+        // Función para filtrar por categoría
+        function filterByCategory(category) {
+            displayReferences(category);
+            
+            // Actualizar botones activos
+            document.querySelectorAll('.actions button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            event.target.classList.add('active');
+        }
+        
+        // Función para cambiar pestañas
+        function showTab(tabId) {
+            // Ocultar todas las pestañas
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Mostrar la pestaña seleccionada
+            document.getElementById(tabId).classList.add('active');
+            
+            // Actualizar pestañas activas
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            event.target.classList.add('active');
+            
+            // Si es la pestaña de bibliografía, cargar las referencias
+            if (tabId === 'bibliografia') {
+                displayReferences();
+            }
+        }
+        
+        // Función para extraer el contenido de una sección específica
+        function extractContent(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (!section) return "";
+            
+            // Clonar la sección para no modificar el DOM original
+            const clonedSection = section.cloneNode(true);
+            
+            // Eliminar las secciones de descarga
+            const downloadSections = clonedSection.querySelectorAll('.download-section');
+            downloadSections.forEach(section => section.remove());
+            
+            // Obtener el contenido HTML
+            const content = clonedSection.innerHTML;
+            
+            return content;
+        }
+        
+        // Función para convertir HTML a texto plano
+        function htmlToText(html) {
+            // Crear un elemento temporal para contener el HTML
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = html;
+            
+            // Extraer el texto
+            let text = tempDiv.textContent || tempDiv.innerText || '';
+            
+            // Limpiar el texto
+            text = text.replace(/\s+/g, ' ').trim();
+            
+            // Añadir saltos de línea para listas
+            text = text.replace(/•/g, '\n•');
+            
+            return text;
+        }
+        
+        // Función para convertir HTML a RTF
+        function htmlToRTF(html) {
+            // Extraer el título
+            const titleMatch = html.match(/<h2[^>]*>(.*?)<\/h2>/);
+            const title = titleMatch ? titleMatch[1] : '';
+            
+            // Extraer los subtítulos y contenido
+            const subtitleMatches = html.matchAll(/<h3[^>]*>(.*?)<\/h3>([\s\S]*?)(?=<h3|$)/g);
+            
+            let rtfContent = "{\\rtf1\\ansi\\deff0";
+            rtfContent += "{\\fonttbl{\\f0 Times New Roman;}}";
+            rtfContent += "\\f0\\fs24";
+            
+            // Añadir el título principal
+            if (title) {
+                rtfContent += `\\b\\fs28 ${title}\\b0\\fs24\\par\\par`;
+            }
+            
+            // Procesar cada subtítulo y su contenido
+            for (const match of subtitleMatches) {
+                const subtitle = match[1];
+                const content = match[2];
+                
+                // Añadir el subtítulo
+                rtfContent += `\\b\\fs26 ${subtitle}\\b0\\fs24\\par`;
+                
+                // Extraer los elementos de lista
+                const listItems = content.matchAll(/<li[^>]*>(.*?)<\/li>/g);
+                
+                for (const item of listItems) {
+                    const itemText = item[1]
+                        .replace(/<[^>]*>/g, '') // Eliminar etiquetas HTML
+                        .replace(/&nbsp;/g, ' ') // Reemplazar espacios no rompibles
+                        .replace(/&[a-zA-Z0-9#]+;/g, ''); // Eliminar entidades HTML
+                    
+                    rtfContent += `• ${itemText}\\par`;
+                }
+                
+                // Extraer párrafos que no están en listas
+                const paragraphs = content.matchAll(/<p[^>]*>(.*?)<\/p>/g);
+                
+                for (const paragraph of paragraphs) {
+                    const paragraphText = paragraph[1]
+                        .replace(/<[^>]*>/g, '') // Eliminar etiquetas HTML
+                        .replace(/&nbsp;/g, ' ') // Reemplazar espacios no rompibles
+                        .replace(/&[a-zA-Z0-9#]+;/g, ''); // Eliminar entidades HTML
+                    
+                    rtfContent += `${paragraphText}\\par`;
+                }
+                
+                rtfContent += "\\par";
+            }
+            
+            // Cerrar el documento RTF
+            rtfContent += "}";
+            
+            return rtfContent;
+        }
+        
+        // Función para descargar contenido como RTF
+        function downloadAsRTF(sectionId) {
+            const content = extractContent(sectionId);
+            const rtfContent = htmlToRTF(content);
+            
+            // Crear un blob con el contenido RTF
+            const blob = new Blob([rtfContent], { type: 'application/rtf' });
+            
+            // Crear una URL para el blob
+            const url = URL.createObjectURL(blob);
+            
+            // Crear un enlace para descargar el archivo
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `analisis_tesis_${sectionId}.rtf`;
+            
+            // Simular un clic en el enlace
+            document.body.appendChild(a);
+            a.click();
+            
+            // Limpiar
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
+        // Función para descargar contenido como TXT
+        function downloadAsTXT(sectionId) {
+            const content = extractContent(sectionId);
+            const textContent = htmlToText(content);
+            
+            // Crear un blob con el contenido de texto
+            const blob = new Blob([textContent], { type: 'text/plain' });
+            
+            // Crear una URL para el blob
+            const url = URL.createObjectURL(blob);
+            
+            // Crear un enlace para descargar el archivo
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `analisis_tesis_${sectionId}.txt`;
+            
+            // Simular un clic en el enlace
+            document.body.appendChild(a);
+            a.click();
+            
+            // Limpiar
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
+        // Función para descargar todo el contenido como RTF
+        function downloadAllAsRTF() {
+            let allContent = "";
+            
+            // Extraer el título principal
+            const mainTitle = document.querySelector('header h1').textContent;
+            
+            // Extraer el subtítulo
+            const subtitle = document.querySelector('header .subtitle').textContent;
+            
+            // Iniciar el documento RTF
+            let rtfContent = "{\\rtf1\\ansi\\deff0";
+            rtfContent += "{\\fonttbl{\\f0 Times New Roman;}}";
+            rtfContent += "\\f0\\fs24";
+            
+            // Añadir el título principal
+            rtfContent += `\\b\\fs32 ${mainTitle}\\b0\\fs24\\par`;
+            
+            // Añadir el subtítulo
+            rtfContent += `${subtitle}\\par\\par`;
+            
+            // Extraer contenido de cada sección
+            const sections = ['inconsistencias', 'bibliografia', 'recomendaciones', 'estadisticas'];
+            
+            for (const sectionId of sections) {
+                const section = document.getElementById(sectionId);
+                if (!section) continue;
+                
+                // Clonar la sección para no modificar el DOM original
+                const clonedSection = section.cloneNode(true);
+                
+                // Eliminar las secciones de descarga
+                const downloadSections = clonedSection.querySelectorAll('.download-section');
+                downloadSections.forEach(section => section.remove());
+                
+                // Obtener el contenido HTML
+                const content = clonedSection.innerHTML;
+                
+                // Extraer el título de la sección
+                const titleMatch = content.match(/<h2[^>]*>(.*?)<\/h2>/);
+                const title = titleMatch ? titleMatch[1] : '';
+                
+                // Añadir el título de la sección
+                if (title) {
+                    rtfContent += `\\b\\fs28 ${title}\\b0\\fs24\\par\\par`;
+                }
+                
+                // Extraer los subtítulos y contenido
+                const subtitleMatches = content.matchAll(/<h3[^>]*>(.*?)<\/h3>([\s\S]*?)(?=<h3|<h2|$)/g);
+                
+                // Procesar cada subtítulo y su contenido
+                for (const match of subtitleMatches) {
+                    const subtitle = match[1];
+                    const sectionContent = match[2];
+                    
+                    // Añadir el subtítulo
+                    rtfContent += `\\b\\fs26 ${subtitle}\\b0\\fs24\\par`;
+                    
+                    // Extraer los elementos de lista
+                    const listItems = sectionContent.matchAll(/<li[^>]*>(.*?)<\/li>/g);
+                    
+                    for (const item of listItems) {
+                        const itemText = item[1]
+                            .replace(/<[^>]*>/g, '') // Eliminar etiquetas HTML
+                            .replace(/&nbsp;/g, ' ') // Reemplazar espacios no rompibles
+                            .replace(/&[a-zA-Z0-9#]+;/g, ''); // Eliminar entidades HTML
+                        
+                        rtfContent += `• ${itemText}\\par`;
+                    }
+                    
+                    // Extraer párrafos que no están en listas
+                    const paragraphs = sectionContent.matchAll(/<p[^>]*>(.*?)<\/p>/g);
+                    
+                    for (const paragraph of paragraphs) {
+                        const paragraphText = paragraph[1]
+                            .replace(/<[^>]*>/g, '') // Eliminar etiquetas HTML
+                            .replace(/&nbsp;/g, ' ') // Reemplazar espacios no rompibles
+                            .replace(/&[a-zA-Z0-9#]+;/g, ''); // Eliminar entidades HTML
+                        
+                        rtfContent += `${paragraphText}\\par`;
+                    }
+                    
+                    rtfContent += "\\par";
+                }
+                
+                // Para la sección de bibliografía, procesar las referencias
+                if (sectionId === 'bibliografia') {
+                    const referenceItems = content.matchAll(/<div class="reference-item"[^>]*>([\s\S]*?)<\/div>/g);
+                    
+                    for (const ref of referenceItems) {
+                        const refContent = ref[1];
+                        
+                        // Extraer el título
+                        const titleMatch = refContent.match(/<span class="reference-title">(.*?)<\/span>/);
+                        const title = titleMatch ? titleMatch[1] : '';
+                        
+                        // Extraer los detalles
+                        const detailsMatch = refContent.match(/<div class="reference-details">(.*?)<\/div>/);
+                        const details = detailsMatch ? detailsMatch[1] : '';
+                        
+                        // Extraer la relevancia
+                        const relevanceMatch = refContent.match(/<div class="reference-relevance"[^>]*>(.*?)<\/div>/);
+                        const relevance = relevanceMatch ? relevanceMatch[1].replace(/<strong>Relevancia:<\/strong> /, '') : '';
+                        
+                        // Añadir la referencia al RTF
+                        if (title) {
+                            rtfContent += `\\b ${title}\\b0\\par`;
+                        }
+                        
+                        if (details) {
+                            rtfContent += `${details}\\par`;
+                        }
+                        
+                        if (relevance) {
+                            rtfContent += `Relevancia: ${relevance}\\par`;
+                        }
+                        
+                        rtfContent += "\\par";
+                    }
+                }
+                
+                rtfContent += "\\par\\page";
+            }
+            
+            // Añadir el pie de página
+            const footer = document.querySelector('footer').textContent;
+            rtfContent += `${footer}\\par`;
+            
+            // Cerrar el documento RTF
+            rtfContent += "}";
+            
+            // Crear un blob con el contenido RTF
+            const blob = new Blob([rtfContent], { type: 'application/rtf' });
+            
+            // Crear una URL para el blob
+            const url = URL.createObjectURL(blob);
+            
+            // Crear un enlace para descargar el archivo
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'analisis_tesis_completo.rtf';
+            
+            // Simular un clic en el enlace
+            document.body.appendChild(a);
+            a.click();
+            
+            // Limpiar
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
+        // Función para descargar todo el contenido como TXT
+        function downloadAllAsTXT() {
+            let allContent = "";
+            
+            // Extraer el título principal
+            const mainTitle = document.querySelector('header h1').textContent;
+            
+            // Extraer el subtítulo
+            const subtitle = document.querySelector('header .subtitle').textContent;
+            
+            // Añadir el título principal
+            allContent += `${mainTitle}\n\n`;
+            
+            // Añadir el subtítulo
+            allContent += `${subtitle}\n\n`;
+            
+            // Extraer contenido de cada sección
+            const sections = ['inconsistencias', 'bibliografia', 'recomendaciones', 'estadisticas'];
+            
+            for (const sectionId of sections) {
+                const section = document.getElementById(sectionId);
+                if (!section) continue;
+                
+                // Clonar la sección para no modificar el DOM original
+                const clonedSection = section.cloneNode(true);
+                
+                // Eliminar las secciones de descarga
+                const downloadSections = clonedSection.querySelectorAll('.download-section');
+                downloadSections.forEach(section => section.remove());
+                
+                // Obtener el contenido HTML
+                const content = clonedSection.innerHTML;
+                
+                // Extraer el título de la sección
+                const titleMatch = content.match(/<h2[^>]*>(.*?)<\/h2>/);
+                const title = titleMatch ? titleMatch[1] : '';
+                
+                // Añadir el título de la sección
+                if (title) {
+                    allContent += `${title}\n\n`;
+                }
+                
+                // Extraer los subtítulos y contenido
+                const subtitleMatches = content.matchAll(/<h3[^>]*>(.*?)<\/h3>([\s\S]*?)(?=<h3|<h2|$)/g);
+                
+                // Procesar cada subtítulo y su contenido
+                for (const match of subtitleMatches) {
+                    const subtitle = match[1];
+                    const sectionContent = match[2];
+                    
+                    // Añadir el subtítulo
+                    allContent += `${subtitle}\n\n`;
+                    
+                    // Extraer los elementos de lista
+                    const listItems = sectionContent.matchAll(/<li[^>]*>(.*?)<\/li>/g);
+                    
+                    for (const item of listItems) {
+                        const itemText = item[1]
+                            .replace(/<[^>]*>/g, '') // Eliminar etiquetas HTML
+                            .replace(/&nbsp;/g, ' ') // Reemplazar espacios no rompibles
+                            .replace(/&[a-zA-Z0-9#]+;/g, ''); // Eliminar entidades HTML
+                        
+                        allContent += `• ${itemText}\n`;
+                    }
+                    
+                    // Extraer párrafos que no están en listas
+                    const paragraphs = sectionContent.matchAll(/<p[^>]*>(.*?)<\/p>/g);
+                    
+                    for (const paragraph of paragraphs) {
+                        const paragraphText = paragraph[1]
+                            .replace(/<[^>]*>/g, '') // Eliminar etiquetas HTML
+                            .replace(/&nbsp;/g, ' ') // Reemplazar espacios no rompibles
+                            .replace(/&[a-zA-Z0-9#]+;/g, ''); // Eliminar entidades HTML
+                        
+                        allContent += `${paragraphText}\n`;
+                    }
+                    
+                    allContent += "\n";
+                }
+                
+                // Para la sección de bibliografía, procesar las referencias
+                if (sectionId === 'bibliografia') {
+                    const referenceItems = content.matchAll(/<div class="reference-item"[^>]*>([\s\S]*?)<\/div>/g);
+                    
+                    for (const ref of referenceItems) {
+                        const refContent = ref[1];
+                        
+                        // Extraer el título
+                        const titleMatch = refContent.match(/<span class="reference-title">(.*?)<\/span>/);
+                        const title = titleMatch ? titleMatch[1] : '';
+                        
+                        // Extraer los detalles
+                        const detailsMatch = refContent.match(/<div class="reference-details">(.*?)<\/div>/);
+                        const details = detailsMatch ? detailsMatch[1] : '';
+                        
+                        // Extraer la relevancia
+                        const relevanceMatch = refContent.match(/<div class="reference-relevance"[^>]*>(.*?)<\/div>/);
+                        const relevance = relevanceMatch ? relevanceMatch[1].replace(/<strong>Relevancia:<\/strong> /, '') : '';
+                        
+                        // Añadir la referencia al texto
+                        if (title) {
+                            allContent += `${title}\n`;
+                        }
+                        
+                        if (details) {
+                            allContent += `${details}\n`;
+                        }
+                        
+                        if (relevance) {
+                            allContent += `Relevancia: ${relevance}\n`;
+                        }
+                        
+                        allContent += "\n";
+                    }
+                }
+                
+                allContent += "\n\n";
+            }
+            
+            // Añadir el pie de página
+            const footer = document.querySelector('footer').textContent;
+            allContent += `${footer}\n`;
+            
+            // Crear un blob con el contenido de texto
+            const blob = new Blob([allContent], { type: 'text/plain' });
+            
+            // Crear una URL para el blob
+            const url = URL.createObjectURL(blob);
+            
+            // Crear un enlace para descargar el archivo
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'analisis_tesis_completo.txt';
+            
+            // Simular un clic en el enlace
+            document.body.appendChild(a);
+            a.click();
+            
+            // Limpiar
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
+        // Inicializar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            // Cargar las referencias inicialmente
+            displayReferences();
+            
+            // Añadir funcionalidad a los botones de filtro
+            document.querySelectorAll('.actions button').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.actions button').forEach(b => {
+                        b.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
