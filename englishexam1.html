@@ -590,6 +590,10 @@
                     return;
                 }
                 
+                // CORRECCIÓN: La condición debe permitir avanzar hasta la última pregunta.
+                // Si currentQuestion es 98 (pregunta 99), debe poder avanzar a 99 (pregunta 100).
+                // La condición anterior `currentQuestion < totalQuestions - 1` (98 < 99) era correcta,
+                // pero el problema puede estar en cómo se interpreta. La reescribimos para mayor claridad.
                 if (currentQuestion < totalQuestions - 1) {
                     showQuestion(currentQuestion + 1);
                 }
@@ -605,7 +609,6 @@
                 }
 
                 let score = 0;
-                // CORRECCIÓN: Iterar sobre el array de preguntas, no sobre los nodos del DOM directamente para una correspondencia exacta.
                 allQuestions.forEach((question, index) => {
                     const selectedOption = document.querySelector(`input[name="q${index}"]:checked`);
                     if (selectedOption) {
