@@ -281,11 +281,6 @@
                 width: 100%;
                 margin-bottom: 5px;
             }
-            
-            footer p {
-                font-size: 12px;
-                padding: 0 10px;
-            }
         }
     </style>
 </head>
@@ -334,7 +329,7 @@
                 <div class="progress" id="progressBar"></div>
             </div>
             
-            <div class="question-counter" id="questionCounter">Pregunta 1 de 100</div>
+            <div class="question-counter" id="questionCounter">Pregunta 1 de 90</div>
             
             <div id="questionsArea">
                 <!-- Las preguntas serán generadas aquí por JavaScript -->
@@ -350,10 +345,7 @@
         <div class="results-container" id="resultsContainer">
             <h2>Resultados del Cuestionario</h2>
             
-            <!-- Puntuación sobre 100 -->
-            <div class="score" id="scoreDisplay">0/100</div>
-            
-            <!-- Puntuación equivalente sobre 20 -->
+            <div class="score" id="scoreDisplay">0/90</div>
             <div class="score" id="scoreDisplay20" style="font-size: 36px; color: var(--secondary-color);">0.00/20</div>
             
             <p id="scoreMessage"></p>
@@ -375,7 +367,7 @@
             </div>
             
             <div class="capture-message">
-                <i class="fas fa-camera"></i> Por favor, capture o imprima esta pantalla como comprobante de su evaluación
+                Por favor, capture o imprima esta pantalla como comprobante de su evaluación
             </div>
             
             <button type="button" class="btn" id="restartBtn">Realizar Nuevo Cuestionario</button>
@@ -392,7 +384,6 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Elementos del DOM
             const studentForm = document.getElementById('studentForm');
             const formData = document.getElementById('formData');
             const quizContainer = document.getElementById('quizContainer');
@@ -406,13 +397,11 @@
             const questionCounter = document.getElementById('questionCounter');
             const notification = document.getElementById('notification');
             
-            // Variables para el cuestionario
             let currentQuestion = 0;
-            const totalQuestions = 100;
 
-            // Base de datos de 100 preguntas (de la lección 1)
+            // CORRECCIÓN CLAVE: totalQuestions se calcula dinámicamente
             const allQuestions = [
-                // --- Cognados y Palabras Similares ---
+                // (Aquí van tus 90 preguntas actuales - se mantienen iguales)
                 { q: "La palabra 'Animal' se escribe igual en inglés y español.", a: true, e: "Es un cognado." },
                 { q: "La palabra 'Error' significa 'Acierto' en inglés.", a: false, e: "Significa 'Error'." },
                 { q: "'Hospital' es un cognado.", a: true, e: "Se escribe igual, cambia la pronunciación." },
@@ -423,7 +412,6 @@
                 { q: "'Mesa' es un cognado.", a: false, e: "La palabra en inglés es 'Table'." },
                 { q: "'General' es un cognado.", a: true, e: "Se escribe igual." },
                 { q: "'Metal' es un cognado.", a: true, e: "Sí, es un cognado." },
-                // --- Terminación -ing ---
                 { q: "La terminación '-ing' indica una acción en progreso.", a: true, e: "Como 'trabajando' (working)." },
                 { q: "'Working' significa 'trabajo'.", a: false, e: "Significa 'trabajando'. 'Work' es 'trabajo'." },
                 { q: "'Lighting' es la acción de 'Luz' (Light).", a: true, e: "Significa 'alumbrando'." },
@@ -434,7 +422,6 @@
                 { q: "'Darking' significa 'oscureciendo'.", a: true, e: "Correcto." },
                 { q: "La palabra 'Offering' es un sustantivo, no una acción.", a: false, e: "Indica la acción de 'ofrecer'." },
                 { q: "La terminación '-ing' se usa para formar adjetivos.", a: true, e: "También puede, como en 'a working man'." },
-                // --- Uso de IS y ARE ---
                 { q: "'They is my friends' es una frase gramaticalmente correcta.", a: false, e: "Con 'They' se usa 'are'." },
                 { q: "'The sky is blue' usa el verbo correcto.", a: true, e: "'Sky' es singular, se usa 'is'." },
                 { q: "Se debe usar 'are' para el pronombre 'He'.", a: false, e: "Con 'He' se usa 'is'." },
@@ -445,7 +432,6 @@
                 { q: "'We is happy' es correcto.", a: false, e: "Con 'We' se usa 'are'." },
                 { q: "'It is a good idea' es correcto.", a: true, e: "'It' (ello) es singular, usa 'is'." },
                 { q: "Se usa 'is' para referirse a una sola persona o cosa.", a: true, e: "Es la regla general para el singular." },
-                // --- Adjetivos ---
                 { q: "En inglés, los adjetivos se colocan después del sustantivo.", a: false, e: "Se colocan antes: 'a blue sky'." },
                 { q: "La frase 'a house new' sigue la regla correcta de adjetivos.", a: false, e: "Lo correcto es 'a new house'." },
                 { q: "'A strong man' significa 'un hombre fuerte'.", a: true, e: "El adjetivo 'strong' va antes de 'man'." },
@@ -456,7 +442,6 @@
                 { q: "'A wise man' significa 'un hombre sabio'.", a: true, e: "Correcto." },
                 { q: "'A sweet drink' es una frase correcta.", a: true, e: "Significa 'una bebida dulce'." },
                 { q: "'A white dress' significa 'un vestido azul'.", a: false, e: "Significa 'un vestido blanco'." },
-                // --- Vocabulario General ---
                 { q: "'Hat' significa 'sombrero'.", a: true, e: "Correcto." },
                 { q: "'Brother' significa 'hermana'.", a: false, e: "Significa 'hermano'." },
                 { q: "'Blue' es el color 'azul'.", a: true, e: "Correcto." },
@@ -506,7 +491,6 @@
                 { q: "'Woman' significa 'hombre'.", a: false, e: "Significa 'mujer'." },
                 { q: "'Wise' significa 'sabio'.", a: true, e: "Correcto." },
                 { q: "'White' es el color 'negro'.", a: false, e: "Significa 'blanco'." },
-                // --- Conceptos de la Lección ---
                 { q: "La lección sugiere estudiar las palabras de forma aislada para mejor memorización.", a: false, e: "Sugiere usar la asociación de ideas y estudiar en voz alta." },
                 { q: "El método promete un aprendizaje rápido y con poco esfuerzo.", a: true, e: "Así se menciona en la introducción de la lección." },
                 { q: "La lección recomienda usar una libreta para apuntes.", a: true, e: "Sí, una libreta pequeña de bolsillo." },
@@ -519,15 +503,16 @@
                 { q: "El método está diseñado para hispanohablantes.", a: true, e: "El texto original está en español y se dirige a escolares hispanoamericanos." }
             ];
 
-            // Función para generar el HTML de las preguntas dinámicamente
+            const totalQuestions = allQuestions.length; // CORREGIDO: ahora es dinámico
+
             function generateQuizHTML() {
-                questionsArea.innerHTML = ''; // Limpiar área de preguntas
+                questionsArea.innerHTML = '';
                 allQuestions.forEach((q, index) => {
                     const questionDiv = document.createElement('div');
                     questionDiv.className = 'question';
-                    questionDiv.style.display = 'none'; // Ocultar todas al principio
+                    questionDiv.style.display = 'none';
                     questionDiv.innerHTML = `
-                        <h3>${index + 1}. ${q.q}</h3>
+                        <h3>\( {index + 1}. \){q.q}</h3>
                         <ul class="options">
                             <li><input type="radio" name="q${index}" value="true"> Verdadero</li>
                             <li><input type="radio" name="q${index}" value="false"> Falso</li>
@@ -536,146 +521,108 @@
                     questionsArea.appendChild(questionDiv);
                 });
             }
-            
-            // Event Listeners
+
             formData.addEventListener('submit', startQuiz);
             prevBtn.addEventListener('click', showPreviousQuestion);
             nextBtn.addEventListener('click', showNextQuestion);
             submitBtn.addEventListener('click', submitQuiz);
             restartBtn.addEventListener('click', restartQuiz);
-            
-            // Funciones
+
             function startQuiz(e) {
                 e.preventDefault();
-                
                 if (!formData.checkValidity()) {
                     showNotification('Por favor, complete todos los campos requeridos', 'error');
                     return;
                 }
-                
                 studentForm.style.display = 'none';
                 quizContainer.style.display = 'block';
-                
-                generateQuizHTML(); // Generar las preguntas antes de mostrar la primera
+                generateQuizHTML();
                 showQuestion(0);
             }
-            
+
             function showQuestion(index) {
                 const questions = document.querySelectorAll('.question');
-                questions.forEach(question => question.style.display = 'none');
-                questions[index].style.display = 'block';
-                
-                questionCounter.textContent = `Pregunta ${index + 1} de ${totalQuestions}`;
+                questions.forEach(q => q.style.display = 'none');
+                if (questions[index]) questions[index].style.display = 'block';
+
+                questionCounter.textContent = `Pregunta \( {index + 1} de \){totalQuestions}`;
                 progressBar.style.width = `${((index + 1) / totalQuestions) * 100}%`;
-                
+
                 prevBtn.style.display = index === 0 ? 'none' : 'inline-block';
                 nextBtn.style.display = index === totalQuestions - 1 ? 'none' : 'inline-block';
                 submitBtn.style.display = index === totalQuestions - 1 ? 'inline-block' : 'none';
-                
+
                 currentQuestion = index;
             }
-            
+
             function showPreviousQuestion() {
-                if (currentQuestion > 0) {
-                    showQuestion(currentQuestion - 1);
-                }
+                if (currentQuestion > 0) showQuestion(currentQuestion - 1);
             }
-            
+
             function showNextQuestion() {
-                const currentOptions = document.querySelectorAll(`.question input[name="q${currentQuestion}"]`);
-                const isSelected = Array.from(currentOptions).some(option => option.checked);
-                
+                const currentOptions = document.querySelectorAll(`input[name="q${currentQuestion}"]`);
+                const isSelected = Array.from(currentOptions).some(opt => opt.checked);
+
                 if (!isSelected) {
                     showNotification('Por favor, seleccione una respuesta antes de continuar', 'error');
                     return;
                 }
-                
-                // CORRECCIÓN: La condición debe permitir avanzar hasta la última pregunta.
-                // Si currentQuestion es 98 (pregunta 99), debe poder avanzar a 99 (pregunta 100).
-                // La condición anterior `currentQuestion < totalQuestions - 1` (98 < 99) era correcta,
-                // pero el problema puede estar en cómo se interpreta. La reescribimos para mayor claridad.
+
                 if (currentQuestion < totalQuestions - 1) {
                     showQuestion(currentQuestion + 1);
                 }
             }
-            
+
             function submitQuiz() {
-                 const currentOptions = document.querySelectorAll(`.question input[name="q${currentQuestion}"]`);
-                const isSelected = Array.from(currentOptions).some(option => option.checked);
-                
-                if (!isSelected) {
-                    showNotification('Por favor, seleccione una respuesta antes de enviar', 'error');
+                const lastOptions = document.querySelectorAll(`input[name="q${currentQuestion}"]`);
+                if (!Array.from(lastOptions).some(opt => opt.checked)) {
+                    showNotification('Por favor, responda la última pregunta', 'error');
                     return;
                 }
 
                 let score = 0;
-                allQuestions.forEach((question, index) => {
-                    const selectedOption = document.querySelector(`input[name="q${index}"]:checked`);
-                    if (selectedOption) {
-                        const userAnswer = selectedOption.value === 'true';
-                        if (userAnswer === question.a) {
-                            score++;
-                        }
-                    }
+                allQuestions.forEach((q, i) => {
+                    const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                    if (selected && (selected.value === 'true') === q.a) score++;
                 });
-                
+
                 showResults(score);
             }
-            
+
             function showResults(score) {
                 quizContainer.style.display = 'none';
                 resultsContainer.style.display = 'block';
-                
-                // --- CORRECCIÓN Y MEJORA DE LA VISUALIZACIÓN DE RESULTADOS ---
-                
-                // 1. Mostrar puntuación sobre 100
-                document.getElementById('scoreDisplay').textContent = `${score}/${totalQuestions}`;
-                
-                // 2. Calcular y mostrar puntuación equivalente sobre 20
-                const score20 = (score / 5).toFixed(2); // (score / 100) * 20 = score / 5
+
+                document.getElementById('scoreDisplay').textContent = `\( {score}/ \){totalQuestions}`;
+                const score20 = (score / totalQuestions * 20).toFixed(2);
                 document.getElementById('scoreDisplay20').textContent = `${score20}/20`;
-                
-                // 3. Mensaje según puntuación
-                let message = '';
-                if (score >= 90) {
-                    message = '¡Excelente! Has demostrado un conocimiento sobresaliente de la lección.';
-                } else if (score >= 75) {
-                    message = '¡Muy bien! Tienes un buen conocimiento de los conceptos de la lección.';
-                } else if (score >= 60) {
-                    message = 'Bien. Has aprobado, pero te recomendamos repasar algunos conceptos.';
-                } else {
-                    message = 'Necesitas mejorar tu conocimiento sobre esta lección. Te recomendamos estudiar más.';
-                }
+
+                let message = score >= 90 ? '¡Excelente! Has demostrado un conocimiento sobresaliente.' :
+                             score >= 75 ? '¡Muy bien! Tienes un buen dominio.' :
+                             score >= 60 ? 'Bien. Aprobado, pero repasa algunos temas.' :
+                             'Necesitas reforzar esta lección. ¡Tú puedes!';
+
                 document.getElementById('scoreMessage').textContent = message;
-                
-                // 4. Mostrar información del estudiante
                 document.getElementById('resultNombre').textContent = document.getElementById('nombre').value;
                 document.getElementById('resultApellido').textContent = document.getElementById('apellido').value;
                 document.getElementById('resultPNF').textContent = document.getElementById('pnf').value;
-                
+
                 showNotification('Cuestionario completado con éxito', 'success');
             }
-            
+
             function restartQuiz() {
                 resultsContainer.style.display = 'none';
                 studentForm.style.display = 'block';
                 formData.reset();
-                
-                document.querySelectorAll('input[type="radio"]').forEach(radio => {
-                    radio.checked = false;
-                });
-                
+                document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
                 progressBar.style.width = '0%';
             }
-            
+
             function showNotification(message, type) {
                 notification.textContent = message;
                 notification.className = `notification ${type}`;
                 notification.style.display = 'block';
-                
-                setTimeout(() => {
-                    notification.style.display = 'none';
-                }, 3000);
+                setTimeout(() => notification.style.display = 'none', 3000);
             }
         });
     </script>
