@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inglés Básico - Lección 1</title>
+    <style>
+        /* --- Estilos Generales --- */
+        :root {
+            --primary-color: #004d40; /* Verde oscuro */
+            --secondary-color: #00796b; /* Verde medio */
+            --accent-color: #b2dfdb; /* Verde claro */
+            --text-color: #212121;
+            --light-gray: #f5f5f5;
+            --border-color: #ddd;
+            --success-color: #4caf50; /* Verde */
+            --error-color: #f44336; /* Rojo */
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+            color: var(--text-color);
+            background-color: var(--light-gray);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 2em auto;
+            padding: 2em;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        /* --- Header y Títulos --- */
+        header {
+            text-align: center;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 1em;
+            margin-bottom: 2em;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin: 0;
+        }
+
+        h2 {
+            color: var(--secondary-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5em;
+            margin-top: 2.5em;
+        }
+
+        /* --- Tablas --- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5em 0;
+        }
+
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            text-align: left;
+        }
+
+        thead {
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        /* --- Secciones de contenido --- */
+        section {
+            margin-bottom: 2em;
+        }
+
+        p, li {
+            font-size: 1.1em;
+        }
+
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        ul li {
+            background-color: var(--light-gray);
+            border-left: 4px solid var(--secondary-color);
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+        }
+        
+        strong {
+            color: var(--primary-color);
+        }
+
+        /* --- Examen Interactivo --- */
+        #examen .question-group {
+            margin-bottom: 1.5em;
+        }
+        #examen label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 0.5em;
+        }
+        #examen input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+            box-sizing: border-box; /* Importante para que el padding no afecte el ancho */
+        }
+        #examen input.correct {
+            border-color: var(--success-color);
+            background-color: #e8f5e9;
+        }
+        #examen input.incorrect {
+            border-color: var(--error-color);
+            background-color: #ffebee;
+        }
+        .feedback {
+            margin-top: 0.5em;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        .feedback.correct { color: var(--success-color); }
+        .feedback.incorrect { color: var(--error-color); }
+
+        /* --- Botones --- */
+        .button-container {
+            text-align: center;
+            margin: 2em 0;
+        }
+        button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin: 0 10px;
+        }
+        button:hover {
+            background-color: var(--primary-color);
+        }
+
+        /* --- Footer --- */
+        footer {
+            text-align: center;
+            margin-top: 3em;
+            padding: 1.5em;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 8px;
+            font-size: 0.9em;
+        }
+
+        /* --- Sección de Respuestas (Oculta por defecto) --- */
+        #answerKey {
+            display: none;
+            margin-top: 2em;
+            padding: 1.5em;
+            background-color: var(--accent-color);
+            border: 1px solid var(--secondary-color);
+            border-radius: 8px;
+        }
+        #answerKey h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+        #answerKey table {
+            margin-top: 1em;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Inglés Básico (Ogden & Ghio)</h1>
+            <p><strong>PRIMERA LECCIÓN</strong></p>
+        </header>
+
+        <main>
+            <section id="introduccion">
+                <p>Como ya lo hemos dicho, el estudio del inglés por medio del sistema Básico se hace tan sencillo y fácil, que con unas pocas semanas de estudio se aprende en este libro más inglés del que podría aprender en meses y aun en años por medio de otros sistemas.</p>
+                <p>Lo importante es empezar con el estudio de un grupo determinado de palabras, las cuales permitirán luego construir y comprender las frases inglesas.</p>
+                <p>Vamos a comenzar nuestro estudio de la lengua inglesa aprendiendo, de memoria, un grupo de palabras que son exactamente iguales en inglés y en castellano, variando solamente en su pronunciación.</p>
+            </section>
+
+            <section id="cognados">
+                <h2>Palabras Similares (Cognados)</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Inglés</th>
+                            <th>Pronunciación Figurada</th>
+                            <th>Español</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Animal</td><td>(Ánimal)</td><td>Animal</td></tr>
+                        <tr><td>Base</td><td>(beis)</td><td>Base</td></tr>
+                        <tr><td>Collar</td><td>(cólaR)</td><td>Collar</td></tr>
+                        <tr><td>Control</td><td>(contróUl)</td><td>Control</td></tr>
+                        <tr><td>Error</td><td>(érroR)</td><td>Error</td></tr>
+                        <tr><td>General</td><td>(yéneral)</td><td>General</td></tr>
+                        <tr><td>Hospital</td><td>(jóspitAl)</td><td>Hospital</td></tr>
+                        <tr><td>Idea</td><td>(aidía)</td><td>Idea</td></tr>
+                        <tr><td>Metal</td><td>(métAl)</td><td>Metal</td></tr>
+                        <tr><td>Material</td><td>(matírial)</td><td>Material</td></tr>
+                        <tr><td>Natural</td><td>(náchural)</td><td>Natural</td></tr>
+                        <tr><td>No</td><td>(nóU)</td><td>No</td></tr>
+                        <tr><td>Opinion</td><td>(opíniOn)</td><td>Opinión</td></tr>
+                        <tr><td>Gas</td><td>(gas)</td><td>Gas</td></tr>
+                        <tr><td>Normal</td><td>(normal)</td><td>Normal</td></tr>
+                        <tr><td>Record</td><td>(récooRd)</td><td>Récord</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="terminacion-ing">
+                <h2>LA TERMINACIÓN ING</h2>
+                <p>En inglés, como en castellano, existen terminaciones especiales que agregadas a ciertas palabras sirven para formar nuevas palabras. Una de ellas es la terminación <strong>ing</strong>. La terminación ing indica la acción de la cosa señalada por la palabra.</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Palabra Base</th>
+                            <th>Traducción</th>
+                            <th>Con terminación -ing</th>
+                            <th>Traducción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Light</td><td>(lait) - Luz</td><td>Lighting</td><td>(laiting) - Alumbrando</td></tr>
+                        <tr><td>Work</td><td>(ueRk) - Trabajo</td><td>Working</td><td>(ueRking) - Trabajando</td></tr>
+                        <tr><td>Oil</td><td>(oil) - Aceite</td><td>Oiling</td><td>(oiling) - Aceitando</td></tr>
+                        <tr><td>Offer</td><td>(ofeR) - Oferta</td><td>Offering</td><td>(ofering) - Ofreciendo</td></tr>
+                        <tr><td>Dark</td><td>(daRk) - Oscuro</td><td>Darking</td><td>(daRking) - Oscureciendo</td></tr>
+                        <tr><td>Plant</td><td>(plant) - Planta</td><td>Planting</td><td>(planting) - Plantando</td></tr>
+                        <tr><td>Smile</td><td>(smail) - Sonrisa</td><td>Smiling</td><td>(smailing) - Sonriendo</td></tr>
+                        <tr><td>Flower</td><td>(flaueR) - Flor</td><td>Flowering</td><td>(flauering) - Floreciendo</td></tr>
+                    </tbody>
+                </table>
+            </section>
+            
+            <section id="is-are">
+                <h2>IS y ARE</h2>
+                <p>Las palabras <strong>IS</strong> y <strong>ARE</strong> son sumamente usadas en la lengua inglesa.</p>
+                <ul>
+                    <li><strong>IS (iz)</strong> significa es o está.</li>
+                    <li><strong>ARE ( aR)</strong> significa son o están.</li>
+                </ul>
+                <p>Ejemplos:</p>
+                <ul>
+                    <li><strong>He is my brother</strong> ......... El es mi hermano</li>
+                    <li><strong>They are sisters</strong> ............. Ellas son hermanas</li>
+                    <li><strong>The sky is blue</strong> .............. El cielo es azul</li>
+                    <li><strong>They are walking</strong> .......... Ellos están caminando.</li>
+                    <li><strong>He is painting</strong> ............ El está pintando.</li>
+                </ul>
+            </section>
+
+            <section id="adjetivos">
+                <h2>EL ADJETIVO INGLÉS</h2>
+                <p>En inglés, las cualidades (adjetivos) se colocan <strong>delante</strong> de las cosas o personas (sustantivos). Los ingleses dicen: un negro libro, un alto hombre, una fría pieza, etc.</p>
+                <ul>
+                    <li><strong>A bad boy</strong> (e bad bói) - Un niño malo</li>
+                    <li><strong>A blue sky</strong> (e blúu scai) - Un cielo azul</li>
+                    <li><strong>Clean water</strong> (clíin uóoteR) - Agua limpia</li>
+                    <li><strong>A new house</strong> (e niúu jaus) - Una casa nueva</li>
+                    <li><strong>A strong man</strong> (e stróng man) - Un hombre fuerte</li>
+                    <li><strong>A small table</strong> (e smóol téibEl) - Una mesa chica</li>
+                </ul>
+            </section>
+
+            <section id="examen">
+                <h2>EXAMEN DE LA PRIMERA LECCIÓN</h2>
+                <p>Si usted ha seguido nuestras instrucciones y estudiado correctamente las páginas anteriores, podrá efectuar sin ninguna dificultad este primer examen.</p>
+                
+                <div class="question-group">
+                    <h3>a) Traduzca al castellano las siguientes palabras:</h3>
+                    <label for="a1">1. Offer</label>
+                    <input type="text" id="a1" data-answer="Oferta">
+                    <div class="feedback" id="feedback-a1"></div>
+
+                    <label for="a2">2. Offering</label>
+                    <input type="text" id="a2" data-answer="Ofreciendo">
+                    <div class="feedback" id="feedback-a2"></div>
+                    
+                    <label for="a3">3. Monday</label>
+                    <input type="text" id="a3" data-answer="Lunes">
+                    <div class="feedback" id="feedback-a3"></div>
+
+                    <label for="a4">4. Blue</label>
+                    <input type="text" id="a4" data-answer="Azul">
+                    <div class="feedback" id="feedback-a4"></div>
+
+                    <label for="a5">5. Son</label>
+                    <input type="text" id="a5" data-answer="Hijo">
+                    <div class="feedback" id="feedback-a5"></div>
+                </div>
+
+                <div class="question-group">
+                    <h3>b) Traduzca al inglés las siguientes palabras:</h3>
+                    <label for="b1">1. Lunes</label>
+                    <input type="text" id="b1" data-answer="Monday">
+                    <div class="feedback" id="feedback-b1"></div>
+
+                    <label for="b2">2. Casa</label>
+                    <input type="text" id="b2" data-answer="House">
+                    <div class="feedback" id="feedback-b2"></div>
+
+                    <label for="b3">3. Agua</label>
+                    <input type="text" id="b3" data-answer="Water">
+                    <div class="feedback" id="feedback-b3"></div>
+
+                    <label for="b4">4. Sombrero</label>
+                    <input type="text" id="b4" data-answer="Hat">
+                    <div class="feedback" id="feedback-b4"></div>
+
+                    <label for="b5">5. Animal</label>
+                    <input type="text" id="b5" data-answer="Animal">
+                    <div class="feedback" id="feedback-b5"></div>
+                </div>
+                
+                <div class="question-group">
+                    <h3>c) Traduzca al castellano las siguientes frases:</h3>
+                    <label for="c1">1. She is smiling</label>
+                    <input type="text" id="c1" data-answer="Ella está sonriendo">
+                    <div class="feedback" id="feedback-c1"></div>
+
+                    <label for="c2">2. You are late</label>
+                    <input type="text" id="c2" data-answer="Ustedes están atrasados">
+                    <div class="feedback" id="feedback-c2"></div>
+
+                    <label for="c3">3. He is my brother</label>
+                    <input type="text" id="c3" data-answer="El es mi hermano">
+                    <div class="feedback" id="feedback-c3"></div>
+                </div>
+
+                <div class="button-container">
+                    <button id="checkBtn">Verificar Respuestas</button>
+                    <button id="toggleAnswersBtn">Mostrar/Ocultar Solución</button>
+                </div>
+
+                <div id="answerKey">
+                    <h3>Respuestas Correctas</h3>
+                    <p><strong>a) Traducción al castellano:</strong><br>
+                    1. Oferta, 2. Ofreciendo, 3. Lunes, 4. Azul, 5. Hijo</p>
+                    <p><strong>b) Traducción al inglés:</strong><br>
+                    1. Monday, 2. House, 3. Water, 4. Hat, 5. Animal</p>
+                    <p><strong>c) Traducción de frases:</strong><br>
+                    1. Ella está sonriendo, 2. Ustedes están atrasados, 3. El es mi hermano</p>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Elaborado por el Profesor Ángel Chacín Ávila, Licenciado en Física, Especialista en Ciencias Computacionales, Diplomado en Educación Policial, Docente e Investigador de la Universidad Nacional Experimental de la Seguridad Núcleo Zulia</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const checkBtn = document.getElementById('checkBtn');
+            const toggleAnswersBtn = document.getElementById('toggleAnswersBtn');
+            const answerKeyDiv = document.getElementById('answerKey');
+
+            checkBtn.addEventListener('click', () => {
+                const inputs = document.querySelectorAll('#examen input[type="text"]');
+                inputs.forEach(input => {
+                    const userAnswer = input.value.trim().toLowerCase();
+                    const correctAnswer = input.dataset.answer.toLowerCase();
+                    const feedbackDiv = document.getElementById(`feedback-${input.id}`);
+
+                    // Limpiar clases y feedback anteriores
+                    input.classList.remove('correct', 'incorrect');
+                    feedbackDiv.textContent = '';
+                    feedbackDiv.classList.remove('correct', 'incorrect');
+
+                    if (userAnswer === correctAnswer) {
+                        input.classList.add('correct');
+                        feedbackDiv.textContent = '¡Correcto!';
+                        feedbackDiv.classList.add('correct');
+                    } else {
+                        input.classList.add('incorrect');
+                        feedbackDiv.textContent = `Incorrecto. La respuesta es: ${input.dataset.answer}`;
+                        feedbackDiv.classList.add('incorrect');
+                    }
+                });
+            });
+
+            toggleAnswersBtn.addEventListener('click', () => {
+                if (answerKeyDiv.style.display === 'block') {
+                    answerKeyDiv.style.display = 'none';
+                } else {
+                    answerKeyDiv.style.display = 'block';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
