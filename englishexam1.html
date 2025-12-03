@@ -349,7 +349,13 @@
         
         <div class="results-container" id="resultsContainer">
             <h2>Resultados del Cuestionario</h2>
+            
+            <!-- Puntuación sobre 100 -->
             <div class="score" id="scoreDisplay">0/100</div>
+            
+            <!-- Puntuación equivalente sobre 20 -->
+            <div class="score" id="scoreDisplay20" style="font-size: 36px; color: var(--secondary-color);">0.00/20</div>
+            
             <p id="scoreMessage"></p>
             
             <div class="student-info">
@@ -590,22 +596,21 @@
             }
             
             function submitQuiz() {
-                const currentOptions = document.querySelectorAll(`.question input[name="q${currentQuestion}"]`);
+                 const currentOptions = document.querySelectorAll(`.question input[name="q${currentQuestion}"]`);
                 const isSelected = Array.from(currentOptions).some(option => option.checked);
                 
                 if (!isSelected) {
                     showNotification('Por favor, seleccione una respuesta antes de enviar', 'error');
                     return;
                 }
-                
+
                 let score = 0;
-                const questions = document.querySelectorAll('.question');
-                
-                questions.forEach((questionDiv, index) => {
-                    const selectedOption = questionDiv.querySelector('input[type="radio"]:checked');
+                // CORRECCIÓN: Iterar sobre el array de preguntas, no sobre los nodos del DOM directamente para una correspondencia exacta.
+                allQuestions.forEach((question, index) => {
+                    const selectedOption = document.querySelector(`input[name="q${index}"]:checked`);
                     if (selectedOption) {
                         const userAnswer = selectedOption.value === 'true';
-                        if (userAnswer === allQuestions[index].a) {
+                        if (userAnswer === question.a) {
                             score++;
                         }
                     }
@@ -618,8 +623,16 @@
                 quizContainer.style.display = 'none';
                 resultsContainer.style.display = 'block';
                 
+                // --- CORRECCIÓN Y MEJORA DE LA VISUALIZACIÓN DE RESULTADOS ---
+                
+                // 1. Mostrar puntuación sobre 100
                 document.getElementById('scoreDisplay').textContent = `${score}/${totalQuestions}`;
                 
+                // 2. Calcular y mostrar puntuación equivalente sobre 20
+                const score20 = (score / 5).toFixed(2); // (score / 100) * 20 = score / 5
+                document.getElementById('scoreDisplay20').textContent = `${score20}/20`;
+                
+                // 3. Mensaje según puntuación
                 let message = '';
                 if (score >= 90) {
                     message = '¡Excelente! Has demostrado un conocimiento sobresaliente de la lección.';
@@ -630,9 +643,9 @@
                 } else {
                     message = 'Necesitas mejorar tu conocimiento sobre esta lección. Te recomendamos estudiar más.';
                 }
-                
                 document.getElementById('scoreMessage').textContent = message;
                 
+                // 4. Mostrar información del estudiante
                 document.getElementById('resultNombre').textContent = document.getElementById('nombre').value;
                 document.getElementById('resultApellido').textContent = document.getElementById('apellido').value;
                 document.getElementById('resultPNF').textContent = document.getElementById('pnf').value;
