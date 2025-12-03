@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario - Lección 1 de Inglés Básico</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #c1272d;
+            --secondary-color: #0033a0;
+            --text-color: #333;
+            --light-bg: #f9f9f9;
+            --border-color: #ddd;
+            --accent-color: #f0c808;
+            --success-color: #28a745;
+            --error-color: #dc3545;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Roboto',sans-serif; line-height:1.6; color:var(--text-color); background:#fff; }
+        .container { max-width:900px; margin:0 auto; padding:20px; }
+        header { background:var(--primary-color); color:white; padding:20px 0; text-align:center; box-shadow:0 4px 10px rgba(0,0,0,0.2); }
+        h1 { font-size:28px; font-weight:700; }
+        .form-section, .quiz-container, .results-container {
+            background:white; padding:30px; border-radius:8px; box-shadow:0 4px 15px rgba(0,0,0,0.1); margin:30px 0;
+        }
+        h2 { color:var(--secondary-color); text-align:center; margin-bottom:20px; }
+        .form-group { margin-bottom:20px; }
+        label { display:block; margin-bottom:8px; font-weight:500; }
+        input, select { width:100%; padding:12px; border:1px solid var(--border-color); border-radius:4px; font-size:16px; }
+        .btn { background:var(--primary-color); color:white; padding:12px 24px; border:none; border-radius:4px; cursor:pointer; font-size:16px; font-weight:500; }
+        .btn:hover { background:#a02020; }
+        .progress-bar { height:10px; background:#eee; border-radius:5px; overflow:hidden; margin:20px 0; }
+        .progress { height:100%; background:var(--primary-color); width:0%; transition:width 0.4s; }
+        .question-counter { text-align:center; font-weight:500; color:var(--secondary-color); margin-bottom:20px; font-size:18px; }
+        .question { display:none; padding-bottom:20px; border-bottom:1px solid var(--border-color); margin-bottom:20px; }
+        .question h3 { color:var(--secondary-color); margin-bottom:15px; }
+        .options { list-style:none; }
+        .options li { padding:12px; background:var(--light-bg); margin:8px 0; border-radius:4px; cursor:pointer; }
+        .options li:hover { background:#e9ecef; }
+        .options input { margin-right:10px; }
+        .quiz-actions { display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-top:30px; }
+        .score { font-size:48px; font-weight:700; color:var(--primary-color); text-align:center; margin:20px 0; }
+        #scoreDisplay20 { font-size:36px; color:var(--secondary-color); }
+        .student-info { background:var(--light-bg); padding:20px; border-radius:8px; margin:20px 0; }
+        .info-row { margin:10px 0; }
+        .info-label { font-weight:500; display:inline-block; width:130px; }
+        .capture-message { background:var(--accent-color); color:white; padding:15px; border-radius:8px; text-align:center; font-size:18px; margin:20px 0; }
+        footer { background:var(--secondary-color); color:white; text-align:center; padding:20px; margin-top:50px; font-size:14px; }
+        .notification { position:fixed; top:20px; right:20px; padding:15px 25px; border-radius:4px; color:white; z-index:9999; display:none; font-weight:500; }
+        .notification.success { background:var(--success-color); }
+        .notification.error { background:var(--error-color); }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Unidad Curricular Inglés UNES Núcleo Zulia</h1>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="form-section" id="studentForm">
+            <h2>Información del Estudiante</h2>
+            <form id="formData">
+                <div class="form-group">
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" id="nombre" required>
+                </div>
+                <div class="form-group">
+                    <label for="apellido">Apellido:</label>
+                    <input type="text" id="apellido" required>
+                </div>
+                <div class="form-group">
+                    <label for="pnf">Programa Nacional de Formación (PNF):</label>
+                    <select id="pnf" required>
+                        <option value="">Seleccione una opción</option>
+                        <option value="Ambiente 1 Criminalística I-2025">Ambiente 1 Criminalística I-2025</option>
+                        <option value="Ambiente 2 Criminalística I-2025">Ambiente 2 Criminalística I-2025</option>
+                        <option value="Licenciatura en Criminalística I-2024">Licenciatura en Criminalística I-2024</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn">Comenzar Cuestionario</button>
+            </form>
+        </div>
+
+        <div class="quiz-container" id="quizContainer" style="display:none;">
+            <h2>Cuestionario: Lección 1 de Inglés Básico</h2>
+            <p>Responde las siguientes preguntas sobre la primera lección. Cada respuesta correcta vale 1 punto.</p>
+            <div class="progress-bar"><div class="progress" id="progressBar"></div></div>
+            <div class="question-counter" id="questionCounter">Pregunta 1 de 90</div>
+            <div id="questionsArea"></div>
+            <div class="quiz-actions">
+                <button type="button" class="btn" id="prevBtn" style="display:none;">Anterior</button>
+                <button type="button" class="btn" id="nextBtn">Siguiente</button>
+                <button type="button" class="btn" id="submitBtn" style="display:none;">Enviar Respuestas</button>
+            </div>
+        </div>
+
+        <div class="results-container" id="resultsContainer" style="display:none;">
+            <h2>Resultados del Cuestionario</h2>
+            <div class="score" id="scoreDisplay">0/90</div>
+            <div class="score" id="scoreDisplay20">0.00/20</div>
+            <p id="scoreMessage" style="text-align:center; font-size:18px; margin:20px 0;"></p>
+            <div class="student-info">
+                <h3>Información del Estudiante</h3>
+                <div class="info-row"><span class="info-label">Nombre:</span> <span id="resultNombre"></span></div>
+                <div class="info-row"><span class="info-label">Apellido:</span> <span id="resultApellido"></span></div>
+                <div class="info-row"><span class="info-label">PNF:</span> <span id="resultPNF"></span></div>
+            </div>
+            <div class="capture-message">
+                <i class="fas fa-camera"></i> Por favor, capture o imprima esta pantalla como comprobante
+            </div>
+            <button type="button" class="btn" id="restartBtn">Realizar Nuevo Cuestionario</button>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>Elaborado por el Profesor Ángel Chacín Ávila • UNES Núcleo Zulia • 2025 • Licencia GPL</p>
+        </div>
+    </footer>
+
+    <div class="notification" id="notification"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const studentForm = document.getElementById("studentForm");
+            const quizContainer = document.getElementById("quizContainer");
+            const resultsContainer = document.getElementById("resultsContainer");
+            const questionsArea = document.getElementById("questionsArea");
+            const prevBtn = document.getElementById("prevBtn");
+            const nextBtn = document.getElementById("nextBtn");
+            const submitBtn = document.getElementById("submitBtn");
+            const restartBtn = document.getElementById("restartBtn");
+            const progressBar = document.getElementById("progressBar");
+            const questionCounter = document.getElementById("questionCounter");
+            const notification = document.getElementById("notification");
+
+            let currentQuestion = 0;
+
+            const allQuestions = [
+                { q: "La palabra 'Animal' se escribe igual en inglés y español.", a: true },
+                { q: "La palabra 'Error' significa 'Acierto' en inglés.", a: false },
+                { q: "'Hospital' es un cognado.", a: true },
+                { q: "'Idea' en inglés es 'Idea' en español.", a: true },
+                { q: "'Gasolina' es un cognado.", a: false },
+                { q: "'Normal' se escribe igual en ambos idiomas.", a: true },
+                { q: "'Opinion' es la forma inglesa para 'Opinión'.", a: true },
+                { q: "'Mesa' es un cognado.", a: false },
+                { q: "'General' es un cognado.", a: true },
+                { q: "'Metal' es un cognado.", a: true },
+                { q: "La terminación '-ing' indica una acción en progreso.", a: true },
+                { q: "'Working' significa 'trabajo'.", a: false },
+                { q: "'Lighting' es la acción de 'Luz' (Light).", a: true },
+                { q: "'Smiling' significa 'llorando'.", a: false },
+                { q: "'Oiling' se deriva de la palabra 'Aceite' (Oil).", a: true },
+                { q: "'Planting' significa 'plantando'.", a: true },
+                { q: "'Flowering' significa 'floreciendo'.", a: true },
+                { q: "'Darking' significa 'oscureciendo'.", a: true },
+                { q: "La palabra 'Offering' es un sustantivo, no una acción.", a: false },
+                { q: "La terminación '-ing' se usa para formar adjetivos.", a: true },
+                { q: "'They is my friends' es una frase gramaticalmente correcta.", a: false },
+                { q: "'The sky is blue' usa el verbo correcto.", a: true },
+                { q: "Se debe usar 'are' para el pronombre 'He'.", a: false },
+                { q: "'You are late' es una frase correcta.", a: true },
+                { q: "'My son is in the garden' es gramaticalmente correcto.", a: true },
+                { q: "'They are walking' significa 'Ellos están caminando'.", a: true },
+                { q: "'She is painting' significa 'Ella está pintando'.", a: true },
+                { q: "'We is happy' es correcto.", a: false },
+                { q: "'It is a good idea' es correcto.", a: true },
+                { q: "Se usa 'is' para referirse a una sola persona o cosa.", a: true },
+                { q: "En inglés, los adjetivos se colocan después del sustantivo.", a: false },
+                { q: "La frase 'a house new' sigue la regla correcta de adjetivos.", a: false },
+                { q: "'A strong man' significa 'un hombre fuerte'.", a: true },
+                { q: "'Water clean' es la forma correcta de decir 'agua limpia'.", a: false },
+                { q: "La frase 'a small table' es gramaticalmente correcta.", a: true },
+                { q: "'Un niño malo' se traduce como 'a boy bad'.", a: false },
+                { q: "La posición del adjetivo es una de las características del inglés explicadas en la lección.", a: true },
+                { q: "'A wise man' significa 'un hombre sabio'.", a: true },
+                { q: "'A sweet drink' es una frase correcta.", a: true },
+                { q: "'A white dress' significa 'un vestido azul'.", a: false },
+                { q: "'Hat' significa 'sombrero'.", a: true },
+                { q: "'Brother' significa 'hermana'.", a: false },
+                { q: "'Blue' es el color 'azul'.", a: true },
+                { q: "'Garden' significa 'coche'.", a: false },
+                { q: "'Here' significa 'aquí'.", a: true },
+                { q: "'Fork' significa 'cuchara'.", a: false },
+                { q: "'In' significa 'en'.", a: true },
+                { q: "'Late' significa 'temprano'.", a: false },
+                { q: "'My' es un posesivo que significa 'mi' o 'mis'.", a: true },
+                { q: "'Sister' significa 'hermano'.", a: false },
+                { q: "'Son' significa 'hijo'.", a: true },
+                { q: "'Sky' significa 'cielo'.", a: true },
+                { q: "'They' significa 'tú'.", a: false },
+                { q: "'The' es un artículo que significa 'el', 'la', 'los' o 'las'.", a: true },
+                { q: "'This' significa 'ese' o 'esa'.", a: false },
+                { q: "'You' puede significar 'tú', 'usted' o 'ustedes'.", a: true },
+                { q: "'Yellow' es el color 'amarillo'.", a: true },
+                { q: "'Opposite' significa 'opuesto'.", a: true },
+                { q: "'To' es una preposición que significa 'a'.", a: true },
+                { q: "'Day' significa 'noche'.", a: false },
+                { q: "'Today' significa 'hoy'.", a: true },
+                { q: "'Monday' significa 'martes'.", a: false },
+                { q: "'Apple' significa 'manzana'.", a: true },
+                { q: "'Bad' significa 'bueno'.", a: false },
+                { q: "'Boy' significa 'niño'.", a: true },
+                { q: "'Black' es el color 'blanco'.", a: false },
+                { q: "'Bitter' significa 'dulce'.", a: false },
+                { q: "'Clean' significa 'sucio'.", a: false },
+                { q: "'Deep' significa 'profundo'.", a: true },
+                { q: "'Dirty' significa 'limpio'.", a: false },
+                { q: "'Drink' es 'bebida'.", a: true },
+                { q: "'Dress' significa 'pantalón'.", a: false },
+                { q: "'House' significa 'casa'.", a: true },
+                { q: "'Kind' significa 'bondadoso'.", a: true },
+                { q: "'Man' significa 'mujer'.", a: false },
+                { q: "'New' significa 'viejo'.", a: false },
+                { q: "'News' significa 'noticias'.", a: true },
+                { q: "'Poor' significa 'rico'.", a: false },
+                { q: "'Plate' significa 'plato'.", a: true },
+                { q: "'River' significa 'río'.", a: true },
+                { q: "'Strong' significa 'débil'.", a: false },
+                { q: "'Small' significa 'grande'.", a: false },
+                { q: "'Sweet' significa 'salado'.", a: false },
+                { q: "'Table' significa 'mesa'.", a: true },
+                { q: "'Young' significa 'joven'.", a: true },
+                { q: "'Water' significa 'agua'.", a: true },
+                { q: "'Woman' significa 'hombre'.", a: false },
+                { q: "'Wise' significa 'sabio'.", a: true },
+                { q: "'White' es el color 'negro'.", a: false },
+                { q: "La lección sugiere estudiar las palabras de forma aislada para mejor memorización.", a: false },
+                { q: "El método promete un aprendizaje rápido y con poco esfuerzo.", a: true },
+                { q: "La lección recomienda usar una libreta para apuntes.", a: true },
+                { q: "Según la lección, es importante estudiar en voz alta.", a: true },
+                { q: "El examen de la lección debe hacerse mentalmente, no por escrito.", a: false },
+                { q: "La lección afirma que el inglés es imposible de aprender.", a: false },
+                { q: "La lección se enfoca en un grupo reducido de palabras para empezar.", a: true },
+                { q: "La pronunciación exacta es la prioridad número uno al empezar.", a: false },
+                { q: "La lección recomienda seguir adelante aunque no se entienda una lección.", a: false },
+                { q: "El método está diseñado para hispanohablantes.", a: true }
+            ];
+
+            const totalQuestions = allQuestions.length;
+
+            function generateQuizHTML() {
+                questionsArea.innerHTML = "";
+                allQuestions.forEach((q, i) => {
+                    const div = document.createElement("div");
+                    div.className = "question";
+                    div.innerHTML = `
+                        <h3>\( {i + 1}. \){q.q}</h3>
+                        <ul class="options">
+                            <li><label><input type="radio" name="q${i}" value="true"> Verdadero</label></li>
+                            <li><label><input type="radio" name="q${i}" value="false"> Falso</label></li>
+                        </ul>
+                    `;
+                    questionsArea.appendChild(div);
+                });
+            }
+
+            function showQuestion(n) {
+                document.querySelectorAll(".question").forEach((q, i) => q.style.display = i === n ? "block" : "none");
+                questionCounter.textContent = `Pregunta \( {n + 1} de \){totalQuestions}`;
+                progressBar.style.width = `${((n + 1) / totalQuestions) * 100}%`;
+                prevBtn.style.display = n === 0 ? "none" : "inline-block";
+                nextBtn.style.display = n === totalQuestions - 1 ? "none" : "inline-block";
+                submitBtn.style.display = n === totalQuestions - 1 ? "inline-block" : "none";
+                currentQuestion = n;
+            }
+
+            function showNotification(msg, type = "error") {
+                notification.textContent = msg;
+                notification.className = `notification ${type}`;
+                notification.style.display = "block";
+                setTimeout(() => notification.style.display = "none", 3000);
+            }
+
+            document.getElementById("formData").addEventListener("submit", function (e) {
+                e.preventDefault();
+                if (!this.checkValidity()) return showNotification("Complete todos los campos");
+                studentForm.style.display = "none";
+                quizContainer.style.display = "block";
+                generateQuizHTML();
+                showQuestion(0);
+            });
+
+            prevBtn.onclick = () => showQuestion(currentQuestion - 1);
+            nextBtn.onclick = () => {
+                if (!document.querySelector(`input[name="q${currentQuestion}"]:checked`)) {
+                    showNotification("Seleccione una respuesta antes de continuar");
+                    return;
+                }
+                if (currentQuestion < totalQuestions - 1) showQuestion(currentQuestion + 1);
+            };
+
+            submitBtn.onclick = () => {
+                if (!document.querySelector(`input[name="q${currentQuestion}"]:checked`)) {
+                    showNotification("Responda la última pregunta");
+                    return;
+                }
+                let score = 0;
+                allQuestions.forEach((q, i) => {
+                    const sel = document.querySelector(`input[name="q${i}"]:checked`);
+                    if (sel && (sel.value === "true") === q.a) score++;
+                });
+
+                quizContainer.style.display = "none";
+                resultsContainer.style.display = "block";
+
+                document.getElementById("scoreDisplay").textContent = `\( {score}/ \){totalQuestions}`;
+                document.getElementById("scoreDisplay20").textContent = `${(score / totalQuestions * 20).toFixed(2)}/20`;
+
+                const msg = score >= 90 ? "¡Excelente! Has demostrado un conocimiento sobresaliente." :
+                           score >= 75 ? "¡Muy bien! Buen dominio de la lección." :
+                           score >= 60 ? "Aprobado, pero repasa algunos temas." : "Necesitas reforzar esta lección. ¡Tú puedes!";
+                document.getElementById("scoreMessage").textContent = msg;
+
+                document.getElementById("resultNombre").textContent = document.getElementById("nombre").value;
+                document.getElementById("resultApellido").textContent = document.getElementById("apellido").value;
+                document.getElementById("resultPNF").textContent = document.getElementById("pnf").value;
+
+                showNotification("¡Cuestionario completado con éxito!", "success");
+            };
+
+            restartBtn.onclick = () => {
+                resultsContainer.style.display = "none";
+                studentForm.style.display = "block";
+                document.getElementById("formData").reset();
+                progressBar.style.width = "0%";
+            };
+        });
+    </script>
+</body>
+</html>
