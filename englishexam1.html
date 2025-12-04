@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario - Lección 1 de Inglés Básico</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #c1272d;
+            --secondary-color: #0033a0;
+            --text-color: #333;
+            --light-bg: #f9f9f9;
+            --border-color: #ddd;
+            --accent-color: #f0c808;
+            --success-color: #28a745;
+            --error-color: #dc3545;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: #fff;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        header h1 {
+            text-align: center;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        
+        .form-section {
+            background-color: var(--light-bg);
+            padding: 30px 0;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .form-container h2 {
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #a02020;
+        }
+        
+        .quiz-container {
+            display: none;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .question {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .question h3 {
+            margin-bottom: 15px;
+            color: var(--secondary-color);
+        }
+        
+        .options {
+            list-style-type: none;
+        }
+        
+        .options li {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .options li:hover {
+            background-color: var(--light-bg);
+        }
+        
+        .options li input {
+            margin-right: 10px;
+        }
+        
+        .quiz-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        .results-container {
+            display: none;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .results-container h2 {
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+        }
+        
+        .score {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 20px 0;
+        }
+        
+        .student-info {
+            background-color: var(--light-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .student-info h3 {
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .info-row {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        
+        .info-label {
+            font-weight: 500;
+            width: 200px;
+        }
+        
+        .capture-message {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-weight: 500;
+            font-size: 18px;
+        }
+        
+        footer {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 20px 0;
+            margin-top: 40px;
+            text-align: center;
+        }
+        
+        footer p {
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 4px;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .notification.success {
+            background-color: var(--success-color);
+        }
+        
+        .notification.error {
+            background-color: var(--error-color);
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: var(--light-bg);
+            border-radius: 5px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .question-counter {
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 500;
+            color: var(--secondary-color);
+        }
+        
+        @media (max-width: 768px) {
+            .quiz-actions {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .info-row {
+                flex-direction: column;
+            }
+            
+            .info-label {
+                width: 100%;
+                margin-bottom: 5px;
+            }
+            
+            footer p {
+                font-size: 12px;
+                padding: 0 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Unidad Curricular Inglés UNES Núcleo Zulia</h1>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="form-section" id="studentForm">
+            <div class="form-container">
+                <h2>Información del Estudiante</h2>
+                <form id="formData">
+                    <div class="form-group">
+                        <label for="nombre">Nombre:</label>
+                        <input type="text" id="nombre" name="nombre" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="apellido">Apellido:</label>
+                        <input type="text" id="apellido" name="apellido" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="pnf">Programa Nacional de Formación (PNF):</label>
+                        <select id="pnf" name="pnf" required>
+                            <option value="">Seleccione una opción</option>
+                            <option value="Ambiente 1 Criminalística I-2025">Ambiente 1 Criminalística I-2025</option>
+                            <option value="Ambiente 2 Criminalística I-2025">Ambiente 2 Criminalística I-2025</option>
+                            <option value="Licenciatura en Criminalística I-2024">Licenciatura en Criminalística I-2024</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn">Comenzar Cuestionario</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="quiz-container" id="quizContainer">
+            <h2>Cuestionario: Lección 1 de Inglés Básico</h2>
+            <p>Responde las siguientes preguntas sobre la primera lección. Cada respuesta correcta vale 1 punto.</p>
+            
+            <div class="progress-bar">
+                <div class="progress" id="progressBar"></div>
+            </div>
+            
+            <div class="question-counter" id="questionCounter">Pregunta 1 de 101</div>
+            
+            <div id="questionsArea">
+                <!-- Las preguntas serán generadas aquí por JavaScript -->
+            </div>
+            
+            <div class="quiz-actions">
+                <button type="button" class="btn" id="prevBtn" style="display:none;">Anterior</button>
+                <button type="button" class="btn" id="nextBtn">Siguiente</button>
+                <button type="button" class="btn" id="submitBtn" style="display:none;">Enviar Respuestas</button>
+            </div>
+        </div>
+        
+        <div class="results-container" id="resultsContainer">
+            <h2>Resultados del Cuestionario</h2>
+            
+            <div class="score" id="scoreDisplay">0/101</div>
+            <div class="score" id="scoreDisplay20" style="font-size: 36px; color: var(--secondary-color);">0.00/20</div>
+            
+            <p id="scoreMessage"></p>
+            
+            <div class="student-info">
+                <h3>Información del Estudiante</h3>
+                <div class="info-row">
+                    <span class="info-label">Nombre:</span>
+                    <span id="resultNombre"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Apellido:</span>
+                    <span id="resultApellido"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">PNF:</span>
+                    <span id="resultPNF"></span>
+                </div>
+            </div>
+            
+            <div class="capture-message">
+                <i class="fas fa-camera"></i> Por favor, capture o imprima esta pantalla como comprobante de su evaluación
+            </div>
+            
+            <button type="button" class="btn" id="restartBtn">Realizar Nuevo Cuestionario</button>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>Elaborado por el Profesor Ángel Chacín Ávila, Licenciado en Física, Especialista en Ciencias Computacionales, Diplomado en Educación Policial, Docente e Investigador de la Universidad Nacional Experimental de la Seguridad Núcleo Zulia @2025 se publica con licencia GPL</p>
+        </div>
+    </footer>
+    
+    <div class="notification" id="notification"></div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos del DOM
+            const studentForm = document.getElementById('studentForm');
+            const formData = document.getElementById('formData');
+            const quizContainer = document.getElementById('quizContainer');
+            const resultsContainer = document.getElementById('resultsContainer');
+            const questionsArea = document.getElementById('questionsArea');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const submitBtn = document.getElementById('submitBtn');
+            const restartBtn = document.getElementById('restartBtn');
+            const progressBar = document.getElementById('progressBar');
+            const questionCounter = document.getElementById('questionCounter');
+            const notification = document.getElementById('notification');
+            
+            let currentQuestion = 0;
+            const totalQuestions = 101;
+            let userAnswers = new Array(totalQuestions).fill(null);
+
+            const allQuestions = [
+                // --- Cognados y Palabras Similares ---
+                { q: "La palabra 'Animal' se escribe igual en inglés y español.", a: true, e: "Es un cognado." },
+                { q: "La palabra 'Error' significa 'Acierto' en inglés.", a: false, e: "Significa 'Error'." },
+                { q: "'Hospital' es un cognado.", a: true, e: "Se escribe igual, cambia la pronunciación." },
+                { q: "'Idea' en inglés es 'Idea' en español.", a: true, e: "Otro cognado." },
+                { q: "'Gasolina' es un cognado.", a: false, e: "La palabra es 'Gas'." },
+                { q: "'Normal' se escribe igual en ambos idiomas.", a: true, e: "Es un cognado." },
+                { q: "'Opinion' es la forma inglesa para 'Opinión'.", a: true, e: "Sí, es un cognado." },
+                { q: "'Mesa' es un cognado.", a: false, e: "La palabra en inglés es 'Table'." },
+                { q: "'General' es un cognado.", a: true, e: "Se escribe igual." },
+                { q: "'Metal' es un cognado.", a: true, e: "Sí, es un cognado." },
+                // --- Terminación -ing ---
+                { q: "La terminación '-ing' indica una acción en progreso.", a: true, e: "Como 'trabajando' (working)." },
+                { q: "'Working' significa 'trabajo'.", a: false, e: "Significa 'trabajando'. 'Work' es 'trabajo'." },
+                { q: "'Lighting' es la acción de 'Luz' (Light).", a: true, e: "Significa 'alumbrando'." },
+                { q: "'Smiling' significa 'llorando'.", a: false, e: "Significa 'sonriendo'. 'Crying' es 'llorando'." },
+                { q: "'Oiling' se deriva de la palabra 'Aceite' (Oil).", a: true, e: "Significa 'aceitando'." },
+                { q: "'Planting' significa 'plantando'.", a: true, e: "Viene de 'Plant' (planta)." },
+                { q: "'Flowering' significa 'floreciendo'.", a: true, e: "Correcto." },
+                { q: "'Darking' significa 'oscureciendo'.", a: true, e: "Correcto." },
+                { q: "La palabra 'Offering' es un sustantivo, no una acción.", a: false, e: "Indica la acción de 'ofrecer'." },
+                { q: "La terminación '-ing' se usa para formar adjetivos.", a: true, e: "También puede, como en 'a working man'." },
+                // --- Uso de IS y ARE ---
+                { q: "'They is my friends' es una frase gramaticalmente correcta.", a: false, e: "Con 'They' se usa 'are'." },
+                { q: "'The sky is blue' usa el verbo correcto.", a: true, e: "'Sky' es singular, se usa 'is'." },
+                { q: "Se debe usar 'are' para el pronombre 'He'.", a: false, e: "Con 'He' se usa 'is'." },
+                { q: "'You are late' es una frase correcta.", a: true, e: "'You' (ustedes) usa 'are'." },
+                { q: "'My son is in the garden' es gramaticalmente correcto.", a: true, e: "'Son' es singular, usa 'is'." },
+                { q: "'They are walking' significa 'Ellos están caminando'.", a: true, e: "Correcto." },
+                { q: "'She is painting' significa 'Ella está pintando'.", a: true, e: "Correcto." },
+                { q: "'We is happy' es correcto.", a: false, e: "Con 'We' se usa 'are'." },
+                { q: "'It is a good idea' es correcto.", a: true, e: "'It' (ello) es singular, usa 'is'." },
+                { q: "Se usa 'is' para referirse a una sola persona o cosa.", a: true, e: "Es la regla general para el singular." },
+                // --- Adjetivos ---
+                { q: "En inglés, los adjetivos se colocan después del sustantivo.", a: false, e: "Se colocan antes: 'a blue sky'." },
+                { q: "La frase 'a house new' sigue la regla correcta de adjetivos.", a: false, e: "Lo correcto es 'a new house'." },
+                { q: "'A strong man' significa 'un hombre fuerte'.", a: true, e: "El adjetivo 'strong' va antes de 'man'." },
+                { q: "'Water clean' es la forma correcta de decir 'agua limpia'.", a: false, e: "Lo correcto es 'clean water'." },
+                { q: "La frase 'a small table' es gramaticalmente correcta.", a: true, e: "El adjetivo 'small' está antes del sustantivo." },
+                { q: "'Un niño malo' se traduce como 'a boy bad'.", a: false, e: "Lo correcto es 'a bad boy'." },
+                { q: "La posición del adjetivo es una de las características del inglés explicadas en la lección.", a: true, e: "Sí, es un punto clave." },
+                { q: "'A wise man' significa 'un hombre sabio'.", a: true, e: "Correcto." },
+                { q: "'A sweet drink' es una frase correcta.", a: true, e: "Significa 'una bebida dulce'." },
+                { q: "'A white dress' significa 'un vestido azul'.", a: false, e: "Significa 'un vestido blanco'." },
+                // --- Vocabulario General ---
+                { q: "'Hat' significa 'sombrero'.", a: true, e: "Correcto." },
+                { q: "'Brother' significa 'hermana'.", a: false, e: "Significa 'hermano'." },
+                { q: "'Blue' es el color 'azul'.", a: true, e: "Correcto." },
+                { q: "'Garden' significa 'coche'.", a: false, e: "Significa 'jardín'." },
+                { q: "'Here' significa 'aquí'.", a: true, e: "Correcto." },
+                { q: "'Fork' significa 'cuchara'.", a: false, e: "Significa 'tenedor'." },
+                { q: "'In' significa 'en'.", a: true, e: "Correcto." },
+                { q: "'Late' significa 'temprano'.", a: false, e: "Significa 'tarde' o 'atrasado'." },
+                { q: "'My' es un posesivo que significa 'mi' o 'mis'.", a: true, e: "Correcto." },
+                { q: "'Sister' significa 'hermano'.", a: false, e: "Significa 'hermana'." },
+                { q: "'Son' significa 'hijo'.", a: true, e: "Correcto." },
+                { q: "'Sky' significa 'cielo'.", a: true, e: "Correcto." },
+                { q: "'They' significa 'tú'.", a: false, e: "Significa 'ellos' o 'ellas'." },
+                { q: "'The' es un artículo que significa 'el', 'la', 'los' o 'las'.", a: true, e: "Es el artículo definido." },
+                { q: "'This' significa 'ese' o 'esa'.", a: false, e: "Significa 'este' o 'esta'. 'That' es 'ese/esa'." },
+                { q: "'You' puede significar 'tú', 'usted' o 'ustedes'.", a: true, e: "Correcto." },
+                { q: "'Yellow' es el color 'amarillo'.", a: true, e: "Correcto." },
+                { q: "'Opposite' significa 'opuesto'.", a: true, e: "Correcto." },
+                { q: "'To' es una preposición que significa 'a'.", a: true, e: "Correcto." },
+                { q: "'Day' significa 'noche'.", a: false, e: "Significa 'día'." },
+                { q: "'Today' significa 'hoy'.", a: true, e: "Correcto." },
+                { q: "'Monday' significa 'martes'.", a: false, e: "Significa 'lunes'." },
+                { q: "'Apple' significa 'manzana'.", a: true, e: "Correcto." },
+                { q: "'Bad' significa 'bueno'.", a: false, e: "Significa 'malo'." },
+                { q: "'Boy' significa 'niño'.", a: true, e: "Correcto." },
+                { q: "'Black' es el color 'blanco'.", a: false, e: "Significa 'negro'." },
+                { q: "'Bitter' significa 'dulce'.", a: false, e: "Significa 'amargo'." },
+                { q: "'Clean' significa 'sucio'.", a: false, e: "Significa 'limpio'." },
+                { q: "'Deep' significa 'profundo'.", a: true, e: "Correcto." },
+                { q: "'Dirty' significa 'limpio'.", a: false, e: "Significa 'sucio'." },
+                { q: "'Drink' es 'bebida'.", a: true, e: "Correcto." },
+                { q: "'Dress' significa 'pantalón'.", a: false, e: "Significa 'vestido' o 'traje'." },
+                { q: "'House' significa 'casa'.", a: true, e: "Correcto." },
+                { q: "'Kind' significa 'bondadoso'.", a: true, e: "Correcto." },
+                { q: "'Man' significa 'mujer'.", a: false, e: "Significa 'hombre'." },
+                { q: "'New' significa 'viejo'.", a: false, e: "Significa 'nuevo'." },
+                { q: "'News' significa 'noticias'.", a: true, e: "Correcto." },
+                { q: "'Poor' significa 'rico'.", a: false, e: "Significa 'pobre'." },
+                { q: "'Plate' significa 'plato'.", a: true, e: "Correcto." },
+                { q: "'River' significa 'río'.", a: true, e: "Correcto." },
+                { q: "'Strong' significa 'débil'.", a: false, e: "Significa 'fuerte'." },
+                { q: "'Small' significa 'grande'.", a: false, e: "Significa 'pequeño'." },
+                { q: "'Sweet' significa 'salado'.", a: false, e: "Significa 'dulce'." },
+                { q: "'Table' significa 'mesa'.", a: true, e: "Correcto." },
+                { q: "'Young' significa 'joven'.", a: true, e: "Correcto." },
+                { q: "'Water' significa 'agua'.", a: true, e: "Correcto." },
+                { q: "'Woman' significa 'hombre'.", a: false, e: "Significa 'mujer'." },
+                { q: "'Wise' significa 'sabio'.", a: true, e: "Correcto." },
+                { q: "'White' es el color 'negro'.", a: false, e: "Significa 'blanco'." },
+                // --- Conceptos de la Lección ---
+                { q: "La lección sugiere estudiar las palabras de forma aislada para mejor memorización.", a: false, e: "Sugiere usar la asociación de ideas y estudiar en voz alta." },
+                { q: "El método promete un aprendizaje rápido y con poco esfuerzo.", a: true, e: "Así se menciona en la introducción de la lección." },
+                { q: "La lección recomienda usar una libreta para apuntes.", a: true, e: "Sí, una libreta pequeña de bolsillo." },
+                { q: "Según la lección, es importante estudiar en voz alta.", a: true, e: "Para educar simultáneamente la vista, el oído, la lengua y la memoria." },
+                { q: "El examen de la lección debe hacerse mentalmente, no por escrito.", a: false, e: "El libro dice: 'Este examen deberá usted hacerlo por escrito'." },
+                { q: "La lección afirma que el inglés es imposible de aprender.", a: false, e: "Afirma lo contrario, que su método lo hace fácil." },
+                { q: "La lección se enfoca en un grupo reducido de palabras para empezar.", a: true, e: "Comienza con cognados y palabras básicas." },
+                { q: "La pronunciación exacta es la prioridad número uno al empezar.", a: false, e: "Dice que no debe preocupar demasiado al principio." },
+                { q: "La lección recomienda seguir adelante aunque no se entienda una lección.", a: false, e: "Insiste en no seguir adelante sin haber asimilado la lección anterior." },
+                { q: "El método está diseñado para hispanohablantes.", a: true, e: "El texto original está en español y se dirige a escolares hispanoamericanos." },
+                // --- Pregunta adicional 100 ---
+                { q: "El profesor comentó que hay una versión PDF del libro", a: true, e: "Verdadero, se mencionó en la introducción del curso." }
+            ];
+
+            function generateQuizHTML() {
+                questionsArea.innerHTML = '';
+                allQuestions.forEach((q, index) => {
+                    const questionDiv = document.createElement('div');
+                    questionDiv.className = 'question';
+                    questionDiv.style.display = 'none';
+                    
+                    questionDiv.innerHTML = `
+                        <h3>${index + 1}. ${q.q}</h3>
+                        <ul class="options">
+                            <li><label><input type="radio" name="q${index}" value="true" ${userAnswers[index] === true ? 'checked' : ''}> Verdadero</label></li>
+                            <li><label><input type="radio" name="q${index}" value="false" ${userAnswers[index] === false ? 'checked' : ''}> Falso</label></li>
+                        </ul>
+                    `;
+                    
+                    // Agregar event listeners a los radio buttons
+                    const radioButtons = questionDiv.querySelectorAll('input[type="radio"]');
+                    radioButtons.forEach(radio => {
+                        radio.addEventListener('change', () => {
+                            userAnswers[index] = radio.value === 'true';
+                        });
+                    });
+                    
+                    questionsArea.appendChild(questionDiv);
+                });
+            }
+            
+            function showQuestion(index) {
+                const questions = document.querySelectorAll('.question');
+                questions.forEach(q => q.style.display = 'none');
+                
+                if (questions[index]) {
+                    questions[index].style.display = 'block';
+                }
+                
+                questionCounter.textContent = `Pregunta ${index + 1} de ${totalQuestions}`;
+                progressBar.style.width = `${((index + 1) / totalQuestions) * 100}%`;
+                
+                prevBtn.style.display = index === 0 ? 'none' : 'inline-block';
+                nextBtn.style.display = index === totalQuestions - 1 ? 'none' : 'inline-block';
+                submitBtn.style.display = index === totalQuestions - 1 ? 'inline-block' : 'none';
+                
+                currentQuestion = index;
+            }
+            
+            function startQuiz(e) {
+                e.preventDefault();
+                if (!formData.checkValidity()) {
+                    showNotification('Por favor, complete todos los campos requeridos', 'error');
+                    return;
+                }
+                studentForm.style.display = 'none';
+                quizContainer.style.display = 'block';
+                generateQuizHTML();
+                showQuestion(0);
+            }
+            
+            function showPreviousQuestion() {
+                if (currentQuestion > 0) {
+                    showQuestion(currentQuestion - 1);
+                }
+            }
+            
+            function showNextQuestion() {
+                // Verificar si la pregunta actual está respondida
+                if (userAnswers[currentQuestion] === null) {
+                    showNotification('Por favor, seleccione una respuesta antes de continuar', 'error');
+                    return;
+                }
+                
+                if (currentQuestion < totalQuestions - 1) {
+                    showQuestion(currentQuestion + 1);
+                }
+            }
+            
+            function submitQuiz() {
+                // Verificar que la última pregunta esté respondida
+                if (userAnswers[totalQuestions - 1] === null) {
+                    showNotification('Por favor, responda la última pregunta antes de enviar', 'error');
+                    return;
+                }
+                
+                let score = 0;
+                allQuestions.forEach((question, index) => {
+                    if (userAnswers[index] === question.a) {
+                        score++;
+                    }
+                });
+                
+                showResults(score);
+            }
+            
+            function showResults(score) {
+                quizContainer.style.display = 'none';
+                resultsContainer.style.display = 'block';
+                
+                document.getElementById('scoreDisplay').textContent = `${score}/${totalQuestions}`;
+                const score20 = ((score / totalQuestions) * 20).toFixed(2);
+                document.getElementById('scoreDisplay20').textContent = `${score20}/20`;
+                
+                let message = '';
+                const percentage = (score / totalQuestions) * 100;
+                if (percentage >= 90) {
+                    message = '¡Excelente! Has demostrado un conocimiento sobresaliente de la lección.';
+                } else if (percentage >= 75) {
+                    message = '¡Muy bien! Tienes un buen conocimiento de los conceptos de la lección.';
+                } else if (percentage >= 60) {
+                    message = 'Bien. Has aprobado, pero te recomendamos repasar algunos conceptos.';
+                } else {
+                    message = 'Necesitas mejorar tu conocimiento sobre esta lección. Te recomendamos estudiar más.';
+                }
+                document.getElementById('scoreMessage').textContent = message;
+                
+                document.getElementById('resultNombre').textContent = document.getElementById('nombre').value;
+                document.getElementById('resultApellido').textContent = document.getElementById('apellido').value;
+                document.getElementById('resultPNF').textContent = document.getElementById('pnf').value;
+                
+                showNotification('Cuestionario completado con éxito', 'success');
+            }
+            
+            function restartQuiz() {
+                resultsContainer.style.display = 'none';
+                studentForm.style.display = 'block';
+                formData.reset();
+                userAnswers = new Array(totalQuestions).fill(null);
+                progressBar.style.width = '0%';
+                currentQuestion = 0;
+            }
+            
+            function showNotification(message, type) {
+                notification.textContent = message;
+                notification.className = `notification ${type}`;
+                notification.style.display = 'block';
+                setTimeout(() => { notification.style.display = 'none'; }, 3000);
+            }
+
+            // Event Listeners
+            formData.addEventListener('submit', startQuiz);
+            prevBtn.addEventListener('click', showPreviousQuestion);
+            nextBtn.addEventListener('click', showNextQuestion);
+            submitBtn.addEventListener('click', submitQuiz);
+            restartBtn.addEventListener('click', restartQuiz);
+        });
+    </script>
+</body>
+</html>
