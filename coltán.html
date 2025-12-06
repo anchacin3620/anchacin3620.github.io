@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan Piloto de Desarrollo Minero</title>
+    <style>
+        :root {
+            --primary-color: #004d40; /* Verde oscuro */
+            --secondary-color: #00796b; /* Verde medio */
+            --accent-color: #b2dfdb; /* Verde claro */
+            --background-color: #f4f4f9;
+            --text-color: #333;
+            --light-gray: #e0e0e0;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: var(--white);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin: 0;
+        }
+
+        .plan-selector {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .plan-selector button {
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border: 2px solid var(--secondary-color);
+            background-color: var(--white);
+            color: var(--secondary-color);
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .plan-selector button.active {
+            background-color: var(--secondary-color);
+            color: var(--white);
+        }
+
+        .plan-selector button:hover {
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+        }
+        
+        .plan-selector button.active:hover {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        main {
+            min-height: 400px;
+        }
+
+        #plan-details h2 {
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--light-gray);
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+
+        #plan-details h2:first-of-type {
+            margin-top: 0;
+        }
+
+        #plan-details ul {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+
+        #plan-details strong {
+            color: var(--secondary-color);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 15px;
+            font-size: 14px;
+            color: #777;
+            border-top: 1px solid var(--light-gray);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+            .plan-selector {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Plan Piloto para el Desarrollo Minero de Coltán y Tierras Raras</h1>
+        </header>
+
+        <div class="plan-selector">
+            <button id="btn-coltan" class="active">Plan para Coltán</button>
+            <button id="btn-ree">Plan para Tierras Raras</button>
+        </div>
+
+        <main id="plan-details">
+            <!-- El contenido del plan se insertará aquí con JavaScript -->
+        </main>
+
+        <footer>
+            <p>Elaborado por Ángel Chacín Ávila, Licenciado en Física, Especialista en Ciencias Computacionales</p>
+            <p>&copy; 2025 Copyright. Todos los derechos reservados.</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Datos de los planes estructurados en un objeto
+            const planData = {
+                coltan: {
+                    title: "Plan Piloto para Coltán (Zona: Amazonas - Cerro Impacto)",
+                    sections: [
+                        {
+                            title: "A. Tipo de Equipos Requeridos",
+                            content: `
+                                <p>Basado en el "Eje Productivo" y el compromiso con la "Minería Ecológica", los equipos se centrarán en la eficiencia y el bajo impacto ambiental.</p>
+                                <ul>
+                                    <li><strong>Para Extracción:</strong> Equipos de extracción de pequeña escala y bajo impacto. Sistemas de lavado y clasificación primaria in-situ para reducir el volumen de material a transportar.</li>
+                                    <li><strong>Para Procesamiento:</strong>
+                                        <ul>
+                                            <li><strong>Planta Modular de Procesamiento:</strong> Unidad compacta y transportable.</li>
+                                            <li><strong>Trituradora y Molino:</strong> Para reducir el tamaño del mineral.</li>
+                                            <li><strong>Sistema de Separación Magnética de Alta Intensidad:</strong> Equipo clave para separar la tantalita.</li>
+                                            <li><strong>Mesas de Concentración o Espirales:</strong> Para la concentración gravimétrica final.</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            `
+                        },
+                        {
+                            title: "B. Cantidad de Equipos y Posibles Proveedores",
+                            content: `
+                                <ul>
+                                    <li><strong>Cantidad:</strong> 1 Planta Modular de Procesamiento Piloto. Equipos de apoyo para 2 frentes de extracción.</li>
+                                    <li><strong>Proveedores:</strong>
+                                        <ul>
+                                            <li><strong>Internacionales:</strong> Para la tecnología de punta (separación magnética). Proveedores en Alemania, Australia o China.</li>
+                                            <li><strong>Nacionales:</strong> Para la fabricación de la estructura de la planta, tanques y obras civiles.</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            `
+                        },
+                        {
+                            title: "C. Tiempo Estimado de Adquisición",
+                            content: `
+                                <p>Basado en el cronograma de 5 años:</p>
+                                <ul>
+                                    <li><strong>Selección y Licitación:</strong> 6 meses.</li>
+                                    <li><strong>Fabricación y Entrega:</strong> 12-18 meses.</li>
+                                    <li><strong>Instalación y Puesta en Marcha:</strong> 6 meses.</li>
+                                </ul>
+                                <p><strong>Total Estimado: 24 meses</strong> desde la decisión de compra hasta la operatividad.</p>
+                            `
+                        },
+                        {
+                            title: "D. Volumen de Producción Esperado",
+                            content: `
+                                <p>La meta general es de 300-500 toneladas anuales. Para una planta piloto:</p>
+                                <p><strong>Capacidad Instalada Piloto: 100 toneladas anuales de concentrado de tantalita.</strong></p>
+                            `
+                        },
+                        {
+                            title: "E. Número de Trabajadores Requeridos",
+                            content: `
+                                <ul>
+                                    <li><strong>Personal de Extracción:</strong> 30 trabajadores.</li>
+                                    <li><strong>Personal de Planta:</strong> 40 trabajadores.</li>
+                                    <li><strong>Personal de Mantenimiento y Soporte:</strong> 15 trabajadores.</li>
+                                </ul>
+                                <p><strong>Total estimado para la Planta Piloto de Coltán: 85 trabajadores directos.</strong></p>
+                            `
+                        }
+                    ]
+                },
+                ree: {
+                    title: "Plan Piloto para Tierras Raras (REE) (Zona: Bolívar/Guayana)",
+                    sections: [
+                        {
+                            title: "A. Tipo de Equipos Requeridos",
+                            content: `
+                                <p>El procesamiento de REEs es más complejo, pero el documento guía la estrategia hacia la obtención de concentrados.</p>
+                                <ul>
+                                    <li><strong>Para Extracción:</strong> Equipos para la remoción de sobrecarga y extracción selectiva del mineral.</li>
+                                    <li><strong>Para Procesamiento:</strong>
+                                        <ul>
+                                            <li><strong>Planta Modular de Procesamiento:</strong> Adaptada para las características de los minerales de REE.</li>
+                                            <li><strong>Trituradora, Molino y Clasificadores:</strong> Para la preparación del mineral.</li>
+                                            <li><strong>Equipos de Separación Física:</strong> Separadores gravimétricos, magnéticos y electrostáticos.</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            `
+                        },
+                        {
+                            title: "B. Cantidad de Equipos y Posibles Proveedores",
+                            content: `
+                                <ul>
+                                    <li><strong>Cantidad:</strong> 1 Planta Modular de Procesamiento Piloto para REE. Equipos de apoyo para 1 frente de extracción.</li>
+                                    <li><strong>Proveedores:</strong>
+                                        <ul>
+                                            <li><strong>Internacionales:</strong> La tecnología es altamente especializada. Proveedores en Australia, EE.UU. y China.</li>
+                                            <li><strong>Nacionales:</strong> Para la infraestructura y componentes no especializados.</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            `
+                        },
+                        {
+                            title: "C. Tiempo Estimado de Adquisición",
+                            content: `
+                                <p>El cronograma es paralelo al de Coltán.</p>
+                                <p><strong>Total Estimado: 24 a 30 meses</strong>, considerando que la tecnología para REE puede tener plazos de fabricación más largos.</p>
+                            `
+                        },
+                        {
+                            title: "D. Volumen de Producción Esperado",
+                            content: `
+                                <p>El documento no cuantifica una meta, pero se puede inferir a partir de la lógica del plan.</p>
+                                <p><strong>Capacidad Instalada Piloto: 50 a 80 toneladas anuales de concentrado de REE.</strong></p>
+                            `
+                        },
+                        {
+                            title: "E. Número de Trabajadores Requeridos",
+                            content: `
+                                <p>La operación de REEs puede requerir personal con un nivel técnico ligeramente superior.</p>
+                                <ul>
+                                    <li><strong>Personal de Extracción:</strong> 20 trabajadores.</li>
+                                    <li><strong>Personal de Planta:</strong> 45 trabajadores (incluyendo químicos y técnicos de laboratorio).</li>
+                                    <li><strong>Personal de Mantenimiento y Soporte:</strong> 15 trabajadores.</li>
+                                </ul>
+                                <p><strong>Total estimado para la Planta Piloto de Tierras Raras: 80 trabajadores directos.</strong></p>
+                            `
+                        }
+                    ]
+                }
+            };
+
+            // Referencias a los elementos del DOM
+            const btnColtan = document.getElementById('btn-coltan');
+            const btnRee = document.getElementById('btn-ree');
+            const planDetails = document.getElementById('plan-details');
+
+            // Función para renderizar el plan seleccionado
+            function renderPlan(planKey) {
+                const plan = planData[planKey];
+                if (!plan) return;
+
+                let htmlContent = `<h2>${plan.title}</h2>`;
+                plan.sections.forEach(section => {
+                    htmlContent += `
+                        <section>
+                            <h3>${section.title}</h3>
+                            <div>${section.content}</div>
+                        </section>
+                    `;
+                });
+                planDetails.innerHTML = htmlContent;
+            }
+
+            // Event Listeners para los botones
+            btnColtan.addEventListener('click', () => {
+                renderPlan('coltan');
+                btnColtan.classList.add('active');
+                btnRee.classList.remove('active');
+            });
+
+            btnRee.addEventListener('click', () => {
+                renderPlan('ree');
+                btnRee.classList.add('active');
+                btnColtan.classList.remove('active');
+            });
+
+            // Cargar el plan de Coltán por defecto al iniciar la página
+            renderPlan('coltan');
+        });
+    </script>
+
+</body>
+</html>
