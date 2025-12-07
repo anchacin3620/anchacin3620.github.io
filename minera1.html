@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan Piloto de Desarrollo Minero</title>
+    <style>
+        :root {
+            --primary-color: #004d40; /* Verde oscuro */
+            --secondary-color: #00796b; /* Verde medio */
+            --accent-color: #b2dfdb; /* Verde claro */
+            --background-color: #f4f4f9;
+            --text-color: #333;
+            --light-gray: #e0e0e0;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: var(--white);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin: 0;
+        }
+
+        .plan-selector {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .plan-selector button {
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border: 2px solid var(--secondary-color);
+            background-color: var(--white);
+            color: var(--secondary-color);
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .plan-selector button.active {
+            background-color: var(--secondary-color);
+            color: var(--white);
+        }
+
+        .plan-selector button:hover {
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+        }
+        
+        .plan-selector button.active:hover {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        main {
+            min-height: 400px;
+        }
+
+        #plan-details h2 {
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--light-gray);
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+
+        #plan-details h2:first-of-type {
+            margin-top: 0;
+        }
+        
+        #plan-details h3 {
+            color: var(--secondary-color);
+            border-left: 4px solid var(--secondary-color);
+            padding-left: 10px;
+        }
+
+        #plan-details ul {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+
+        #plan-details li {
+            margin-bottom: 10px;
+        }
+
+        #plan-details strong {
+            color: var(--secondary-color);
+        }
+        
+        .cost-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .cost-table th, .cost-table td {
+            border: 1px solid var(--light-gray);
+            padding: 12px;
+            text-align: left;
+        }
+
+        .cost-table th {
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+        }
+
+        .disclaimer {
+            font-size: 0.9em;
+            color: #555;
+            font-style: italic;
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #fffde7;
+            border-left: 3px solid #fbc02d;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 15px;
+            font-size: 14px;
+            color: #777;
+            border-top: 1px solid var(--light-gray);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+            .plan-selector {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Plan Piloto de Desarrollo Minero</h1>
+        </header>
+
+        <div class="plan-selector">
+            <button id="btn-coltan" class="active">Plan para Coltán</button>
+            <button id="btn-ree">Plan para Tierras Raras</button>
+            <button id="btn-ree-market">Mercado de Tierras Raras</button>
+            <button id="btn-storage">Almacenamiento de Mineral</button>
+            <button id="btn-physical-analysis">Análisis Físico-Químico</button>
+        </div>
+
+        <main id="plan-details">
+            <!-- El contenido del plan se insertará aquí con JavaScript -->
+        </main>
+
+        <footer>
+            <p>Elaborado por Ángel Chacín Ávila, Licenciado en Física, Especialista en Ciencias Computacionales</p>
+            <p>&copy; 2025 Copyright. Todos los derechos reservados.</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const planData = {
+                coltan: {
+                    title: "Plan Piloto para Coltán (Zona: Estado Bolívar - Arco Minero del Orinoco)",
+                    sections: [
+                        { title: "A. Tipo de Equipos Requeridos", content: `<p>El plan se enfoca en reemplazar la minería rudimentaria e ilegal por un modelo industrial y ecológico.</p><ul><li><strong>Para Extracción (Bajo Impacto):</strong><ul><li><strong>Excavadoras sobre orugas (20-30 ton):</strong> Para remoción de sobrecarga y selectiva.</li><li><strong>Trommel Lavador Portátil:</strong> Para la clasificación y lavado inicial del material.</li><li><strong>Sistemas de Recirculación de Agua:</strong> Bombas y tanques para minimizar el consumo de agua.</li></ul></li><li><strong>Para Procesamiento (Concentración):</strong><ul><li><strong>Trituradora de Mandíbula (Jaw Crusher):</strong> Reducción primaria del tamaño del mineral.</li><li><strong>Molino de Bolas (Ball Mill):</strong> Molienda fina para liberar los minerales de tantalita.</li><li><strong>Separador Magnético de Alta Intensidad (HIMS):</strong> Equipo clave para separar la tantalita.</li><li><strong>Mesa de Concentración (Shaking Table):</strong> Para la concentración gravimétrica final.</li></ul></li></ul>` },
+                        { title: "B. Cantidad, Proveedores y Costos Estimados", content: `<p>Se requiere una línea completa de procesamiento para una planta piloto.</p><ul><li><strong>Cantidad:</strong> 1 conjunto completo para una capacidad de 50-100 TPH.</li><li><strong>Posibles Proveedores:</strong> Metso (Finlandia), FLSmidth (Dinamarca), Steinert (Alemania), SLon (China), y empresas nacionales para estructuras.</li></ul><h3>Costos Estimados de Equipamiento Clave (Presupuesto Inicial)</h3><table class="cost-table"><thead><tr><th>Equipo</th><th>Capacidad Estimada</th><th>Precio Estimado (USD)</th></tr></thead><tbody><tr><td>Trituradora de Mandíbula</td><td>50 TPH</td><td>$150,000 - $250,000</td></tr><tr><td>Molino de Bolas</td><td>30-40 TPH</td><td>$400,000 - $700,000</td></tr><tr><td>Separador Magnético HIMS</td><td>20 TPH</td><td>$200,000 - $350,000</td></tr></tbody></table><p class="disclaimer"><strong>Advertencia:</strong> Precios aproximados para planificación. No incluyen instalación, transporte ni impuestos.</p>` },
+                        { title: "C. Tiempo Estimado de Adquisición", content: `<p><strong>Total Estimado: 26 a 38 meses</strong> desde la decisión de compra hasta la operatividad.</p>` },
+                        { title: "D. Volumen de Producción Esperado", content: `<p><strong>Capacidad Piloto: 100 toneladas anuales de concentrado de tantalita (aprox. 60-70% Ta₂O₅).</strong></p>` },
+                        { title: "E. Número de Trabajadores Requeridos", content: `<p><strong>Total estimado: 85 trabajadores directos.</strong></p>` }
+                    ]
+                },
+                ree: {
+                    title: "Plan Piloto para Tierras Raras (REE) (Zona: Bolívar/Guayana)",
+                    sections: [
+                        { title: "A. Tipo de Equipos Requeridos", content: `<p>El plan piloto se enfoca en la obtención de un concentrado físico.</p><ul><li><strong>Para Extracción:</strong> Perforadoras, excavadoras y camiones de volquete.</li><li><strong>Para Procesamiento (Concentración Física):</strong><ul><li><strong>Trituradora (Jaw + Cone):</strong> Reducción progresiva del tamaño del mineral.</li><li><strong>Molino Sag/Bolas:</strong> Molienda fina para liberar los minerales de REE.</li><li><strong>Celdas de Flotación:</strong> Equipo clave para separar los minerales de REE de la ganga.</li><li><strong>Separadores Magnéticos y Espirales:</strong> Para limpieza del concentrado.</li></ul></li></ul>` },
+                        { title: "B. Cantidad, Proveedores y Costos Estimados", content: `<p>Se requiere una línea de procesamiento más compleja que la del coltán.</p><ul><li><strong>Cantidad:</strong> 1 conjunto completo para una capacidad de 100-200 TPH.</li><li><strong>Posibles Proveedores:</strong> Metso (Finlandia), FLSmidth (Dinamarca), Outotec (Finlandia), Multotec (Sudáfrica), y empresas nacionales.</li></ul><h3>Costos Estimados de Equipamiento Clave (Presupuesto Inicial)</h3><table class="cost-table"><thead><tr><th>Equipo</th><th>Capacidad Estimada</th><th>Precio Estimado (USD)</th></tr></thead><tbody><tr><td>Circuito de Trituración</td><td>150 TPH</td><td>$800,000 - $1.5M</td></tr><tr><td>Molino SAG</td><td>100 TPH</td><td>$2.5M - $4M</td></tr><tr><td>Banco de Celdas de Flotación</td><td>100 TPH</td><td>$1M - $2M</td></tr></tbody></table><p class="disclaimer"><strong>Advertencia:</strong> Precios aproximados para planificación. No incluyen instalación, transporte ni impuestos.</p>` },
+                        { title: "C. Tiempo Estimado de Adquisición", content: `<p><strong>Total Estimado: 30 a 42 meses</strong>, considerando la ingeniería y fabricación de equipos pesados.</p>` },
+                        { title: "D. Volumen de Producción Esperado", content: `<p><strong>Capacidad Piloto: 50,000 toneladas anuales de concentrado de REE (aprox. 30-45% TRAO).</strong></p>` },
+                        { title: "E. Número de Trabajadores Requeridos", content: `<p><strong>Total estimado: 120 trabajadores directos.</strong></p>` }
+                    ]
+                },
+                reeMarket: {
+                    title: "Análisis del Mercado de Tierras Raras (ETR)",
+                    sections: [
+                        { title: "Introducción: ¿Qué son y por qué son importantes?", content: `<p>Los Elementos de Tierras Raras (ETR) son un grupo de 17 elementos químicos metálicos esenciales para la fabricación de productos de alta tecnología.</p><p>Se dividen en dos grupos:</p><ul><li><strong>Elementos de Tierras Raras Ligeras (LREE):</strong> Los primeros de la serie (Lantano a Gadolinio). Son más abundantes.</li><li><strong>Elementos de Tierras Raras Pesadas (HREE):</strong> Los últimos de la serie (Terbio a Lutecio). Son más escasos y, por lo general, más valiosos.</li></ul>` },
+                        { title: "Elementos Más Demandados y sus Aplicaciones", content: `<p>La demanda de ETR está impulsada por la transición energética y la electrónica de consumo.</p><ul><li><strong>Neodimio (Nd) y Praseodimio (Pr):</strong> Imanes permanentes de alto rendimiento (imanes NdFeB) para motores de vehículos eléctricos y generadores de turbinas eólicas.</li><li><strong>Disprosio (Dy) y Terbio (Tb):</strong> Aditivos cruciales en imanes NdFeB para mejorar su rendimiento a altas temperaturas. Esenciales para la industria eólica y automotriz.</li><li><strong>Lantano (La) y Cerio (Ce):</strong> Baterías de níquel-hidruro metálico (Ni-MH) y catalizadores de refinación de petróleo y automotrices.</li><li><strong>Europio (Eu) e Itrio (Y):</strong> Fósforos para pantallas y iluminación (rojo, verde), láseres y superconductores.</li></ul>` },
+                        { title: "Conclusión Estratégica", content: `<p>El control de la cadena de valor de las Tierras Raras es una prioridad geopolítica. Desarrollar una capacidad nacional para producir concentrados de alto valor, especialmente ricos en HREE, posiciona al país de manera estratégica en los mercados tecnológicos y energéticos del futuro.</p>` }
+                    ]
+                },
+                storage: {
+                    title: "Módulo de Almacenamiento y Acopio de Mineral",
+                    sections: [
+                        { title: "Infraestructura y Tipos de Almacenamiento", content: `<p>El almacenamiento seguro y controlado del mineral es fundamental para la trazabilidad soberana, la prevención del robo y la protección ambiental.</p><ul><li><strong>Acopios a Cielo Abierto:</strong> Montones de mineral a la intemperie. Es la opción de menor costo, pero presenta altos riesgos de pérdida por lixiviación, contaminación y robo. No se recomienda para el plan piloto.</li><li><strong>Almacenamiento Cubierto (Nave Industrial):</strong> Consiste en almacenar el mineral en una estructura cerrada. Es la opción ideal para el plan piloto.<ul><li><strong>Ventajas:</strong> Protege el mineral de la intemperie, facilita el control de polvo, permite un riguroso control de acceso y vigilancia.</li><li><strong>Desventajas:</strong> Mayor costo inicial de construcción.</li></ul></li><li><strong>Silos de Almacenamiento:</strong> Estructuras verticales para el almacenamiento de materiales finos o en polvo (como el concentrado final). Son ideales para el producto de alto valor.</li></ul>` },
+                        { title: "Equipos y Tecnologías Relacionadas", content: `<p>Para una gestión eficiente del almacenamiento se requiere la siguiente tecnología:</p><ul><li><strong>Manejo de Materiales:</strong><ul><li><strong>Cintas Transportadoras:</strong> Para mover el mineral desde la recepción hasta las zonas de acopio y desde allí hasta la alimentación de la planta.</li><li><strong>Alimentadores de Tolva (Hopper Feeders):</strong> Para dosificar y controlar el flujo de mineral.</li></ul></li><li><strong>Seguridad y Trazabilidad:</strong><ul><li><strong>Sistemas de Pesaje:</strong> Básculas de puente para pesar los camiones a la entrada y salida.</li><li><strong>Circuito Cerrado de Televisión (CCTV):</strong> Cámaras de vigilancia en todos los puntos críticos.</li><li><strong>Sistemas de Control de Acceso:</strong> Barreras, personal de seguridad y registro de entrada/salida.</li></ul></li></ul>` },
+                        { title: "Proveedores y Costos Estimados", content: `<h3>Infraestructura y Equipamiento Clave</h3><table class="cost-table"><thead><tr><th>Equipo/Infraestructura</th><th>Descripción/Capacidad</th><th>Proveedores (No EEUU)</th><th>Precio Estimado (USD)</th></tr></thead><tbody><tr><td>Nave Industrial Prefabricada</td><td>1,500 - 2,000 m²</td><td>Proveedores locales e internacionales (ej. Astron, Frisomat)</td><td>$300 - $500 por m²</td></tr><tr><td>Cinta Transportadora</td><td>Ancho 800mm, 500m de largo</td><td>BEUMER Group (Alemania), Sandvik (Suecia)</td><td>$1,000 - $2,500 por metro</td></tr><tr><td>Silo de Acero para Concentrado</td><td>500 toneladas de capacidad</td><td>Symaga (España), AGCO (Alemania)</td><td>$150,000 - $250,000</td></tr><tr><td>Sistema de Vigilancia (CCTV)</td><td>16 cámaras, servidores, software</td><td>Hikvision (China), Axis (Suecia)</td><td>$10,000 - $25,000</td></tr></tbody></table><p class="disclaimer"><strong>Advertencia:</strong> Precios aproximados para planificación. No incluyen instalación, transporte ni impuestos.</p>` },
+                        { title: "Integración con el Plan Piloto", content: `<p>Para la fase piloto, se recomienda la construcción de una <strong>única nave industrial de 1,500 m²</strong>. Esta nave albergaría:</p><ul><li>Una zona de acopio para el mineral extraído (material en bruto).</li><li>Una zona acordonada para el concentrado de alta pureza producido por la planta.</li><li>Un laboratorio de control de calidad.</li><li>Una pequeña oficina de administración y control de acceso.</li></ul>` }
+                    ]
+                },
+                physicalAnalysis: {
+                    title: "Análisis Físico-Químico de los Minerales",
+                    sections: [
+                        {
+                            title: "Análisis del Coltán (Tantalita-Columbita)",
+                            content: `
+                                <p>Es crucial entender que el "Coltán" no es un mineral en sí, sino el nombre abreviado para un mineral de <strong>Tantalita-Columbita</strong>. Su valor reside en el contenido de Tantalio (Ta) y Niobio (Nb).</p>
+                                <ul>
+                                    <li><strong>Composición Química:</strong>
+                                        <ul>
+                                            <li><strong>Tantalita:</strong> (Fe,Mn)Ta₂O₆. Es la fuente primaria de Tantalio (Ta).</li>
+                                            <li><strong>Columbita:</strong> (Fe,Mn)Nb₂O₆. Es la fuente primaria de Niobio (Nb).</li>
+                                            <li>La proporción de Tantalio a Niobio varía significativamente entre los yacimientos. El Coltán de alto valor tiene una alta proporción de Tantalita.</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Propiedades Físicas Clave para el Procesamiento:</strong>
+                                        <ul>
+                                            <li><strong>Densidad:</strong> Muy alta. La Tantalita tiene una densidad de ~8.2 g/cm³, mientras que la Columbita es de ~5.2 g/cm³. Esta alta densidad es la base para los métodos de concentración gravimétrica (mesas de concentración, espirales), que los separan de la roca de ganga (densidad ~2.7 g/cm³).</li>
+                                            <li><strong>Propiedades Magnéticas:</strong> La Tantalita es <strong>paramagnética</strong> (débilmente atraída por un campo magnético intenso), mientras que la Columbita es menos magnética. Esta diferencia es explotada por los Separadores Magnéticos de Alta Intensidad (HIMS) para separar la Tantalita de la Columbita y otros minerales.</li>
+                                            <li><strong>Dureza:</strong> 6 - 6.5 en la escala de Mohs, lo que la hace relativamente resistente a la abrasión.</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            `
+                        },
+                        {
+                            title: "Análisis de las Tierras Raras (Elementos de Tierras Raras - ETR)",
+                            content: `
+                                <p>Los Elementos de Tierras Raras (ETR) son un grupo de 17 elementos metálicos: los 15 lantánidos (del Lantano al Lutecio), más el Escandio y el Itrio. A pesar de su nombre, no son raros en la corteza terrestre, pero su concentración en minerales explotables es baja.</p>
+                                <ul>
+                                    <li><strong>Composición Química y Propiedades:</strong>
+                                        <ul>
+                                            <li>Todos los ETR tienen propiedades químicas muy similares, ya que comparten la configuración electrónica de la capa 4f. Esto los hace extremadamente <strong>difíciles de separar</strong> unos de otros.</li>
+                                            <li>Un fenómeno clave es la <strong>Contracción Lantánida</strong>: a medida que se avanza en la serie de los lantánidos, el radio iónico de los átomos disminuye gradualmente. Esta pequeña pero sistemática diferencia es la base para las complejas técnicas de separación química (ej. extracción con disolventes).</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Mineralogía Principal:</strong>
+                                        <ul>
+                                            <li><strong>Bastnäsite ((Ce, La, Y)CO₃F):</strong> El principal mineral de ETR ligeros (LREE). Es una fuente de Cerio (Ce), Lantano (La) y Neodimio (Nd).</li>
+                                            <li><strong>Monazite ((Ce, La, Nd, Th)PO₄):</strong> Contiene tanto LREE como HREE. Una característica importante es que a menudo contiene <strong>Torio (Th)</strong>, un elemento radiactivo, lo que requiere manejo especial y consideraciones de seguridad radiológica en su procesamiento.</li>
+                                            <li><strong>Xenotime (YPO₄):</strong> El principal mineral de ETR pesados (HREE) y de Itrio (Y). Es una fuente clave de Disprosio (Dy), Terbio (Tb) e Itrio.</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Implicaciones para el Procesamiento:</strong>
+                                        <ul>
+                                            <li>El primer paso es siempre la concentración física (trituración, molienda, separación gravimétrica y magnética) para obtener un concentrado de minerales de ETR (Bastnäsite, Monazite, etc.).</li>
+                                            <li>El segundo paso, mucho más complejo y costoso, es la separación química individual de cada elemento, que requiere plantas de procesamiento químico avanzado y no está contemplado en la fase piloto.</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            `
+                        }
+                    ]
+                }
+            };
+
+            const btnColtan = document.getElementById('btn-coltan');
+            const btnRee = document.getElementById('btn-ree');
+            const btnReeMarket = document.getElementById('btn-ree-market');
+            const btnStorage = document.getElementById('btn-storage');
+            const btnPhysicalAnalysis = document.getElementById('btn-physical-analysis');
+            const planDetails = document.getElementById('plan-details');
+
+            function renderPlan(planKey) {
+                const plan = planData[planKey];
+                if (!plan) return;
+
+                let htmlContent = `<h2>${plan.title}</h2>`;
+                plan.sections.forEach(section => {
+                    htmlContent += `
+                        <section>
+                            <h3>${section.title}</h3>
+                            <div>${section.content}</div>
+                        </section>
+                    `;
+                });
+                planDetails.innerHTML = htmlContent;
+            }
+            
+            function setActiveButton(activeBtn) {
+                const buttons = [btnColtan, btnRee, btnReeMarket, btnStorage, btnPhysicalAnalysis];
+                buttons.forEach(btn => btn.classList.remove('active'));
+                activeBtn.classList.add('active');
+            }
+
+            btnColtan.addEventListener('click', () => { renderPlan('coltan'); setActiveButton(btnColtan); });
+            btnRee.addEventListener('click', () => { renderPlan('ree'); setActiveButton(btnRee); });
+            btnReeMarket.addEventListener('click', () => { renderPlan('reeMarket'); setActiveButton(btnReeMarket); });
+            btnStorage.addEventListener('click', () => { renderPlan('storage'); setActiveButton(btnStorage); });
+            btnPhysicalAnalysis.addEventListener('click', () => { renderPlan('physicalAnalysis'); setActiveButton(btnPhysicalAnalysis); });
+
+            // Cargar el plan de Coltán por defecto
+            renderPlan('coltan');
+        });
+    </script>
+
+</body>
+</html>
