@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mecanismos de Crecimiento de Películas Delgadas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        .section {
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .toggle-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .toggle-btn:hover {
+            background-color: #2980b9;
+        }
+        .content {
+            display: none;
+        }
+        .content.active {
+            display: block;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #2c3e50;
+            color: white;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Mecanismos de Crecimiento de Películas Delgadas</h1>
+
+    <!-- Volmer-Weber -->
+    <div class="section">
+        <button class="toggle-btn" onclick="toggleSection('volmer-weber')">Volmer-Weber (Crecimiento por Islas o 3D)</button>
+        <div id="volmer-weber" class="content">
+            <h3>Descripción</h3>
+            <p>El modelo de Volmer-Weber describe el crecimiento de películas delgadas en el que los átomos depositados forman <strong>islas tridimensionales</strong> sobre el sustrato. Ocurre cuando los átomos del material depositado tienen mayor afinidad entre sí que con el sustrato.</p>
+            <h3>Condiciones Termodinámicas</h3>
+            <p>La energía de interacción entre los átomos del material (E_m-m) es mayor que la energía de interacción con el sustrato (E_m-s). Matemáticamente: <strong>γ_s > γ_m + γ_i</strong>, donde:</p>
+            <ul>
+                <li><strong>γ_s</strong>: Energía superficial del sustrato.</li>
+                <li><strong>γ_m</strong>: Energía superficial del material depositado.</li>
+                <li><strong>γ_i</strong>: Energía interfacial entre el material y el sustrato.</li>
+            </ul>
+            <h3>Mecanismo de Crecimiento</h3>
+            <ol>
+                <li>Los átomos se nucleen en sitios específicos, formando clústeres o islas tridimensionales.</li>
+                <li>Las islas crecen y coalescen, formando una película continua, pero rugosa.</li>
+            </ol>
+            <h3>Ejemplos y Aplicaciones</h3>
+            <p>Depósito de metales (Ag, Au) sobre sustratos no metálicos (SiO₂). Usado en puntos cuánticos y nanocristales.</p>
+            <h3>Ventajas y Desventajas</h3>
+            <p><strong>Ventajas:</strong> Útil para nanoestructuras discretas.<br><strong>Desventajas:</strong> Películas rugosas, menos uniformes.</p>
+        </div>
+    </div>
+
+    <!-- Frank-van der Merwe -->
+    <div class="section">
+        <button class="toggle-btn" onclick="toggleSection('frank-van-der-merwe')">Frank-van der Merwe (Crecimiento por Capas o 2D)</button>
+        <div id="frank-van-der-merwe" class="content">
+            <h3>Descripción</h3>
+            <p>El modelo de Frank-van der Merwe describe el crecimiento en capas bidimensionales completas antes de formar la siguiente capa. Ocurre cuando los átomos tienen mayor afinidad con el sustrato.</p>
+            <h3>Condiciones Termodinámicas</h3>
+            <p>La energía de interacción con el sustrato (E_m-s) es mayor que entre los átomos del material (E_m-m). Matemáticamente: <strong>γ_s < γ_m + γ_i</strong>.</p>
+            <h3>Mecanismo de Crecimiento</h3>
+            <ol>
+                <li>Los átomos se adsorben formando una monocapa completa.</li>
+                <li>La siguiente monocapa comienza tras completar la anterior.</li>
+            </ol>
+            <h3>Ejemplos y Aplicaciones</h3>
+            <p>Depósito homoepitaxial (Si/Si, GaAs/GaAs). Usado en microelectrónica y optoelectrónica.</p>
+            <h3>Ventajas y Desventajas</h3>
+            <p><strong>Ventajas:</strong> Películas lisas y uniformes.<br><strong>Desventajas:</strong> Requiere sustratos compatibles y control estricto.</p>
+        </div>
+    </div>
+
+    <!-- Stranski-Krastanov -->
+    <div class="section">
+        <button class="toggle-btn" onclick="toggleSection('stranski-krastanov')">Stranski-Krastanov (Crecimiento Mixto)</button>
+        <div id="stranski-krastanov" class="content">
+            <h3>Descripción</h3>
+            <p>El modelo de Stranski-Krastanov combina el crecimiento en capas (2D) y por islas (3D). Inicialmente forma capas bidimensionales, pero tras un espesor crítico, pasa a formar islas tridimensionales debido a la tensión por desajuste de red.</p>
+            <h3>Condiciones Termodinámicas</h3>
+            <p>Inicialmente, <strong>γ_s < γ_m + γ_i</strong>, pero la tensión acumulada por el desajuste de red cambia la dinámica a <strong>γ_s > γ_m + γ_i</strong> tras un espesor crítico.</p>
+            <h3>Mecanismo de Crecimiento</h3>
+            <ol>
+                <li>Formación de capas bidimensionales coherentes.</li>
+                <li>Tras un espesor crítico, la tensión induce la formación de islas 3D.</li>
+            </ol>
+            <h3>Ejemplos y Aplicaciones</h3>
+            <p>Crecimiento heteroepitaxial (Ge/Si, InAs/GaAs). Usado en puntos cuánticos para láseres.</p>
+            <h3>Ventajas y Desventajas</h3>
+            <p><strong>Ventajas:</strong> Permite nanoestructuras funcionales.<br><strong>Desventajas:</strong> Complejidad en controlar la transición.</p>
+        </div>
+    </div>
+
+    <!-- Técnicas de Epitaxia -->
+    <div class="section">
+        <button class="toggle-btn" onclick="toggleSection('epitaxia')">Teoría de Técnicas de Epitaxia</button>
+        <div id="epitaxia" class="content">
+            <h3>Definición</h3>
+            <p>La epitaxia es el proceso de crecimiento ordenado de una película cristalina sobre un sustrato cristalino, donde la estructura cristalina de la película se alinea con la del sustrato. Es fundamental en la fabricación de dispositivos semiconductores.</p>
+            <h3>Principales Técnicas de Epitaxia</h3>
+            <ul>
+                <li><strong>Epitaxia por Haz Molecular (MBE):</strong> Deposición en ultra-alto vacío de átomos o moléculas desde fuentes térmicas. Permite control preciso a nivel atómico, ideal para estructuras complejas como puntos cuánticos.</li>
+                <li><strong>Deposición Química de Vapor (CVD):</strong> Usa reacciones químicas de precursores gaseosos para formar películas. Variantes incluyen MOCVD (usando compuestos organometálicos) y LPCVD (baja presión).</li>
+                <li><strong>Epitaxia de Fase Líquida (LPE):</strong> Crecimiento desde una solución líquida saturada. Usada en compuestos como GaAs, aunque menos común hoy en día.</li>
+                <li><strong>Epitaxia por Sputtering:</strong> Deposición física mediante bombardeo iónico. Menos precisa, pero útil para ciertos materiales.</li>
+            </ul>
+            <h3>Parámetros Clave</h3>
+            <p>La calidad del crecimiento epitaxial depende de:</p>
+            <ul>
+                <li><strong>Temperatura:</strong> Afecta la movilidad de los átomos y la calidad cristalina.</li>
+                <li><strong>Tasa de deposición:</strong> Controla la uniformidad y defectos.</li>
+                <li><strong>Presión y ambiente:</strong> Ultra-alto vacío (MBE) o gases reactivos (CVD).</li>
+                <li><strong>Compatibilidad del sustrato:</strong> Influenciada por el desajuste de red.</li>
+            </ul>
+            <h3>Aplicaciones</h3>
+            <p>Producción de semiconductores (transistores, LEDs, láseres), puntos cuánticos, y estructuras multicapa para dispositivos optoelectrónicos.</p>
+        </div>
+    </div>
+
+    <!-- Desajuste de Red -->
+    <div class="section">
+        <button class="toggle-btn" onclick="toggleSection('desajuste-red')">Desajuste de Red</button>
+        <div id="desajuste-red" class="content">
+            <h3>Definición</h3>
+            <p>El desajuste de red (lattice mismatch) ocurre cuando los parámetros de red cristalina del material depositado y el sustrato son diferentes. Se calcula como:</p>
+            <p><strong>f = (a_f - a_s) / a_s</strong>, donde:</p>
+            <ul>
+                <li><strong>a_f</strong>: Parámetro de red del material de la película.</li>
+                <li><strong>a_s</strong>: Parámetro de red del sustrato.</li>
+            </ul>
+            <h3>Efectos del Desajuste de Red</h3>
+            <ul>
+ Ascending (1) Descending
+                <li><strong>Bajo (f < 1%):</strong> La película crece coherentemente, siguiendo el modelo de Frank-van der Merwe, con mínima formación de defectos.</li>
+                <li><strong>Moderado (1% < f < 5%):</strong> Puede inducir el crecimiento Stranski-Krastanov, con formación de islas tras un espesor crítico para relajar la tensión.</li>
+                <li><strong>Alto (f > 5%):</strong> Favorece el crecimiento Volmer-Weber, con formación directa de islas y alta densidad de defectos.</li>
+            </ul>
+            <h3>Tensión y Relajación</h3>
+            <p>El desajuste genera tensión elástica en la película. Esta tensión puede relajarse mediante:</p>
+            <ul>
+                <li><strong>Formación de dislocaciones:</strong> Defectos cristalinos que liberan energía elástica, pero degradan la calidad de la película.</li>
+                <li><strong>Formación de islas:</strong> Como en el modelo Stranski-Krastanov, permite relajar la tensión formando estructuras 3D.</li>
+            </ul>
+            <h3>Importancia</h3>
+            <p>El desajuste de red es crítico en heteroepitaxia, ya que afecta la calidad de la película y el rendimiento de dispositivos. Técnicas como capas tampón o gradientes de composición ayudan a mitigar sus efectos.</p>
+        </div>
+    </div>
+
+    <!-- Tabla Comparativa -->
+    <div class="section">
+        <h2>Comparación de Modelos de Crecimiento</h2>
+        <table>
+            <tr>
+                <th>Característica</th>
+                <th>Volmer-Weber</th>
+                <th>Frank-van der Merwe</th>
+                <th>Stranski-Krastanov</th>
+            </tr>
+            <tr>
+                <td>Tipo de Crecimiento</td>
+                <td>Islas (3D)</td>
+                <td>Capas (2D)</td>
+                <td>Capas + Islas (2D → 3D)</td>
+            </tr>
+            <tr>
+                <td>Condición Energética</td>
+                <td>γ_s > γ_m + γ_i</td>
+                <td>γ_s < γ_m + γ_i</td>
+                <td>Transición de 2D a 3D</td>
+            </tr>
+            <tr>
+                <td>Desajuste de Red</td>
+                <td>Alto</td>
+                <td>Bajo o nulo</td>
+                <td>Moderado</td>
+            </tr>
+            <tr>
+                <td>Morfología</td>
+                <td>Rugosa, granular</td>
+                <td>Lisa, uniforme</td>
+                <td>Capa lisa + islas</td>
+            </tr>
+            <tr>
+                <td>Aplicaciones</td>
+                <td>Puntos cuánticos, nanocristales</td>
+                <td>Películas epitaxiales</td>
+                <td>Puntos cuánticos, heteroepitaxia</td>
+            </tr>
+            <tr>
+                <td>Ejemplo de Materiales</td>
+                <td>Ag/SiO₂, Au/Si</td>
+                <td>Si/Si, GaAs/GaAs</td>
+                <td>Ge/Si, InAs/GaAs</td>
+            </tr>
+        </table>
+    </div>
+
+    <footer>
+        <p>Elaborado por el Profesor Ángel Chacín Ávila, Licenciado en Física, Docente e Investigador de la Universidad Nacional Experimental de la Seguridad, Núcleo Zulia</p>
+    </footer>
+
+    <script>
+        function toggleSection(sectionId) {
+            const content = document.getElementById(sectionId);
+            content.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>
