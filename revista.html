@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SINÁPSIS: Umbral de la Estrategia Asimétrica</title>
+    <style>
+        body {
+            font-family: Georgia, serif;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            background-color: #f9f9f9;
+        }
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+            padding: 10px 20px;
+            text-align: center;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        header h1 {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            font-size: 24px;
+        }
+        header p {
+            margin: 0;
+            font-size: 14px;
+            color: #666;
+        }
+        nav {
+            background-color: #eee;
+            padding: 10px;
+            text-align: center;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        nav li {
+            display: inline-block;
+            margin: 0 10px;
+        }
+        nav a {
+            text-decoration: none;
+            color: #0056b3;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        main {
+            max-width: 900px;
+            margin: 120px auto 20px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3 {
+            font-family: Arial, sans-serif;
+            color: #222;
+        }
+        ul, ol {
+            margin-left: 20px;
+        }
+        .index {
+            list-style: none;
+        }
+        .index a {
+            color: #0056b3;
+        }
+        blockquote {
+            border-left: 4px solid #ccc;
+            padding-left: 10px;
+            color: #555;
+        }
+        /* Responsive design */
+        @media (max-width: 768px) {
+            nav ul {
+                display: block;
+            }
+            nav li {
+                display: block;
+                margin: 10px 0;
+            }
+            main {
+                margin-top: 150px;
+                padding: 10px;
+            }
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>SINÁPSIS: Umbral de la Estrategia Asimétrica</h1>
+        <p>Año 1 · Volumen 1 · Número 0 · Noviembre 2025</p>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="#" onclick="loadSection('inicio')">Inicio</a></li>
+            <li><a href="#" onclick="loadSection('normas')">Normas Editoriales</a></li>
+            <li><a href="#" onclick="loadSection('editorial')">Editorial</a></li>
+            <li><a href="#" onclick="loadSection('articulo1')">Artículo 1: El Reloj de Arena Roto</a></li>
+            <li><a href="#" onclick="loadSection('articulo2')">Artículo 2: IA en Análisis Estratégico</a></li>
+        </ul>
+    </nav>
+    <main id="content">
+        <!-- Contenido se carga aquí dinámicamente -->
+    </main>
+    <script>
+        const sections = {
+            inicio: {
+                title: "Inicio - SINÁPSIS",
+                content: `
+                    <h1>SINÁPSIS</h1>
+                    <h2>Umbral de la Estrategia Asimétrica</h2>
+                    <p>Año 1 · Volumen 1 · Número 0</p>
+                    <p>Noviembre 2025</p>
+                    <p>Editorial El Puente</p>
+                    <h2>Directorio y Consejo Editorial</h2>
+                    <p>Editor Jefe: PhD. José Colmenares</p>
+                    <p>Secretario Editorial: Msc. Pedro S. Rodríguez C.</p>
+                    <p>Coordinación Académica: Prof. Freddy Aguilar</p>
+                    <p>Asesor Tecnológico: Prof. Ángel Chacín Ávila</p>
+                    <h3>Consejo Científico y Asesor</h3>
+                    <p>Dr. José Cuadros - Criminología - UNES</p>
+                    <p>Prof. Gustavo Lara - Análisis Estratégico y Geopolítica</p>
+                    <p>Lic. Ángel Chacín Á. - Física Computacional y Modelado de Sistemas</p>
+                    <p>Soc. Ronald Bracho - Sociología de la Juventud y Culturas Digitales</p>
+                `
+            },
+            normas: {
+                title: "Normas Editoriales",
+                content: `
+                    <h1>Normas Editoriales</h1>
+                    <h2>Instrucciones para Autores</h2>
+                    <p>Para asegurar la coherencia metodológica (cultura editorial) de la revista SINÁPSIS, todos los manuscritos deben adherirse a las siguientes directrices:</p>
+                    <h2>Naturaleza y Alcance de la Revista</h2>
+                    <p>SINÁPSIS: Umbral de la Estrategia Asimétrica no es una revista de ciencias puras; es una revista de Seguridad que utiliza perspectivas interdisciplinarias. Es decir, es una revista especializada en Estudios de Seguridad con un Enfoque Interdisciplinario.</p>
+                    <h2>Misión y Temática</h2>
+                    <p>Esta revista arbitrada tiene como misión publicar investigaciones científicas originales y ensayos académicos que analicen los fenómenos de la seguridad ciudadana y la seguridad nacional desde una perspectiva interdisciplinaria.</p>
+                    <p>Invitamos contribuciones de campos como:</p>
+                    <ul>
+                        <li>Ciencias Sociales: Antropología, Sociología, Ciencia Política, Derecho, Criminología, Relaciones Internacionales, Geopolítica.</li>
+                        <li>Humanidades: Estudios críticos de seguridad, Análisis del discurso sobre seguridad en medios y literatura, Ética y derechos humanos, Perspectivas históricas de la seguridad nacional.</li>
+                        <li>Ciencias Formales y Aplicadas: Aplicaciones de la inteligencia artificial y la ciencia de datos en la predicción del delito, Análisis geoespacial del crimen, Ingeniería en ciberseguridad crítica para la nación.</li>
+                    </ul>
+                    <h2>Enfoque Geográfico y Temático</h2>
+                    <p>El eje central de todos los trabajos debe ser su contribución al debate teórico o práctico sobre la seguridad, con especial interés en el contexto venezolano y latinoamericano.</p>
+                    <h2>Tipos de Artículos Aceptables</h2>
+                    <ul>
+                        <li>Ciencias Sociales: Ejemplo: Un estudio cuantitativo sobre la correlación entre desigualdad y tasas de homicidio.</li>
+                        <li>Derecho: Ejemplo: Un análisis doctrinal de la Ley Orgánica de Seguridad de la Nación.</li>
+                        <li>Letras/Humanidades: Ejemplo: Un ensayo sobre la representación de la policía en la novela venezolana contemporánea.</li>
+                        <li>Arte: Ejemplo: Un estudio visual sobre el arte de protesta y su relación con la percepción de (in)seguridad.</li>
+                        <li>Ciencias de la Computación: Ejemplo: Un artículo sobre el desarrollo de un algoritmo para detectar patrones de desinformación que afectan la seguridad nacional.</li>
+                    </ul>
+                    <h2>Formato de Manuscrito</h2>
+                    <p>Extensión: Máximo 8.000 palabras (incluyendo notas y bibliografía).</p>
+                    <p>Cuerpo del Texto: Tipo de letra Times New Roman, 12pt, interlineado 1.5.</p>
+                    <p>Estructura: Título, Autor(es), Resumen (máx. 250 palabras), Palabras Clave (máx. 6), Introducción, Secciones Metodológicas/Analíticas, Conclusiones y Referencias.</p>
+                    <h2>Sistema de Citación</h2>
+                    <p>La revista adopta el estilo Autor-Año utilizando BibLaTeX con Biber como motor de procesamiento. Las citas en el texto deben seguir el formato (Apellido Año) y la lista final de referencias debe ordenarse alfabéticamente por el apellido del primer autor.</p>
+                    <h2>Proceso de Evaluación</h2>
+                    <p>Todos los artículos son sometidos a un proceso de revisión por pares a doble ciego (Double-Blind Peer Review) para asegurar la máxima objetividad y calidad.</p>
+                    <h2>Envío de Manuscritos</h2>
+                    <p>Los manuscritos deben ser enviados a: [correo electrónico de la revista]</p>
+                    <p>La revista se reserva el derecho de realizar ajustes editoriales menores para mantener la coherencia de estilo y formato.</p>
+                `
+            },
+            editorial: {
+                title: "Editorial",
+                content: `
+                    <h1>Editorial</h1>
+                    <h2>Umbrales e Interdisciplinariedad: Nuevas Rutas para la Seguridad</h2>
+                    <p>Comité Editorial SINÁPSIS: Umbral de la Estrategia Asimétrica</p>
+                    <p>Noviembre de 2025</p>
+                    <p>Este primer número de SINÁPSIS: Umbral de la Estrategia Asimétrica marca un hito en los estudios de seguridad en nuestra región. No nos concebimos como una revista de ciencias puras, sino como una publicación especializada en Estudios de Seguridad con un Enfoque Interdisciplinario que responde a la complejidad de los fenómenos de seguridad contemporáneos.</p>
+                    <p>Vivimos un tiempo de umbrales donde las aproximaciones disciplinares tradicionales resultan insuficientes. La seguridad, en su doble dimensión ciudadana y nacional, exige miradas capaces de conectar saberes diversos: desde la sociología y la ciencia política hasta la inteligencia artificial y la ciberseguridad; desde el análisis del discurso en humanidades hasta los modelos computacionales en ciencias aplicadas.</p>
+                    <p>Este volumen inaugural es testimonio de nuestra vocación integradora. Por un lado, un artículo desde la Antropología de las Edades y el cine analiza cómo la explotación criminal de la juventud constituye una distorsión del tiempo social. Por otro, un trabajo desde las Ciencias de la Computación examina cómo la Inteligencia Artificial redefine el análisis estratégico como herramienta de guerra asimétrica. Aparentemente distantes, estos abordajes comparten un mismo propósito: comprender las vulnerabilidades y oportunidades de nuestro tiempo desde perspectivas complementarias.</p>
+                    <p>Nuestra misión como SINÁPSIS es crear un espacio donde converjan investigaciones científicas originales y ensayos académicos que, desde las Ciencias Sociales, las Humanidades o las Ciencias Formales y Aplicadas, contribuyan al debate teórico y práctico sobre la seguridad, con especial atención al contexto venezolano y latinoamericano.</p>
+                    <p>La seguridad ciudadana ya no puede reducirse a la respuesta policial, sino que comienza en la estructura social, la justicia intergeneracional y la protección de los proyectos vitales. La seguridad nacional, a su vez, trasciende la disuasión convencional para abarcar la soberanía tecnológica, la resiliencia cibernética y la anticipación estratégica.</p>
+                    <p>Frente a problemas complejos y multifacéticos, asumimos el desafío de pensar de modo integrador: con rigor metodológico pero sin corsés disciplinarios; con profundidad analítica pero con apertura a la innovación conceptual.</p>
+                    <p>Este número cero es, por tanto, una invitación amplia a la comunidad académica, a los profesionales de la seguridad y a la sociedad crítica, para construir colectivamente este espacio de reflexión-acción. Los desafíos que enfrentamos son asimétricos y dinámicos; nuestras respuestas deben serlo igualmente.</p>
+                `
+            },
+            articulo1: {
+                title: "Artículo 1: El Reloj de Arena Roto",
+                content: `
+                    <h1>El Reloj de Arena Roto: Juventud, Gerontocracia y la Explotación Criminal del Tiempo Social</h1>
+                    <p>Freddy Aguilar</p>
+                    <p>Docente de la UNES</p>
+                    <p>Áreas de Teatro, Audiovisual y Formación Sociopolítica para Aspirantes a Investigadores Penales</p>
+                    <h2>Índice Interno</h2>
+                    <ul class="index">
+                        <li><a href="#intro1">1.1 Introducción: La Praxis Teatral y la Cronopolítica del Crimen</a></li>
+                        <li><a href="#metodo1">1.2 Metodología: Cine y Etnografía de la Explotación en Dos Escenarios</a></li>
+                        <li><a href="#cuerpo-int">1.2.1 El Cuerpo Fílmico Internacional: Cartografías de la Explotación</a></li>
+                        <li><a href="#cuerpo-lat">1.2.2 El Cuerpo Fílmico Latinoamericano: Etnografías de la Resistencia en el Terreno de la Desigualdad</a></li>
+                        <li><a href="#corrupcion">1.3 La Corrupción del Ciclo: El Reloj de Arena como Máquina Criminal en América Latina</a></li>
+                        <li><a href="#caso1-int">1.3.1 Primer Análisis de Caso Internacional: “L’immoralità” y la Venganza Espectral como Justicia Alternativa</a></li>
+                        <li><a href="#caso2-int">1.3.2 Segundo Análisis de Caso Internacional: “El Tambor de Hojalata” y la Huelga Corporal contra el Tiempo Adulto</a></li>
+                        <li><a href="#caso1-lat">1.3.3 Primer Análisis de Caso Latinoamericano: “Pixote” y “La Vendedora de Rosas” - La Pedagogía de la Calle</a></li>
+                        <li><a href="#caso2-lat">1.3.4 Segundo Análisis de caso latinoamericano: “Pelo Malo”, “La Ciénega” y “Los olvidados” - la tríada de la resistencia silenciosa</a></li>
+                        <li><a href="#epstein">1.4 El Caso Epstein: La Máquina Gerontocrática de Chantaje Sistémico</a></li>
+                        <li><a href="#tipologias">1.5 Tipologías de Resistencia Temporal en el Cuerpo fílmico Latinoamericano</a></li>
+                        <li><a href="#conclusion1">1.6 Conclusión: Hacia una Cronopolítica de la Investigación Penal en Clave Latinoamericana</a></li>
+                        <li><a href="#epilogo">1.7 Epílogo: El Teatro como Laboratorio del Tiempo Social</a></li>
+                    </ul>
+                    <h2>Resumen</h2>
+                    <p>Este artículo, surge de mi praxis pedagógica en la Universidad Nacional Experimental de la Seguridad (UNES). Propone un análisis desde la Antropología de las Edades para examinar la explotación criminal de adolescentes como un mecanismo de las élites gerontocráticas. A partir de un cuerpo de producciones cinematográficas internacionales y latinoamericanas utilizadas como evidencia etnográfica, se argumenta que este fenómeno representa una lucha por el control del tiempo social. Para ello se contrastó el “Reloj de Arena” de Carles Feixa -modelo de transición cíclica y reproducción generacional- con el “Reloj Analógico”, que simboliza la ruptura y la creación de un continuo de nuevas perspectivas generacionales. Se afirma que redes criminales, como la de Epstein, representan una gerontocracia perversa que, al análisis de Zavaleta Alegría (2021), secuestra el poder y expolia el futuro en América Latina, corrompiendo activamente el “tiempo juvenil” para convertirlo en un Poder Extorsivo que acumula información sensible sobre la triada político/económico/moral. Para el investigador penal, esta perspectiva es crucial para desentrañar las lógicas temporales y generacionales que sostienen las economías criminales del poder.</p>
+                    <p>Palabras clave: Antropología de las Edades, criminología, gerontocracia, culturas juveniles, explotación, tiempo social, cine latinoamericano.</p>
+                    <!-- Contenido completo del artículo no proporcionado en su totalidad; usando lo disponible -->
+                    <h2 id="intro1">1.1 Introducción: La Praxis Teatral y la Cronopolítica del Crimen</h2>
+                    <p>[Contenido de la sección no proporcionado en detalle; placeholder para el artículo completo.]</p>
+                    <!-- Agregar más secciones similares basadas en el índice, pero como el texto completo no está, usar placeholders -->
+                    <p><strong>Nota:</strong> El contenido completo de este artículo no se proporciona en el documento fuente; se muestra el resumen y estructura.</p>
+                    <!-- Bibliografía al final (asumida no proporcionada) -->
+                    <h2>Bibliografía</h2>
+                    <p>[Bibliografía no proporcionada en el documento fuente.]</p>
+                `
+            },
+            articulo2: {
+                title: "Artículo 2: Las Aplicaciones de la Inteligencia Artificial en Análisis Estratégico",
+                content: `
+                    <h1>Las Aplicaciones de la Inteligencia Artificial en Análisis Estratégico</h1>
+                    <h2>Índice Interno</h2>
+                    <ul class="index">
+                        <li><a href="#intro2">2.1 Introducción</a></li>
+                        <li><a href="#ia-militar">2.2 La Inteligencia Artificial en el Análisis Estratégico Militar</a></li>
+                        <li><a href="#teoria-juegos">2.2.1 Teoría de Juegos y Toma de Decisiones</a></li>
+                        <li><a href="#sim-determinista">2.2.2 Simulación Computacional Determinista</a></li>
+                        <li><a href="#sim-estocastica">2.2.3 Simulación Computacional Estocástica: Método de Monte Carlo</a></li>
+                        <li><a href="#sim-moleculares">2.2.4 Simulación Basada en Dinámicas Moleculares</a></li>
+                        <li><a href="#ia-decisiones">2.3 La IA como Herramienta de Toma de Decisiones</a></li>
+                        <li><a href="#apoyo-civil">2.3.1 Apoyo al Liderazgo Civil</a></li>
+                        <li><a href="#apoyo-militar">2.3.2 Apoyo al Mando Militar</a></li>
+                        <li><a href="#ia-asimetrica">2.4 La IA como Herramienta de Guerra Asimétrica</a></li>
+                        <li><a href="#opt-recursos">2.4.1 Optimización de Recursos Limitados</a></li>
+                        <li><a href="#des-capacidades">2.4.2 Desarrollo de Capacidades No Convencionales</a></li>
+                        <li><a href="#anal-vuln">2.4.3 Análisis de Vulnerabilidades Adversarias</a></li>
+                        <li><a href="#disuasion">2.4.4 Disuasión Inteligente</a></li>
+                        <li><a href="#conclusion2">2.5 Conclusiones</a></li>
+                    </ul>
+                    <!-- Contenido completo no proporcionado; usando estructura del índice -->
+                    <h2 id="intro2">2.1 Introducción</h2>
+                    <p>[Contenido de la sección no proporcionado en detalle; placeholder para el artículo completo.]</p>
+                    <p><strong>Nota:</strong> El contenido completo de este artículo no se proporciona en el documento fuente; se muestra la estructura.</p>
+                    <!-- Bibliografía al final -->
+                    <h2>Bibliografía</h2>
+                    <p>[Bibliografía no proporcionada en el documento fuente.]</p>
+                `
+            }
+        };
+
+        function loadSection(sectionId) {
+            const section = sections[sectionId];
+            if (section) {
+                document.getElementById('content').innerHTML = `<h1>\( {section.title}</h1> \){section.content}`;
+            } else {
+                document.getElementById('content').innerHTML = '<p>Sección no encontrada.</p>';
+            }
+        }
+
+        // Cargar la sección inicial por defecto
+        loadSection('inicio');
+    </script>
+</body>
+</html>
