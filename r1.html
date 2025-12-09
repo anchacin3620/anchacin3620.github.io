@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SINÁPSIS: Umbral de la Estrategia Asimétrica - Número 0</title>
+    <style>
+        /* CSS para un diseño modular y amigable */
+        body {
+            font-family: 'Times New Roman', serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f7f6;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 3px solid #104e8b; /* Azul marino */
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            color: #104e8b;
+            font-size: 2.2em;
+            margin: 0;
+        }
+
+        header p {
+            color: #555;
+            font-style: italic;
+            margin-top: 5px;
+        }
+
+        /* Estilos de las Pestañas (Tabs) */
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .tab-button {
+            background-color: #eee;
+            border: none;
+            padding: 12px 20px;
+            cursor: pointer;
+            margin-right: 5px;
+            border-top-left-radius: 6px;
+            border-top-right-radius: 6px;
+            font-size: 1em;
+            transition: background-color 0.3s, color 0.3s;
+            outline: none;
+        }
+
+        .tab-button:hover {
+            background-color: #ddd;
+        }
+
+        .tab-button.active {
+            background-color: #104e8b;
+            color: white;
+            border-bottom: 2px solid #104e8b;
+        }
+
+        /* Contenido de las Pestañas */
+        .tab-content {
+            display: none;
+            padding: 20px 0;
+            line-height: 1.6;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .content-card {
+            background: #f9f9f9;
+            border: 1px solid #eee;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+        }
+
+        .content-card h3 {
+            color: #104e8b;
+            border-bottom: 1px dashed #ccc;
+            padding-bottom: 5px;
+            margin-top: 0;
+            font-size: 1.3em;
+        }
+
+        .content-card ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .content-card li {
+            margin-bottom: 8px;
+        }
+        
+        /* Estilos específicos para Resumen */
+        .resumen {
+            border-left: 5px solid #ffaa00; /* Naranja */
+            padding-left: 15px;
+            font-style: italic;
+            margin-top: 10px;
+        }
+
+        .keywords {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        
+        .keywords span {
+            font-weight: normal;
+            background-color: #e0f2ff;
+            padding: 2px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        footer {
+            text-align: center;
+            padding-top: 20px;
+            margin-top: 20px;
+            border-top: 1px solid #ccc;
+            font-size: 0.9em;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>SINÁPSIS: Umbral de la Estrategia Asimétrica</h1>
+            <p>Revista Interdisciplinaria de Estudios de Seguridad</p>
+            <p>Año 1 | Volumen 1 | Número 0 | Noviembre 2025</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="openTab('directorio')">Directorio y Revista</button>
+            <button class="tab-button" onclick="openTab('normas')">Normas Editoriales</button>
+            <button class="tab-button" onclick="openTab('articulo1')">Artículo 1: El Reloj de Arena Roto</button>
+            <button class="tab-button" onclick="openTab('articulo2')">Artículo 2: La IA en Análisis Estratégico</button>
+        </div>
+
+        <div id="directorio" class="tab-content active">
+            <div class="content-card">
+                <h3>Información de la Revista</h3>
+                [span_0](start_span)<p><strong>Naturaleza y Alcance:</strong> Revista especializada en **Estudios de Seguridad** con un Enfoque Interdisciplinario[span_0](end_span). [span_1](start_span)No es una revista de ciencias puras[span_1](end_span).</p>
+                [span_2](start_span)<p><strong>Misión:</strong> Publicar investigaciones científicas originales y ensayos académicos que analicen los fenómenos de la **seguridad ciudadana** y la **seguridad nacional** desde una perspectiva interdisciplinaria[span_2](end_span).</p>
+                [span_3](start_span)[span_4](start_span)<p><strong>Enfoque:</strong> Contribución al debate teórico o práctico sobre la seguridad, con especial interés en el contexto **venezolano y latinoamericano**[span_3](end_span)[span_4](end_span).</p>
+                [span_5](start_span)<p><strong>Campos de Contribución:</strong> Ciencias Sociales, Humanidades, y Ciencias Formales y Aplicadas[span_5](end_span).</p>
+            </div>
+            <div class="content-card">
+                <h3>Directorio</h3>
+                <ul>
+                    <li><strong>Editor Jefe:</strong> PhD. [span_6](start_span)José Colmenares[span_6](end_span)</li>
+                    <li><strong>Secretario Editorial:</strong> Msc. [span_7](start_span)Pedro S. Rodríguez C.[span_7](end_span)</li>
+                    [span_8](start_span)<li><strong>Coordinación Académica:</strong> Prof. Freddy Aguilar[span_8](end_span)</li>
+                    [span_9](start_span)<li><strong>Asesor Tecnológico:</strong> Prof. Ángel Chacín Ávila[span_9](end_span)</li>
+                </ul>
+            </div>
+            <div class="content-card">
+                <h3>Consejo Científico y Asesor</h3>
+                <ul>
+                    <li><strong>Dr. [span_10](start_span)José Cuadros:</strong> Criminología - UNES[span_10](end_span)</li>
+                    <li><strong>Prof. [span_11](start_span)Gustavo Lara:</strong> Análisis Estratégico y Geopolítica[span_11](end_span)</li>
+                    <li><strong>Lic. [span_12](start_span)Ángel Chacín Á.:</strong> Física Computacional y Modelado de Sistemas[span_12](end_span)</li>
+                    <li><strong>Soc. [span_13](start_span)Ronald Bracho:</strong> Sociología de la Juventud y Culturas Digitales[span_13](end_span)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="normas" class="tab-content">
+            <div class="content-card">
+                <h3>Formato de Manuscrito</h3>
+                <ul>
+                    [span_14](start_span)<li><strong>Extensión:</strong> Máximo 8.000 palabras (incluyendo notas y bibliografía)[span_14](end_span).</li>
+                    [span_15](start_span)<li><strong>Tipo de Letra:</strong> Times New Roman, 12pt, interlineado 1.5[span_15](end_span).</li>
+                    [span_16](start_span)<li><strong>Estructura:</strong> Título, Autor(es), **Resumen** (máx. 250 palabras), **Palabras Clave** (máx. 6), Introducción, Secciones Metodológicas/Analíticas, Conclusiones y Referencias[span_16](end_span).</li>
+                </ul>
+            </div>
+            <div class="content-card">
+                <h3>Sistema de Citación y Evaluación</h3>
+                <ul>
+                    [span_17](start_span)<li><strong>Citación:</strong> Estilo **Autor-Año** utilizando BibLaTeX con Biber[span_17](end_span). [span_18](start_span)Formato de cita en texto: (Apellido Año)[span_18](end_span).</li>
+                    [span_19](start_span)<li><strong>Proceso de Evaluación:</strong> Revisión por pares a **doble ciego** (Double-Blind Peer Review)[span_19](end_span).</li>
+                    [span_20](start_span)<li><strong>Envío:</strong> Los manuscritos deben ser enviados a: [correo electrónico de la revista][span_20](end_span).</li>
+                </ul>
+            </div>
+            <div class="content-card">
+                <h3>Ejemplos de Artículos Aceptables</h3>
+                <p>La revista acepta contribuciones de diversas áreas, como:</p>
+                <ul>
+                    [span_21](start_span)<li>**Derecho:** Análisis doctrinal de la Ley Orgánica de Seguridad de la Nación[span_21](end_span).</li>
+                    [span_22](start_span)<li>**Arte:** Estudio visual sobre el arte de protesta y su relación con la percepción de (in)seguridad[span_22](end_span).</li>
+                    [span_23](start_span)<li>**Ciencias de la Computación:** Artículo sobre el desarrollo de un algoritmo para detectar patrones de desinformación[span_23](end_span).</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="articulo1" class="tab-content">
+            <div class="content-card">
+                <h3>El Reloj de Arena Roto: Juventud, Gerontocracia y la Explotación Criminal del Tiempo Social</h3>
+                [span_24](start_span)<p><strong>Autor:</strong> Freddy Aguilar (Docente de la UNES)[span_24](end_span)</p>
+                
+                <h4>Resumen</h4>
+                [span_25](start_span)<p class="resumen">El artículo analiza la explotación criminal de adolescentes por élites gerontocráticas desde la **Antropología de las Edades**[span_25](end_span). [span_26](start_span)Utiliza producciones cinematográficas como evidencia etnográfica para argumentar que este fenómeno es una lucha por el control del **tiempo social**[span_26](end_span). [span_27](start_span)[span_28](start_span)Contrapone el "Reloj de Arena" (reproducción cíclica generacional) con el "Reloj Analógico" (ruptura y creación generacional)[span_27](end_span)[span_28](end_span). [span_29](start_span)[span_30](start_span)Concluye que redes como la de Epstein secuestran el poder y expolian el futuro, corrompiendo el "tiempo juvenil" para generar un capital de **chantaje sistémico** sobre la élite político/económico/moral[span_29](end_span)[span_30](end_span).</p>
+
+                <div class="keywords">
+                    [span_31](start_span)Palabras Clave: <span>Antropología de las Edades</span> <span>criminología</span> <span>gerontocracia</span> <span>culturas juveniles</span> <span>explotación</span> <span>tiempo social</span> <span>cine latinoamericano</span>[span_31](end_span)
+                </div>
+                
+                [span_32](start_span)<h4>Cuerpo Fílmico Analizado (Etnografía Ficticia)[span_32](end_span)</h4>
+                <ul>
+                    [span_33](start_span)[span_34](start_span)[span_35](start_span)[span_36](start_span)<li>**Internacional:** *Pretty Baby* (1978), *My Little Princess* (2011), *El tambor de hojalata* (1979), *L'immoralità* (1978)[span_33](end_span)[span_34](end_span)[span_35](end_span)[span_36](end_span).</li>
+                    [span_37](start_span)[span_38](start_span)[span_39](start_span)<li>**Latinoamericano (Etnografías de la Resistencia):** *Pixote: La Ley del Más Débil* (1981), *La Vendedora de Rosas* (1998), *La Ciénaga* (2001), *Roma* (2018), *La Teta Asustada* (2009), *Los Olvidados* (1950), *Pelo Malo* (2013)[span_37](end_span)[span_38](end_span)[span_39](end_span).</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="articulo2" class="tab-content">
+            <div class="content-card">
+                <h3>Las Aplicaciones de la Inteligencia Artificial en Análisis Estratégico</h3>
+                [span_40](start_span)[span_41](start_span)<p>El artículo examina cómo la **Inteligencia Artificial (IA)** redefine el análisis estratégico como herramienta de guerra asimétrica[span_40](end_span)[span_41](end_span).</p>
+
+                <h4>La IA en el Análisis Estratégico Militar</h4>
+                <ul>
+                    [span_42](start_span)<li>**Teoría de Juegos y Toma de Decisiones:** Uso de IA para optimizar la comprensión de estrategias del adversario[span_42](end_span).</li>
+                    [span_43](start_span)<li>**Simulación Computacional Determinista:** Modelado de sistemas donde las variables de entrada definen con precisión el resultado[span_43](end_span).</li>
+                    [span_44](start_span)<li>**Simulación Computacional Estocástica (Método de Monte Carlo):** Evaluación de miles de escenarios para sistemas complejos con múltiples variables inciertas, optimizada por la IA[span_44](end_span).</li>
+                    [span_45](start_span)<li>**Simulación Basada en Dinámicas Moleculares:** Adaptada para modelar la evolución de sistemas compuestos por múltiples elementos interactuantes (ej. redes de comando y control)[span_45](end_span).</li>
+                </ul>
+
+                [span_46](start_span)<h4>La IA como Herramienta de Toma de Decisiones[span_46](end_span)</h4>
+                <ul>
+                    [span_47](start_span)<li>**Apoyo al Liderazgo Civil:** Integración de información de múltiples fuentes para evaluar implicaciones de largo plazo de decisiones estratégicas[span_47](end_span).</li>
+                    [span_48](start_span)<li>**Apoyo al Mando Militar:** Evaluación en tiempo real de situaciones operativas y optimización de asignación de recursos limitados[span_48](end_span).</li>
+                </ul>
+
+                [span_49](start_span)<h4>La IA como Herramienta de Guerra Asimétrica[span_49](end_span)</h4>
+                [span_50](start_span)<p>Permite a países con presupuestos de defensa limitados maximizar su efectividad[span_50](end_span).</p>
+                <ul>
+                    [span_51](start_span)<li>**Optimización de Recursos Limitados:** Maximizar la efectividad de sistemas existentes[span_51](end_span).</li>
+                    [span_52](start_span)<li>**Desarrollo de Capacidades No Convencionales:** Facilita el desarrollo de ciberdefensa, guerra electrónica y estrategias de desinformación[span_52](end_span).</li>
+                    [span_53](start_span)<li>**Análisis de Vulnerabilidades Adversarias:** Identificación y explotación de vulnerabilidades en sistemas militares más complejos ("guerra de guantes blancos" digitales)[span_53](end_span).</li>
+                    [span_54](start_span)<li>**Disuasión Inteligente:** Estrategias de disuasión más sofisticadas y personalizadas[span_54](end_span).</li>
+                </ul>
+            </div>
+        </div>
+
+        <footer>
+            <p>Editorial El Puente &copy; Noviembre 2025. Resumen generado a partir del PDF "Sinapsis 0.pdf".</p>
+        </footer>
+    </div>
+
+    <script>
+        // JavaScript para la funcionalidad modular de las pestañas
+        function openTab(tabId) {
+            // 1. Ocultar todos los contenidos de las pestañas
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // 2. Desactivar todos los botones de las pestañas
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // 3. Mostrar el contenido de la pestaña seleccionada
+            const selectedContent = document.getElementById(tabId);
+            if (selectedContent) {
+                selectedContent.classList.add('active');
+            }
+
+            // 4. Activar el botón de la pestaña seleccionada
+            const selectedButton = document.querySelector(`.tab-button[onclick*='${tabId}']`);
+            if (selectedButton) {
+                selectedButton.classList.add('active');
+            }
+        }
+
+        // Inicializar con la primera pestaña activa
+        document.addEventListener('DOMContentLoaded', () => {
+            openTab('directorio');
+        });
+    </script>
+</body>
+</html>
