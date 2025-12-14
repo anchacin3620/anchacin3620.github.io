@@ -1,0 +1,1856 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revista SINÁPSIS - Número 0</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #1a237e;
+            --secondary-color: #3949ab;
+            --accent-color: #7986cb;
+            --text-color: #333;
+            --light-bg: #f5f7fa;
+            --white: #ffffff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --error-color: #f44336;
+            --dark-bg: #1e1e1e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--light-bg);
+        }
+
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            padding: 2rem 0;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .download-btn {
+            background: var(--white);
+            color: var(--primary-color);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Navigation */
+        .nav {
+            background: var(--white);
+            padding: 1rem 0;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 80px;
+            z-index: 999;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: var(--transition);
+            position: relative;
+            white-space: nowrap;
+        }
+
+        .nav-link:hover {
+            background-color: var(--light-bg);
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 3px;
+            background-color: var(--accent-color);
+            transition: var(--transition);
+        }
+
+        .nav-link.active {
+            background-color: var(--light-bg);
+        }
+
+        /* Main Content */
+        .main-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        /* Section Styles */
+        .section {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        .section-icon {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-right: 1rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+        }
+
+        /* Identity Section */
+        .identity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .identity-card {
+            background: linear-gradient(135deg, #f5f7fa, #e8eaf6);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .identity-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .discipline-list {
+            list-style: none;
+        }
+
+        .discipline-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px dashed #ddd;
+        }
+
+        .discipline-tag {
+            display: inline-block;
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            margin: 0.3rem 0.3rem 0.3rem 0;
+            font-size: 0.9rem;
+        }
+
+        /* Guidelines Section */
+        .guidelines-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .guideline-item {
+            background: var(--light-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .guideline-item h3 {
+            color: var(--secondary-color);
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .guideline-item h3 i {
+            margin-right: 0.5rem;
+        }
+
+        /* Content Classification */
+        .content-type {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+            font-weight: bold;
+        }
+
+        .type-article {
+            background: var(--primary-color);
+            color: var(--white);
+        }
+
+        .type-video {
+            background: var(--warning-color);
+            color: var(--white);
+        }
+
+        .type-audio {
+            background: var(--secondary-color);
+            color: var(--white);
+        }
+
+        .type-book {
+            background: var(--accent-color);
+            color: var(--white);
+        }
+
+        /* Advanced Search Section */
+        .search-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 0.8rem;
+            border: 2px solid var(--accent-color);
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .search-btn {
+            padding: 0.8rem 1.5rem;
+            background: var(--primary-color);
+            color: var(--white);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .search-btn:hover {
+            background: var(--secondary-color);
+        }
+
+        .search-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .search-result {
+            background: var(--white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .search-result:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .result-thumbnail {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .result-content {
+            padding: 1rem;
+        }
+
+        .result-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .result-author {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .author-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            object-fit: cover;
+        }
+
+        .author-name {
+            font-style: italic;
+            color: var(--secondary-color);
+        }
+
+        .result-type {
+            margin-bottom: 0.5rem;
+        }
+
+        .result-synopsis {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .result-stats {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        /* Article Detail Section */
+        .article-detail {
+            display: none;
+            margin-top: 2rem;
+        }
+
+        .article-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .article-cover {
+            width: 100%;
+            max-width: 600px;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin: 0 auto 1rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .article-title {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .article-meta {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .article-content {
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        .paragraph {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--light-bg);
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .paragraph-actions {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .paragraph-btn {
+            background: none;
+            border: none;
+            color: var(--accent-color);
+            cursor: pointer;
+            font-size: 0.8rem;
+            padding: 0.3rem;
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+
+        .paragraph-btn:hover {
+            background: var(--accent-color);
+            color: var(--white);
+        }
+
+        .paragraph-reactions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .reaction-count {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        /* Forum Section */
+        .forum-section {
+            margin-top: 2rem;
+            background: var(--light-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+
+        .forum-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .forum-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .forum-controls {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .forum-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .forum-btn-primary {
+            background: var(--primary-color);
+            color: var(--white);
+        }
+
+        .forum-btn-secondary {
+            background: var(--secondary-color);
+            color: var(--white);
+        }
+
+        .forum-comments {
+            margin-top: 1rem;
+        }
+
+        .forum-comment {
+            background: var(--white);
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            border-left: 3px solid var(--accent-color);
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .comment-author {
+            font-weight: bold;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .comment-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+        }
+
+        .comment-date {
+            color: #666;
+            font-size: 0.8rem;
+        }
+
+        .comment-content {
+            margin-bottom: 0.5rem;
+        }
+
+        .comment-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .comment-action-btn {
+            background: none;
+            border: none;
+            color: var(--accent-color);
+            cursor: pointer;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.2rem;
+        }
+
+        /* Symposium Section */
+        .symposium-section {
+            margin-top: 2rem;
+        }
+
+        .symposium-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .symposium-card {
+            background: linear-gradient(135deg, #e8eaf6, #c5cae9);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .symposium-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .symposium-header {
+            padding: 1.5rem;
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        .symposium-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .symposium-date {
+            font-style: italic;
+            color: var(--secondary-color);
+        }
+
+        .symposium-content {
+            padding: 1.5rem;
+        }
+
+        .symposium-description {
+            margin-bottom: 1rem;
+        }
+
+        .symposium-participants {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .participant-tag {
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 0.2rem 0.6rem;
+            border-radius: 15px;
+            font-size: 0.85rem;
+        }
+
+        /* Audiovisual Section */
+        .audiovisual-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .media-card {
+            background: linear-gradient(135deg, #e8eaf6, #c5cae9);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .media-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .media-header {
+            padding: 1.5rem;
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        .media-title {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .media-presenter {
+            font-style: italic;
+            color: var(--secondary-color);
+        }
+
+        .media-content {
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .media-image {
+            width: 100%;
+            max-width: 400px;
+            height: 225px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .media-controls {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .media-btn {
+            flex: 1;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-weight: 500;
+        }
+
+        .video-btn {
+            background: var(--primary-color);
+            color: var(--white);
+        }
+
+        .video-btn:hover {
+            background: var(--secondary-color);
+        }
+
+        .audio-btn {
+            background: var(--secondary-color);
+            color: var(--white);
+        }
+
+        .audio-btn:hover {
+            background: var(--accent-color);
+        }
+
+        .external-link {
+            background: var(--accent-color);
+            color: var(--white);
+        }
+
+        .external-link:hover {
+            background: var(--primary-color);
+        }
+
+        /* Books Section */
+        .books-container {
+            margin-top: 1.5rem;
+        }
+
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .book-card {
+            background: linear-gradient(135deg, #f5f7fa, #e8eaf6);
+            border-radius: 8px;
+            padding: 1.5rem;
+            border-left: 4px solid var(--secondary-color);
+            transition: var(--transition);
+        }
+
+        .book-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .book-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .book-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .book-tag {
+            background: var(--secondary-color);
+            color: var(--white);
+            padding: 0.2rem 0.6rem;
+            border-radius: 15px;
+            font-size: 0.85rem;
+        }
+
+        .book-author {
+            color: var(--text-color);
+            font-style: italic;
+        }
+
+        /* Translation Section */
+        .translation-section {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .translation-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .language-select {
+            padding: 0.5rem;
+            border: 2px solid var(--accent-color);
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .translate-btn {
+            padding: 0.5rem 1rem;
+            background: var(--primary-color);
+            color: var(--white);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .translate-btn:hover {
+            background: var(--secondary-color);
+        }
+
+        /* Recommendations Section */
+        .recommendations-section {
+            margin-top: 2rem;
+        }
+
+        .recommendations-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+
+        .recommendations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .recommendation-item {
+            background: var(--light-bg);
+            padding: 1rem;
+            border-radius: 4px;
+            border-left: 3px solid var(--accent-color);
+        }
+
+        .recommendation-title {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 0.3rem;
+        }
+
+        .recommendation-type {
+            display: inline-block;
+            background: var(--secondary-color);
+            color: var(--white);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Contact Section */
+        .contact-container {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .contact-item {
+            background: var(--light-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            transition: var(--transition);
+            border: 2px solid transparent;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .contact-item:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-5px);
+        }
+
+        .contact-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .contact-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 2rem 0;
+            margin-top: 3rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .audiovisual-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .books-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .contact-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            
+            .logo {
+                font-size: 2rem;
+            }
+            
+            .section {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .section:nth-child(2) { animation-delay: 0.1s; }
+        .section:nth-child(3) { animation-delay: 0.2s; }
+        .section:nth-child(4) { animation-delay: 0.3s; }
+        .section:nth-child(5) { animation-delay: 0.4s; }
+        .section:nth-child(6) { animation-delay: 0.5s; }
+        .section:nth-child(7) { animation-delay: 0.6s; }
+        .section:nth-child(8) { animation-delay: 0.7s; }
+        .section:nth-child(9) { animation-delay: 0.8s; }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div>
+                <div class="logo">SINÁPSIS</div>
+                <div class="subtitle">Revista Interdisciplinaria de Estudios de Seguridad</div>
+            </div>
+            <a href="https://anchacin3620.github.io/revista0.pdf" class="download-btn" download>
+                <i class="fas fa-download"></i>
+                Descargar PDF
+            </a>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="#identity" class="nav-link active">Identidad</a>
+            <a href="#guidelines" class="nav-link">Normas Editoriales</a>
+            <a href="#search" class="nav-link">Biblioteca</a>
+            <a href="#audiovisual" class="nav-link">Audiovisuales</a>
+            <a href="#symposium" class="nav-link">Simposios</a>
+            <a href="#contact" class="nav-link">Contacto</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <!-- Identity Section -->
+        <section id="identity" class="section">
+            <div class="section-header">
+                <i class="fas fa-book-open section-icon"></i>
+                <h2 class="section-title">Identidad y Alcance de la Revista</h2>
+            </div>
+            <p>La revista SINÁPSIS: Umbral de la Estratégia Asimétrica es una publicación especializada en Estudios de Seguridad con un Enfoque Interdisciplinario.</p>
+            
+            <div class="identity-grid">
+                <div class="identity-card">
+                    <h3><i class="fas fa-info-circle"></i> Naturaleza</h3>
+                    <p>No es una revista de ciencias puras, sino que utiliza perspectivas interdisciplinarias para el estudio de la Seguridad.</p>
+                </div>
+                
+                <div class="identity-card">
+                    <h3><i class="fas fa-bullseye"></i> Misión y Temática</h3>
+                    <p>Su objetivo es publicar investigaciones y ensayos que analicen los fenómenos de la seguridad ciudadana y la seguridad nacional desde una óptica interdisciplinaria.</p>
+                </div>
+                
+                <div class="identity-card">
+                    <h3><i class="fas fa-globe"></i> Enfoque Geográfico</h3>
+                    <p>Muestra un interés especial en el contexto venezolano y latinoamericano.</p>
+                </div>
+                
+                <div class="identity-card">
+                    <h3><i class="fas fa-graduation-cap"></i> Campos de Contribución</h3>
+                    <ul class="discipline-list">
+                        <li><strong>Ciencias Sociales:</strong></li>
+                        <li><span class="discipline-tag">Criminología</span> <span class="discipline-tag">Sociología</span> <span class="discipline-tag">Ciencia Política</span> <span class="discipline-tag">Derecho</span> <span class="discipline-tag">Geopolítica</span></li>
+                        <li><strong>Humanidades:</strong></li>
+                        <li><span class="discipline-tag">Estudios críticos de seguridad</span> <span class="discipline-tag">Ética y derechos humanos</span> <span class="discipline-tag">Análisis del discurso</span></li>
+                        <li><strong>Ciencias Formales y Aplicadas:</strong></li>
+                        <li><span class="discipline-tag">Aplicaciones de IA</span> <span class="discipline-tag">Análisis geoespacial</span> <span class="discipline-tag">Ciberseguridad</span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Guidelines Section -->
+        <section id="guidelines" class="section">
+            <div class="section-header">
+                <i class="fas fa-clipboard-list section-icon"></i>
+                <h2 class="section-title">Normas y Proceso Editorial</h2>
+            </div>
+            <p>La revista establece directrices claras para la presentación de manuscritos:</p>
+            
+            <div class="guidelines-grid">
+                <div class="guideline-item">
+                    <h3><i class="fas fa-file-alt"></i> Extensión</h3>
+                    <p>El límite máximo es de 8.000 palabras (incluyendo notas y bibliografía).</p>
+                </div>
+                
+                <div class="guideline-item">
+                    <h3><i class="fas fa-font"></i> Formato y Estructura</h3>
+                    <p>Letra Times New Roman, 12pt, interlineado 1.5. La estructura debe incluir:</p>
+                    <ul>
+                        <li>Título</li>
+                        <li>Autor(es)</li>
+                        <li>Resumen (máximo 250 palabras)</li>
+                        <li>Palabras Clave (máx. 6)</li>
+                        <li>Introducción</li>
+                        <li>Secciones Metodológicas/Analíticas</li>
+                        <li>Conclusiones</li>
+                        <li>Referencias</li>
+                    </ul>
+                </div>
+                
+                <div class="guideline-item">
+                    <h3><i class="fas fa-quote-right"></i> Sistema de Citación</h3>
+                    <p>Adopta el estilo Autor-Año (ejemplo: (Apellido Año)) utilizando BibLaTeX con Biber, ordenando la lista final de referencias alfabéticamente.</p>
+                </div>
+                
+                <div class="guideline-item">
+                    <h3><i class="fas fa-users"></i> Evaluación</h3>
+                    <p>Todos los artículos son sometidos a un proceso de revisión por pares a doble ciego (Double-Blind Peer Review) para asegurar la objetividad y calidad.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Advanced Search Section -->
+        <section id="search" class="section">
+            <div class="section-header">
+                <i class="fas fa-search section-icon"></i>
+                <h2 class="section-title">Biblioteca Digital SINÁPSIS</h2>
+            </div>
+            <p>Explora nuestra colección completa de publicaciones, audiovisuales y recursos.</p>
+            
+            <div class="search-container">
+                <form class="search-form" id="searchForm">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Buscar artículos, programas, autores...">
+                    <button type="submit" class="search-btn">
+                        <i class="fas fa-search"></i> Buscar
+                    </button>
+                </form>
+                
+                <div class="search-results" id="searchResults">
+                    <!-- Results will be displayed here -->
+                </div>
+            </div>
+            
+            <!-- Article Detail Section -->
+            <div class="article-detail" id="articleDetail">
+                <div class="article-header">
+                    <img src="" alt="" class="article-cover" id="articleCover">
+                    <h1 class="article-title" id="articleTitle"></h1>
+                    <div class="article-meta" id="articleMeta"></div>
+                </div>
+                
+                <div class="article-content" id="articleContent"></div>
+                
+                <!-- Forum Section -->
+                <div class="forum-section">
+                    <div class="forum-header">
+                        <h3 class="forum-title">Foro de Discusión: Continuidad de la Lectura</h3>
+                        <div class="forum-controls">
+                            <button class="forum-btn forum-btn-primary" id="newCommentBtn">
+                                <i class="fas fa-plus"></i> Nuevo Comentario
+                            </button>
+                            <button class="forum-btn forum-btn-secondary" id="sortCommentsBtn">
+                                <i class="fas fa-sort"></i> Ordenar
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="forum-comments" id="forumComments">
+                        <!-- Comments will be displayed here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Audiovisual Section -->
+        <section id="audiovisual" class="section">
+            <div class="section-header">
+                <i class="fas fa-video section-icon"></i>
+                <h2 class="section-title">Canales Audiovisuales</h2>
+            </div>
+            <p>Contenido audiovisual exclusivo de SINÁPSIS y colaboraciones externas.</p>
+            
+            <div class="audiovisual-grid">
+                <div class="media-card">
+                    <div class="media-header">
+                        <h3 class="media-title">Análisis Estratégico: Seguridad en el Siglo XXI</h3>
+                        <p class="media-presenter">Presentado por: Prof. Ángel Chacín Ávila</p>
+                    </div>
+                    <div class="media-content">
+                        <img src="https://picsum.photos/id/101/400/225" alt="Análisis Estratégico: Seguridad en el Siglo XXI" class="media-image">
+                        <div class="media-controls">
+                            <button class="media-btn video-btn">
+                                <i class="fas fa-play"></i> Reproducir Video
+                            </button>
+                            <button class="media-btn video-btn">
+                                <i class="fas fa-download"></i> Descargar Video
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="media-card">
+                    <div class="media-header">
+                        <h3 class="media-title">Diálogos de Seguridad: Perspectivas Críticas</h3>
+                        <p class="media-presenter">Presentado por: Prof. Freddy Aguilar</p>
+                    </div>
+                    <div class="media-content">
+                        <img src="https://picsum.photos/id/102/400/225" alt="Diálogos de Seguridad: Perspectivas Críticas" class="media-image">
+                        <div class="media-controls">
+                            <button class="media-btn audio-btn">
+                                <i class="fas fa-play"></i> Reproducir Audio
+                            </button>
+                            <button class="media-btn audio-btn">
+                                <i class="fas fa-download"></i> Descargar Audio
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="media-card">
+                    <div class="media-header">
+                        <h3 class="media-title">Foro de Seguridad: Debates Interdisciplinarios</h3>
+                        <p class="media-presenter">Presentado por: Equipo SINÁPSIS</p>
+                    </div>
+                    <div class="media-content">
+                        <img src="https://picsum.photos/id/103/400/225" alt="Foro de Seguridad: Debates Interdisciplinarios" class="media-image">
+                        <div class="media-controls">
+                            <button class="media-btn video-btn">
+                                <i class="fas fa-play"></i> Reproducir Video
+                            </button>
+                            <button class="media-btn video-btn">
+                                <i class="fas fa-download"></i> Descargar Video
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <a href="https://www.heterodoxiatv.com" class="media-btn external-link" target="_blank">
+                    <i class="fas fa-external-link-alt"></i> Visitar Heterodoxia TV
+                </a>
+            </div>
+        </section>
+
+        <!-- Symposium Section -->
+        <section id="symposium" class="section">
+            <div class="section-header">
+                <i class="fas fa-university section-icon"></i>
+                <h2 class="section-title">Simposios Temáticos</h2>
+            </div>
+            <p>Eventos académicos periódicos centrados en temas emergentes de la seguridad.</p>
+            
+            <div class="symposium-grid">
+                <div class="symposium-card">
+                    <div class="symposium-header">
+                        <h3 class="symposium-title">Simposio: Seguridad Digital y Soberanía Nacional</h3>
+                        <p class="symposium-date">Próximo: 15 de diciembre, 2025</p>
+                    </div>
+                    <div class="symposium-content">
+                        <p class="symposium-description">Exploración de las implicaciones de la ciberseguridad en la soberanía nacional y las estrategias para proteger la infraestructura crítica.</p>
+                        <div class="symposium-participants">
+                            <span class="participant-tag">Dr. María Pérez</span>
+                            <span class="participant-tag">Ing. Carlos Rodríguez</span>
+                            <span class="participant-tag">Prof. Ángel Chacín</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="symposium-card">
+                    <div class="symposium-header">
+                        <h3 class="symposium-title">Simposio: Juventud y Seguridad en América Latina</h3>
+                        <p class="symposium-date">Próximo: 20 de enero, 2026</p>
+                    </div>
+                    <div class="symposium-content">
+                        <p class="symposium-description">Análisis de las dinámicas de poder entre generaciones y su impacto en la estructura social y la seguridad ciudadana.</p>
+                        <div class="symposium-participants">
+                            <span class="participant-tag">Prof. Freddy Aguilar</span>
+                            <span class="participant-tag">Dra. Laura Martínez</span>
+                            <span class="participant-tag">Dr. José Hernández</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="symposium-card">
+                    <div class="symposium-header">
+                        <h3 class="symposium-title">Simposio: Inteligencia Artificial y Estrategia Militar</h3>
+                        <p class="symposium-date">Próximo: 10 de marzo, 2026</p>
+                    </div>
+                    <div class="symposium-content">
+                        <p class="symposium-description">Evaluación de las aplicaciones de la IA en el análisis estratégico y la toma de decisiones en contextos de defensa nacional.</p>
+                        <div class="symposium-participants">
+                            <span class="participant-tag">Prof. Ángel Chacín</span>
+                            <span class="participant-tag">Dr. Ricardo Gómez</span>
+                            <span class="participant-tag">Ing. Sofía Torres</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Books Section -->
+        <section class="section">
+            <div class="section-header">
+                <i class="fas fa-book section-icon"></i>
+                <h2 class="section-title">Catálogo de Libros</h2>
+            </div>
+            <p>Publicaciones y series académicas de SINÁPSIS.</p>
+            
+            <div class="books-container">
+                <div class="books-grid">
+                    <div class="book-card">
+                        <h3 class="book-title">Estrategias Asimétricas en la Seguridad Nacional</h3>
+                        <div class="book-meta">
+                            <span class="book-tag">Serie: Seguridad Contemporánea</span>
+                            <span class="book-tag">Número: 01</span>
+                            <span class="book-tag">2024</span>
+                        </div>
+                        <p class="book-author">Autor: Prof. Ángel Chacín Ávila</p>
+                        <p>Análisis profundo de las estrategias asimétricas en el contexto latinoamericano, explorando las implicaciones tecnológicas y geopolíticas.</p>
+                    </div>
+                    
+                    <div class="book-card">
+                        <h3 class="book-title">Juventud y Poder en la Sociedad Contemporánea</h3>
+                        <div class="book-meta">
+                            <span class="book-tag">Serie: Estudios Sociales</span>
+                            <span class="book-tag">Número: 02</span>
+                            <span class="book-tag">2024</span>
+                        </div>
+                        <p class="book-author">Autor: Prof. Freddy Aguilar</p>
+                        <p>Estudio interdisciplinario sobre las dinámicas de poder entre generaciones y su impacto en la estructura social.</p>
+                    </div>
+                    
+                    <div class="book-card">
+                        <h3 class="book-title">Inteligencia Artificial y Seguridad: Nuevos Paradigmas</h3>
+                        <div class="book-meta">
+                            <span class="book-tag">Serie: Tecnología y Seguridad</span>
+                            <span class="book-tag">Número: 03</span>
+                            <span class="book-tag">2025</span>
+                        </div>
+                        <p class="book-author">Autor: Equipo SINÁPSIS</p>
+                        <p>Exploración de las aplicaciones de la IA en el análisis estratégico y la toma de decisiones en seguridad nacional.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recommendations Section -->
+        <section class="section recommendations-section">
+            <div class="section-header">
+                <i class="fas fa-star section-icon"></i>
+                <h2 class="section-title">Recomendaciones del Sistema</h2>
+            </div>
+            <p>Contenido destacado basado en tus intereses y tendencias de lectura.</p>
+            
+            <div class="recommendations-grid" id="recommendationsGrid">
+                <!-- Recommendations will be displayed here -->
+            </div>
+        </section>
+
+        <!-- Translation Section -->
+        <section class="section translation-section">
+            <div class="section-header">
+                <i class="fas fa-language section-icon"></i>
+                <h2 class="section-title">Traducción Multilingüe</h2>
+            </div>
+            <p>Acceso a contenido en múltiples idiomas.</p>
+            
+            <div class="translation-controls">
+                <select class="language-select" id="languageSelect">
+                    <option value="es">Español</option>
+                    <option value="en">English</option>
+                    <option value="fr">Français</option>
+                    <option value="pt">Português</option>
+                    <option value="it">Italiano</option>
+                </select>
+                <button class="translate-btn" id="translateBtn">
+                    <i class="fas fa-language"></i> Traducir
+                </button>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="section">
+            <div class="section-header">
+                <i class="fas fa-address-book section-icon"></i>
+                <h2 class="section-title">Contacto</h2>
+            </div>
+            <p>Para consultas, colaboraciones o información adicional, contáctenos:</p>
+            
+            <div class="contact-container">
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="contact-title">Correo Electrónico</div>
+                    <p><a href="mailto:garrojo43@gmail.com" style="color: inherit; text-decoration: none;">garrojo43@gmail.com</a></p>
+                </div>
+                
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fab fa-whatsapp"></i>
+                    </div>
+                    <div class="contact-title">Grupo de WhatsApp</div>
+                    <p><a href="https://chat.whatsapp.com/EXheQ8HEGyP2HURea8TWmM" style="color: inherit; text-decoration: none;">Unirse al grupo</a></p>
+                </div>
+                
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <div class="contact-title">Soporte</div>
+                    <p><a href="mailto:lordchacinavila@gmail.com" style="color: inherit; text-decoration: none;">lordchacinavila@gmail.com</a></p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2025 Revista SINÁPSIS. Todos los derechos reservados.</p>
+            <p>Publicación especializada en Estudios de Seguridad con Enfoque Interdisciplinario</p>
+        </div>
+    </footer>
+
+    <script>
+        // Content database
+        const contentDatabase = {
+            articles: [
+                {
+                    id: 1,
+                    title: "El Reloj de Arena Roto: Juventud, Gerontocracia y la Explotación Criminal del Tiempo Social",
+                    author: "Prof. Freddy Aguilar",
+                    type: "article",
+                    category: "ciencias-sociales",
+                    thumbnail: "https://picsum.photos/id/201/300/200",
+                    cover: "https://picsum.photos/id/301/600/400",
+                    avatar: "https://picsum.photos/id/401/30/30",
+                    synopsis: "Análisis desde la Antropología de las Edades de la explotación criminal de adolescentes por élites gerontocráticas.",
+                    content: [
+                        "La explotación juvenil representa una lucha por el control del tiempo social en nuestras sociedades modernas.",
+                        "Este estudio contrasta el 'Reloj de Arena' (modelo de transición cíclica) con el 'Reloj Analógico' (modelo de ruptura y creación generacional) de Carles Feixa.",
+                        "Utilizamos producciones cinematográficas internacionales y latinoamericanas como evidencia etnográfica para el análisis criminológico.",
+                        "La red Epstein se utiliza para argumentar que la explotación juvenil es un mecanismo estructural sofisticado cuyo producto final es el capital de chantaje contra el poder político, económico y moral, garantizando impunidad a la red gerontocrática."
+                    ],
+                    stats: {
+                        views: 1250,
+                        likes: 89,
+                        comments: 23,
+                        downloads: 45
+                    }
+                },
+                {
+                    id: 2,
+                    title: "Las Aplicaciones de la Inteligencia Artificial en Análisis Estratégico",
+                    author: "Prof. Ángel Chacín Ávila",
+                    type: "article",
+                    category: "ciencias-formales",
+                    thumbnail: "https://picsum.photos/id/202/300/200",
+                    cover: "https://picsum.photos/id/302/600/400",
+                    avatar: "https://picsum.photos/id/402/30/30",
+                    synopsis: "Analiza el uso de la Inteligencia Artificial (IA) en el análisis estratégico militar y su impacto en la toma de decisiones civil y militar.",
+                    content: [
+                        "La Inteligencia Artificial está revolucionando el análisis estratégico en el siglo XXI.",
+                        "Este artículo examina el uso de la Teoría de Juegos, Simulación Computacional Determinista y Estocástica (Método de Monte Carlo y Dinámicas Moleculares).",
+                        "La IA emerge como herramienta de guerra asimétrica para países con presupuestos de defensa limitados, optimizando recursos y desarrollando capacidades no convencionales.",
+                        "El dominio de la IA será crucial para la seguridad nacional, redefiniendo el paradigma estratégico contemporáneo."
+                    ],
+                    stats: {
+                        views: 1890,
+                        likes: 156,
+                        comments: 42,
+                        downloads: 78
+                    }
+                },
+                {
+                    id: 3,
+                    title: "Ciberdefensa y Seguridad Nacional en el Contexto Latinoamericano",
+                    author: "Dr. María Pérez",
+                    type: "article",
+                    category: "ciencias-formales",
+                    thumbnail: "https://picsum.photos/id/203/300/200",
+                    cover: "https://picsum.photos/id/303/600/400",
+                    avatar: "https://picsum.photos/id/403/30/30",
+                    synopsis: "Análisis de las estrategias de ciberdefensa en países latinoamericanos y sus implicaciones para la seguridad nacional.",
+                    content: [
+                        "La ciberdefensa se ha convertido en un pilar fundamental de la seguridad nacional en el contexto digital actual.",
+                        "Este estudio evalúa las capacidades técnicas y estratégicas de los países latinoamericanos en materia de ciberseguridad.",
+                        "Se analizan los desafíos específicos de la región, incluyendo la brecha digital y las amenazas cibernéticas emergentes.",
+                        "Se proponen estrategias adaptadas a las condiciones económicas y tecnológicas de los países de la región."
+                    ],
+                    stats: {
+                        views: 980,
+                        likes: 67,
+                        comments: 18,
+                        downloads: 32
+                    }
+                },
+                {
+                    id: 4,
+                    title: "Análisis Crítico de la Seguridad Ciudadana en Venezuela",
+                    author: "Dra. Laura Martínez",
+                    type: "article",
+                    category: "ciencias-sociales",
+                    thumbnail: "https://picsum.photos/id/204/300/200",
+                    cover: "https://picsum.photos/id/304/600/400",
+                    avatar: "https://picsum.photos/id/404/30/30",
+                    synopsis: "Perspectiva crítica sobre los desafíos y oportunidades en la seguridad ciudadana venezolana.",
+                    content: [
+                        "La seguridad ciudadana en Venezuela presenta desafíos únicos que requieren enfoques innovadores y multidisciplinarios.",
+                        "Este artículo examina las causas estructurales de la inseguridad y evalúa las políticas públicas implementadas.",
+                        "Se analizan los programas comunitarios y las iniciativas ciudadanas que han mostrado resultados positivos.",
+                        "Se proponen estrategias basadas en la participación ciudadana y la colaboración interinstitucional."
+                    ],
+                    stats: {
+                        views: 1560,
+                        likes: 112,
+                        comments: 35,
+                        downloads: 56
+                    }
+                }
+            ],
+            videos: [
+                {
+                    id: 101,
+                    title: "Análisis Estratégico: Seguridad en el Siglo XXI",
+                    author: "Prof. Ángel Chacín Ávila",
+                    type: "video",
+                    category: "ciencias-formales",
+                    thumbnail: "https://picsum.photos/id/101/300/200",
+                    duration: "45:30"
+                },
+                {
+                    id: 102,
+                    title: "Diálogos de Seguridad: Perspectivas Críticas",
+                    author: "Prof. Freddy Aguilar",
+                    type: "audio",
+                    category: "ciencias-sociales",
+                    thumbnail: "https://picsum.photos/id/102/300/200",
+                    duration: "32:15"
+                },
+                {
+                    id: 103,
+                    title: "Foro de Seguridad: Debates Interdisciplinarios",
+                    author: "Equipo SINÁPSIS",
+                    type: "video",
+                    category: "interdisciplinario",
+                    thumbnail: "https://picsum.photos/id/103/300/200",
+                    duration: "58:45"
+                }
+            ],
+            books: [
+                {
+                    id: 201,
+                    title: "Estrategias Asimétricas en la Seguridad Nacional",
+                    author: "Prof. Ángel Chacín Ávila",
+                    type: "book",
+                    category: "ciencias-formales",
+                    thumbnail: "https://picsum.photos/id/205/300/200",
+                    series: "Seguridad Contemporánea",
+                    number: "01",
+                    year: "2024"
+                },
+                {
+                    id: 202,
+                    title: "Juventud y Poder en la Sociedad Contemporánea",
+                    author: "Prof. Freddy Aguilar",
+                    type: "book",
+                    category: "ciencias-sociales",
+                    thumbnail: "https://picsum.photos/id/206/300/200",
+                    series: "Estudios Sociales",
+                    number: "02",
+                    year: "2024"
+                },
+                {
+                    id: 203,
+                    title: "Inteligencia Artificial y Seguridad: Nuevos Paradigmas",
+                    author: "Equipo SINÁPSIS",
+                    type: "book",
+                    category: "ciencias-formales",
+                    thumbnail: "https://picsum.photos/id/207/300/200",
+                    series: "Tecnología y Seguridad",
+                    number: "03",
+                    year: "2025"
+                }
+            ]
+        };
+
+        // User interaction data
+        const userInteractions = {
+            likes: {},
+            downloads: {},
+            views: {},
+            searchHistory: []
+        };
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Update active nav link
+                    document.querySelectorAll('.nav-link').forEach(link => {
+                        link.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                }
+            });
+        });
+
+        // Search functionality
+        const searchForm = document.getElementById('searchForm');
+        const searchInput = document.getElementById('searchInput');
+        const searchResults = document.getElementById('searchResults');
+        const articleDetail = document.getElementById('articleDetail');
+
+        searchForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const query = searchInput.value.toLowerCase();
+            
+            if (query.trim() === '') {
+                searchResults.innerHTML = '<p style="text-align: center; color: #666;">Por favor, ingrese un término de búsqueda.</p>';
+                return;
+            }
+            
+            // Add to search history
+            if (!userInteractions.searchHistory.includes(query)) {
+                userInteractions.searchHistory.push(query);
+            }
+            
+            // Combine all content for search
+            const allContent = [...contentDatabase.articles, ...contentDatabase.videos, ...contentDatabase.books];
+            const results = allContent.filter(item => 
+                item.title.toLowerCase().includes(query) ||
+                item.author.toLowerCase().includes(query) ||
+                item.category.toLowerCase().includes(query)
+            );
+            
+            if (results.length === 0) {
+                searchResults.innerHTML = '<p style="text-align: center; color: #666;">No se encontraron resultados.</p>';
+            } else {
+                searchResults.innerHTML = results.map(item => `
+                    <div class="search-result" data-id="${item.id}" data-type="${item.type}">
+                        <img src="${item.thumbnail}" alt="${item.title}" class="result-thumbnail">
+                        <div class="result-content">
+                            <h3 class="result-title">${item.title}</h3>
+                            <div class="result-author">
+                                <img src="${item.avatar || 'https://picsum.photos/id/400/30/30'}" alt="Avatar" class="author-avatar">
+                                <span class="author-name">${item.author}</span>
+                            </div>
+                            <div class="result-type">
+                                <span class="content-type type-${item.type}">${item.type}</span>
+                                <span class="content-type" style="background: var(--secondary-color);">${item.category}</span>
+                            </div>
+                            <p class="result-synopsis">${item.synopsis}</p>
+                            <div class="result-stats">
+                                <span class="stat-item">
+                                    <i class="fas fa-eye"></i> ${item.stats?.views || 0}
+                                </span>
+                                <span class="stat-item">
+                                    <i class="fas fa-heart"></i> ${item.stats?.likes || 0}
+                                </span>
+                                <span class="stat-item">
+                                    <i class="fas fa-comment"></i> ${item.stats?.comments || 0}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+                
+                // Add click event to results
+                document.querySelectorAll('.search-result').forEach(result => {
+                    result.addEventListener('click', function() {
+                        const id = this.getAttribute('data-id');
+                        const type = this.getAttribute('data-type');
+                        showArticleDetail(id, type);
+                    });
+                });
+            }
+        });
+
+        // Show article detail
+        function showArticleDetail(id, type) {
+            const content = [...contentDatabase.articles, ...contentDatabase.videos, ...contentDatabase.books].find(item => item.id == id);
+            
+            if (content) {
+                document.getElementById('articleCover').src = content.cover;
+                document.getElementById('articleTitle').textContent = content.title;
+                document.getElementById('articleMeta').innerHTML = `
+                    <div class="meta-item">
+                        <i class="fas fa-user"></i> ${content.author}
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-calendar"></i> ${new Date().toLocaleDateString()}
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-folder"></i> ${content.category}
+                    </div>
+                `;
+                
+                // Show content based on type
+                let contentHtml = '';
+                if (content.content) {
+                    contentHtml = content.content.map((paragraph, index) => `
+                        <div class="paragraph">
+                            <div class="paragraph-actions">
+                                <button class="paragraph-btn like-btn" data-paragraph="${index}">
+                                    <i class="fas fa-thumbs-up"></i> Me gusta
+                                </button>
+                                <button class="paragraph-btn agree-btn" data-paragraph="${index}">
+                                    <i class="fas fa-check"></i> Estoy de acuerdo
+                                </button>
+                                <button class="paragraph-btn interesting-btn" data-paragraph="${index}">
+                                    <i class="fas fa-lightbulb"></i> Interesante
+                                </button>
+                                <button class="paragraph-btn confusing-btn" data-paragraph="${index}">
+                                    <i class="fas fa-question"></i> Es confuso
+                                </button>
+                                <button class="paragraph-btn debate-btn" data-paragraph="${index}">
+                                    <i class="fas fa-comments"></i> Merece debate
+                                </button>
+                            </div>
+                            <p>${paragraph}</p>
+                            <div class="paragraph-reactions">
+                                <span class="reaction-count">Reacciones: 0</span>
+                            </div>
+                        </div>
+                    `).join('');
+                } else if (content.duration) {
+                    contentHtml = `<p>${content.duration} - ${content.author}</p>`;
+                }
+                
+                document.getElementById('articleContent').innerHTML = contentHtml;
+                articleDetail.style.display = 'block';
+                
+                // Track view
+                if (!userInteractions.views[content.id]) {
+                    userInteractions.views[content.id] = 0;
+                }
+                userInteractions.views[content.id]++;
+                
+                // Show recommendations
+                showRecommendations(content.category);
+            }
+        }
+
+        // Show recommendations
+        function showRecommendations(category) {
+            const recommendations = contentDatabase.articles.filter(article => 
+                article.category === category && article.id != currentArticleId
+            ).slice(0, 3);
+            
+            const recommendationsGrid = document.getElementById('recommendationsGrid');
+            recommendationsGrid.innerHTML = recommendations.map(article => `
+                <div class="recommendation-item">
+                    <div class="recommendation-title">${article.title}</div>
+                    <span class="recommendation-type type-article">${article.type}</span>
+                    <div class="recommendation-author">
+                        <img src="${article.avatar}" alt="Avatar" class="comment-avatar" style="width: 20px; height: 20px; margin-right: 5px;">
+                        ${article.author}
+                    </div>
+                    <p class="recommendation-synopsis">${article.synopsis}</p>
+                </div>
+            `).join('');
+        }
+
+        // Paragraph interaction buttons
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('paragraph-btn')) {
+                const paragraphIndex = e.target.getAttribute('data-paragraph');
+                const paragraph = e.target.closest('.paragraph');
+                const reactionCount = paragraph.querySelector('.reaction-count');
+                
+                // Simulate reaction
+                let count = parseInt(reactionCount.textContent.match(/\d+/)[0]);
+                count++;
+                reactionCount.textContent = `Reacciones: ${count}`;
+                
+                // Add visual feedback
+                e.target.style.background = 'var(--accent-color)';
+                e.target.style.color = 'var(--white)';
+                
+                setTimeout(() => {
+                    e.target.style.background = 'none';
+                    e.target.style.color = 'var(--accent-color)';
+                }, 1000);
+            }
+        });
+
+        // New comment button
+        document.getElementById('newCommentBtn').addEventListener('click', function() {
+            const commentForm = document.createElement('div');
+            commentForm.innerHTML = `
+                <div style="margin-bottom: 1rem;">
+                    <input type="text" placeholder="Tu nombre" style="width: 100%; padding: 0.5rem; margin-bottom: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                    <textarea placeholder="Escribe tu comentario..." style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; min-height: 80px;"></textarea>
+                    <button style="background: var(--primary-color); color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">Enviar</button>
+                </div>
+            `;
+            
+            document.getElementById('forumComments').appendChild(commentForm);
+        });
+
+        // Translation functionality
+        document.getElementById('translateBtn').addEventListener('click', function() {
+            const selectedLanguage = document.getElementById('languageSelect').value;
+            const translations = {
+                es: "Contenido en español",
+                en: "Content in English",
+                fr: "Contenu en français", 
+                pt: "Conteúdo em português",
+                it: "Contenuto in italiano"
+            };
+            
+            alert(`Traducción a ${translations[selectedLanguage]} - Funcionalidad en desarrollo`);
+        });
+
+        // Initialize
+        let currentArticleId = null;
+        
+        // Add hover effect to cards
+        const cards = document.querySelectorAll('.article-card, .identity-card, .guideline-item, .media-card, .book-card, .contact-item, .search-result, .comment-item, .symposium-card, .recommendation-item');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Add scroll-to-top button
+        const scrollButton = document.createElement('button');
+        scrollButton.innerHTML = '<i class="fas fa-arrow-up"></i>';
+        scrollButton.className = 'scroll-top';
+        scrollButton.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 20px;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            z-index: 1000;
+        `;
+        
+        document.body.appendChild(scrollButton);
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollButton.style.opacity = '1';
+            } else {
+                scrollButton.style.opacity = '0';
+            }
+        });
+
+        scrollButton.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    </script>
+</body>
+</html>
