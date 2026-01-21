@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planificación y Evaluación - UNES</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #e0e0e0; padding: 20px; }
+        .page { background: white; width: 21cm; min-height: 29.7cm; padding: 1.5cm; margin: 10px auto; box-shadow: 0 0 10px rgba(0,0,0,0.2); position: relative; }
+        
+        /* Estilo Logo UNES */
+        .header-logo { text-align: center; margin-bottom: 20px; }
+        .unes-txt { font-size: 48px; font-weight: bold; color: #b7a99a; letter-spacing: 8px; margin: 0; }
+        .unes-sub { font-size: 11px; font-weight: bold; border-top: 3px solid #fccb05; border-bottom: 3px solid #cf0921; display: inline-block; padding: 2px 5px; color: #333; }
+        
+        h1 { text-align: center; font-size: 18px; text-decoration: underline; margin: 20px 0; }
+        
+        /* Tablas de Datos */
+        table { width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 11px; }
+        th, td { border: 1px solid black; padding: 6px; text-align: left; }
+        th { background-color: #f0f0f0; text-align: center; text-transform: uppercase; }
+        
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; border: 1px solid black; margin-bottom: 15px; }
+        .info-item { border: 0.5px solid #ccc; padding: 5px; font-size: 11px; }
+        .label { font-weight: bold; text-transform: uppercase; }
+
+        .btn-container { text-align: center; margin-bottom: 20px; }
+        button { padding: 10px 20px; background: #cf0921; color: white; border: none; cursor: pointer; border-radius: 5px; font-weight: bold; }
+        button:hover { background: #a0071a; }
+
+        @media print {
+            .btn-container { display: none; }
+            body { background: none; padding: 0; }
+            .page { margin: 0; box-shadow: none; width: 100%; }
+        }
+
+        .signatures { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 30px; text-align: center; font-size: 9px; }
+        .sig-box { border-top: 1px solid black; margin-top: 40px; padding-top: 5px; }
+    </style>
+</head>
+<body>
+
+    <div class="btn-container">
+        <button onclick="window.print()">Descargar / Imprimir Documentos</button>
+    </div>
+
+    <div class="page">
+        <div class="header-logo">
+            <p class="unes-txt">UNES</p>
+            <p class="unes-sub">UNIVERSIDAD NACIONAL EXPERIMENTAL DE LA SEGURIDAD</p>
+        </div>
+
+        <h1>PLAN DE EVALUACIÓN</h1>
+
+        <div class="info-grid">
+            <div class="info-item" style="grid-column: span 1;"><span class="label">PNF:</span> Servicio Policial</div>
+            <div class="info-item"><span class="label">PROCESO:</span> I-2026</div>
+            <div class="info-item"><span class="label">TRAYECTO:</span> I</div>
+            <div class="info-item"><span class="label">TRIMESTRE:</span> I</div>
+            <div class="info-item"><span class="label">FECHA INICIO:</span> 12/01/2026</div>
+            <div class="info-item"><span class="label">FECHA CULM:</span> 03/04/2026</div>
+            <div class="info-item" style="grid-column: span 2;"><span class="label">AMBIENTE:</span> SALA 4</div>
+            <div class="info-item" style="grid-column: span 4;"><span class="label">UNIDAD CURRICULAR:</span> DOCUMENTOS DEL LIBERTADOR SIMÓN BOLÍVAR</div>
+            <div class="info-item" style="grid-column: span 3;"><span class="label">DOCENTE:</span> PROF. [NOMBRE]</div>
+            <div class="info-item"><span class="label">TELÉFONO:</span> 0412-1234567</div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th rowspan="2">Nro. Objetivo / Tema</th>
+                    <th colspan="2">ESTRATEGIAS DE EVALUACIÓN</th>
+                    <th rowspan="2">TIPO DE EVALUACIÓN</th>
+                    <th colspan="2">VALOR</th>
+                    <th rowspan="2">FECHA</th>
+                </tr>
+                <tr>
+                    <th>Técnica</th>
+                    <th>Instrumento</th>
+                    <th>Ptos</th>
+                    <th>%</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1. Manifiesto de Cartagena (1812)</td>
+                    <td>Análisis de Contenido</td>
+                    <td>Escala de Estimación</td>
+                    <td>Sumativa</td>
+                    <td>4</td>
+                    <td>20%</td>
+                    <td>Semana 3</td>
+                </tr>
+                <tr>
+                    <td>2. Carta de Jamaica (1815)</td>
+                    <td>Taller Grupal</td>
+                    <td>Lista de Cotejo</td>
+                    <td>Sumativa</td>
+                    <td>5</td>
+                    <td>25%</td>
+                    <td>Semana 6</td>
+                </tr>
+                <tr>
+                    <td>3. Discurso de Angostura (1819)</td>
+                    <td>Exposición Didáctica</td>
+                    <td>Guía de Observación</td>
+                    <td>Sumativa</td>
+                    <td>5</td>
+                    <td>25%</td>
+                    <td>Semana 9</td>
+                </tr>
+                <tr>
+                    <td>4. Congreso de Panamá y Última Proclama</td>
+                    <td>Ensayo Escrito</td>
+                    <td>Rúbrica Holística</td>
+                    <td>Sumativa</td>
+                    <td>6</td>
+                    <td>30%</td>
+                    <td>Semana 12</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="signatures">
+            <div class="sig-box">Firma Responsable de Gestión Curricular</div>
+            <div class="sig-box">Firma Responsable Área del Conocimiento</div>
+            <div class="sig-box">Firma del Docente de la Unidad Curricular</div>
+        </div>
+    </div>
+
+    <div class="page">
+        <div class="header-logo">
+            <p class="unes-txt">UNES</p>
+            <p class="unes-sub">UNIVERSIDAD NACIONAL EXPERIMENTAL DE LA SEGURIDAD</p>
+        </div>
+
+        <h1>PLANIFICACIÓN DEL DOCENTE</h1>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>SEMANA</th>
+                    <th>OBJETIVO ESPECÍFICO</th>
+                    <th>CONTENIDO</th>
+                    <th>METODOLOGÍA DIDÁCTICA</th>
+                    <th>FECHA</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1-3</td>
+                    <td>Analizar las causas políticas y militares de la caída de la Primera República.</td>
+                    <td>El Manifiesto de Cartagena: El Federalismo vs. Centralismo.</td>
+                    <td>Lectura dirigida y debate de grupos focalizados.</td>
+                    <td>Ene - Feb</td>
+                </tr>
+                <tr>
+                    <td>4-6</td>
+                    <td>Interpretar la visión integracionista de Bolívar para el continente.</td>
+                    <td>La Carta de Jamaica: Análisis del contexto de exilio y profecías políticas.</td>
+                    <td>Mesa redonda y construcción de mapas conceptuales.</td>
+                    <td>Febrero</td>
+                </tr>
+                <tr>
+                    <td>7-9</td>
+                    <td>Examinar la propuesta del Poder Moral como base republicana.</td>
+                    <td>Discurso de Angostura: Educación, moral y la unión de la Gran Colombia.</td>
+                    <td>Seminario interactivo y análisis documental.</td>
+                    <td>Marzo</td>
+                </tr>
+                <tr>
+                    <td>10-12</td>
+                    <td>Sintetizar el legado final y el llamado a la unidad nacional.</td>
+                    <td>Congreso de Panamá y Última Proclama: El ocaso del proyecto bolivariano.</td>
+                    <td>Producción de ensayos y foro de cierre.</td>
+                    <td>Abril</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="signatures">
+            <div class="sig-box">Firma Responsable de Gestión Curricular</div>
+            <div class="sig-box">Firma Responsable Área del Conocimiento</div>
+            <div class="sig-box">Firma del Docente de la Unidad Curricular</div>
+        </div>
+    </div>
+
+</body>
+</html>
