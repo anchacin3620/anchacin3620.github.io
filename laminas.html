@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulación Monte Carlo: Depósición Cr y Fe sobre Mg (001)</title>
+    <!-- Fuentes modernas -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #0f1115;
+            --text-color: #e0e6ed;
+            --slide-bg: #161b22;
+            --accent-cr: #4aa3df; /* Azul Metálico para Cr */
+            --accent-fe: #e67e22; /* Naranja/Rojo para Fe */
+            --accent-mg: #a0aec0; /* Gris para Mg */
+            --success: #2ecc71;
+            --font-main: 'Inter', sans-serif;
+            --font-mono: 'Roboto Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-main);
+            overflow: hidden; /* Evitar scroll nativo, usamos slides */
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- Contenedor de Slides --- */
+        #presentation-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            max-width: 1280px;
+            max-height: 720px;
+            overflow: hidden;
+            background: var(--bg-color);
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 4rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.6s ease, transform 0.6s ease;
+            transform: translateX(50px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            z-index: 1;
+            background: radial-gradient(circle at center, var(--slide-bg) 0%, var(--bg-color) 100%);
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0);
+            z-index: 10;
+        }
+
+        .slide.prev {
+            transform: translateX(-50px);
+        }
+
+        h1, h2, h3 {
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, var(--accent-cr), var(--text-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 {
+            font-size: 2rem;
+            border-bottom: 2px solid var(--accent-cr);
+            display: inline-block;
+            padding-bottom: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        h3 {
+            color: var(--accent-cr);
+            font-size: 1.5rem;
+        }
+
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            max-width: 800px;
+        }
+
+        ul {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        li {
+            margin-bottom: 0.8rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        li::before {
+            content: "▹";
+            position: absolute;
+            left: 0;
+            color: var(--accent-cr);
+        }
+
+        /* --- Elementos de la Interfaz --- */
+        .highlight-cr { color: var(--accent-cr); font-weight: bold; }
+        .highlight-fe { color: var(--accent-fe); font-weight: bold; }
+
+        .author-info {
+            margin-top: 3rem;
+            font-size: 0.9rem;
+            color: #8892b0;
+            border-top: 1px solid #2d3748;
+            padding-top: 1rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .university-logos {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            opacity: 0.8;
+        }
+
+        .logo-placeholder {
+            width: 60px;
+            height: 60px;
+            background: #2d3748;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            color: #fff;
+            border: 1px solid #4a5568;
+        }
+
+        /* --- Tarjetas y Grids --- */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            height: 100%;
+            align-items: center;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .card.cr { border-top: 4px solid var(--accent-cr); }
+        .card.fe { border-top: 4px solid var(--accent-fe); }
+
+        /* --- Tabla Estilizada --- */
+        .styled-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 1rem;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .styled-table th, .styled-table td {
+            padding: 1rem;
+            text-align: left;
+        }
+
+        .styled-table th {
+            background-color: #1f2937;
+            color: var(--text-color);
+        }
+
+        .styled-table tr.cr-row { border-left: 4px solid var(--accent-cr); }
+        .styled-table tr.fe-row { border-left: 4px solid var(--accent-fe); }
+        
+        .metric-value {
+            font-family: var(--font-mono);
+            font-size: 1.2rem;
+        }
+
+        /* --- Controles de Navegación --- */
+        .controls {
+            position: absolute;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            gap: 1rem;
+            z-index: 100;
+        }
+
+        .btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            border-radius: 50px;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            backdrop-filter: blur(5px);
+        }
+
+        .btn:hover {
+            background: white;
+            color: black;
+        }
+
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-cr), var(--accent-fe));
+            width: 0%;
+            transition: width 0.3s;
+            z-index: 100;
+        }
+
+        .slide-number {
+            position: absolute;
+            bottom: 2rem;
+            left: 2rem;
+            font-family: var(--font-mono);
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        /* --- Canvas Container --- */
+        .canvas-container {
+            position: relative;
+            width: 100%;
+            height: 350px;
+            background: #0d1117;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #30363d;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .toggle-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem;
+            gap: 1rem;
+        }
+
+        .toggle-btn {
+            padding: 0.5rem 1.5rem;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            opacity: 0.5;
+            transition: opacity 0.3s;
+        }
+
+        .toggle-btn.active {
+            opacity: 1;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        .toggle-btn.cr-btn { background-color: var(--accent-cr); color: white; }
+        .toggle-btn.fe-btn { background-color: var(--accent-fe); color: white; }
+
+        /* --- Responsive --- */
+        @media (max-width: 768px) {
+            .slide { padding: 1.5rem; overflow-y: auto; }
+            h1 { font-size: 1.8rem; }
+            h2 { font-size: 1.5rem; }
+            .grid-2 { grid-template-columns: 1fr; gap: 1rem; }
+            .controls { bottom: 1rem; right: 1rem; }
+            .btn { padding: 0.5rem 1rem; font-size: 0.8rem; }
+            .canvas-container { height: 250px; }
+        }
+
+        /* Utilidades de animación */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="presentation-container">
+        
+        <!-- Barra de progreso -->
+        <div class="progress-bar" id="progress-bar"></div>
+        <div class="slide-number" id="slide-number">1 / 7</div>
+
+        <!-- Controles -->
+        <div class="controls">
+            <button class="btn" onclick="prevSlide()">&#8592; Anterior</button>
+            <button class="btn" onclick="nextSlide()">Siguiente &#8594;</button>
+        </div>
+
+        <!-- SLIDE 1: Portada -->
+        <div class="slide active">
+            <div class="university-logos">
+                <div class="logo-placeholder">LUZ</div>
+                <div class="logo-placeholder">FEC</div>
+                <div class="logo-placeholder">FISICA</div>
+            </div>
+            
+            <h1>Simulación Monte Carlo de los procesos de deposición de películas delgadas de Cr y Fe SOBRE un sustrato sólido de Mg (001)</h1>
+            
+            <div class="author-info">
+                <div>
+                    <strong>Autor:</strong> Br. Ángel Chacín Ávila<br>
+                    <small>Licenciatura en Física</small>
+                </div>
+                <div>
+                    <strong>Tutora:</strong> Msc. Emily Chávez Rivas<br>
+                    <strong>Cotutor:</strong> Dr. José Fermín
+                </div>
+                <div>
+                    <strong>Fecha:</strong> Maracaibo, Diciembre 2025<br>
+                    <small>Universidad del Zulia</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 2: Introducción -->
+        <div class="slide">
+            <h2>Introducción: Películas Delgadas y Simulación</h2>
+            <div class="grid-2">
+                <div>
+                    <h3>Contexto Físico</h3>
+                    <ul>
+                        <li>Las películas delgadas de <span class="highlight-cr">Cromo (Cr)</span> e <span class="highlight-fe">Hierro (Fe)</span> son cruciales para recubrimientos protectores y dispositivos magnéticos.</li>
+                        <li>El sustrato de <strong>Magnesio (001)</strong> (estructura hexagonal compacta) presenta desafíos de corrosión que requieren recubrimientos optimizados.</li>
+                        <li>La dinámica a escala atómica (adsorción y difusión) determina la morfología final.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Simulación Estocástica</h3>
+                    <p>El método <strong>Monte Carlo Cinético (KMC)</strong> permite modelar procesos fuera del equilibrio que son imposibles de resolver con ecuaciones deterministas simples.</p>
+                    <p style="font-size: 0.9em; color: #a0aec0;">"Se utiliza la ecuación maestra probabilística como base teórica para derivar tasas de transición de adsorción y difusión."</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: Metodología KMC -->
+        <div class="slide">
+            <h2>Metodología: Algoritmo KMC</h2>
+            <div class="grid-2">
+                <div>
+                    <h3>Modo Balístico</h3>
+                    <p>En esta simulación, se utiliza el <strong>modo de deposición balístico</strong>:</p>
+                    <ul>
+                        <li>Energía promedio de partículas: 5.0 eV.</li>
+                        <li>Simula deposición a alta energía.</li>
+                        <li>Promueve crecimiento vertical y formación de columnas.</li>
+                    </ul>
+                    <br>
+                    <h3>Implementación</h3>
+                    <p>Código desarrollado en <strong>Fortran 90</strong> para el motor de simulación y <strong>Python</strong> para el análisis post-simulación (mapas 2D/3D, métricas).</p>
+                </div>
+                <div class="card" style="display: flex; flex-direction: column; justify-content: center;">
+                    <h3 style="text-align: center; color: white;">Ciclo del Algoritmo</h3>
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+                        <div style="background: #2d3748; padding: 1rem; border-radius: 8px; width: 80%; text-align: center;">1. Inicializar Rejilla (Sustrato Mg)</div>
+                        <div style="font-size: 1.5rem;">↓</div>
+                        <div style="background: var(--accent-cr); padding: 1rem; border-radius: 8px; width: 80%; text-align: center; color: white;">2. Selección de Evento (Deposición/Difusión)</div>
+                        <div style="font-size: 1.5rem;">↓</div>
+                        <div style="background: var(--accent-fe); padding: 1rem; border-radius: 8px; width: 80%; text-align: center; color: white;">3. Actualización de Sistema (Átomos Cr/Fe)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 4: Parámetros de Materiales -->
+        <div class="slide">
+            <h2>Parámetros del Sistema</h2>
+            <p>Propiedades físicas intrínsecas utilizadas para definir las tasas de transición en el modelo KMC.</p>
+            <div class="grid-2">
+                <div class="card cr">
+                    <h3>Cromo (Cr)</h3>
+                    <ul>
+                        <li><strong>Adhesión (Sticking):</strong> 0.98 (Alta)</li>
+                        <li><strong>Energía de Difusión (Ed):</strong> 0.01 - 0.25 eV (Baja)</li>
+                        <li><strong>Comportamiento:</strong> Menor movilidad superficial, estructuras más rígidas y fragmentadas.</li>
+                    </ul>
+                </div>
+                <div class="card fe">
+                    <h3>Hierro (Fe)</h3>
+                    <ul>
+                        <li><strong>Adhesión (Sticking):</strong> 0.95</li>
+                        <li><strong>Energía de Difusión (Ed):</strong> 0.5 - 1.0 eV (Alta)</li>
+                        <li><strong>Comportamiento:</strong> Mayor movilidad superficial, forma picos pronunciados y valles profundos.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: Resultados Numéricos -->
+        <div class="slide">
+            <h2>Resultados: Modo Balístico</h2>
+            <p>Comparación métrica obtenida tras el análisis de las simulaciones.</p>
+            
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Parámetro</th>
+                        <th>Hierro (Fe)</th>
+                        <th>Cromo (Cr)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="fe-row">
+                        <td><strong>Rugosidad (capas)</strong></td>
+                        <td class="metric-value highlight-fe">7.28 ± 2.62</td>
+                        <td class="metric-value highlight-cr">7.53 ± 2.68</td>
+                    </tr>
+                    <tr class="fe-row">
+                        <td><strong>Espesor (capas)</strong></td>
+                        <td class="metric-value">10.52 ± 5.63</td>
+                        <td class="metric-value">10.81 ± 5.71</td>
+                    </tr>
+                    <tr class="fe-row">
+                        <td><strong>Altura Máxima</strong></td>
+                        <td class="metric-value">27.83 ± 7.01</td>
+                        <td class="metric-value">28.22 ± 7.12</td>
+                    </tr>
+                    <tr class="fe-row">
+                        <td><strong>Cobertura (>10 capas)</strong></td>
+                        <td class="metric-value">46.35%</td>
+                        <td class="metric-value">47.92%</td>
+                    </tr>
+                    <tr class="fe-row">
+                        <td><strong>Coalescencia</strong></td>
+                        <td class="metric-value">30.00%</td>
+                        <td class="metric-value">30.00%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p style="margin-top: 1rem; font-size: 0.9rem;"><em>* Cr muestra un mayor incremento relativo en espesor y cobertura debido a su menor energía de difusión intrínseca.</em></p>
+        </div>
+
+        <!-- SLIDE 6: Visualización de Morfología (Canvas) -->
+        <div class="slide">
+            <h2>Simulación Visual de Morfología</h2>
+            <p>Representación conceptual del crecimiento de la superficie (Perfil transversal).</p>
+            
+            <div class="canvas-container">
+                <canvas id="morphologyCanvas"></canvas>
+            </div>
+
+            <div class="toggle-container">
+                <button class="toggle-btn fe-btn active" onclick="setMaterial('Fe')">Ver Hierro (Fe)</button>
+                <button class="toggle-btn cr-btn" onclick="setMaterial('Cr')">Ver Cromo (Cr)</button>
+            </div>
+
+            <p id="material-desc" style="margin-top: 1rem; font-size: 0.9rem; text-align: center; color: #a0aec0;">
+                Hierro (Fe): Mayor energía de difusión genera movilidad superficial, resultando en picos pronunciados y valles profundos.
+            </p>
+        </div>
+
+        <!-- SLIDE 7: Conclusiones -->
+        <div class="slide">
+            <h2>Conclusiones</h2>
+            <div class="grid-2">
+                <div>
+                    <ul>
+                        <li><strong>Validación del Modelo:</strong> El código en Fortran 90 basado en KMC demostró alta precisión para modelar deposición estocástica.</li>
+                        <li><strong>Patrones de Crecimiento:</strong> Aunque Fe y Cr tienen valores de rugosidad similares, sus morfologías son distintas. Fe es más homogéneo en transiciones, mientras que Cr es más fragmentado y abrupto.</li>
+                        <li><strong>Eficiencia Computacional:</strong> El uso combinado de Fortran (cálculo numérico pesado) y Python (visualización) resultó óptimo para este estudio.</li>
+                        <li><strong>Modo Balístico:</strong> Resultó clave para alcanzar espesores mayores y definir nanoestructuras columnares.</li>
+                    </ul>
+                </div>
+                <div class="card" style="text-align: center;">
+                    <h3 style="color: white;">¿El futuro?</h3>
+                    <p>Se recomienda:</p>
+                    <ul style="text-align: left; display: inline-block;">
+                        <li>Variar temperatura del sustrato (300-800K).</li>
+                        <li>Incorporar modos de Sputtering Reactivo.</li>
+                        <li>Simular multicapas Fe/Cr/Fe.</li>
+                    </ul>
+                    <br><br>
+                    <p style="color: var(--accent-cr);">¡Gracias por su atención!</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- Lógica de la Presentación ---
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const progressBar = document.getElementById('progress-bar');
+        const slideNumber = document.getElementById('slide-number');
+        const totalSlides = slides.length;
+
+        function updateSlide() {
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active', 'prev');
+                if (index === currentSlide) {
+                    slide.classList.add('active');
+                } else if (index < currentSlide) {
+                    slide.classList.add('prev');
+                }
+            });
+            // Actualizar barra de progreso
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            progressBar.style.width = `${progress}%`;
+            slideNumber.innerText = `${currentSlide + 1} / ${totalSlides}`;
+            
+            // Controlar la animación del canvas solo si es visible
+            if(currentSlide === 5) {
+                if(!animationRunning) {
+                    animateCanvas();
+                }
+            } else {
+                animationRunning = false;
+            }
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateSlide();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlide();
+            }
+        }
+
+        // Navegación por teclado
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        });
+
+        // --- Visualización Canvas (Simulación Morfológica) ---
+        const canvas = document.getElementById('morphologyCanvas');
+        const ctx = canvas.getContext('2d');
+        let animationRunning = false;
+        let currentMaterial = 'Fe'; // Por defecto mostramos Fe
+        let offset = 0;
+
+        // Ajustar tamaño del canvas
+        function resizeCanvas() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function setMaterial(mat) {
+            currentMaterial = mat;
+            const btnFe = document.querySelector('.toggle-btn.fe-btn');
+            const btnCr = document.querySelector('.toggle-btn.cr-btn');
+            const desc = document.getElementById('material-desc');
+
+            if(mat === 'Fe') {
+                btnFe.classList.add('active');
+                btnCr.classList.remove('active');
+                desc.innerHTML = "Hierro (Fe): Mayor energía de difusión genera movilidad superficial, resultando en <strong>picos pronunciados y valles profundos</strong>.";
+            } else {
+                btnCr.classList.add('active');
+                btnFe.classList.remove('active');
+                desc.innerHTML = "Cromo (Cr): Menor energía de difusión crea una <strong>estructura fragmentada con cambios bruscos de altura</strong> y bordes rígidos.";
+            }
+        }
+
+        // Generador de ruido simple
+        function noise(x, frequency, amplitude) {
+            return Math.sin(x * frequency) * amplitude + 
+                   Math.sin(x * frequency * 2.5) * (amplitude * 0.5) +
+                   (Math.random() - 0.5) * amplitude * 0.3; // Un poco de ruido aleatorio
+        }
+
+        function animateCanvas() {
+            if(!animationRunning && currentSlide !== 5) return;
+            animationRunning = true;
+
+            const w = canvas.width;
+            const h = canvas.height;
+            const baseline = h / 2;
+            
+            // Limpiar
+            ctx.fillStyle = '#0d1117';
+            ctx.fillRect(0, 0, w, h);
+
+            // Configurar estilo según material
+            let lineColor, baseFreq, baseAmp, fillStyle;
+
+            if (currentMaterial === 'Fe') {
+                lineColor = '#e67e22'; // Naranja
+                baseFreq = 0.02;
+                baseAmp = 80; // Picos pronunciados
+                fillStyle = 'rgba(230, 126, 34, 0.2)';
+            } else {
+                lineColor = '#4aa3df'; // Azul
+                baseFreq = 0.05; // Más fragmentado (frecuencia alta)
+                baseAmp = 50; 
+                fillStyle = 'rgba(74, 163, 223, 0.2)';
+            }
+
+            // Dibujar línea de superficie
+            ctx.beginPath();
+            ctx.moveTo(0, baseline);
+
+            // Generar onda continua
+            // Para Cr, agregamos más "jaggedness" (ruido)
+            const jaggedness = (currentMaterial === 'Cr') ? 15 : 5;
+
+            for (let x = 0; x < w; x+=2) {
+                // Lógica visual basada en la descripción del texto
+                let y = baseline;
+                
+                if (currentMaterial === 'Fe') {
+                    // Fe: Picos pronunciados y valles profundos (Mayor amplitud, forma sinusoidal suave)
+                    y -= noise(x + offset, baseFreq, baseAmp);
+                } else {
+                    // Cr: Fragmentado, cambios bruscos (Alta frecuencia, ruido aleatorio alto)
+                    y -= noise(x + offset, baseFreq, baseAmp);
+                    // Añadir irregularidad abrupta
+                    if (x % 10 === 0) y += (Math.random() - 0.5) * jaggedness;
+                }
+
+                ctx.lineTo(x, y);
+            }
+
+            ctx.lineTo(w, h);
+            ctx.lineTo(0, h);
+            ctx.closePath();
+
+            // Relleno gradiente
+            const gradient = ctx.createLinearGradient(0, 0, 0, h);
+            gradient.addColorStop(0, fillStyle);
+            gradient.addColorStop(1, 'rgba(0,0,0,0)');
+            ctx.fillStyle = gradient;
+            ctx.fill();
+
+            // Trazo de línea superior
+            ctx.beginPath();
+            ctx.moveTo(0, baseline);
+            for (let x = 0; x < w; x+=2) {
+                let y = baseline;
+                if (currentMaterial === 'Fe') {
+                    y -= noise(x + offset, baseFreq, baseAmp);
+                } else {
+                    y -= noise(x + offset, baseFreq, baseAmp);
+                    if (x % 10 === 0) y += (Math.random() - 0.5) * jaggedness;
+                }
+                ctx.lineTo(x, y);
+            }
+            ctx.strokeStyle = lineColor;
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            // Texto decorativo en canvas
+            ctx.fillStyle = '#fff';
+            ctx.font = '12px Inter';
+            ctx.fillText(`Altura (capas) - Simulación: ${currentMaterial}`, 10, 20);
+
+            // Mover la animación
+            offset -= 1; // Velocidad de desplazamiento
+            if(Math.abs(offset) > 1000) offset = 0;
+
+            requestAnimationFrame(animateCanvas);
+        }
+
+        // Iniciar
+        updateSlide();
+
+    </script>
+</body>
+</html>
