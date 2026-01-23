@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inglés Básico - Resumen de Lecciones</title>
+    <style>
+        /* ESTILOS GENERALES (CSS) */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f7f6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 20px;
+        }
+
+        h1 { color: #2c3e50; }
+        h2 { color: #2980b9; border-left: 5px solid #2980b9; padding-left: 10px; margin-top: 30px; }
+        h3 { color: #e67e22; margin-top: 20px; }
+
+        /* NAVEGACIÓN */
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #bdc3c7;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        button:hover { background-color: #95a5a6; }
+
+        button.active {
+            background-color: #3498db;
+            font-weight: bold;
+            transform: scale(1.05);
+        }
+
+        /* CONTENIDO DE LAS LECCIONES */
+        .lesson-content {
+            display: none; /* Oculto por defecto */
+            animation: fadeIn 0.5s ease;
+        }
+
+        .lesson-content.active {
+            display: block; /* Se muestra si tiene la clase active */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* TABLAS Y LISTAS */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background-color: #fff;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #ecf0f1;
+            color: #2c3e50;
+        }
+
+        tr:nth-child(even) { background-color: #f9f9f9; }
+
+        .rule-box {
+            background-color: #e8f8f5;
+            border: 1px solid #a3e4d7;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            color: #16a085;
+            font-weight: bold;
+        }
+
+        .example {
+            font-style: italic;
+            color: #555;
+            background: #fefefe;
+            padding: 5px 10px;
+            border-left: 3px solid #ccc;
+            margin: 5px 0;
+        }
+
+        .important { color: #c0392b; font-weight: bold; }
+
+        /* RECUADROS DE VOCABULARIO */
+        .vocab-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .vocab-card {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .en-word { font-weight: bold; font-size: 1.1em; color: #2980b9; }
+        .es-word { color: #7f8c8d; }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>INGLÉS BÁSICO (Ogden & Ghio)</h1>
+        <p>Resumen Interactivo de las Dos Primeras Lecciones</p>
+    </header>
+
+    <!-- BOTONES DE NAVEGACIÓN -->
+    <div class="nav-buttons">
+        <button id="btn-lesson1" class="active" onclick="showLesson(1)">Lección 1</button>
+        <button id="btn-lesson2" onclick="showLesson(2)">Lección 2</button>
+    </div>
+
+    <!-- LECCIÓN 1 -->
+    <div id="lesson1" class="lesson-content active">
+        <h2>PRIMERA LECCIÓN: Fundamentos Básicos</h2>
+        <p>Esta lección establece las bases usando palabras conocidas y reglas gramaticales simples.</p>
+
+        <h3>1. Palabras Iguales (Cognados)</h3>
+        <p>Comenzamos con palabras que se escriben igual en inglés y español, solo cambia la pronunciación.</p>
+        <div class="vocab-grid">
+            <div class="vocab-card"><div class="en-word">Animal</div><div class="es-word">Animal</div></div>
+            <div class="vocab-card"><div class="en-word">Base</div><div class="es-word">Base</div></div>
+            <div class="vocab-card"><div class="en-word">Doctor</div><div class="es-word">Doctor</div></div>
+            <div class="vocab-card"><div class="en-word">Hospital</div><div class="es-word">Hospital</div></div>
+            <div class="vocab-card"><div class="en-word">General</div><div class="es-word">General</div></div>
+            <div class="vocab-card"><div class="en-word">Idea</div><div class="es-word">Idea</div></div>
+            <div class="vocab-card"><div class="en-word">Metal</div><div class="es-word">Metal</div></div>
+            <div class="vocab-card"><div class="en-word">Motor</div><div class="es-word">Motor</div></div>
+            <div class="vocab-card"><div class="en-word">Natural</div><div class="es-word">Natural</div></div>
+            <div class="vocab-card"><div class="en-word">No</div><div class="es-word">No</div></div>
+        </div>
+
+        <h3>2. La terminación -ing</h3>
+        <p>Agregando <strong>-ing</strong> al final de una palabra, indicamos la acción de esa cosa (gerundio/participio presente).</p>
+        <ul>
+            <li><strong>Light</strong> (Luz) -> <strong>Lighting</strong> (Alumbrando)</li>
+            <li><strong>Work</strong> (Trabajo) -> <strong>Working</strong> (Trabajando)</li>
+            <li><strong>Oil</strong> (Aceite) -> <strong>Oiling</strong> (Aceitando)</li>
+            <li><strong>Smile</strong> (Sonrisa) -> <strong>Smiling</strong> (Sonriendo)</li>
+        </ul>
+
+        <h3>3. Verbos IS y ARE</h3>
+        <p>Son fundamentales para decir "Es" o "Está" (IS) y "Son" o "Están" (ARE).</p>
+        <table>
+            <tr>
+                <th>Inglés</th>
+                <th>Español</th>
+                <th>Ejemplo</th>
+            </tr>
+            <tr>
+                <td>He <strong>is</strong> my brother</td>
+                <td>Él <strong>es</strong> mi hermano</td>
+            </tr>
+            <tr>
+                <td>They <strong>are</strong> sisters</td>
+                <td>Ellas <strong>son</strong> hermanas</td>
+            </tr>
+            <tr>
+                <td>They <strong>are</strong> walking</td>
+                <td>Ellos <strong>están</strong> caminando</td>
+            </tr>
+            <tr>
+                <td>The sky <strong>is</strong> blue</td>
+                <td>El cielo <strong>es</strong> azul</td>
+            </tr>
+        </table>
+
+        <h3>4. Regla de Oro: El Adjetivo</h3>
+        <div class="rule-box">
+            IMPORTANTE: En inglés, el adjetivo SIEMPRE va antes del sustantivo.
+        </div>
+        <table>
+            <tr>
+                <th>Estructura Inglesa</th>
+                <th>Traducción</th>
+            </tr>
+            <tr>
+                <td>A <strong>bad</strong> boy</td>
+                <td>Un niño <strong>malo</strong></td>
+            </tr>
+            <tr>
+                <td>A <strong>blue</strong> sky</td>
+                <td>Un cielo <strong>azul</strong></td>
+            </tr>
+            <tr>
+                <td>A <strong>clean</strong> plate</td>
+                <td>Un plato <strong>limpio</strong></td>
+            </tr>
+            <tr>
+                <td>A <strong>black</strong> hat</td>
+                <td>Un sombrero <strong>negro</strong></td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- LECCIÓN 2 -->
+    <div id="lesson2" class="lesson-content">
+        <h2>SEGUNDA LECCIÓN: El Sistema Verbal</h2>
+        <p>Aquí aprendemos los verbos básicos, los tiempos y fechas.</p>
+
+        <h3>1. Pronombres Personales</h3>
+        <table>
+            <tr>
+                <th>Inglés</th>
+                <th>Español</th>
+                <th>Nota</th>
+            </tr>
+            <tr><td>I</td><td>Yo</td><td></td></tr>
+            <tr><td>You</td><td>Usted / Ustedes</td><td></td></tr>
+            <tr><td>He</td><td>Él</td><td>Persona</td></tr>
+            <tr><td>She</td><td>Ella</td><td>Persona</td></tr>
+            <tr><td>It</td><td>Ello</td><td>Cosa o Animal</td></tr>
+            <tr><td>We</td><td>Nosotros</td><td></td></tr>
+            <tr><td>They</td><td>Ellos</td><td></td></tr>
+        </table>
+
+        <h3>2. Los 16 Verbos Básicos</h3>
+        <p>Todo el sistema se basa en estos 16 verbos.</p>
+        <div class="vocab-grid">
+            <div class="vocab-card"><div class="en-word">To Come</div><div class="es-word">Venir</div></div>
+            <div class="vocab-card"><div class="en-word">To Let</div><div class="es-word">Dejar</div></div>
+            <div class="vocab-card"><div class="en-word">To Go</div><div class="es-word">Ir</div></div>
+            <div class="vocab-card"><div class="en-word">To Put</div><div class="es-word">Poner</div></div>
+            <div class="vocab-card"><div class="en-word">To Take</div><div class="es-word">Tomar</div></div>
+            <div class="vocab-card"><div class="en-word">To Give</div><div class="es-word">Dar</div></div>
+            <div class="vocab-card"><div class="en-word">To Get</div><div class="es-word">Conseguir</div></div>
+            <div class="vocab-card"><div class="en-word">To Keep</div><div class="es-word">Mantener</div></div>
+            <div class="vocab-card"><div class="en-word">To Make</div><div class="es-word">Hacer</div></div>
+            <div class="vocab-card"><div class="en-word">To Do</div><div class="es-word">Hacer</div></div>
+            <div class="vocab-card"><div class="en-word">To Seem</div><div class="es-word">Parecer</div></div>
+            <div class="vocab-card"><div class="en-word">To Say</div><div class="es-word">Decir</div></div>
+            <div class="vocab-card"><div class="en-word">To See</div><div class="es-word">Ver</div></div>
+            <div class="vocab-card"><div class="en-word">To Send</div><div class="es-word">Enviar</div></div>
+            <div class="vocab-card"><div class="en-word">To Be</div><div class="es-word">Ser/Estar</div></div>
+            <div class="vocab-card"><div class="en-word">To Have</div><div class="es-word">Tener/Haber</div></div>
+        </div>
+
+        <h3>3. Tiempo Presente</h3>
+        <p>Para conjugar, quitamos el "To" y ponemos el pronombre.</p>
+        <div class="rule-box">
+            REGLA IMPORTANTE: Para <strong>He, She, It</strong>, agregamos una <strong>"s"</strong> al final del verbo.
+        </div>
+        <table>
+            <tr>
+                <th>Español</th>
+                <th>Inglés</th>
+            </tr>
+            <tr><td>Yo tomo</td><td>I <strong>take</strong></td></tr>
+            <tr><td>Él toma</td><td>He <strong>take-s</strong></td></tr>
+            <tr><td>Ella toma</td><td>She <strong>take-s</strong></td></tr>
+            <tr><td>Usted toma</td><td>You <strong>take</strong></td></tr>
+        </table>
+
+        <h3>4. Tiempo Futuro</h3>
+        <p>Es muy fácil. Solo ponemos la palabra <strong>WILL</strong> antes del verbo.</p>
+        <div class="example">
+            I <strong>will</strong> go (Yo iré) <br>
+            We <strong>will</strong> send (Nosotros enviaremos) <br>
+            She <strong>will</strong> come (Ella vendrá)
+        </div>
+
+        <h3>5. Artículos A y AN</h3>
+        <ul>
+            <li><strong>A</strong>: Se usa antes de consonantes (A book).</li>
+            <li><strong>AN</strong>: Se usa antes de vocales (An apple).</li>
+        </ul>
+
+        <h3>6. Días y Meses</h3>
+        <p>Para días de la semana se usa <strong>On</strong>.</p>
+        <ul>
+            <li><em>On Monday</em> (El lunes)</li>
+            <li><em>On Friday</em> (El viernes)</li>
+        </ul>
+    </div>
+
+</div>
+
+<!-- LOGICA JAVASCRIPT -->
+<script>
+    // Función para cambiar entre lecciones
+    function showLesson(lessonNumber) {
+        // 1. Ocultar todos los contenidos
+        document.getElementById('lesson1').classList.remove('active');
+        document.getElementById('lesson2').classList.remove('active');
+
+        // 2. Desactivar el estilo de todos los botones
+        document.getElementById('btn-lesson1').classList.remove('active');
+        document.getElementById('btn-lesson2').classList.remove('active');
+
+        // 3. Mostrar la lección seleccionada y activar su botón
+        if (lessonNumber === 1) {
+            document.getElementById('lesson1').classList.add('active');
+            document.getElementById('btn-lesson1').classList.add('active');
+        } else if (lessonNumber === 2) {
+            document.getElementById('lesson2').classList.add('active');
+            document.getElementById('btn-lesson2').classList.add('active');
+        }
+    }
+</script>
+
+</body>
+</html>
