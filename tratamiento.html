@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protocolo de Recuperación Neurovegetativa</title>
+    <style>
+        :root {
+            --primary: #2c3e50; /* Azul oscuro académico */
+            --accent: #3498db; /* Azul calmante */
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --alert-bg: #fdf2f2;
+            --alert-text: #c0392b;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Encabezado */
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 14px;
+            font-style: italic;
+        }
+
+        /* Sección de Perfil */
+        .profile-card {
+            background: #eaf2f8;
+            border-left: 5px solid var(--accent);
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 25px;
+            font-size: 0.9em;
+        }
+
+        .profile-card h3 {
+            margin-top: 0;
+            color: var(--primary);
+        }
+
+        /* Herramienta de Respiración */
+        .breathing-tool {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .circle-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .circle {
+            width: 100%;
+            height: 100%;
+            background-color: var(--accent);
+            border-radius: 50%;
+            opacity: 0.2;
+            transform: scale(1);
+            transition: all 4s ease-in-out; /* Inhale duration */
+        }
+
+        .circle.inhale {
+            transform: scale(1.5);
+            opacity: 0.6;
+        }
+
+        .circle.exhale {
+            transform: scale(1);
+            opacity: 0.2;
+            transition: all 6s ease-in-out; /* Exhale duration */
+        }
+
+        .instruction-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+            position: absolute;
+        }
+
+        .controls {
+            margin-top: 20px;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: var(--accent);
+        }
+
+        button:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+
+        /* Acordeón del Plan */
+        .plan-section {
+            margin-bottom: 10px;
+            background: var(--card-bg);
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .accordion-header {
+            background-color: var(--primary);
+            color: white;
+            padding: 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        .accordion-header:hover {
+            background-color: #34495e;
+        }
+
+        .accordion-content {
+            padding: 0 15px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background-color: #fff;
+        }
+
+        .accordion-content p {
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .accordion-content ul {
+            padding-left: 20px;
+            padding-bottom: 15px;
+        }
+
+        .active .accordion-content {
+            max-height: 500px; /* Altura suficiente para contenido */
+            overflow-y: auto;
+        }
+
+        .active .arrow {
+            transform: rotate(180deg);
+        }
+
+        .arrow {
+            transition: transform 0.3s;
+        }
+
+        /* Protocolo de Emergencia */
+        .emergency-card {
+            background-color: var(--alert-bg);
+            border: 1px solid #fadbd8;
+            color: var(--alert-text);
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 30px;
+        }
+
+        .emergency-card h3 {
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .emergency-steps {
+            margin-top: 10px;
+        }
+
+        .step {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .step-number {
+            font-weight: bold;
+            margin-right: 10px;
+            background: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.8em;
+            color: #95a5a6;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            h1 { font-size: 20px; }
+            .circle-container { width: 150px; height: 150px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Consultorio Neurofisiológico Personal</h1>
+        <div class="subtitle">Protocolo de Reentrenamiento Neurovegetativo y Recuperación Sistémica</div>
+    </header>
+
+    <!-- Perfil del Paciente -->
+    <div class="profile-card">
+        <h3>Perfil Fisiológico Activo</h3>
+        <p><strong>Paciente:</strong> Hombre de 52 años. Recuperación viral.</p>
+        <p><strong>Ejes Clave:</strong></p>
+        <ul>
+            <li><strong>Neuromuscular:</strong> Lesión cervical izquierda + Edentulismo (ATM) + Sensibilidad nerviosa.</li>
+            <li><strong>Visceral:</strong> Distonía gástrica + Eje Intestino-Cerebro reactivo.</li>
+            <li><strong>Psicosomático:</strong> Tendencia a hipervigilancia y somatización.</li>
+        </ul>
+        <p style="font-size: 0.9em; color: #555;">Objetivo: Calibrar el sistema nervioso autónomo (SNA) y reducir el ruido aferente.</p>
+    </div>
+
+    <!-- Herramienta de Respiración -->
+    <div class="breathing-tool">
+        <h3>Estimulación Vagal Guiada</h3>
+        <p>Ritmo Coherente: 4s Inhalación / 6s Exhalación</p>
+        
+        <div class="circle-container">
+            <div class="circle" id="breathCircle"></div>
+            <div class="instruction-text" id="breathText">Listo</div>
+        </div>
+
+        <div class="controls">
+            <button id="startBtn" onclick="startBreathing()">Iniciar Sesión</button>
+            <button id="stopBtn" onclick="stopBreathing()" disabled>Detener</button>
+        </div>
+        <p id="timerDisplay" style="margin-top:10px; font-weight:bold; color:#7f8c8d;">00:00</p>
+    </div>
+
+    <!-- Protocolo Diario (Acordeón) -->
+    <div id="daily-plan">
+        <h2 style="color: var(--primary); border-bottom: 1px solid #ccc; padding-bottom: 10px;">Plan Diario de Recuperación</h2>
+
+        <!-- Mañana -->
+        <div class="plan-section">
+            <div class="accordion-header" onclick="toggleSection(this)">
+                <span>🌅 Mañana: Activación Calma</span>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="accordion-content">
+                <p><strong>1. Hidratación y Calma:</strong> Al despertar, 3 minutos de respiración lenta en cama antes de levantarse.</p>
+                <p><strong>2. Micro-Alineación:</strong> Estiramientos suaves de cuello (sin dolor). Hombros abajo y atrás.</p>
+                <p><strong>3. Desayuno:</strong> Evitar café con el estómago vacío. Priorizar alimentos suaves para no disparar la distonía gástrica.</p>
+            </div>
+        </div>
+
+        <!-- Comida -->
+        <div class="plan-section">
+            <div class="accordion-header" onclick="toggleSection(this)">
+                <span>🍽️ Comida: Protección Gástrica</span>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="accordion-content">
+                <p><strong>Pre-comida:</strong> 10 respiraciones lentas para activar el sistema parasimpático (digerir requiere "freno", no "acelerador").</p>
+                <p><strong>Masticación:</strong> Debido al edentulismo, masticar lentamente para reducir carga mecánica en el estómago y la ATM.</p>
+                <p><strong>Post-comida:</strong> Caminata suave de 5-10 minutos. <strong>Prohibido acostarse</strong> inmediatamente para evitar reflujo.</p>
+            </div>
+        </div>
+
+        <!-- Tarde -->
+        <div class="plan-section">
+            <div class="accordion-header" onclick="toggleSection(this)">
+                <span>☕ Tarde: Pausas Vagales</span>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="accordion-content">
+                <p><strong>Cada 2 horas:</strong> Escaneo corporal de 30 segundos.</p>
+                <ul>
+                    <li>¿Mandíbula apretada? Soltar.</li>
+                    <li>¿Lengua en paladar? Colocarla suavemente.</li>
+                    <li>¿Hombros subidos? Exhalar y dejarlos caer.</li>
+                </ul>
+                <p><strong>Si sientes inquietud:</strong> Beber agua a temperatura temperatura sorbo a sorbo. Nombrar la sensación ("Es ruido neurovegetativo, no peligro") y respirar.</p>
+            </div>
+        </div>
+
+        <!-- Noche -->
+        <div class="plan-section">
+            <div class="accordion-header" onclick="toggleSection(this)">
+                <span>🌙 Noche: Apagado Sistémico</span>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="accordion-content">
+                <p><strong>60-90 min antes de dormir:</strong> Sin pantallas brillantes. Luz cálida.</p>
+                <p><strong>Ritual:</strong> 5-10 minutos de respiración con la herramienta de arriba.</p>
+                <p><strong>Postura:</strong> Almohada que alinee la columna cervical neutra.</p>
+                <p><strong>Si te despiertas:</strong> No luchar. Si no hay sueño en 20 min, levántate, hace algo tranquilo y vuelve.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Protocolo de Emergencia -->
+    <div class="emergency-card">
+        <h3>⚠️ Protocolo Agudo (Inquietud / Acidez / Dolor)</h3>
+        <div class="emergency-steps">
+            <div class="step">
+                <span class="step-number">1</span>
+                <span><strong>Agua Tibia:</strong> Beber un vaso de agua a temperatura ambiente lentamente para diluir el ácido.</span>
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                <span><strong>Postura Vertical:</strong> Mantenerse sentado o de pie. Gravedad ayuda al esfínter esofágico.</span>
+            </div>
+            <div class="step">
+                <span class="step-number">3</span>
+                <span><strong>Respiración de Emergencia:</strong> Usar la herramienta de arriba por 3 minutos (énfasis en exhalar largo). Esto corta el ciclo estrés -> espasmo.</span>
+            </div>
+            <div class="step">
+                <span class="step-number">4</span>
+                <span><strong>Cognitivo:</strong> "Es un error de regulación química, no un daño estructural". Pasará.</span>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Herramienta de apoyo educativo basada en neurofisiología clínica.<br>No sustituye el juicio médico profesional en emergencias reales.</p>
+    </footer>
+</div>
+
+<script>
+    // --- Lógica de Acordeón ---
+    function toggleSection(element) {
+        element.parentElement.classList.toggle("active");
+    }
+
+    // --- Lógica de Respiración ---
+    let breathingInterval;
+    let timerInterval;
+    let seconds = 0;
+    let isRunning = false;
+    
+    const circle = document.getElementById('breathCircle');
+    const text = document.getElementById('breathText');
+    const timerDisplay = document.getElementById('timerDisplay');
+    const startBtn = document.getElementById('startBtn');
+    const stopBtn = document.getElementById('stopBtn');
+
+    // Estado inicial
+    let isInhaling = false;
+
+    function startBreathing() {
+        if (isRunning) return;
+        
+        isRunning = true;
+        startBtn.disabled = true;
+        stopBtn.disabled = false;
+        
+        // Iniciar ciclo respiratorio inmediatamente
+        runBreathCycle();
+        
+        // Ciclo respiratorio: 4s inhale + 6s exhale = 10s total
+        breathingInterval = setInterval(runBreathCycle, 10000);
+
+        // Timer de sesión
+        timerInterval = setInterval(() => {
+            seconds++;
+            const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
+            const secs = (seconds % 60).toString().padStart(2, '0');
+            timerDisplay.textContent = `${mins}:${secs}`;
+        }, 1000);
+    }
+
+    function runBreathCycle() {
+        // Fase de Inhalación (4 segundos)
+        isInhaling = true;
+        circle.className = 'circle inhale'; // CSS transition: 4s
+        text.textContent = "Inhalar...";
+        
+        // Preparar siguiente fase (Exhalación) después de 4s
+        setTimeout(() => {
+            if (!isRunning) return; // Si se detuvo a mitad de ciclo
+            
+            // Fase de Exhalación (6 segundos)
+            isInhaling = false;
+            circle.className = 'circle exhale'; // CSS transition: 6s
+            text.textContent = "Exhalar...";
+            
+        }, 4000);
+    }
+
+    function stopBreathing() {
+        isRunning = false;
+        clearInterval(breathingInterval);
+        clearInterval(timerInterval);
+        
+        startBtn.disabled = false;
+        stopBtn.disabled = true;
+        
+        // Resetear UI
+        circle.className = 'circle';
+        text.textContent = "Listo";
+    }
+
+    // Abrir la primera sección del plan por defecto
+    document.querySelector('.accordion-header').click();
+</script>
+
+</body>
+</html>
