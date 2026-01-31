@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inglés Básico - Lecciones 3 y 4</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --background-color: #f4f7f6;
+            --text-color: #333;
+            --card-bg: #ffffff;
+            --success-color: #27ae60;
+            --error-color: #c0392b;
+            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .header-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            color: var(--primary-color);
+            margin-top: 1.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        /* Navigation */
+        nav {
+            background-color: #34495e;
+            padding: 0.5rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 0 20px;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            color: #bdc3c7;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .nav-btn:hover {
+            color: white;
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        .nav-btn.active {
+            color: white;
+            border-bottom-color: var(--accent-color);
+        }
+
+        /* Main Content */
+        main {
+            flex: 1;
+            max-width: 1000px;
+            width: 100%;
+            margin: 2rem auto;
+            padding: 0 20px;
+        }
+
+        .lesson-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .lesson-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Card Components */
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border: 1px solid #e0e0e0;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            text-align: justify;
+        }
+
+        /* Vocabulary Lists */
+        .vocab-list {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .vocab-item {
+            background-color: #ecf0f1;
+            padding: 10px 15px;
+            border-radius: 5px;
+            border-left: 4px solid var(--accent-color);
+            cursor: pointer;
+            transition: transform 0.2s;
+            position: relative;
+        }
+
+        .vocab-item:hover {
+            transform: translateX(5px);
+            background-color: #dde4e6;
+        }
+
+        .eng-word {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+
+        .pronunciation {
+            color: #7f8c8d;
+            font-style: italic;
+            font-size: 0.9rem;
+            margin-right: 10px;
+        }
+
+        .spanish-word {
+            color: #2980b9;
+            display: block;
+            margin-top: 5px;
+        }
+
+        /* Tables */
+        .grammar-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        .grammar-table th, .grammar-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .grammar-table th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .grammar-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        /* Interactive Exercises */
+        .exercise-box {
+            background-color: #fff8e1;
+            border: 1px solid #ffe0b2;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+        }
+
+        .input-group {
+            margin-bottom: 1rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .btn-action {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+
+        .btn-action:hover {
+            background-color: #2980b9;
+        }
+
+        .feedback {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+            font-weight: 500;
+        }
+
+        .feedback.success {
+            background-color: #d4edda;
+            color: #155724;
+            display: block;
+        }
+
+        .feedback.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            display: block;
+        }
+
+        /* Pronunciation Guide Tooltip */
+        .pronounciation-guide {
+            font-size: 0.8rem;
+            color: #666;
+            background: #eee;
+            padding: 5px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 1.5rem 20px;
+            margin-top: auto;
+            font-size: 0.9rem;
+            border-top: 5px solid var(--accent-color);
+        }
+
+        footer strong {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                text-align: center;
+            }
+            .nav-btn {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+            .vocab-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-container">
+        <h1>INGLES BASICO</h1>
+        <span style="font-size: 0.9rem; opacity: 0.8;">Charles K. Ogden & Augusto Ghio D.</span>
+    </div>
+</header>
+
+<nav>
+    <div class="nav-container">
+        <button class="nav-btn active" onclick="switchTab('lesson3')">Lección 3</button>
+        <button class="nav-btn" onclick="switchTab('lesson4')">Lección 4</button>
+    </div>
+</nav>
+
+<main>
+    <!-- LECCION 3 -->
+    <section id="lesson3" class="lesson-content active">
+        <div class="card">
+            <h2>TERCERA LECCIÓN</h2>
+            <div class="pronounciation-guide">
+                Nota: La pronunciación figurada entre paréntesis ayuda a sonar las palabras en español.
+            </div>
+
+            <h3>The (El, La, Los, Las)</h3>
+            <p>
+                "The" es el artículo definido en inglés. Se usa para referirse a algo específico, a diferencia de "A" o "An" que son indeterminados.
+            </p>
+            <ul class="vocab-list">
+                <li class="vocab-item">
+                    <span class="eng-word">The <span class="pronunciation">(dii)</span></span>
+                    <span class="spanish-word">El, la, los, las (artículo definido)</span>
+                </li>
+            </ul>
+
+            <h3>Would, May, Might</h3>
+            <p>Palabras auxiliares modales que se utilizan para expresar deseo, posibilidad o permiso.</p>
+            <ul class="vocab-list">
+                <li class="vocab-item">
+                    <span class="eng-word">Would <span class="pronunciation">(uúd)</span></span>
+                    <span class="spanish-word">Quisiera, haría, gustaría</span>
+                </li>
+                <li class="vocab-item">
+                    <span class="eng-word">May <span class="pronunciation">(méi)</span></span>
+                    <span class="spanish-word">Poder, permiso, posibilidad</span>
+                </li>
+                <li class="vocab-item">
+                    <span class="eng-word">Might <span class="pronunciation">(máit)</span></span>
+                    <span class="spanish-word">Podría (posibilidad remota)</span>
+                </li>
+            </ul>
+
+            <h3>Plural de los sustantivos</h3>
+            <p>En inglés, para formar el plural de la mayoría de los sustantivos, simplemente se agrega una "s" al final de la palabra.</p>
+            <div class="exercise-box">
+                <p><strong>Ejemplos:</strong></p>
+                <ul class="vocab-list">
+                    <li class="vocab-item"><span class="eng-word">Tree</span> -> <span class="eng-word">Trees</span></li>
+                    <li class="vocab-item"><span class="eng-word">Map</span> -> <span class="eng-word">Maps</span></li>
+                    <li class="vocab-item"><span class="eng-word">Day</span> -> <span class="eng-word">Days</span></li>
+                </ul>
+            </div>
+
+            <h3>Invariabilidad de los adjetivos</h3>
+            <p>Una de las grandes ventajas del inglés básico es que los adjetivos <strong>no cambian</strong> por género (masculino/femenino) ni por número (singular/plural).</p>
+            <div class="exercise-box">
+                <table class="grammar-table">
+                    <thead>
+                        <tr>
+                            <th>Singular / Masculino</th>
+                            <th>Plural / Femenino</th>
+                            <th>Español</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>A good man</td>
+                            <td>Good women</td>
+                            <td>Un hombre bueno / Mujeres buenas</td>
+                        </tr>
+                        <tr>
+                            <td>The red apple</td>
+                            <td>The red apples</td>
+                            <td>La manzana roja / Las manzanas rojas</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Números (Numbers)</h3>
+            <p>Aprenda los números básicos, fundamentales para cualquier comunicación.</p>
+            <ul class="vocab-list">
+                <li class="vocab-item"><span class="eng-word">One <span class="pronunciation">(uán)</span></span> <span class="spanish-word">Uno</span></li>
+                <li class="vocab-item"><span class="eng-word">Two <span class="pronunciation">(túu)</span></span> <span class="spanish-word">Dos</span></li>
+                <li class="vocab-item"><span class="eng-word">Three <span class="pronunciation">(zríi)</span></span> <span class="spanish-word">Tres</span></li>
+                <li class="vocab-item"><span class="eng-word">Four <span class="pronunciation">(fóoR)</span></span> <span class="spanish-word">Cuatro</span></li>
+                <li class="vocab-item"><span class="eng-word">Five <span class="pronunciation">(fáiv)</span></span> <span class="spanish-word">Cinco</span></li>
+                <li class="vocab-item"><span class="eng-word">Six <span class="pronunciation">(síks)</span></span> <span class="spanish-word">Seis</span></li>
+                <li class="vocab-item"><span class="eng-word">Seven <span class="pronunciation">(séven)</span></span> <span class="spanish-word">Siete</span></li>
+                <li class="vocab-item"><span class="eng-word">Eight <span class="pronunciation">(éit)</span></span> <span class="spanish-word">Ocho</span></li>
+                <li class="vocab-item"><span class="eng-word">Nine <span class="pronunciation">(náin)</span></span> <span class="spanish-word">Nueve</span></li>
+                <li class="vocab-item"><span class="eng-word">Ten <span class="pronunciation">(ten)</span></span> <span class="spanish-word">Diez</span></li>
+            </ul>
+
+            <h3>La terminación "ly"</h3>
+            <p>La terminación "ly" convierte a muchos adjetivos en adverbios.</p>
+            <ul class="vocab-list">
+                <li class="vocab-item">
+                    <span class="eng-word">Quick (Rápido)</span> -> <span class="eng-word">Quickly (Rápidamente)</span>
+                </li>
+                <li class="vocab-item">
+                    <span class="eng-word">Kind (Bondadoso)</span> -> <span class="eng-word">Kindly (Bondadosamente)</span>
+                </li>
+            </ul>
+
+            <div class="exercise-box">
+                <h3>Ejercicio Práctico 3</h3>
+                <p>Complete la frase traduciendo al inglés. Use "The" si es necesario.</p>
+                <div class="input-group">
+                    <label>1. Los árboles (Trees) son verdes (Green).</label>
+                    <input type="text" id="ex3-1" placeholder="Escriba su respuesta aquí...">
+                    <div class="feedback" id="fb-3-1"></div>
+                </div>
+                <button class="btn-action" onclick="checkExercise('ex3-1', 'The trees are green', 'fb-3-1')">Verificar Respuesta</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- LECCION 4 -->
+    <section id="lesson4" class="lesson-content">
+        <div class="card">
+            <h2>CUARTA LECCIÓN</h2>
+            
+            <h3>Números Ordinales</h3>
+            <p>Se utilizan para indicar orden o posición.</p>
+            <ul class="vocab-list">
+                <li class="vocab-item"><span class="eng-word">First <span class="pronunciation">(féerst)</span></span> <span class="spanish-word">Primero</span></li>
+                <li class="vocab-item"><span class="eng-word">Second <span class="pronunciation">(sécond)</span></span> <span class="spanish-word">Segundo</span></li>
+                <li class="vocab-item"><span class="eng-word">Third <span class="pronunciation">(zérd)</span></span> <span class="spanish-word">Tercero</span></li>
+                <li class="vocab-item"><span class="eng-word">Fourth <span class="pronunciation">(fóoRz)</span></span> <span class="spanish-word">Cuarto</span></li>
+            </ul>
+
+            <h3>Tiempo Pasado (Past Tense)</h3>
+            <p>En el Inglés Básico, para formar el pasado de los verbos regulares, simplemente se agrega la terminación <strong>"ed"</strong> al verbo. Es una regla muy sencilla que elimina irregularidades complejas.</p>
+            
+            <h3>La terminación "ed"</h3>
+            <ul class="vocab-list">
+                <li class="vocab-item"><span class="eng-word">Walk (Caminar)</span> -> <span class="eng-word">Walked (Caminó)</span></li>
+                <li class="vocab-item"><span class="eng-word">Play (Jugar)</span> -> <span class="eng-word">Played (Jugó)</span></li>
+                <li class="vocab-item"><span class="eng-word">Wash (Lavar)</span> -> <span class="eng-word">Washed (Lavó)</span></li>
+            </ul>
+
+            <h3>Do y Make</h3>
+            <p>En español, ambos verbos suelen traducirse como "Hacer", pero en inglés tienen usos distintos:</p>
+            <table class="grammar-table">
+                <thead>
+                    <tr>
+                        <th>Verbo</th>
+                        <th>Uso Principal</th>
+                        <th>Ejemplo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Make</strong></td>
+                        <td>Crear, construir, fabricar (algo material)</td>
+                        <td>Make a cake (Hacer un pastel)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Do</strong></td>
+                        <td>Realizar una acción, tarea, trabajo abstracto</td>
+                        <td>Do work (Hacer trabajo)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Plural de los sustantivos terminados en Y</h3>
+            <p>Regla especial: Si el sustantivo termina en "y" precedida de una consonante, se cambia la "y" por "ies". Si termina en vocal, solo se agrega "s".</p>
+            <ul class="vocab-list">
+                <li class="vocab-item"><span class="eng-word">Baby (Bebé)</span> -> <span class="eng-word">Babies</span></li>
+                <li class="vocab-item"><span class="eng-word">Day (Día)</span> -> <span class="eng-word">Days</span></li>
+            </ul>
+
+            <h3>El verbo TO HAVE (Haber o Tener)</h3>
+            <p>Este verbo es fundamental para expresar posesión. Presenta una pequeña irregularidad en la tercera persona.</p>
+            
+            <h4>Presente</h4>
+            <ul class="vocab-list">
+                <li class="vocab-item">I have (Yo tengo)</li>
+                <li class="vocab-item">You have (Usted tiene)</li>
+                <li class="vocab-item">He has (El tiene) - <em>¡Ojo! Se agrega 's'</em></li>
+                <li class="vocab-item">We have (Nosotros tenemos)</li>
+                <li class="vocab-item">They have (Ellos tienen)</li>
+            </ul>
+
+            <h4>Pasado</h4>
+            <ul class="vocab-list">
+                <li class="vocab-item">I had (Yo tuve)</li>
+                <li class="vocab-item">He had (El tuvo)</li>
+                <li class="vocab-item">We had (Nosotros tuvimos)</li>
+            </ul>
+
+            <div class="exercise-box">
+                <h3>Examen de la Cuarta Lección</h3>
+                <p>Traduzca las siguientes frases al inglés:</p>
+
+                <div class="input-group">
+                    <label>1. El tuvo (had) un mapa.</label>
+                    <input type="text" id="ex4-1" placeholder="Respuesta...">
+                    <div class="feedback" id="fb-4-1"></div>
+                </div>
+                
+                <div class="input-group">
+                    <label>2. Ellos caminaron (walk - pasado).</label>
+                    <input type="text" id="ex4-2" placeholder="Respuesta...">
+                    <div class="feedback" id="fb-4-2"></div>
+                </div>
+
+                <div class="input-group">
+                    <label>3. Bebés (plural de baby).</label>
+                    <input type="text" id="ex4-3" placeholder="Respuesta...">
+                    <div class="feedback" id="fb-4-3"></div>
+                </div>
+
+                <button class="btn-action" onclick="checkMultiple(['ex4-1', 'ex4-2', 'ex4-3'], ['He had a map', 'They walked', 'Babies'], ['fb-4-1', 'fb-4-2', 'fb-4-3'])">Verificar Todo</button>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <p>
+        <strong>Elaborado por el Profesor Ángel Chacín Ávila, Licenciado en Física y Especialista en Ciencias Computacionales, Docente e Investigador de la Universidad Nacional Experimental de la Seguridad, Núcleo Zulia</strong>
+    </p>
+    <p style="opacity: 0.7; font-size: 0.8rem;">&copy; 2023 Sistema Interactivo de Enseñanza</p>
+</footer>
+
+<script>
+    // Lógica para cambiar de pestaña (Lección 3 a 4)
+    function switchTab(lessonId) {
+        // Remover clase active de todos los contenidos
+        document.querySelectorAll('.lesson-content').forEach(content => {
+            content.classList.remove('active');
+        });
+        // Remover clase active de todos los botones
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+
+        // Activar el contenido seleccionado
+        document.getElementById(lessonId).classList.add('active');
+
+        // Activar el botón correspondiente
+        const index = lessonId === 'lesson3' ? 0 : 1;
+        document.querySelectorAll('.nav-btn')[index].classList.add('active');
+    }
+
+    // Lógica para verificar ejercicios individuales
+    function checkExercise(inputId, correctAnswer, feedbackId) {
+        const input = document.getElementById(inputId);
+        const feedback = document.getElementById(feedbackId);
+        const userAnswer = input.value.trim();
+
+        if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
+            feedback.textContent = "¡Correcto! Muy bien hecho.";
+            feedback.className = "feedback success";
+        } else {
+            feedback.textContent = "Incorrecto. Intente de nuevo. La respuesta correcta es: " + correctAnswer;
+            feedback.className = "feedback error";
+        }
+    }
+
+    // Lógica para verificar múltiples ejercicios a la vez
+    function checkMultiple(inputIds, correctAnswers, feedbackIds) {
+        let allCorrect = true;
+
+        for (let i = 0; i < inputIds.length; i++) {
+            const input = document.getElementById(inputIds[i]);
+            const feedback = document.getElementById(feedbackIds[i]);
+            const userAnswer = input.value.trim();
+
+            if (userAnswer.toLowerCase() === correctAnswers[i].toLowerCase()) {
+                feedback.textContent = "¡Correcto!";
+                feedback.className = "feedback success";
+            } else {
+                feedback.textContent = "Incorrecto. Correcto: " + correctAnswers[i];
+                feedback.className = "feedback error";
+                allCorrect = false;
+            }
+        }
+    }
+</script>
+
+</body>
+</html>
