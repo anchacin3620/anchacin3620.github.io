@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Defensa de Tesis: Simulación Monte Carlo</title>
+    
+    <!-- Librerías de Exportación -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/gitbrent/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
+
+    <!-- Configuración de MathJax -->
+    <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        renderActions: { addMenu: [] } 
+      },
+      svg: { fontCache: 'global' } 
+    };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        /* --- ESTILOS GENERALES --- */
+        :root {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --accent-color: #64b5f6;
+            --secondary-color: #90a4ae;
+            --slide-bg: #1e1e1e;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- DIAPOSITIVAS --- */
+        .slides-container {
+            flex: 1;
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 3rem 5rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.6s ease-in-out, transform 0.6s ease;
+            transform: scale(0.95);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            background-color: var(--bg-color);
+            z-index: 1;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
+            z-index: 10;
+        }
+
+        .slide.exporting {
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 1;
+            visibility: visible;
+            transform: none;
+            z-index: 5;
+            padding: 2rem; 
+            width: 1280px;
+            height: 720px;
+            overflow: hidden;
+        }
+
+        /* --- TIPOGRAFÍA --- */
+        h1 { font-size: 2.5rem; color: var(--accent-color); margin-bottom: 1rem; line-height: 1.2; }
+        h2 { font-size: 2rem; color: var(--accent-color); margin-bottom: 1.5rem; border-bottom: 2px solid var(--secondary-color); padding-bottom: 0.5rem; width: 100%; }
+        h3 { font-size: 1.4rem; color: #fff; margin: 1rem 0 0.5rem 0; }
+        p, li { font-size: 1.1rem; line-height: 1.6; margin-bottom: 1rem; max-width: 95%; text-align: justify; }
+        ul { margin-left: 2rem; }
+        
+        /* --- ELEMENTOS --- */
+        .math-block { background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; text-align: center; border-left: 4px solid var(--accent-color); }
+        .highlight-box { background-color: rgba(100, 181, 246, 0.1); border: 1px solid var(--accent-color); padding: 1rem; border-radius: 6px; margin: 1rem 0; }
+        .chapter-tag { background-color: var(--secondary-color); color: #121212; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; margin-bottom: 10px; text-transform: uppercase; }
+
+        /* --- IMÁGENES Y TABLAS --- */
+        figure { margin: 1.5rem 0; text-align: center; width: 100%; }
+        
+        img { 
+            max-width: 100%; 
+            height: auto; 
+            max-height: 50vh; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5); 
+            object-fit: contain; 
+        }
+
+        .grid-images { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; width: 100%; align-items: center; }
+        
+        .feature-img-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.03);
+            padding: 10px;
+        }
+
+        figcaption { margin-top: 0.5rem; font-style: italic; font-size: 0.9rem; color: var(--secondary-color); }
+        
+        table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 1rem; }
+        th, td { border: 1px solid #555; padding: 10px; text-align: center; }
+        th { background-color: var(--accent-color); color: #121212; }
+
+        /* --- TÍTULO --- */
+        .title-slide { 
+            text-align: center; 
+            align-items: center; 
+            justify-content: center; 
+            background: linear-gradient(rgba(18,18,18,0.9), rgba(18,18,18,0.9)), 
+                        radial-gradient(circle at 30% 30%, #2c3e50 0%, #000000 100%);
+        }
+        .title-slide h1 { font-size: 2.8rem; text-shadow: 2px 2px 4px #000; }
+        .subtitle { font-size: 1.5rem; color: var(--secondary-color); margin-bottom: 2rem; }
+
+        /* --- UI CONTROLS --- */
+        .controls {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            gap: 1rem;
+            z-index: 100;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            background-color: var(--accent-color);
+            color: #121212;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s, background-color 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            font-size: 0.9rem;
+        }
+        .btn:hover { background-color: #fff; transform: translateY(-2px); }
+        .btn.export-btn { background-color: #ffa726; color: #121212; }
+
+        .progress-bar {
+            position: fixed; bottom: 0; left: 0; height: 5px;
+            background-color: var(--accent-color); width: 0%; transition: width 0.3s; z-index: 100;
+        }
+        .slide-number { position: fixed; bottom: 2rem; left: 2rem; font-size: 1rem; color: var(--secondary-color); z-index: 100; }
+
+        /* Overlay para "Cargando..." */
+        #loading-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); color: #fff; z-index: 9999;
+            display: none; flex-direction: column; justify-content: center; align-items: center;
+        }
+        #loading-overlay h2 { color: var(--accent-color); border: none; }
+        .spinner {
+            border: 8px solid #f3f3f3; border-top: 8px solid var(--accent-color);
+            border-radius: 50%; width: 60px; height: 60px; animation: spin 1s linear infinite; margin-bottom: 20px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        @media (max-width: 768px) {
+            .slide { padding: 1rem; }
+            h1 { font-size: 1.8rem; }
+            .grid-images { grid-template-columns: 1fr; }
+            .controls { bottom: 1rem; right: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Overlay de Carga -->
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+        <h2 id="loading-text">Generando archivo...</h2>
+        <p>Esto puede tardar unos segundos, por favor espere.</p>
+    </div>
+
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="slide-number" id="slideNumber">1 / 20</div>
+
+    <div class="slides-container">
+
+        <!-- PORTADA -->
+        <section class="slide active title-slide">
+            <h3 style="color: #fff; text-shadow: 1px 1px 3px #000;">UNIVERSIDAD DEL ZULIA<br>FACULTAD EXPERIMENTAL DE CIENCIAS</h3>
+            <h1 style="margin-top: 1rem;">SIMULACIÓN MONTE CARLO DE LOS PROCESOS DE DEPOSICIÓN DE PELÍCULAS DELGADAS DE Cr y Fe SOBRE UN SUSTRATO SÓLIDO DE Mg (001)</h1>
+            
+            <div class="highlight-box" style="margin-top: 2rem; text-align: left; display: inline-block; background: rgba(0,0,0,0.7);">
+                <p><strong> Autor:</strong> Br. Ángel Chacín Ávila</p>
+                <p><strong> Tutora:</strong> Msc. Emily Chávez Rivas</p>
+                <p><strong> Cotutor:</strong> Dr. José Fermín</p>
+            </div>
+            <p style="margin-top: 2rem; font-size: 1.2rem; color: #fff;">Maracaibo, Enero de 2026</p>
+        </section>
+
+        <!-- ÍNDICE -->
+        <section class="slide">
+            <div class="grid-images">
+                <div>
+                    <span class="chapter-tag">Estructura de la Presentación</span>
+                    <h2>Índice General</h2>
+                    <ul style="line-height: 2;">
+                        <li><strong>Resumen</strong></li>
+                        <li><strong>Capítulo I:</strong> Introducción</li>
+                        <li><strong>Capítulo II:</strong> Ecuación Maestra Probabilística</li>
+                        <li><strong>Capítulo III:</strong> Método de Monte Carlo</li>
+                        <li><strong>Capítulo IV:</strong> Análisis y Discusión de Resultados</li>
+                        <li><strong>Capítulo V:</strong> Conclusión y Recomendaciones</li>
+                    </ul>
+                </div>
+                <div class="feature-img-container">
+                    <!-- SVG Abstracto: Red de nodos -->
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgNDAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI1IiBmaWxsPSIjNjRiNWY2IiBvcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSIyMDAiIGN5PSI1MCIgcj0iNSIgZmlsbD0iIzY0YjVmNiIgb3BhY2l0eT0iMC41Ii8+PGNpcmNsZSBjeD0iMzUwIiBjeT0iMTUwIiByPSI1IiBmaWxsPSIjNjRiNWY2IiBvcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSIxMDAiIGN5PSIyNTAiIHI9IjUiIGZpbGw9IiM2NGI1ZjYiIG9wYWNpdHk9IjAuNSIvPjxjaXJjbGUgY3g9IjMwMCIgY3k9IjMwMCIgcj0iNSIgZmlsbD0iIzY0YjVmNiIgb3BhY2l0eT0iMC41Ii8+PGxpbmUgeDE9IjUwIiB5MT0iNTAiIHgyPSIyMDAiIHkyPSI1MCIgc3Ryb2tlPSIjOTA5MDkwIiBzdHJva2Utd2lkdGg9IjIiLz48bGluZSB4MT0iMjAwIiB5MT0iNTAiIHgyPSIzNTAiIHkyPSIxNTAiIHN0cm9rZT0iIzkwOTA5MCIgc3Ryb2tlLXdpZHRoPSIyIi8+PGxpbmUgeDE9IjUwIiB5MT0iNTAiIHgyPSIxMDAiIHkyPSIyNTAiIHN0cm9rZT0iIzkwOTA5MCIgc3Ryb2tlLXdpZHRoPSIyIi8+PGxpbmUgeDE9IjEwMCIgeTE9IjI1MCIgeDI9IjMwMCIgeTI9IjMwMCIgc3Ryb2tlPSIjOTA5MDkwIiBzdHJva2Utd2lkdGg9IjIiLz48bGluZSB4MT0iMzAwIiB5MT0iMzAwIiB4Mj0iMzUwIiB5Mj0iMTUwIiBzdHJva2U9IiM5MDkwOTAiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==" alt="Red abstracta">
+                </div>
+            </div>
+        </section>
+
+        <!-- RESUMEN -->
+        <section class="slide">
+            <span class="chapter-tag">Resumen</span>
+            <h2>Resumen</h2>
+            <div class="grid-images">
+                <div>
+                    <p>Este trabajo presenta una simulación computacional mediante el método Monte Carlo Cinético para modelar la deposición de películas delgadas de Cr y Fe sobre un sustrato de Mg (001).</p>
+                    <ul>
+                        <li><strong>Objetivo:</strong> Caracterizar mecanismos, estudiar difusión y analizar el modo de deposición balístico.</li>
+                        <li><strong>Herramientas:</strong> Código Fortran (Simulación) y Python (Análisis/Visualización).</li>
+                        <li><strong>Resultados:</strong> Fe muestra mayor movilidad superficial (picos/valles pronunciados), Cr presenta estructuras más rígidas/fragmentadas.</li>
+                    </ul>
+                </div>
+                <div class="feature-img-container">
+                    <!-- SVG Terminal de Código -->
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iIzJkMmQyZCIgcng9IjEwIi8+PHBhdGggZD0iTTEwIDUwaDM4MHYyMGgtMzgwIiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIwLjEiLz48Y2lyY2xlIGN4PSIyMCIgY3k9IjM1IiByPSI1IiBmaWxsPSIjZmY1MDUwIi8+PGNpcmNsZSBjeD0iNDAiIGN5PSIzNSIgcj0iNSIgZmlsbD0iI2ZmYmMwMCIvPjxjaXJjbGUgY3g9IjYwIiBjeT0iMzUiIHI9IjUiIGZpbGw9IiM0NGI4MDAiLz48cGF0aCBkPSJNNDAgNjBoNDBsLTQwIDQwaDMwIiBmaWxsPSJub25lIiBzdHJva2U9IiM2NGI1ZjYiIHN0cm9rZS13aWR0aD0iMyIvPjxsaW5lIHgxPSIxMDAiIHkxPSI2MCIgeDI9IjM1MCIgeTI9IjYwIiBzdHJva2U9IiM2NGI1ZjYiIHN0cm9rZS13aWR0aD0iMyIvPjxsaW5lIHgxPSIxMDAiIHkxPSIxMDAiIHgyPSIzMDAiIHkyPSIxMDAiIHN0cm9rZT0iIzY0YjVmNiIgc3Ryb2tlLXdpZHRoPSIzIi8+PC9zdmc+" alt="Código">
+                </div>
+            </div>
+        </section>
+
+        <!-- CAPÍTULO I: PELÍCULAS DELGADAS -->
+        <section class="slide">
+            <span class="chapter-tag">Capítulo I</span>
+            <h2>1. Introducción</h2>
+            <h3>1.1 Películas Delgadas</h3>
+            <div class="grid-images">
+                <div>
+                    <p>Capas de material con espesores nanométricos a micrométricos. Sus propiedades (mecánicas, ópticas, magnéticas) difieren del material masivo debido a efectos de tamaño e interacciones interfaciales.</p>
+                    <p>El Mg (001) se usa como sustrato por su ligereza, pero requiere recubrimientos (Cr/Fe) para mejorar resistencia a la corrosión.</p>
+                </div>
+                <div class="feature-img-container">
+                    <!-- IMAGEN ADJUNTA 1: Películas Delgadas (Thin Film / Substrate) -->
+                    <img src="https://z-cdn-media.chatglm.cn/files/d142db6b-9f82-46f3-81ba-e51ab45481f6.jpg?auth_key=1870284280-8f5ee6ecc7b2418fa4f70ee31f7e4bbd-0-738b5c8f37096a2a1e128bca6f6cf378" alt="Diagrama de Película Delgada sobre Sustrato">
+                </div>
+            </div>
+        </section>
+
+        <!-- CAPÍTULO I: SIMULACIÓN -->
+        <section class="slide">
+            <span class="chapter-tag">Capítulo I</span>
+            <h2>1. Introducción (Continuación)</h2>
+            <h3>1.2 Simulación Estocástica</h3>
+            <div class="grid-images">
+                <div>
+                    <p>Permite modelar procesos probabilísticos (adsorción, difusión) imposibles de resolver de forma determinista a escalas atómicas. El Método de Monte Carlo Cinético (KMC) es ideal para procesos fuera del equilibrio como el crecimiento de películas.</p>
+                    <div class="highlight-box">
+                        <strong>¿Por qué Simular?</strong><br>
+                        Para predecir morfologías atómicas antes de la fabricación experimental, ahorrando tiempo y recursos.
+                    </div>
+                </div>
+                <div class="feature-img-container">
+                    <!-- SVG Gráfico Estocástico -->
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIj48bGluZSB4MT0iMjAiIHkxPSIyODAiIHgyPSIzODAiIHkyPSIyODAiIHN0cm9rZT0iIzkwOTA5MCIgc3Ryb2tlLXdpZHRoPSIyIi8+PGxpbmUgeDE9IjIwIiB5MT0iMjgwIiB4Mj0iMjAwIiB5Mj0iMjAiIHN0cm9rZT0iIzY0YjVmNiIgc3Ryb2tlLXdpZHRoPSIzIi8+PHBvbHlnb24gcG9pbnRzPSIyMDAsMjAgMjUwLDE1MCAzNTAsODAgMzgwLDUwIDMwMCwyMDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmYTcyNiIgc3Ryb2tlLXdpZHRoPSIyIiBvcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSIyMDAiIGN5PSIyMCIgcj0iNSIgZmlsbD0iIzY0YjVmNiIvPjxjaXJjbGUgY3g9IjM4MCIgY3k9IjUwIiByPSI1IiBmaWxsPSIjNmZmNWY2Ii8+PC9zdmc+" alt="Gráfico estocástico">
+                </div>
+            </div>
+        </section>
+
+        <!-- CAPÍTULO II: FUNDAMENTOS -->
+        <section class="slide">
+            <span class="chapter-tag">Capítulo II</span>
+            <h2>2. Ecuación Maestra Probabilística</h2>
+            <h3>2.2 Fundamentos</h3>
+            <div class="grid-images">
+                <div>
+                    <p>Describe la evolución temporal de sistemas estocásticos mediante la probabilidad $P(\sigma,t)$ de estar en un estado $\sigma$ en el tiempo $t$:</p>
+                    
+                    <div class="math-block">
+                        $$ \frac{dP(\sigma,t)}{dt} = \sum_{\sigma'} [W(\sigma' \to \sigma)P(\sigma',t) - W(\sigma \to \sigma')P(\sigma,t)] $$                     </div>
+                    
+                    <ul>
+                        <li>$W(\sigma' \to \sigma)$: Tasa de transición del estado $\sigma'$ a $\sigma$.</li>
+                        <li>En KMC, no resolvemos la ecuación diferencial directamente, sino que simulamos trayectorias basadas en $W$.</li>
+                    </ul>
+                </div>
+                <div class="feature-img-container">
+                    <!-- SVG Partículas abstractas -->
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgNDAwIj48Y2lyY2xlIGN4PSIyMDAiIGN5PSIyMDAiIHI9IjgwIiBmaWxsPSJub25lIiBzdHJva2U9IiM2NGI1ZjYiIHN0cm9rZS13aWR0aD0iMSIvPjxjaXJjbGUgY3g9IjIwMCIgY3k9IjIwMCIgcj0iMjAiIGZpbGw9IiM2NGI1ZjYiLz48cGF0aCBkPSJNMjAwIDIwMCBMNDAgNDAgTDM2MCA0MCAzNjAgMzYwIDQwIDM2MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOTA5MDkwIiBzdHJva2Utd2lkdGg9IjIiLz48L3N2Zz4=" alt="Partículas">
+                </div>
+            </div>
+        </section>
+
+        <!-- CAPÍTULO II: TASAS -->
+        <section class="slide">
+            <span class="chapter-tag">Capítulo II</span>
+            <h2>2. Derivación de las Tasas de Transición</h2>
+            
+            <h3>2.4.1 Difusión Superficial</h3>
+            <p>Modelada por la ecuación de Arrhenius:</p>
+            <div class="math-block">
+                $$ W_{diff} = \nu \exp\left( -\frac{E_d}{k_B T_{subs}} \right) $$             </div>
+            <p>Donde $\nu = 10^{13} s^{-1}$, $T_{subs} = 500 K$. <br>Cr: $E_d \in [0.01, 0.25]$ eV | Fe: $E_d \in [0.5, 1.0]$ eV.</p>
+
+            <h3>2.4.2 Adsorción</h3>
+            <p>Probabilidad de adherencia en modo balístico ($E_{prom}=5.0$ eV):</p>
+            <div class="math-block">
+                $$ P_{ads} = \text{Adhesion} + 0.03 \cdot r $$             </div>
+            <p>Cr: Adhesion $\approx 0.98$ | Fe: Adhesion $\approx 0.95$.</p>
+        </section>
+
+        <!-- CAPÍTULO III: KMC (MODELO BALÍSTICO) -->
+        <section class="slide">
+            <span class="chapter-tag">Capítulo III</span>
+            <h2>3. Método de Monte Carlo</h2>
+            <h3>3.2 Método de Monte Carlo Cinético (KMC)</h3>
+            <div class="grid-images">
+                <div>
+                    <p>Simula la evolución temporal del sistema mediante eventos discretos. El modo balístico considera el impacto directo de partículas de alta energía.</p>
+                    <h3>3.4 Construcción del Algoritmo</h3>
+                    <ol>
+                        <li><strong>Inicialización:</strong> Rejilla $50 \times 50 \times 30$.</li>
+                        <li><strong>Bucle Principal:</strong> Selección de evento (Deposición/Difusión) basado en probabilidades.</li>
+                        <li><strong>Deposición:</strong> Posición $(x,y)$ aleatoria, energía $E$, evaluación de $P_{ads}$.</li>
+                        <li><strong>Difusión:</strong> Selección de átomo superficial, evaluación de $W_{diff}$.</li>
+                    </ol>
+                </div>
+                <div class="feature-img-container">
+                    <!-- IMAGEN ADJUNTA 2: Modelo Balístico / Disposición de Partículas -->
+                    <img src="https://z-cdn-media.chatglm.cn/files/72370022-c246-48df-9acb-894b7c7be488.jpg?auth_key=1870284280-47b74ae8041f46e58e9f9103a523b654-0-1b03e14fe1ca00378b2dbd82c2e8c2fa" alt="Disposición de partículas en el modelo">
+                </div>
+            </div>
+            <p><strong>Implementación:</strong> Fortran 90 (Lógica) + Python (Visualización 2D/3D).</p>
+        </section>
+
+        <!-- CAPÍTULO III: ADAPTACIONES -->
+        <section class="slide">
+            <span class="chapter-tag">Capítulo III</span>
+            <h2>3. Adaptación a Simulaciones 2D y 3D</h2>
+            <div class="grid-images">
+                <div>
+                    <h3>3.5.1 Simulaciones 2D</h3>
+                    <p>Rejilla $50 \times 50$. Distribución de energía uniforme. Estudio preliminar de densidad y mecanismos básicos.</p>
+                    
+                    <h3>3.5.2 Simulaciones 3D</h3>
+                    <p>Rejilla $50 \times 50 \times 30$. Dos capas explícitas de Mg (Sustrato). Distribución de energía Maxwell-Boltzmann (Media 0.13 eV a 1000K).</p>
+                    
+                    <div class="highlight-box">
+                        <strong>Justificación Fortran 90:</strong> Se usó la subrutina intrínseca <code>Random_Number</code> por su eficiencia y ausencia de dependencias externas, suficiente para la escala del estudio.
+                    </div>
+                </div>
+                <div class="feature-img-container">
+                    <!-- SVG Red Cristalina 3D -->
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgNDAwIj48cGF0aCBkPSJNMjAwIDUwIEwzNTAgMTUwIEwzNTAgMzUwIEwyMDAgNDUwIEw1MCAzNTAgTDUwIDE1MCBaIiBmaWxsPSJub25lIiBzdHJva2U9IiM2NGI1ZjYiIHN0cm9rZS13aWR0aD0iMiIvPjxwYXRoIGQ9Ik0yMDAgNTAgTDM1MCAxNTAgTDUwIDE1MCBaIiBmaWxsPSJyZ2JhKDEwMCwxODEsMjQ2LDAuMikiLz48Y2lyY2xlIGN4PSIyMDAiIGN5PSI1MCIgcj0iNSIgZmlsbD0iI2ZmZiIvPjxjaXJjbGUgY3g9IjM1MCIgY3k9IjE1MCIgcj0iNSIgZmlsbD0iI2ZmZiIvPjxjaXJjbGUgY3g9IjUwIiBjeT0iMTUwIiByPSI1IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTUwIDM1MCBMMzUwIDM1MCBMMjAwIDQ1MCBaIiBmaWxsPSJub25lIiBzdHJva2U9IiM2NGI1ZjYiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWRhc2hhcnJheT0iNSw1Ii8+PC9zdmc+" alt="Red Cristalina 3D">
+                </div>
+            </div>
+        </section>
+
+        <!-- CAPÍTULO IV: PARÁMETROS -->
+        <section class="slide">
+            <span class="chapter-tag">Capítulo IV</span>
+            <h2>4. Análisis y Discusión de Resultados</h2>
+            <h3>4.1 Descripción de los Parámetros</h3>
+            <p><strong>Método:</strong> KMC 3D. <strong>Modo:</strong> Balístico. <strong>Tasa de eventos:</strong> 20,000.</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Material</th>
+                        <th>Adhesión</th>
+                        <th>Energía Difusión (eV)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Cr (Cromo)</td>
+                        <td>0.98 (Alta)</td>
+                        <td>0.01 - 0.25 (Baja)</td>
+                    </tr>
+                    <tr>
+                        <td>Fe (Hierro)</td>
+                        <td>0.95 (Media)</td>
+                        <td>0.5 - 1.0 (Alta)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- CAPÍTULO IV: ANÁLISIS NUMÉRICO -->
+        <section class="slide">
+            <span class="chapter-tag">Capítulo IV</span>
+            <h2>4.2 Análisis Numérico del Modo Balístico</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Parámetro</th>
+                        <th>Fe</th>
+                        <th>Cr</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Rugosidad (capas)</td>
+                        <td>$7.28 \pm 2.62$</td>
+                        <td>$7.53 \pm 2.68$</td>
+                    </tr>
+                    <tr>
+                        <td>Espesor (capas)</td>
+                        <td>$10.52 \pm 5.63$</td>
+                        <td>$10.81 \pm 5.71$</td>
+                    </tr>
+                    <tr>
+                        <td>Altura Máx. (capas)</td>
+                        <td>$27.83 \pm 7.01$</td>
+                        <td>$28.22 \pm 7.12$</td>
+                    </tr>
+                    <tr>
+                        <td>Cobertura (>20 capas)</td>
+                        <td>20.83%</td>
+                        <td>21.67%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p><em>Conclusiones Numéricas:</em> Ambos presentan crecimiento vertical significativo (>30 capas). Cr muestra mayor incremento relativo en rugosidad y cobertura en capas altas.</p>
+        </section>
+
+        <!-- CAPÍTULO IV: GRÁFICOS (RUGOSIDAD) -->
+        <section class="slide">
+            <span class="chapter-tag">Capítulo IV</span>
+            <h2>4.3 Análisis Gráfico: Rugosidad</h2>
+            <div class="grid-images">
+                <figure>
+                    <img src="https://z-cdn-media.chatglm.cn/files/b9aa7716-6f1c-4633-a7e4-ba08e490a962.jpg?auth_key=1870228327-6e615b6f124441cdb2279a0cc0868ac7-0-09cbfc62a060bd722b9070709ea50ec4" alt="Figura 1">
+                    <figcaption>Fig 1. Rugosidad vs Energía</figcaption>
+                </figure>
+                <figure>
+                    <img src="https://z-cdn-media.chatglm.cn/files/f0ac7689-6cab-469f-9d5f-7a5fa1ad01f6.jpg?auth_key=1870228327-d65173927f3043ef97683aa81d3c75f1-0-68dd7147b9ca7af4ca6b287bf02bbb03" alt="Figura 2">
+                    <figcaption>Fig 2. Comparación Fe vs Cr</figcaption>
+                </figure>
+            </div>
+            <p>El Fe presenta una distribución de rugosidad más amplia (pico en 9-10 capas), mientras que Cr muestra un doble pico (5 y 9-10 capas), indicando mayor heterogeneidad.</p>
+        </section>
+
+        <!-- CAPÍTULO IV: ALTURAS -->
+        <section class="slide">
+            <span class="chapter-tag">Capítulo IV</span>
+            <h2>4.3 Análisis Gráfico: Distribución de Alturas</h2>
+            <figure>
+                <img src="https://z-cdn-media.chatglm.cn/files/e75ba803-038e-4cc3-9ad1-3aba579f53b2.jpg?auth_key=1870228327-5028686145424e0ca26e2a27da6538a8-0-02c0eb5820e3bba1087d4986e09a60f2" alt="Figura 3">
+                <figcaption>Fig 3. Distribución de Alturas Promedios (120 simulaciones)</figcaption>
+            </figure>
+            <p>Media: 9.28 capas. Distribución asimétrica con cola extendida (>30 capas), confirmando el crecimiento vertical típico del modo balístico.</p>
+        </section>
+
+        <!-- CAPÍTULO IV: MAPAS FE -->
+        <section class="slide">
+            <span class="chapter-tag">Capítulo IV</span>
+            <h2>4.3 Morfología: Hierro (Fe)</h2>
+            <div class="grid-images">
+                <figure>
+                    <img src="https://z-cdn-media.chatglm.cn/files/f74569a3-0419-40b5-8752-790809f99d2d.jpg?auth_key=1870228327-c9621298e8a04ce798a8846c08ba3933-0-5b88d732827be78f19ecf61f76fe6866" alt="Mapa 3D Fe">
+                    <figcaption>Fig 4. Mapa 3D Fe</figcaption>
+                </figure>
+                <figure>
+                    <img src="https://z-cdn-media.chatglm.cn/files/296f6669-ff31-4850-8b5d-d5cbefe5f034.jpg?auth_key=1870228327-9bbba7b905c54788845de7d861208e0c-0-f3c0afa37fcdcc89da52f1e7793d570f" alt="Mapa Contorno Fe">
+                    <figcaption>Fig 5. Mapa de Contorno Fe</figcaption>
+                </figure>
+            </div>
+            <p>Topografía con picos pronunciados y valles profundos. Formación de columnas verticales bien definidas debido a la mayor energía de difusión que permite movilidad superficial antes de fijarse.</p>
+        </section>
+
+        <!-- CAPÍTULO IV: MAPAS CR -->
+        <section class="slide">
+            <span class="chapter-tag">Capítulo IV</span>
+            <h2>4.3 Morfología: Cromo (Cr)</h2>
+            <div class="grid-images">
+                <figure>
+                    <img src="https://z-cdn-media.chatglm.cn/files/9d38c9c7-ad02-4a70-bded-63d5cbe51dfb.jpg?auth_key=1870228327-b598ddc81dbe49b08c5437dc6c90d598-0-06936d99a464e14545a3c05c849583da" alt="Mapa 3D Cr">
+                    <figcaption>Fig 6. Mapa 3D Cr</figcaption>
+                </figure>
+                <figure>
+                    <img src="https://z-cdn-media.chatglm.cn/files/62da92fb-0331-4633-8b24-4490741677b7.jpg?auth_key=1870228327-069b3d1ecc0e43ffb24d820a2fb12e3c-0-b455a308cb37571646c540d969a6ca39" alt="Mapa Contorno Cr">
+                    <figcaption>Fig 7. Mapa de Contorno Cr</figcaption>
+                </figure>
+            </div>
+            <p>Estructura fragmentada y rígida. Cambios de altura bruscos. Parches de alta altura aislados. Menor movilidad superficial (baja energía de difusión) conduce a estructuras menos homogéneas.</p>
+        </section>
+
+        <!-- CAPÍTULO V: CONCLUSIONES -->
+        <section class="slide">
+            <span class="chapter-tag">Capítulo V</span>
+            <h2>5.1 Conclusiones</h2>
+            <div class="grid-images">
+                <div>
+                    <ol>
+                        <li><strong>Validación del Modelo KMC:</strong> Herramienta robusta para predecir morfología basada en parámetros físicos.</li>
+                        <li><strong>Diferenciación Morfológica:</strong> Fe muestra transiciones suaves y homogeneidad; Cr muestra fragmentación y cambios abruptos.</li>
+                        <li><strong>Influencia del Modo Balístico:</strong> Factor crítico que incrementa espesor (+12.9% Fe, +17.3% Cr) y rugosidad, favoreciendo el crecimiento vertical en columnas.</li>
+                        <li><strong>Respuesta Material:</strong> Cr aprovecha mejor el modo balístico para mayor cobertura en capas altas.</li>
+                    </ol>
+                </div>
+                <div class="feature-img-container">
+                    <!-- SVG Objetivo cumplido -->
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgNDAwIj48Y2lyY2xlIGN4PSIyMDAiIGN5PSIyMDAiIHI9IjE1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZhNzI2IiBzdHJva2Utd2lkdGg9IjEwIi8+PGNpcmNsZSBjeD0iMjAwIiBjeT0iMjAwIiByPSIxMDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmYTcyNiIgc3Ryb2tlLXdpZHRoPSIxMCIvPjxjaXJjbGUgY3g9IjIwMCIgY3k9IjIwMCIgcj0iNTAiIGZpbGw9IiNmZmE3MjYiLz48cGF0aCBkPSJNMjAwIDIwMCBMODAgODAgTCAyMDAgMjAwIEMgMjAwIDIwMCAzMjAgODAgMjAwIDIwMCBaIiBmaWxsPSIjZmZhNzI2IiBvcGFjaXR5PSIwLjUiLz48L3N2Zz4=" alt="Objetivo">
+                </div>
+            </div>
+        </section>
+
+        <!-- CAPÍTULO V: RECOMENDACIONES -->
+        <section class="slide">
+            <span class="chapter-tag">Capítulo V</span>
+            <h2>5.2 Recomendaciones</h2>
+            <h3>Para futuras investigaciones</h3>
+            <ul>
+                <li>Variar temperatura del sustrato (300K - 800K).</li>
+                <li>Incorporar modo de sputtering reactivo y ángulos de incidencia variables.</li>
+                <li>Simular aleaciones Fe-Cr o estructuras multicapas.</li>
+                <li>Modelar defectos complejos del sustrato.</li>
+            </ul>
+            <h3>Optimización Computacional</h3>
+            <ul>
+                <li>Uso de generadores de números aleatorios más robustos (Mersenne Twister).</li>
+                <li>Paralelización del código (OpenMP/MPI) para rejillas mayores.</li>
+            </ul>
+        </section>
+
+        <!-- FIN -->
+        <section class="slide title-slide">
+            <h1 style="color: var(--accent-color); font-size: 4rem; text-shadow: 2px 2px 4px #000;">¡Gracias por su atención!</h1>
+            <p style="margin-top: 2rem; font-size: 1.5rem; color: #fff; text-shadow: 1px 1px 3px #000;">¿Preguntas?</p>
+            <div style="margin-top: 3rem; color: var(--secondary-color); background: rgba(0,0,0,0.7); padding: 20px; border-radius: 10px;">
+                <p>Ángel Chacín Ávila</p>
+                <p>lordchacinavila@gmail.com</p>
+            </div>
+        </section>
+
+    </div>
+
+    <div class="controls">
+        <button class="btn" onclick="prevSlide()">Anterior</button>
+        <button class="btn" onclick="nextSlide()">Siguiente</button>
+        <div style="width: 1px; background: #555; margin: 0 10px;"></div>
+        <button class="btn export-btn" onclick="exportToPDF()">Exportar PDF</button>
+        <button class="btn export-btn" onclick="exportToPPTX()">Exportar PPTX</button>
+    </div>
+
+    <script>
+        // --- LÓGICA DE PRESENTACIÓN ---
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const progressBar = document.getElementById('progressBar');
+        const slideNumber = document.getElementById('slideNumber');
+        const totalSlides = slides.length;
+        const overlay = document.getElementById('loading-overlay');
+        const loadingText = document.getElementById('loading-text');
+
+        function updateSlide() {
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active');
+                if (index === currentSlide) {
+                    slide.classList.add('active');
+                }
+            });
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            progressBar.style.width = `${progress}%`;
+            slideNumber.textContent = `${currentSlide + 1} / ${totalSlides}`;
+        }
+
+        function nextSlide() { if (currentSlide < totalSlides - 1) { currentSlide++; updateSlide(); } }
+        function prevSlide() { if (currentSlide > 0) { currentSlide--; updateSlide(); } }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            else if (e.key === 'ArrowLeft') prevSlide();
+        });
+
+        updateSlide();
+
+        // --- LÓGICA DE EXPORTACIÓN ---
+
+        async function captureSlideAsImage(slideElement) {
+            const clone = slideElement.cloneNode(true);
+            const container = document.createElement('div');
+            container.style.position = 'absolute';
+            container.style.left = '-9999px'; 
+            container.style.width = '1280px'; 
+            container.style.background = '#121212';
+            container.appendChild(clone);
+            document.body.appendChild(container);
+
+            clone.classList.add('exporting');
+            clone.classList.remove('active'); 
+
+            try {
+                await new Promise(resolve => setTimeout(resolve, 200)); 
+
+                const canvas = await html2canvas(clone, {
+                    scale: 2, 
+                    useCORS: true, 
+                    backgroundColor: "#121212",
+                    logging: false,
+                    allowTaint: true
+                });
+                
+                document.body.removeChild(container);
+                return canvas.toDataURL('image/png');
+            } catch (error) {
+                console.error("Error capturando slide:", error);
+                document.body.removeChild(container);
+                return null;
+            }
+        }
+
+        async function exportToPDF() {
+            if(!confirm("¿Estás seguro de generar el PDF? Las imágenes internas se exportarán correctamente.")) return;
+
+            showLoading("Generando PDF...");
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('l', 'mm', 'a4');
+            const pdfWidth = 297;
+            const pdfHeight = 210;
+
+            try {
+                for (let i = 0; i < slides.length; i++) {
+                    updateLoadingText(`Generando diapositiva ${i + 1} de ${totalSlides}...`);
+                    
+                    if (i > 0) doc.addPage();
+
+                    const imgData = await captureSlideAsImage(slides[i]);
+                    if (imgData) {
+                        doc.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                    }
+                }
+                doc.save('Presentacion_Simulacion_MonteCarlo.pdf');
+            } catch (err) {
+                alert("Hubo un error al generar el PDF: " + err.message);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function exportToPPTX() {
+            if(!confirm("¿Estás seguro de generar el PPTX?")) return;
+
+            showLoading("Generando PPTX...");
+            const pptx = new PptxGenJS();
+
+            try {
+                for (let i = 0; i < slides.length; i++) {
+                    updateLoadingText(`Generando diapositiva ${i + 1} de ${totalSlides}...`);
+                    
+                    const slide = pptx.addSlide();
+                    const imgData = await captureSlideAsImage(slides[i]);
+                    
+                    if (imgData) {
+                        slide.addImage({ 
+                            data: imgData, 
+                            x: "0%", 
+                            y: "0%", 
+                            w: "100%", 
+                            h: "100%" 
+                        });
+                    }
+                }
+                pptx.writeFile({ fileName: "Presentacion_Simulacion_MonteCarlo.pptx" });
+            } catch (err) {
+                alert("Hubo un error al generar el PPTX: " + err.message);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function showLoading(text) {
+            overlay.style.display = 'flex';
+            updateLoadingText(text);
+        }
+        function updateLoadingText(text) {
+            loadingText.textContent = text;
+        }
+        function hideLoading() {
+            overlay.style.display = 'none';
+        }
+
+    </script>
+</body>
+</html>
