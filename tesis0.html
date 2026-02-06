@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portada - Simulación Monte Carlo</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0f172a; /* Azul oscuro */
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* Fondo animado simple detrás del texto */
+        #fondo {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        }
+        
+        #canvas-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.2; /* Muy sutil para no molestar la lectura */
+        }
+
+        /* Contenedor de la Portada */
+        .portada {
+            position: relative;
+            z-index: 10; /* Asegura que esté por encima del fondo */
+            background-color: rgba(15, 23, 42, 0.85); /* Fondo semi-opaco */
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 90%;
+            max-width: 900px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            border-radius: 8px;
+        }
+
+        /* Estilos de Texto */
+        h1, h2, h3, h4 {
+            text-transform: uppercase;
+            margin: 10px 0;
+        }
+
+        .universidad {
+            font-size: 1.2rem;
+            color: #94a3b8;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .titulo-trabajo {
+            font-family: 'Times New Roman', serif;
+            font-size: 2rem;
+            color: #fbbf24; /* Color dorado para el título */
+            line-height: 1.4;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+
+        .autor-label {
+            font-size: 0.9rem;
+            color: #cbd5e1;
+            margin-top: 30px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .autor-nombre {
+            font-size: 1.5rem;
+            margin: 5px 0;
+            color: #ffffff;
+        }
+
+        .tutores-container {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 20px;
+        }
+
+        .tutor-box {
+            text-align: center;
+        }
+
+        .fecha {
+            font-size: 1.2rem;
+            margin-top: 40px;
+            font-weight: bold;
+            color: #fbbf24;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Fondo Visual -->
+    <div id="fondo">
+        <canvas id="canvas-bg"></canvas>
+    </div>
+
+    <!-- Contenido Principal -->
+    <div class="portada">
+        
+        <div class="universidad">
+            <p>UNIVERSIDAD DEL ZULIA</p>
+            <p>FACULTAD EXPERIMENTAL DE CIENCIAS</p>
+            <p>LICENCIATURA EN FÍSICA</p>
+        </div>
+
+        <hr style="border-color: rgba(255,255,255,0.2); width: 50%; margin: 20px auto;">
+
+        <div class="titulo-trabajo">
+            SIMULACIÓN MONTE CARLO DE LOS PROCESOS DE DEPOSICIÓN DE PELÍCULAS DELGADAS DE Cr Y Fe SOBRE UN SUSTRATO SÓLIDO DE Mg (001)
+        </div>
+
+        <p style="font-style: italic; color: #94a3b8;">Trabajo de Investigación para optar al título de Licenciado en Física</p>
+
+        <div class="autor-label">Autor:</div>
+        <div class="autor-nombre">Br. Ángel Chacín Ávila</div>
+
+        <div class="tutores-container">
+            <div class="tutor-box">
+                <div class="autor-label">Tutora:</div>
+                <div class="autor-nombre" style="font-size: 1.2rem;">Msc. Emily Chávez Rivas</div>
+            </div>
+            <div class="tutor-box">
+                <div class="autor-label">Cotutor:</div>
+                <div class="autor-nombre" style="font-size: 1.2rem;">Dr. José Fermín</div>
+            </div>
+        </div>
+
+        <div class="fecha">
+            Maracaibo, Febrero 2026
+        </div>
+    </div>
+
+    <script>
+        // Script muy simple para animar puntos en el fondo, sin afectar el texto
+        const canvas = document.getElementById('canvas-bg');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        let particles = [];
+        for(let i=0; i<40; i++) {
+            particles.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                r: Math.random() * 3
+            });
+        }
+
+        function animar() {
+            ctx.clearRect(0,0,width,height);
+            ctx.fillStyle = '#ffffff';
+            particles.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+                ctx.fill();
+                p.y -= 0.2; // Movimiento lento hacia arriba
+                if(p.y < 0) p.y = height; // Reiniciar si sale
+            });
+            requestAnimationFrame(animar);
+        }
+        animar();
+    </script>
+</body>
+</html>
