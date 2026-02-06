@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentación Capítulo V: Conclusión y Recomendaciones</title>
+    <style>
+        :root {
+            /* Tema: Conclusión / Logro (Dorado y Gris Oscuro) */
+            --bg-color: #111827; /* Muy oscuro */
+            --slide-bg: rgba(31, 41, 55, 0.95);
+            --text-color: #f3f4f6;
+            --accent-color: #fbbf24; /* Ámbar/Dorado */
+            --secondary-accent: #9ca3af; /* Gris plata */
+            --fe-color: #60a5fa;
+            --cr-color: #f97316;
+            --font-main: 'Segoe UI', Roboto, Helvetica, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Fondo Animado (Red Convergente) */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.2;
+            pointer-events: none;
+        }
+
+        .deck-container {
+            position: relative;
+            z-index: 10;
+            width: 95%;
+            max-width: 1200px;
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide {
+            display: none;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+            background: var(--slide-bg);
+            backdrop-filter: blur(12px);
+            padding: 2.5rem;
+            border-radius: 12px;
+            border-top: 5px solid var(--accent-color);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Tipografía */
+        h1 { 
+            font-size: 2.4rem; 
+            margin-bottom: 0.5rem; 
+            color: var(--accent-color); 
+            font-weight: 800;
+        }
+        h2 { 
+            font-size: 1.6rem; 
+            margin-bottom: 1.5rem; 
+            color: var(--text-color);
+            border-bottom: 2px solid var(--accent-color); 
+            padding-bottom: 0.5rem; 
+            display: inline-block;
+        }
+        h3 { 
+            font-size: 1.2rem; 
+            color: var(--secondary-accent); 
+            margin-bottom: 1rem; 
+            margin-top: 1.5rem; 
+            text-transform: uppercase; 
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+        p { 
+            font-size: 1.1rem; 
+            line-height: 1.7; 
+            margin-bottom: 1rem; 
+            color: #d1d5db;
+        }
+
+        /* Estilos de Lista y Texto */
+        ul { list-style: none; padding-left: 0; margin-bottom: 1.5rem; }
+        li { 
+            margin-bottom: 1rem; 
+            padding-left: 2rem; 
+            position: relative; 
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: 0.4s ease;
+        }
+        li.visible { opacity: 1; transform: translateX(0); }
+        li::before { 
+            content: "★"; 
+            position: absolute; 
+            left: 0; 
+            color: var(--accent-color); 
+            font-size: 1.2rem;
+        }
+
+        .highlight { color: var(--accent-color); font-weight: bold; }
+        .bold-text { font-weight: bold; }
+
+        /* Tarjetas de Comparación */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+        .comp-card {
+            background: rgba(0,0,0,0.3);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid rgba(251, 191, 36, 0.2);
+        }
+        .comp-card h4 { color: var(--text-color); margin-bottom: 0.5rem; font-size: 1.2rem; }
+
+        /* Checkmark para objetivos */
+        .check-list li::before { content: "✔"; color: #4ade80; }
+
+        /* Controles */
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 5%;
+            z-index: 20;
+            pointer-events: none;
+        }
+        .controls > * { pointer-events: auto; }
+
+        .nav-btn {
+            background: linear-gradient(135deg, var(--accent-color), #d97706);
+            color: #451a03;
+            border: none;
+            padding: 12px 28px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-size: 1rem;
+            box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
+        }
+        .nav-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(251, 191, 36, 0.5); }
+
+        .progress { display: flex; gap: 8px; background: rgba(0,0,0,0.6); padding: 8px 16px; border-radius: 20px; }
+        .dot { width: 10px; height: 10px; background: rgba(255,255,255,0.3); border-radius: 50%; transition: 0.3s; cursor: pointer; }
+        .dot.active { background: var(--accent-color); transform: scale(1.3); box-shadow: 0 0 10px var(--accent-color); }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .slide { padding: 1.5rem; }
+            h1 { font-size: 1.8rem; }
+            .comparison-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="bg-canvas"></canvas>
+
+    <main class="deck-container">
+        
+        <!-- Slide 1: Título -->
+        <section class="slide active">
+            <h3>Exposición del Capítulo V</h3>
+            <h1>Conclusión y Recomendaciones</h1>
+            <hr style="border: 0; border-top: 1px solid var(--accent-color); margin: 1.5rem 0;">
+            <p>Señores miembros del jurado:</p>
+            <p>Tras presentar el fundamento, la metodología y los resultados, concluimos este trabajo. El Capítulo V tiene un doble propósito: <strong>sintetizar los hallazgos</strong> y <strong>proyectar caminos futuros</strong>.</p>
+            <br>
+            <p>Este capítulo no es solo un resumen; es la consolidación del aporte científico y la hoja de ruta para su continuidad.</p>
+        </section>
+
+        <!-- Slide 2: 5.1 Introducción a Conclusiones -->
+        <section class="slide">
+            <h2>5.1 Conclusiones</h2>
+            <p>Se presentan las cinco conclusiones principales derivadas de toda la cadena de investigación:</p>
+            <br>
+            <div style="background: rgba(251, 191, 36, 0.1); padding: 1.5rem; border-left: 4px solid var(--accent-color); border-radius: 0 8px 8px 0;">
+                <ol style="margin-left: 1.5rem; line-height: 2;">
+                    <li>Validación del Modelo de Simulación KMC.</li>
+                    <li>Diferenciación Morfológica Clave entre Materiales.</li>
+                    <li>Influencia Determinante del Modo de Deposición (Balístico).</li>
+                    <li>Respuesta Diferencial de los Materiales.</li>
+                    <li>Cumplimiento de los Objetivos.</li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- Slide 3: Conclusión 1 -->
+        <section class="slide">
+            <h2>1. Validación del Modelo de Simulación KMC</h2>
+            <h3>Hallazgo</h3>
+            <p>El código en Fortran 90, basado en la ecuación maestra, demostró ser una herramienta <strong>robusta y precisa</strong>.</p>
+            <h3>Significado</h3>
+            <p>No es solo un programa, sino un <strong>"laboratorio virtual" fiable</strong> que captura la dinámica estocástica fundamental. Valida la potencia predictiva del método KMC para el campo de películas delgadas.</p>
+        </section>
+
+        <!-- Slide 4: Conclusión 2 -->
+        <section class="slide">
+            <h2>2. Diferenciación Morfológica Clave</h2>
+            <h3>Mecanismo Físico: Energía de Difusión (E_d)</h3>
+            <div class="comparison-grid">
+                <div class="comp-card">
+                    <h4><span class="tag-fe">Fe</span> (Alta E_d)</h4>
+                    <p><strong>Baja movilidad.</strong></p>
+                    <p>Topografía de "picos y valles" con transiciones abruptas (crecimiento localizado y competitivo).</p>
+                </div>
+                <div class="comp-card">
+                    <h4><span class="tag-cr">Cr</span> (Baja E_d)</h4>
+                    <p><strong>Alta movilidad.</strong></p>
+                    <p>Estructuras fragmentadas con islas definidas y bordes nítidos, pero cambios de altura bruscos.</p>
+                </div>
+            </div>
+            <br>
+            <p style="text-align: center;"><strong>La E_d es el parámetro discriminante más potente para controlar la morfología.</strong></p>
+        </section>
+
+        <!-- Slide 5: Conclusión 3 -->
+        <section class="slide">
+            <h2>3. Influencia del Modo Balístico</h2>
+            <h3>El Modo como "Interruptor"</h3>
+            <p>El modo balístico (alta energía ~5 eV) modula significativamente las propiedades finales.</p>
+            <ul>
+                <li><strong>Efectos Cuantificados:</strong> Películas más gruesas (+12.9% Fe, +17.3% Cr) y mayor rugosidad.</li>
+                <li><strong>Nanoestructuración:</strong> Promueve crecimiento vertical extremo (>30 capas) y formación de columnas.</li>
+                <li><strong>Significado:</strong> Permite sintonizar propiedades (espesor, rugosidad) para aplicaciones específicas.</li>
+            </ul>
+        </section>
+
+        <!-- Slide 6: Conclusión 4 -->
+        <section class="slide">
+            <h2>4. Respuesta Diferencial de los Materiales</h2>
+            <h3>Sinérgia Cr + Balístico</h3>
+            <ul>
+                <li><strong>Hallazgo:</strong> El Cr aprovecha de manera más eficiente las condiciones balísticas para mayor espesor y cobertura.</li>
+                <li><strong>Explicación:</strong> Su baja E_d intrínseca le permite redistribuir la masa bajo alta energía, consolidando columnas.</li>
+            </ul>
+            <br>
+            <div style="text-align:center; padding: 1rem; background:rgba(255,255,255,0.05); border-radius:8px;">
+                <em>Para optimizar, hay que considerar la interacción material-modo.</em><br>
+                <strong>Cr + Balístico es una combinación especialmente efectiva.</strong>
+            </div>
+        </section>
+
+        <!-- Slide 7: Conclusión 5 -->
+        <section class="slide">
+            <h2>5. Cumplimiento de los Objetivos</h2>
+            <h3>Verificación de Metas</h3>
+            <ul class="check-list">
+                <li>✅ <strong>Caracterizar mecanismos:</strong> Crecimiento vertical y roles de la difusión identificados.</li>
+                <li>✅ <strong>Estudiar efectos de la difusión:</strong> Menor E_d (Cr) → Mayor rugosidad y heterogeneidad.</li>
+                <li>✅ <strong>Analizar modo de deposición:</strong> Impacto crítico y cuantificable sobre propiedades físicas.</li>
+            </ul>
+            <p>La investigación generó un conocimiento transferible sobre el control morfológico de películas.</p>
+        </section>
+
+        <!-- Slide 8: Síntesis -->
+        <section class="slide">
+            <h2>Síntesis Global</h2>
+            <p>En resumen, esta investigación ha establecido con éxito la simulación Monte Carlo Cinético como una herramienta predictiva indispensable.</p>
+            <br>
+            <p>Proporciona un <strong>"mapa de ruta" basado en física fundamental</strong> para diseñar recubrimientos de Cr o Fe sobre Mg(001) con propiedades a la medida, optimizando la elección del material y las condiciones de deposición.</p>
+        </section>
+
+        <!-- Slide 9: Recomendaciones 5.2.1 -->
+        <section class="slide">
+            <h2>5.2.1 Para Futuras Investigaciones</h2>
+            <p>Ampliación del modelo para mayor riqueza:</p>
+            <ul>
+                <li><strong>Estudio de Temperatura:</strong> Variar 300K - 800K para mapear transiciones de crecimiento.</li>
+                <li><strong>Nuevos Modos:</strong> Simular Sputtering reactivo o IBAD (incluir erosión/redisposición).</li>
+                <li><strong>Aleaciones y Multicapas:</strong> Expandir a Fe-Cr o estructuras multicapas para propiedades magnéticas/mecánicas.</li>
+                <li><strong>Defectos Realistas:</strong> Modelar vacancias, escalones y dislocaciones en Mg(001).</li>
+            </ul>
+        </section>
+
+        <!-- Slide 10: Recomendaciones 5.2.2 -->
+        <section class="slide">
+            <h2>5.2.2 Para la Validación Experimental</h2>
+            <p>Puente con la realidad (Cierre del ciclo):</p>
+            <ul>
+                <li><strong>Comparación Directa:</strong> Deposiciones físicas en condiciones idénticas.
+                    <br><em style="font-size:0.9rem; color:var(--secondary-accent)">Usar AFM (rugosidad), SEM (topografía), XRD (estructura).</em>
+                </li>
+                <li><strong>Propiedades Funcionales:</strong> Medir resistencia a la corrosión, dureza y propiedades magnéticas experimentalmente.</li>
+            </ul>
+            <br>
+            <p><strong>Objetivo:</strong> Diseño Computacional → Predicción → Validación Experimental.</p>
+        </section>
+
+        <!-- Slide 11: Recomendaciones 5.2.3 -->
+        <section class="slide">
+            <h2>5.2.3 Para la Optimización Computacional</h2>
+            <p>Potenciar la herramienta:</p>
+            <ul>
+                <li><strong>Generador de Números Aleatorios:</strong> Implementar Mersenne Twister para máxima precisión estadística en escalas masivas.</li>
+                <li><strong>Paralelización del Código:</strong> Usar OpenMP o MPI para simular sistemas >300x300x100.</li>
+                <li><strong>Beneficio:</strong> Reducción drástica de tiempo de cálculo y exploración exhaustiva de parámetros.</li>
+            </ul>
+        </section>
+
+        <!-- Slide 12: Final -->
+        <section class="slide" style="text-align: center; justify-content: center;">
+            <h1 style="font-size: 3.5rem; margin-bottom: 1rem;">Muchas Gracias</h1>
+            <h2 style="font-size: 1.5rem; color: var(--text-color); border:none;">Conclusión y Recomendaciones</h2>
+            
+            <div style="margin-top: 3rem; display: flex; justify-content: center; gap: 2rem;">
+                <div style="width: 120px; height: 2px; background: var(--accent-color);"></div>
+            </div>
+
+            <p style="font-size: 1.2rem; max-width: 800px; margin: 2rem auto; color: #d1d5db;">
+                Este trabajo es un punto de partida sólido. Las recomendaciones plantean caminos para hacer el modelo más realista, conectarlo con el mundo real y potenciar su capacidad computacional.
+            </p>
+            
+            <p style="margin-top: 2rem; font-weight: bold; color: var(--accent-color);">
+                Agradezco profundamente su atención y me encuentro a disposición para sus preguntas.
+            </p>
+        </section>
+
+    </main>
+
+    <div class="controls">
+        <button class="nav-btn" id="prev">❮ Anterior</button>
+        <div class="progress" id="dots"></div>
+        <button class="nav-btn" id="next">Siguiente ❯</button>
+    </div>
+
+    <script>
+        // --- Lógica de Diapositivas ---
+        const slides = document.querySelectorAll('.slide');
+        const dotsContainer = document.getElementById('dots');
+        let currentSlide = 0;
+
+        // Crear dots
+        slides.forEach((_, i) => {
+            const dot = document.createElement('div');
+            dot.className = `dot ${i === 0 ? 'active' : ''}`;
+            dot.onclick = () => goToSlide(i);
+            dotsContainer.appendChild(dot);
+        });
+        const dots = document.querySelectorAll('.dot');
+
+        function updateSlide() {
+            slides.forEach((s, i) => {
+                s.classList.remove('active');
+                dots[i].classList.remove('active');
+                if(i === currentSlide) {
+                    s.classList.add('active');
+                    dots[i].classList.add('active');
+                    // Animar items de lista
+                    const lis = s.querySelectorAll('li');
+                    lis.forEach((li, idx) => {
+                        setTimeout(() => li.classList.add('visible'), idx * 150 + 300);
+                    });
+                }
+            });
+        }
+
+        function goToSlide(n) {
+            currentSlide = n;
+            if (currentSlide < 0) currentSlide = 0;
+            if (currentSlide >= slides.length) currentSlide = slides.length - 1;
+            updateSlide();
+        }
+
+        document.getElementById('next').onclick = () => goToSlide(currentSlide + 1);
+        document.getElementById('prev').onclick = () => goToSlide(currentSlide - 1);
+        
+        document.addEventListener('keydown', (e) => {
+            if(e.key === 'ArrowRight') goToSlide(currentSlide + 1);
+            if(e.key === 'ArrowLeft') goToSlide(currentSlide - 1);
+        });
+
+        // --- Fondo Animado (Convergence/Consolidation) ---
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.3;
+                this.speedY = (Math.random() - 0.5) * 0.3;
+                this.color = `rgba(251, 191, 36, ${Math.random() * 0.5})`; // Gold particles
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if(this.x < 0 || this.x > width) this.speedX *= -1;
+                if(this.y < 0 || this.y > height) this.speedY *= -1;
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
+                ctx.fill();
+            }
+        }
+
+        for(let i=0; i<60; i++) particles.push(new Particle());
+
+        function animate() {
+            ctx.clearRect(0,0,width,height);
+            
+            // Draw connections (Consolidation metaphor)
+            ctx.strokeStyle = 'rgba(251, 191, 36, 0.08)';
+            for(let i=0; i<particles.length; i++) {
+                for(let j=i+1; j<particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx*dx + dy*dy);
+                    if(dist < 120) {
+                        ctx.lineWidth = 1 - (dist/120);
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+                particles[i].update();
+                particles[i].draw();
+            }
+
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+    </script>
+</body>
+</html>
