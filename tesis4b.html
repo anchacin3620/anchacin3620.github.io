@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis de Simulación Monte Carlo: Películas Delgadas Cr y Fe</title>
+    <style>
+        :root {
+            --bg-body: #0f172a;
+            --bg-panel: #1e293b;
+            --bg-card: #334155;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --accent-primary: #38bdf8; /* Light Blue */
+            --accent-secondary: #f472b6; /* Pink for Cr/Fe contrast */
+            --border-color: #475569;
+            --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            --font-mono: 'Courier New', Courier, monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* App-like feel */
+        }
+
+        /* --- Header --- */
+        header {
+            background-color: var(--bg-panel);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+            z-index: 10;
+        }
+
+        .header-title h1 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--accent-primary);
+        }
+
+        .header-title p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .meta-badge {
+            font-size: 0.75rem;
+            background: var(--bg-card);
+            padding: 0.25rem 0.75rem;
+            border-radius: 99px;
+            border: 1px solid var(--border-color);
+            color: var(--accent-primary);
+        }
+
+        /* --- Main Layout --- */
+        main {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* --- Sidebar Navigation --- */
+        nav {
+            width: 260px;
+            background-color: var(--bg-panel);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .nav-label {
+            padding: 1rem;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        .nav-item {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+            transition: all 0.2s ease;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .nav-item:hover {
+            background-color: rgba(255,255,255,0.05);
+            color: var(--text-main);
+        }
+
+        .nav-item.active {
+            background-color: rgba(56, 189, 248, 0.1);
+            border-left-color: var(--accent-primary);
+            color: var(--accent-primary);
+            font-weight: 600;
+        }
+
+        /* --- Content Area --- */
+        .content-area {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+
+        .figure-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .figure-header {
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+        }
+
+        .figure-header h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .figure-header .subtitle {
+            font-family: var(--font-mono);
+            color: var(--accent-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Image Wrapper */
+        .img-wrapper {
+            width: 100%;
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 300px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+        }
+
+        .img-wrapper img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            object-fit: contain;
+        }
+
+        /* Analysis Blocks */
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        @media(min-width: 768px) {
+            .analysis-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .full-width {
+                grid-column: span 2;
+            }
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card.desc h3 { color: var(--text-main); }
+        .card.interp h3 { color: var(--accent-primary); }
+
+        .card p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .card ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .card li {
+            position: relative;
+            padding-left: 1.2rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .card li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--accent-primary);
+        }
+
+        /* Highlight keywords */
+        .highlight {
+            color: var(--text-main);
+            font-weight: 600;
+        }
+        .highlight-fe { color: #60a5fa; font-weight: bold; } /* Fe Blue */
+        .highlight-cr { color: #fb923c; font-weight: bold; } /* Cr Orange */
+
+        /* Footer */
+        footer {
+            background-color: var(--bg-panel);
+            padding: 1rem 2rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            body {
+                height: auto;
+                overflow: auto;
+            }
+            main {
+                flex-direction: column;
+                overflow: visible;
+            }
+            nav {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+                flex-direction: row;
+                overflow-x: auto;
+                padding-bottom: 0.5rem;
+            }
+            .nav-label {
+                display: none;
+            }
+            .nav-item {
+                white-space: nowrap;
+                border-left: none;
+                border-bottom: 3px solid transparent;
+                padding: 1rem;
+            }
+            .nav-item.active {
+                border-left-color: transparent;
+                border-bottom-color: var(--accent-primary);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-title">
+            <h1>Simulación Monte Carlo</h1>
+            <p>Deposición de Películas Delgadas Cr y Fe sobre Mg (001)</p>
+        </div>
+        <div class="meta-badge">Modo Balístico</div>
+    </header>
+
+    <main>
+        <!-- Navigation Sidebar -->
+        <nav id="nav-container">
+            <div class="nav-label">Figuras del Capítulo IV</div>
+            <!-- Nav items generated by JS -->
+        </nav>
+
+        <!-- Main Content Display -->
+        <div class="content-area" id="content-display">
+            <!-- Content injected by JS -->
+        </div>
+    </main>
+
+    <footer>
+        Trabajo de Investigación: Simulación Monte Carlo de los Procesos de Deposición de Películas Delgadas de Cr y Fe sobre un Sustrato Solido de Mg (001) | Autor: Br. Ángel Chacín Ávila
+    </footer>
+
+    <script>
+        // Data based on the research document provided
+        const figuresData = [
+            {
+                id: 1,
+                title: "Rugosidad vs Energía de difusión",
+                subtitle: "Figura 1: Relación entre parámetros materiales y morfología",
+                img: "https://z-cdn-media.chatglm.cn/files/adc9a04b-4060-430d-89dc-a5b63ca811e9.jpg?auth_key=1870387836-606fefd6b2324821967eda577f897ca5-0-86b3df0c43631264528ccddaffab0af1",
+                desc: "Gráfico de dispersión que compara los materiales Hierro (Fe, puntos azules) y Cromo (Cr, puntos naranjas). El eje vertical representa la Rugosidad (en capas) y el eje horizontal la Energía de Difusión (eV).",
+                interp: [
+                    "Muestra la correlación inversa entre la energía de difusión y la rugosidad resultante.",
+                    "El <span class='highlight-fe'>Fe</span> (derecha) tiene mayor energía de difusión (0.5-1.0 eV), lo que facilita la movilidad de los átomos sobre la superficie.",
+                    "El <span class='highlight-cr'>Cr</span> (izquierda) se agrupa en bajas energías (0.01-0.25 eV), indicando menor movilidad superficial.",
+                    "Esta diferencia energética es la causa raíz de las distintas morfologías observadas en las simulaciones 3D."
+                ]
+            },
+            {
+                id: 2,
+                title: "Comparación de Rugosidad: Fe vs Cr",
+                subtitle: "Figura 2: Análisis de densidad de probabilidad",
+                img: "https://z-cdn-media.chatglm.cn/files/28549730-8d29-40f6-828a-4e55ab93effc.jpg?auth_key=1870387836-ea33e53f78eb4d0ea86f68cdd172ca07-0-dc4cd30575eb6c349a3a1d5d3246f1c3",
+                desc: "Diagrama de barras comparando la probabilidad de densidad de la rugosidad para ambos materiales. Se observan distribuciones superpuestas pero con tendencias distintas en altas rugosidades.",
+                interp: [
+                    "En baja rugosidad (3-5 capas), ambos materiales muestran una probabilidad similar, lo que indica una nucleación inicial comparable.",
+                    "En alta rugosidad (8-10 capas), el <span class='highlight-fe'>Fe</span> muestra una mayor probabilidad, sugiriendo una tendencia más pronunciada al crecimiento vertical.",
+                    "El análisis textual señala que el <span class='highlight-cr'>Cr</span> mantiene un 'doble pico' (en 5 y 9-10 capas), lo que confirma una mayor heterogeneidad superficial y fragmentación en su estructura.",
+                    "Esto valida que, aunque ambos tienen rugosidad media similar, la <strong>naturaleza estadística</strong> de la superficie difiere radicalmente."
+                ]
+            },
+            {
+                id: 3,
+                title: "Distribución de Alturas Promedio",
+                subtitle: "Figura 3: Estadística global de crecimiento vertical",
+                img: "https://z-cdn-media.chatglm.cn/files/00b6a2e6-2dc7-400d-9b10-799ebf5a2b73.jpg?auth_key=1870387836-d7897f7ef2fa47dc8e06b7a887d06141-0-ff95a0c291b2bf71fc0ab2ae8271aa11",
+                desc: "Histograma de frecuencia de la altura media (en capas atómicas) obtenido de 120 simulaciones. Muestra una distribución asimétrica con una media de 9.28 y desviación de 0.99.",
+                interp: [
+                    "La curva muestra una alta probabilidad cerca de las 0 capas (zonas bajas), pero con una <span class='highlight'>cola extendida hacia alturas superiores a 30 capas</span>.",
+                    "Esto es característico del <strong>Modo Balístico</strong>: la alta energía cinética (5.0 eV) promueve el crecimiento vertical rápido en ciertas zonas (formación de picos) mientras otras zonas permanecen bajas (valles).",
+                    "La desviación estándar (aprox 1.0) en altura promedio confirma que la película no crece de forma plana (capa por capa), sino con una morfología de islas/columnas tridimensionales."
+                ]
+            },
+            {
+                id: 4,
+                title: "Mapa 3D Promedio - Fe",
+                subtitle: "Figura 4: Topografía tridimensional del Hierro",
+                img: "https://z-cdn-media.chatglm.cn/files/1dba5cde-f13e-41ed-924a-4e126664ce14.jpg?auth_key=1870387836-ab9f3be1ab0346f6a105f07cc9b346f0-0-53630f01a2159c56b464cf0e7e0f0d6a",
+                desc: "Visualización en mapa de relieve 3D de la superficie de Fe tras 60 simulaciones. Se observan zonas verdes (altas) y púrpuras (bajas) formando un terreno accidentado.",
+                interp: [
+                    "El <span class='highlight-fe'>Fe</span> exhibe <strong>picos pronunciados y valles profundos</strong> con transiciones relativamente abruptas.",
+                    "Esto es consecuencia directa de su mayor energía de difusión, que permite a los átomos moverse a posiciones más estables (energéticamente favorables) antes de quedar fijados, creando columnas más definidas.",
+                    "La estructura sugiere un crecimiento columnar clásico en deposición balística, donde la 'sombra' de los picos previene la deposición en los valles."
+                ]
+            },
+            {
+                id: 5,
+                title: "Mapa de Contorno - Fe",
+                subtitle: "Figura 5: Vista superior de distribución de alturas",
+                img: "https://z-cdn-media.chatglm.cn/files/1e3e2723-289f-4cbf-b48f-d6cb79937b1b.jpg?auth_key=1870387836-a404fb6f10b04931b98b743f31c0ae06-0-f8672aab5b0644100a55f02330412c96",
+                desc: "Mapa de calor (contorno) visto desde arriba para el Fe. La escala va de púrpura (0.0) a amarillo (14.4). Las coordenadas x e y representan posiciones en la red cristalina.",
+                interp: [
+                    "Las regiones amarillas (altas) están más concentradas y definidas, con bordes nítidos.",
+                    "Esto confirma la formación de <strong>islas bien delimitadas</strong> y columnas verticales caracterizadas en la Figura 4.",
+                    "La distribución muestra menos fragmentación que el Cr, consistente con una mayor movilidad superficial que agrupa el material en dominios más grandes."
+                ]
+            },
+            {
+                id: 6,
+                title: "Mapa 3D Promedio - Cr",
+                subtitle: "Figura 6: Topografía tridimensional del Cromo",
+                img: "https://z-cdn-media.chatglm.cn/files/d43f7bcf-1787-4d48-bdb7-14caa9395248.jpg?auth_key=1870387836-af1806a93ed841509a169e5812738f76-0-a29044d368aa83d4db2827673caf1e0a",
+                desc: "Visualización 3D de la superficie de Cr. Muestra un terreno con islas altas pero con cambios de altura muy bruscos y una apariencia más fragmentada que el Fe.",
+                interp: [
+                    "El <span class='highlight-cr'>Cr</span> presenta una estructura más <strong>rígida y fragmentada</strong>.",
+                    "Debido a su menor energía de difusión (se adhiere rápido donde llega), los átomos no tienen tiempo de 'relajarse' a posiciones vecinas más bajas.",
+                    "Esto resulta en una superficie con alta rugosidad local y transiciones muy bruscas, creando una morfología 'picada' o discontinua comparada con la columnar del Fe."
+                ]
+            },
+            {
+                id: 7,
+                title: "Mapa de Contorno - Cr",
+                subtitle: "Figura 7: Análisis de heterogeneidad superficial",
+                img: "https://z-cdn-media.chatglm.cn/files/c2493ed4-20c8-44d4-923c-15d9a928f31d.jpg?auth_key=1870387836-0dff85ded0fb40dea006e0800d773801-0-979c8073cce72f474c34ab2c761816d0",
+                desc: "Mapa de calor del Cr. Se observa una distribución de alta altura (amarillo) más aislada y parches pequeños en comparación con el mapa del Fe.",
+                interp: [
+                    "La distribución de altura es <strong>heterogénea</strong>: los parches de alta altura (amarillo) están más aislados entre sí.",
+                    "Esto explica por qué el Cr tiene una cobertura ligeramente mayor en capas muy altas (>30 capas) pero una estructura global más porosa.",
+                    "Los bordes muy definidos entre zonas de alta y baja altura corroboran la formación de estructuras rígidas tipo 'pilares' abruptos."
+                ]
+            }
+        ];
+
+        let activeIndex = 0;
+
+        const navContainer = document.getElementById('nav-container');
+        const contentDisplay = document.getElementById('content-display');
+
+        // Function to render navigation
+        function renderNav() {
+            figuresData.forEach((fig, index) => {
+                const btn = document.createElement('div');
+                btn.className = `nav-item ${index === activeIndex ? 'active' : ''}`;
+                btn.textContent = `Fig ${fig.id}: ${fig.title}`;
+                btn.onclick = () => loadFigure(index);
+                navContainer.appendChild(btn);
+            });
+        }
+
+        // Function to load content
+        function loadFigure(index) {
+            activeIndex = index;
+            const data = figuresData[index];
+            
+            // Update Nav UI
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach((item, idx) => {
+                if (idx === index) item.classList.add('active');
+                else item.classList.remove('active');
+            });
+
+            // Generate Interpretation List HTML
+            const interpListHTML = data.interp.map(point => `<li>${point}</li>`).join('');
+
+            // Update Content
+            contentDisplay.innerHTML = `
+                <div class="figure-container">
+                    <div class="figure-header">
+                        <h2>${data.title}</h2>
+                        <span class="subtitle">${data.subtitle}</span>
+                    </div>
+
+                    <div class="img-wrapper">
+                        <img src="${data.img}" alt="${data.title}" onerror="this.src='https://picsum.photos/seed/err/800/400'; this.alt='Error al cargar imagen'">
+                    </div>
+
+                    <div class="analysis-grid">
+                        <div class="card desc">
+                            <h3>
+                                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                Descripción Gráfica
+                            </h3>
+                            <p>${data.desc}</p>
+                        </div>
+
+                        <div class="card interp">
+                            <h3>
+                                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                                Interpretación Física
+                            </h3>
+                            <ul>
+                                ${interpListHTML}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Initialize
+        renderNav();
+        loadFigure(0);
+
+    </script>
+</body>
+</html>
