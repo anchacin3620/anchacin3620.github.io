@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis de Resultados - Tesis Ángel Chacín</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #3498db;
+            --light: #f4f7f6;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 2rem;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .container {
+            max-width: 900px;
+            width: 90%;
+            margin: 20px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .slide {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        .slide.active {
+            display: block;
+        }
+        .slide img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            display: block;
+            margin: 0 auto 20px;
+        }
+        .content h2 {
+            color: var(--accent);
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 10px;
+        }
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        button {
+            padding: 10px 25px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:disabled {
+            background: #ccc;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .footer-info {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Análisis de Simulación Monte Carlo</h1>
+    <p>Deposición de Películas Delgadas de Cr y Fe sobre Mg (001)</p>
+</header>
+
+<div class="container">
+    <div class="slide active" id="slide0">
+        <h2>Morfología de Superficie: Cr sobre Mg</h2>
+        <img src="1001508027.jpg" alt="Morfología Cr/Mg">
+        <div class="content">
+            <p>Se observa la evolución de la deposición de Cromo. A bajas coberturas, los adátomos de Cr comienzan a nuclearse en la superficie de Magnesio (001). La simulación muestra cómo la difusión superficial juega un papel crítico en la formación de islas antes de completar la primera monocapa.</p>
+        </div>
+    </div>
+
+    <div class="slide" id="slide1">
+        <h2>Morfología de Superficie: Fe sobre Mg</h2>
+        <img src="1001508028.jpg" alt="Morfología Fe/Mg">
+        <div class="content">
+            <p>Comparación con el Hierro. Debido a las diferencias en la energía de enlace y radios atómicos, el Fe presenta una cinética de crecimiento distinta, mostrando estructuras ligeramente más compactas o rugosas dependiendo de la temperatura de sustrato simulada.</p>
+        </div>
+    </div>
+
+    <div class="slide" id="slide2">
+        <h2>Evolución de la Rugosidad (RMS)</h2>
+        <img src="1001512036.jpg" alt="Gráfica Rugosidad">
+        <div class="content">
+            <p>Esta gráfica representa el ancho de la interfaz $w(L,t)$. Se identifica el exponente de crecimiento $\beta$. El comportamiento lineal en escala log-log confirma que el sistema sigue procesos de relajación superficial consistentes con modelos de deposición con difusión.</p>
+        </div>
+    </div>
+
+    <div class="slide" id="slide3">
+        <h2>Distribución de Alturas y Cobertura</h2>
+        <img src="1001508033.jpg" alt="Distribución de Alturas">
+        <div class="content">
+            <p>El análisis de la ocupación de capas permite determinar el mecanismo de crecimiento. Si varias capas crecen simultáneamente, se confirma un crecimiento multiescalar, alejándose del modelo ideal de capa por capa.</p>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button id="prevBtn" onclick="changeSlide(-1)" disabled>Anterior</button>
+        <span id="slideNum">1 / 4</span>
+        <button id="nextBtn" onclick="changeSlide(1)">Siguiente</button>
+    </div>
+</div>
+
+<div class="footer-info">
+    Autor: Br. Ángel Chacín Ávila | Universidad del Zulia (2026)
+</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    function updateControls() {
+        document.getElementById('prevBtn').disabled = currentSlide === 0;
+        document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        document.getElementById('slideNum').innerText = `${currentSlide + 1} / ${totalSlides}`;
+    }
+
+    function changeSlide(direction) {
+        slides[currentSlide].classList.remove('active');
+        currentSlide += direction;
+        slides[currentSlide].classList.add('active');
+        updateControls();
+    }
+</script>
+
+</body>
+</html>
