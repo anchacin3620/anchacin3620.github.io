@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagrama de Flujo KMC - Para Word</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        .controls {
+            margin-bottom: 20px;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Estilos específicos para que se vea bien en pantalla Y en Word */
+        #diagram-container {
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+
+        table.flowchart {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0 auto;
+            max-width: 800px;
+        }
+
+        td {
+            padding: 10px;
+            vertical-align: middle;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        /* Estilos de las formas (Nodos) */
+        .node {
+            border: 2px solid #000;
+            border-radius: 5px;
+            padding: 10px;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .start-end {
+            background-color: #d4edda; /* Verde claro */
+            border-radius: 20px; /* Bordes redondeados */
+            border-color: #28a745;
+        }
+
+        .process {
+            background-color: #cce5ff; /* Azul claro */
+            border-color: #007bff;
+        }
+
+        .decision {
+            background-color: #fff3cd; /* Amarillo claro */
+            border-color: #ffc107;
+            /* Transformar a rombo es difícil de copiar a Word, usamos rectángulo con etiqueta */
+        }
+
+        .sub-process {
+            background-color: #e2e3e5; /* Gris claro */
+            font-style: italic;
+            font-size: 12px;
+        }
+
+        .arrow {
+            font-size: 24px;
+            line-height: 0.5;
+            color: #555;
+        }
+
+        .label-branch {
+            font-size: 11px;
+            color: #666;
+            background: #fff;
+            padding: 2px 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        /* Contenedores invisibles para estructurar el flujo */
+        .spacer {
+            border: none;
+            background: none;
+            height: 10px;
+        }
+        
+        .loop-label {
+            font-size: 12px;
+            color: #d63384;
+            font-weight: bold;
+            border: 2px dashed #d63384;
+            padding: 5px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Diagrama de Flujo: Simulación KMC (jupiter5.f90)</h1>
+
+    <div class="controls">
+        <button onclick="copiarDiagrama()">📋 Seleccionar y Copiar para Word</button>
+        <p style="font-size: 12px; color: #666; margin-top: 10px;">
+            Instrucciones: Haz clic en el botón, luego presiona Ctrl+V en tu documento de Word o Writer.
+        </p>
+    </div>
+
+    <div id="diagram-container">
+        <!-- El JavaScript inyectará la tabla aquí -->
+    </div>
+
+    <script>
+        // Función para generar el HTML de la tabla del diagrama
+        function generarHTMLDiagrama() {
+            let html = `
+            <table class="flowchart">
+                <!-- INICIO -->
+                <tr>
+                    <td colspan="5" class="node start-end">INICIO</td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="arrow">↓</td>
+                </tr>
+                
+                <!-- DECLARACIÓN -->
+                <tr>
+                    <td colspan="5" class="node process">Declarar Constantes y Variables</td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="arrow">↓</td>
+                </tr>
+
+                <!-- INPUT MATERIAL -->
+                <tr>
+                    <td colspan="5" class="node process">INPUT: Selección de Material (1=Cr, 2=Fe)</td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="arrow">↓</td>
+                </tr>
+
+                <!-- DECISIÓN MATERIAL -->
+                <tr>
+                    <td colspan="5" class="node decision">¿Cuál Material?</td>
+                </tr>
+                <tr>
+                    <td class="arrow" style="font-size:14px">Sí (Cr)</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="arrow" style="font-size:14px">Sí (Fe)</td>
+                </tr>
+                <tr>
+                    <td class="node process" style="width: 20%">Configurar Parámetros Cr<br>(Adh=0.98, Ed Baja)</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="node process" style="width: 20%">Configurar Parámetros Fe<br>(Adh=0.95, Ed Alta)</td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="arrow">↓ (Unir flujo)</td>
+                </tr>
+
+                <!-- INPUTS GENERALES -->
+                <tr>
+                    <td colspan="5" class="node process">INPUT: Modo de Deposición (Térmico/Balístico)</td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="arrow">↓</td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="node process">INPUT: Nº de Corridas y Snapshots</td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="arrow">↓</td>
+                </tr>
+
+                <!-- BUCLE CORRIDAS -->
+                <tr>
+                    <td colspan="5" class="node decision"><span class="loop-label">INICIO BUCLE CORRIDAS</span></td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="arrow">↓</td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="node sub-process">Inicializar Semilla Aleatoria y Parámetros (Tasa, Energía)</td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="arrow">↓</td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="node sub-process">Inicializar Rejilla (Sustrato Mg en capas 1 y 2)</td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="arrow">↓</td>
+                </tr>
+
+                <!-- BUCLE EVENTOS -->
+                <tr>
+                    <td colspan="5" class="node decision"><span class="loop-label">INICIO BUCLE EVENTOS (Mientras eventos < MAX)</span></td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="arrow">↓</td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="node sub-process">Avanzar Tiempo (KMC): t = t - ln(r) / R_total</td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="arrow">↓</td>
+                </tr>
+
+                <!-- DECISIÓN TIPO EVENTO -->
+                <tr>
+                    <td colspan="5" class="node decision">Seleccionar Tipo de Evento (Aleatorio Ponderado)</td>
+                </tr>
+                <tr>
+                    <td class="label-branch">Tasa Deposición</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="label-branch">Tasa Difusión</td>
+                </tr>
+                
+                <!-- RAMAS: DEPÓSITO VS DIFUSIÓN -->
+                <tr>
+                    <td class="node process" rowspan="9" valign="top" style="vertical-align:top">
+                        <strong>RUTA: DEPOSICIÓN</strong><br><br>
+                        1. Elegir (x,y) al azar<br>
+                        2. Buscar z_max vecinos<br>
+                        3. Calcular Prob. Adhesión<br>
+                        4. ¿Se adhiere?<br>
+                        &nbsp;&nbsp;Sí: Colocar átomo<br>
+                        &nbsp;&nbsp;No: Fin evento
+                    </td>
+                    <td colspan="3"></td>
+                    <td class="node process" rowspan="9" valign="top" style="vertical-align:top">
+                        <strong>RUTA: DIFUSIÓN</strong><br><br>
+                        1. Elegir átomo (x,y)<br>
+                        2. ¿Es átomo depositado?<br>
+                        3. ¿Prob. Difusión > r?<br>
+                        4. Elegir dirección vecina<br>
+                        5. ¿Sitio vacío y válido?<br>
+                        &nbsp;&nbsp;Sí: Mover átomo
+                    </td>
+                </tr>
+                <tr><td colspan="3"></td></tr> <!-- Espaciador -->
+                <tr><td colspan="3"></td></tr>
+                <tr><td colspan="3"></td></tr>
+                <tr><td colspan="3"></td></tr>
+                <tr><td colspan="3"></td></tr>
+                
+                <!-- MERGE -->
+                <tr>
+                    <td colspan="5" class="arrow">↓ (Unir flujo)</td>
+                </tr>
+
+                <!-- SNAPSHOT CHECK -->
+                <tr>
+                    <td colspan="5" class="node decision">¿Evento múltiplo de 1000?</td>
+                </tr>
+                <tr>
+                    <td class="label-branch">Sí</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="label-branch">No</td>
+                </tr>
+                <tr>
+                    <td class="node process">Calcular Métricas (Rugosidad, Islas)</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="node sub-process">Continuar Bucle</td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="arrow">↓</td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="node process">Guardar Datos en Archivo .dat</td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="arrow">↓</td>
+                </tr>
+
+                <!-- FIN BUCLE EVENTOS -->
+                <tr>
+                    <td colspan="5" class="node decision">¿Eventos >= MAX_EVENTOS?</td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="label-branch">No (Volver arriba)</td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="arrow">↓</td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="node process"><span class="loop-label">FIN BUCLE EVENTOS</span></td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="arrow">↓</td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="node process">Guardar Snapshot Final</td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="arrow">↓</td>
+                </tr>
+
+                <!-- FIN BUCLE CORRIDAS -->
+                <tr>
+                    <td colspan="5" class="node decision">¿Más corridas pendientes?</td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="label-branch">Sí (Volver a Inicio Bucle Corridas)</td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="arrow">↓</td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="node process"><span class="loop-label">FIN BUCLE CORRIDAS</span></td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="arrow">↓</td>
+                </tr>
+
+                <!-- FIN -->
+                <tr>
+                    <td colspan="5" class="node start-end">FIN DEL PROGRAMA</td>
+                </tr>
+            </table>
+            `;
+            return html;
+        }
+
+        // Renderizar el diagrama al cargar
+        document.getElementById('diagram-container').innerHTML = generarHTMLDiagrama();
+
+        // Función para copiar al portapapeles
+        function copiarDiagrama() {
+            const container = document.getElementById('diagram-container');
+            
+            // Crear un rango de selección
+            const range = document.createRange();
+            range.selectNode(container);
+            
+            // Seleccionar el contenido
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            
+            try {
+                // Ejecutar comando de copia
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    alert('¡Diagrama copiado! Ahora ve a Word y presiona Ctrl+V.');
+                } else {
+                    alert('No se pudo copiar automáticamente. Por favor selecciona el diagrama manualmente y copia (Ctrl+C).');
+                }
+            } catch (err) {
+                alert('Error al copiar: ' + err);
+            }
+            
+            // Limpiar selección
+            selection.removeAllRanges();
+        }
+    </script>
+</body>
+</html>
