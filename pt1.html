@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Esquema del Trabajo de Investigación</title>
+    <style>
+        :root {
+            --bg-body: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #38bdf8; /* Azul científico */
+            --border: #334155;
+            --hover-bg: #334155;
+            --line-color: #475569;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 2rem;
+            padding-bottom: 100px; /* Espacio extra para la flecha */
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: var(--bg-card);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        header {
+            background-color: rgba(56, 189, 248, 0.1);
+            padding: 2rem;
+            border-bottom: 1px solid var(--border);
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        header p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-family: monospace;
+        }
+
+        .controls {
+            padding: 0.75rem 2rem;
+            background-color: rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        button {
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 0.4rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background: var(--accent);
+            color: var(--bg-body);
+        }
+
+        /* Tree Structure Styles */
+        .tree {
+            list-style: none;
+            padding: 2rem;
+        }
+
+        .tree ul {
+            list-style: none;
+            padding-left: 1.5rem;
+            margin-left: 0.5rem;
+            border-left: 1px solid var(--line-color);
+            display: none; /* Hidden by default for sub-items */
+        }
+
+        .tree li {
+            margin: 0.5rem 0;
+            position: relative;
+        }
+
+        /* Show sub-items when parent has 'expanded' class */
+        .tree li.expanded > ul {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        /* Connector lines */
+        .tree li::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -1.5rem;
+            width: 1.5rem;
+            height: 100%;
+            border-left: 1px solid var(--line-color);
+            display: none;
+        }
+
+        .tree ul li::before {
+            display: block;
+        }
+
+        .tree ul li::after {
+            content: '';
+            position: absolute;
+            top: 0.75rem;
+            left: -1.5rem;
+            width: 1rem;
+            height: 1px;
+            background-color: var(--line-color);
+        }
+
+        /* Content Styling */
+        .node-content {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: background 0.2s;
+            user-select: none;
+        }
+
+        .node-content:hover {
+            background-color: var(--hover-bg);
+        }
+
+        .arrow {
+            margin-right: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            transition: transform 0.2s;
+            width: 15px;
+            text-align: center;
+        }
+
+        /* Rotate arrow when expanded */
+        .tree li.expanded > .node-content > .arrow {
+            transform: rotate(90deg);
+            color: var(--accent);
+        }
+
+        .label {
+            font-size: 0.95rem;
+            color: var(--text-main);
+        }
+
+        .page-num {
+            margin-left: auto;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            opacity: 0.7;
+        }
+
+        /* Specific styling for levels */
+        .level-0 > .node-content .label {
+            font-weight: 700;
+            color: var(--accent);
+            text-transform: uppercase;
+        }
+
+        .level-1 > .node-content .label {
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .level-2 > .node-content .label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- ESTILOS FLECHA DE NAVEGACIÓN --- */
+        .nav-next-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1000;
+            background-color: var(--bg-card);
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: pulse 3s infinite;
+            text-decoration: none;
+        }
+
+        .nav-next-btn:hover {
+            transform: scale(1.15);
+            background-color: var(--accent);
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.6);
+        }
+
+        .nav-next-btn svg {
+            width: 28px;
+            height: 28px;
+            fill: var(--accent);
+            transition: fill 0.3s ease;
+        }
+
+        .nav-next-btn:hover svg {
+            fill: var(--bg-body);
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(56, 189, 248, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 0.5rem; padding-bottom: 100px; }
+            .container { border-radius: 0; border: none; }
+            .nav-next-btn { width: 50px; height: 50px; bottom: 1.5rem; right: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Esquema General</h1>
+            <p>Trabajo de Grado: Simulación Monte Carlo Cr y Fe</p>
+        </header>
+
+        <div class="controls">
+            <button onclick="expandAll()">Expandir Todo</button>
+            <button onclick="collapseAll()">Contraer Todo</button>
+        </div>
+
+        <ul class="tree" id="indexTree">
+            <!-- Preliminares -->
+            <li class="level-0 expanded">
+                <div class="node-content">
+                    <span class="arrow">▶</span>
+                    <span class="label">Preliminares</span>
+                </div>
+                <ul>
+                    <li class="level-1"><div class="node-content"><span class="arrow">•</span><span class="label">RESUMEN</span><span class="page-num">iii</span></div></li>
+                    <li class="level-1"><div class="node-content"><span class="arrow">•</span><span class="label">ABSTRACT</span><span class="page-num">iv</span></div></li>
+                    <li class="level-1"><div class="node-content"><span class="arrow">•</span><span class="label">Índice de tablas</span><span class="page-num">vii</span></div></li>
+                    <li class="level-1"><div class="node-content"><span class="arrow">•</span><span class="label">Índice de figuras</span><span class="page-num">viii</span></div></li>
+                </ul>
+            </li>
+
+            <!-- Capítulo I -->
+            <li class="level-0 expanded">
+                <div class="node-content">
+                    <span class="arrow">▶</span>
+                    <span class="label">CAPÍTULO I: INTRODUCCIÓN</span>
+                    <span class="page-num">1</span>
+                </div>
+                <ul>
+                    <li class="level-1"><div class="node-content"><span class="arrow">•</span><span class="label">1.1 Películas Delgadas</span><span class="page-num">1</span></div></li>
+                    <li class="level-1"><div class="node-content"><span class="arrow">•</span><span class="label">1.2 Simulación Estocástica</span><span class="page-num">2</span></div></li>
+                </ul>
+            </li>
+
+            <!-- Capítulo II -->
+            <li class="level-0">
+                <div class="node-content">
+                    <span class="arrow">▶</span>
+                    <span class="label">CAPÍTULO II: ECUACIÓN MAESTRA PROBABILÍSTICA</span>
+                    <span class="page-num">5</span>
+                </div>
+                <ul>
+                    <li class="level-1"><div class="node-content"><span class="arrow">•</span><span class="label">2.1 Introducción</span><span class="page-num">5</span></div></li>
+                    <li class="level-1"><div class="node-content"><span class="arrow">•</span><span class="label">2.2 Fundamentos de la Ecuación Maestra Probabilística</span><span class="page-num">5</span></div></li>
+                    <li class="level-1"><div class="node-content"><span class="arrow">•</span><span class="label">2.3 Aplicación al modelo de deposición de películas delgadas</span><span class="page-num">6</span></div></li>
+                    <li class="level-1">
+                        <div class="node-content"><span class="arrow">▶</span><span class="label">2.4 Derivación de las tasas de transición</span><span class="page-num">6</span></div>
+                        <ul>
+                            <li class="level-2"><div class="node-content"><span class="arrow">•</span><span class="label">2.4.1 Difusión Superficial</span></div></li>
+                            <li class="level-2"><div class="node-content"><span class="arrow">•</span><span class="label">2.4.2 Adsorción</span></div></li>
+                        </ul>
+                    </li>
+                    <li class="level-1"><div class="node-content"><span class="arrow">•</span><span class="label">2.5 Implementación en el algoritmo KMC</span><span class="page-num">8</span></div></li>
+                </ul>
+            </li>
+
+            <!-- Capítulo III -->
+            <li class="level-0">
+                <div class="node-content">
+                    <span class="arrow">▶</span>
+                    <span class="label">CAPÍTULO III: MÉTODO DE MONTE CARLO</span>
+                    <span class="page-num">10</span>
+                </div>
+                <ul>
+                    <li class="level-1"><div class="node-content"><span class="arrow">•</span><span class="label">3.1 Introducción</span><span class="page-num">10</span></div></li>
+                    <li class="level-1"><div class="node-content"><span class="arrow">•</span><span class="label">3.2. Método de Monte Carlo Cinético...</span></div></li>
+                    <li class="level-1"><div class="node-content"><span class="arrow">•</span><span class="label">3.3 Ventajas del uso del KMC...</span></div></li>
+                    <li class="level-1">
+                        <div class="node-content"><span class="arrow">▶</span><span class="label">3.4 Construcción del algoritmo KMC implementado</span><span class="page-num">12</span></div>
+                        <ul>
+                            <li class="level-2"><div class="node-content"><span class="arrow">•</span><span class="label">3.4.1 Algoritmo KMC General</span></div></li>
+                            <li class="level-2"><div class="node-content"><span class="arrow">•</span><span class="label">3.4.2 Implementación del sustrato de Mg (001)</span></div></li>
+                            <li class="level-2"><div class="node-content"><span class="arrow">•</span><span class="label">3.4.3 Selección de material y modo de deposición</span></div></li>
+                            <li class="level-2"><div class="node-content"><span class="arrow">•</span><span class="label">3.4.4 Procesos simulados: deposición y difusión</span></div></li>
+                            <li class="level-2"><div class="node-content"><span class="arrow">•</span><span class="label">3.4.5 Cálculo de métricas avanzadas</span></div></li>
+                        </ul>
+                    </li>
+                    <li class="level-1">
+                        <div class="node-content"><span class="arrow">▶</span><span class="label">3.5 Adaptación a Simulaciones 2D y 3D</span><span class="page-num">16</span></div>
+                        <ul>
+                            <li class="level-2"><div class="node-content"><span class="arrow">•</span><span class="label">3.5.1 Simulaciones 2D</span></div></li>
+                            <li class="level-2"><div class="node-content"><span class="arrow">•</span><span class="label">3.5.2 Simulaciones 3D</span></div></li>
+                        </ul>
+                    </li>
+                    <li class="level-1"><div class="node-content"><span class="arrow">•</span><span class="label">3.6 Justificación del uso de la subrutina...</span><span class="page-num">17</span></div></li>
+                </ul>
+            </li>
+
+            <!-- Capítulo IV -->
+            <li class="level-0">
+                <div class="node-content">
+                    <span class="arrow">▶</span>
+                    <span class="label">CAPÍTULO IV: ANÁLISIS Y DISCUSIÓN DE RESULTADO</span>
+                    <span class="page-num">18</span>
+                </div>
+                <ul>
+                    <li class="level-1"><div class="node-content"><span class="arrow">•</span><span class="label">4.1 Descripción de los Parámetros</span><span class="page-num">18</span></div></li>
+                    <li class="level-1"><div class="node-content"><span class="arrow">•</span><span class="label">4.2 Análisis Numérico del Modo Balístico</span><span class="page-num">18</span></div></li>
+                    <li class="level-1"><div class="node-content"><span class="arrow">•</span><span class="label">4.3 Análisis Gráfico del Modo Balístico</span><span class="page-num">19</span></div></li>
+                </ul>
+            </li>
+
+            <!-- Capítulo V -->
+            <li class="level-0">
+                <div class="node-content">
+                    <span class="arrow">▶</span>
+                    <span class="label">CAPÍTULO V: CONCLUSIÓN Y RECOMENDACIONES</span>
+                    <span class="page-num">24</span>
+                </div>
+                <ul>
+                    <li class="level-1"><div class="node-content"><span class="arrow">•</span><span class="label">5.1. Conclusiones</span><span class="page-num">24</span></div></li>
+                    <li class="level-1">
+                        <div class="node-content"><span class="arrow">▶</span><span class="label">5.2 Recomendaciones</span><span class="page-num">26</span></div>
+                        <ul>
+                            <li class="level-2"><div class="node-content"><span class="arrow">•</span><span class="label">5.2.1 Para futuras investigaciones</span></div></li>
+                            <li class="level-2"><div class="node-content"><span class="arrow">•</span><span class="label">5.2.2 Para la validación experimental</span></div></li>
+                            <li class="level-2"><div class="node-content"><span class="arrow">•</span><span class="label">5.2.3 Para la optimización computacional</span></div></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+
+            <!-- Final -->
+            <li class="level-0">
+                <div class="node-content">
+                    <span class="arrow">▶</span>
+                    <span class="label">APÉNDICES Y REFERENCIAS</span>
+                </div>
+                <ul>
+                    <li class="level-1"><div class="node-content"><span class="arrow">•</span><span class="label">Apéndice A. Código Fortran 90...</span><span class="page-num">28</span></div></li>
+                    <li class="level-1"><div class="node-content"><span class="arrow">•</span><span class="label">REFERENCIAS BIBLIOGRÁFICAS</span><span class="page-num">60</span></div></li>
+                </ul>
+            </li>
+
+        </ul>
+    </div>
+
+    <!-- Botón de Navegación Flotante con el link actualizado -->
+    <a href="https://anchacin3620.github.io/pt2.html" class="nav-next-btn" title="Ir a la siguiente lámina">
+        <svg viewBox="0 0 24 24">
+            <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+        </svg>
+    </a>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tree = document.getElementById('indexTree');
+            
+            // Add click events to all nodes that have children
+            const nodeContents = document.querySelectorAll('.node-content');
+            
+            nodeContents.forEach(node => {
+                node.addEventListener('click', (e) => {
+                    const parentLi = node.parentElement;
+                    const nextUl = parentLi.querySelector('ul');
+
+                    // Only toggle if there is a sub-list
+                    if (nextUl) {
+                        parentLi.classList.toggle('expanded');
+                        
+                        const arrow = node.querySelector('.arrow');
+                        if (parentLi.classList.contains('expanded')) {
+                            arrow.textContent = '▼';
+                            arrow.style.transform = 'rotate(90deg)';
+                        } else {
+                            arrow.style.transform = 'rotate(0deg)';
+                        }
+                    }
+                });
+            });
+
+            // Initialize arrows state based on 'expanded' class in HTML
+            const expandedItems = document.querySelectorAll('.expanded > .node-content .arrow');
+            expandedItems.forEach(arrow => {
+                arrow.style.transform = 'rotate(90deg)';
+            });
+        });
+
+        function expandAll() {
+            const allLis = document.querySelectorAll('#indexTree li');
+            allLis.forEach(li => {
+                if(li.querySelector('ul')) {
+                    li.classList.add('expanded');
+                    const arrow = li.querySelector('.node-content .arrow');
+                    if(arrow) arrow.style.transform = 'rotate(90deg)';
+                }
+            });
+        }
+
+        function collapseAll() {
+            const allLis = document.querySelectorAll('#indexTree li');
+            allLis.forEach(li => {
+                if(li.querySelector('ul')) {
+                    li.classList.remove('expanded');
+                    const arrow = li.querySelector('.node-content .arrow');
+                    if(arrow) arrow.style.transform = 'rotate(0deg)';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
