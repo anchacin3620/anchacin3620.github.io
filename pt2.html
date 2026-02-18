@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentación Capítulo I: Simulación Monte Carlo</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --text-color: #e2e8f0;
+            --accent-color: #38bdf8; /* Azul claro */
+            --secondary-accent: #94a3b8; /* Gris azulado */
+            --highlight-color: #fbbf24; /* Dorado sutil para énfasis */
+            --cr-color: #60a5fa; /* Color visual para Cr */
+            --fe-color: #f87171; /* Color visual para Fe */
+            --mg-color: #cbd5e1; /* Color visual para Mg */
+            --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- Fondo Animado --- */
+        #simulation-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.3;
+        }
+
+        /* --- Contenedor de Diapositivas --- */
+        .deck-container {
+            position: relative;
+            z-index: 10;
+            width: 90%;
+            max-width: 1200px;
+            height: 85vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .slide {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.6s ease-in-out, transform 0.6s ease;
+            transform: translateY(20px);
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 3rem;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Tipografía */
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.8rem;
+            color: var(--secondary-accent);
+        }
+
+        p, li {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 1rem;
+        }
+
+        li {
+            position: relative;
+            margin-bottom: 0.8rem;
+            opacity: 0; /* Para animación de entrada */
+            transform: translateX(-10px);
+            transition: all 0.4s ease;
+        }
+
+        /* Bullets personalizados */
+        li::before {
+            content: '➤';
+            position: absolute;
+            left: -1.5rem;
+            color: var(--accent-color);
+            font-size: 0.8em;
+            top: 4px;
+        }
+
+        li.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .highlight {
+            color: var(--highlight-color);
+            font-weight: bold;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            font-weight: bold;
+            margin: 0 2px;
+        }
+        .tag.cr { background: rgba(96, 165, 250, 0.2); color: var(--cr-color); }
+        .tag.fe { background: rgba(248, 113, 113, 0.2); color: var(--fe-color); }
+        .tag.mg { background: rgba(203, 213, 225, 0.2); color: var(--mg-color); }
+
+        /* Controles de Navegación */
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 20;
+            padding: 0 5%;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            backdrop-filter: blur(5px);
+        }
+
+        .nav-btn:hover {
+            background: var(--accent-color);
+            color: var(--bg-color);
+            transform: scale(1.05);
+        }
+
+        .progress-indicators {
+            display: flex;
+            gap: 10px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .dot.active {
+            background: var(--accent-color);
+            transform: scale(1.2);
+        }
+
+        /* Control de simulación */
+        .sim-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 20;
+            display: flex;
+            gap: 10px;
+        }
+
+        .sim-btn {
+            background: rgba(0,0,0,0.6);
+            border: 1px solid var(--secondary-accent);
+            color: var(--secondary-accent);
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+        
+        .sim-btn:hover {
+            color: white;
+            border-color: white;
+        }
+
+        /* --- NUEVO: Estilos Botón Enlace Siguiente --- */
+        .nav-next-link {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: rgba(15, 23, 42, 0.9);
+            border: 3px solid var(--accent-color);
+            color: var(--accent-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 30px rgba(56, 189, 248, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        .nav-next-link:hover {
+            transform: scale(1.15);
+            background-color: var(--accent-color);
+            color: var(--bg-color);
+            box-shadow: 0 0 40px rgba(56, 189, 248, 0.6);
+        }
+
+        .nav-next-link svg {
+            width: 50px;
+            height: 50px;
+            fill: currentColor;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.4); }
+            70% { box-shadow: 0 0 0 20px rgba(56, 189, 248, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
+        }
+
+        /* Scrollbar personalizado */
+        .slide::-webkit-scrollbar {
+            width: 8px;
+        }
+        .slide::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+        }
+        .slide::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.2);
+            border-radius: 4px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8rem; }
+            h2 { font-size: 1.4rem; }
+            .slide { padding: 1.5rem; }
+            .controls { padding: 0 10px; bottom: 10px; }
+            .nav-btn { padding: 8px 15px; font-size: 0.8rem; }
+            .nav-next-link { width: 70px; height: 70px; }
+            .nav-next-link svg { width: 35px; height: 35px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Fondo de Simulación -->
+    <canvas id="simulation-canvas"></canvas>
+    
+    <!-- Botón para pausar/ver el fondo -->
+    <div class="sim-controls">
+        <button class="sim-btn" id="toggle-sim">Pausar Simulación</button>
+        <button class="sim-btn" id="reset-sim">Reiniciar</button>
+    </div>
+
+    <!-- Contenedor Principal de Diapositivas -->
+    <main class="deck-container">
+
+        <!-- Diapositiva 1: Título -->
+        <section class="slide active">
+            <p style="color: var(--accent-color); font-weight: bold; letter-spacing: 2px; text-transform: uppercase;">Exposición del Capítulo I</p>
+            <h1>Introducción: Simulación Monte Carlo de procesos de deposición de películas delgadas</h1>
+            <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.2); margin: 2rem 0;">
+            <p><strong>Sistema:</strong> <span class="tag cr">Cr</span> y <span class="tag fe">Fe</span> sobre sustrato sólido <span class="tag mg">Mg (001)</span></p>
+            <br>
+            <p>A continuación se procede a explicar el capítulo I:</p>
+            <p></p>
+        </section>
+
+        <!-- Diapositiva 2: Objetivos -->
+        <section class="slide">
+            <h2>Objetivo y Estructura</h2>
+            <p>Este capítulo busca contextualizar y justificar la investigación, estableciendo la relevancia científica, el problema y la metodología.</p>
+            <br>
+            <h3>Estructura del Capítulo</h3>
+            <ul>
+                <li><strong>1.1 Películas Delgadas:</strong> Definición, sistema de estudio Cr/Fe-Mg(001), complejidad estocástica y propuesta metodológica.</li>
+                <li><strong>1.2 Simulación Estocástica:</strong> Fundamentos del método, evolución del MC al KMC y los 4 pasos metodológicos clave.</li>
+            </ul>
+        </section>
+
+        <!-- Diapositiva 3: 1.1 Definición -->
+        <section class="slide">
+            <h2>1.1 Películas Delgadas</h2>
+            <h3>Definición y Relevancia</h3>
+            <ul>
+                <li>Capas de material con espesores que van desde <strong>nanómetros hasta micrómetros</strong>.</li>
+                <li>Propiedades únicas distintas al material a granel.</li>
+                <li>Aplicaciones indispensables:
+                    <br><span style="color:var(--secondary-accent)">Recubrimientos protectores, dispositivos electrónicos y magnéticos.</span>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Diapositiva 4: 1.1 Sistema de Estudio -->
+        <section class="slide">
+            <h2>1.1 Sistema de Estudio Específico</h2>
+            <p>Se estudian películas metálicas depositadas sobre un sustrato con orientación cristalográfica (001).</p>
+            <br>
+            <ul>
+                <li><span class="tag cr">Cromo (Cr)</span> y <span class="tag fe">Hierro (Fe)</span>: 
+                    <br>Uso en recubrimientos protectores y dispositivos magnéticos.
+                </li>
+                <li><span class="tag mg">Magnesio Mg (001)</span>: 
+                    <br>Sustrato ligero y prometedor, pero con alta reactividad química que requiere recubrimientos para mejorar su durabilidad.
+                </li>
+            </ul>
+        </section>
+
+        <!-- Diapositiva 5: 1.1 Complejidad y Solución -->
+        <section class="slide">
+            <h2>1.1 Complejidad y Solución</h2>
+            <h3>El Desafío Físico</h3>
+            <ul>
+                <li>Procesos físicos complejos y <strong>estocásticos</strong> (adsorción y difusión superficial).</li>
+                <li>Dependencia crítica de parámetros intrínsecos: Energía de difusión (<span class="highlight">Ed</span>) y coeficiente de adherencia (<span class="highlight">sticking</span>).</li>
+            </ul>
+            <hr style="border: 0; border-top: 1px dashed rgba(255,255,255,0.2); margin: 1.5rem 0;">
+            <h3>La Solución Propuesta</h3>
+            <ul>
+                <li><strong>Limitación Experimental:</strong> Dificultad para observar a escala atómica y en tiempo real.</li>
+                <li><strong>Herramienta:</strong> Simulación computacional mediante el método de <strong>Monte Carlo Cinético (KMC)</strong>.</li>
+                <li><strong>Implementación:</strong> Código en Fortran para deposición balística + Scripts en Python para análisis (mapas, rugosidad, densidad).</li>
+            </ul>
+        </section>
+
+        <!-- Diapositiva 6: 1.2 Simulación Estocástica -->
+        <section class="slide">
+            <h2>1.2 Simulación Estocástica</h2>
+            <h3>Fundamento y Evolución</h3>
+            <ul>
+                <li>Modela sistemas complejos donde los procesos son inherentemente <strong>aleatorios</strong> y no deterministas.</li>
+                <li>Desde el <strong>Monte Carlo (MC)</strong> clásico (años 40) hasta el <strong>Monte Carlo Cinético (KMC)</strong>.</li>
+                <li>El KMC permite simular la evolución temporal de sistemas <strong>fuera del equilibrio</strong> (como el crecimiento de una película).</li>
+            </ul>
+            <br>
+            <p><em>Base teórica: Ecuación maestra probabilística para transiciones entre estados.</em></p>
+        </section>
+
+        <!-- Diapositiva 7: 1.2 Metodología Concreta -->
+        <section class="slide">
+            <h2>1.2 Metodología: Los 4 Pasos</h2>
+            <ol style="list-style: decimal; padding-left: 2rem; line-height: 2;">
+                <li><strong>Definición del sistema:</strong> Creación de una rejilla computacional (Sustrato Mg(001)).</li>
+                <li><strong>Derivación de tasas:</strong> Cálculo probabilístico de eventos (Adsorción/Difusión) usando Ecuación de Arrhenius.</li>
+                <li><strong>Algoritmo KMC:</strong> Código en <strong>Fortran 90</strong> que selecciona eventos aleatorios y actualiza el sistema.</li>
+                <li><strong>Análisis:</strong> Uso de <strong>Python</strong> para procesar datos, calcular propiedades (rugosidad) y visualizar morfología (2D/3D).</li>
+            </ol>
+        </section>
+
+        <!-- Diapositiva 8: Conclusión -->
+        <section class="slide">
+            <h2>Conclusión del Capítulo I</h2>
+            <p>En síntesis, este capítulo establece con claridad:</p>
+            <ul>
+                <li>La importancia científica del sistema <span class="tag cr">Cr</span>/<span class="tag fe">Fe</span> sobre <span class="tag mg">Mg(001)</span>.</li>
+                <li>La naturaleza compleja y estocástica del problema físico.</li>
+                <li>La idoneidad del método <strong>KMC</strong> para abordarlo.</li>
+                <li>La ruta metodológica que conecta la teoría (Ecuación Maestra) con la práctica (Código).</li>
+            </ul>
+            <div style="margin-top: 2rem; padding: 1rem; background: rgba(255,255,255,0.05); border-left: 4px solid var(--accent-color);">
+                <p>Se sientan las bases teóricas necesarias para profundizar en los resultados en los siguientes capítulos.</p>
+            </div>
+        </section>
+
+        <!-- Diapositiva 9: Final (MODIFICADA) -->
+        <section class="slide" style="text-align: center; justify-content: center; align-items: center;">
+            <h2 style="border: none; color: var(--secondary-accent); margin-bottom: 2rem;">Continuar con el Capítulo II</h2>
+            
+            <a href="https://anchacin3620.github.io/pt3.html" class="nav-next-link" title="Ir a la siguiente presentación">
+                <svg viewBox="0 0 24 24">
+                    <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+                </svg>
+            </a>
+        </section>
+
+    </main>
+
+    <!-- Controles Inferiores -->
+    <div class="controls">
+        <button class="nav-btn" id="prev-btn">❮ Anterior</button>
+        
+        <div class="progress-indicators" id="dots-container">
+            <!-- Dots generados por JS -->
+        </div>
+        
+        <button class="nav-btn" id="next-btn">Siguiente ❯</button>
+    </div>
+
+    <script>
+        /**
+         * Lógica de Presentación (Slides)
+         */
+        const slides = document.querySelectorAll('.slide');
+        const dotsContainer = document.getElementById('dots-container');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        let currentSlide = 0;
+
+        // Inicializar indicadores (dots)
+        slides.forEach((_, index) => {
+            const dot = document.createElement('div');
+            dot.classList.add('dot');
+            if (index === 0) dot.classList.add('active');
+            dot.addEventListener('click', () => goToSlide(index));
+            dotsContainer.appendChild(dot);
+        });
+
+        const dots = document.querySelectorAll('.dot');
+
+        function updateSlide() {
+            // Ocultar todas las slides
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active');
+                dots[index].classList.remove('active');
+                
+                // Resetear animaciones de texto dentro de la slide oculta
+                const items = slide.querySelectorAll('li');
+                items.forEach(item => item.classList.remove('visible'));
+            });
+
+            // Mostrar slide actual
+            slides[currentSlide].classList.add('active');
+            dots[currentSlide].classList.add('active');
+
+            // Animar elementos de la lista secuencialmente
+            const currentItems = slides[currentSlide].querySelectorAll('li');
+            currentItems.forEach((item, index) => {
+                setTimeout(() => {
+                    item.classList.add('visible');
+                }, index * 200 + 300); // Retraso escalonado
+            });
+
+            // Actualizar visibilidad de botones
+            prevBtn.style.opacity = currentSlide === 0 ? '0.5' : '1';
+            nextBtn.style.opacity = currentSlide === slides.length - 1 ? '0.5' : '1';
+        }
+
+        function goToSlide(n) {
+            currentSlide = n;
+            updateSlide();
+        }
+
+        nextBtn.addEventListener('click', () => {
+            if (currentSlide < slides.length - 1) goToSlide(currentSlide + 1);
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentSlide > 0) goToSlide(currentSlide - 1);
+        });
+
+        // Navegación por teclado
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' && currentSlide < slides.length - 1) goToSlide(currentSlide + 1);
+            if (e.key === 'ArrowLeft' && currentSlide > 0) goToSlide(currentSlide - 1);
+        });
+
+        // Inicializar primera animación de texto
+        updateSlide();
+
+
+        /**
+         * Animación de Fondo: Simulación de Deposición Balística (Canvas 2D)
+         */
+        const canvas = document.getElementById('simulation-canvas');
+        const ctx = canvas.getContext('2d');
+        const toggleSimBtn = document.getElementById('toggle-sim');
+        const resetSimBtn = document.getElementById('reset-sim');
+
+        let width, height;
+        let atoms = [];
+        let isSimRunning = true;
+        let animationId;
+
+        // Configuración de la simulación
+        const config = {
+            atomSize: 4,
+            gridRows: 20,
+            spawnRate: 2, // Frames entre spawns
+            speed: 4
+        };
+
+        class Atom {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = -config.atomSize;
+                this.vy = config.speed + Math.random() * 2; // Velocidad variable
+                // Color aleatorio entre Cr (azulado) y Fe (rojizo)
+                this.type = Math.random() > 0.5 ? 'Cr' : 'Fe'; 
+                this.color = this.type === 'Cr' ? '#60a5fa' : '#f87171';
+                this.stuck = false;
+            }
+
+            update() {
+                if (this.stuck) return;
+
+                this.y += this.vy;
+
+                // Colisión con el fondo (Sustrato Mg)
+                if (this.y + config.atomSize >= height) {
+                    this.y = height - config.atomSize;
+                    this.stuck = true;
+                }
+
+                // Colisión con otros átomos
+                for (let other of atoms) {
+                    if (other.stuck && 
+                        Math.abs(other.x - this.x) < config.atomSize && 
+                        Math.abs(other.y - this.y) < config.atomSize) {
+                        
+                        this.y = other.y - config.atomSize * 2;
+                        this.stuck = true;
+                        break;
+                    }
+                }
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, config.atomSize, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.closePath();
+            }
+        }
+
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+        }
+
+        function drawSubstrate() {
+            ctx.beginPath();
+            ctx.moveTo(0, height - 2);
+            ctx.lineTo(width, height - 2);
+            ctx.strokeStyle = '#cbd5e1';
+            ctx.lineWidth = 4;
+            ctx.stroke();
+
+            ctx.fillStyle = 'rgba(203, 213, 225, 0.1)';
+            ctx.fillRect(0, height - 20, width, 20);
+        }
+
+        let frameCount = 0;
+
+        function animate() {
+            if (!isSimRunning) return;
+
+            ctx.clearRect(0, 0, width, height);
+
+            drawSubstrate();
+
+            if (frameCount % config.spawnRate === 0) {
+                atoms.push(new Atom());
+            }
+
+            if (atoms.length > 800) atoms.shift(); 
+
+            for (let atom of atoms) {
+                atom.update();
+                atom.draw();
+            }
+
+            frameCount++;
+            animationId = requestAnimationFrame(animate);
+        }
+
+        // Control de simulación
+        toggleSimBtn.addEventListener('click', () => {
+            isSimRunning = !isSimRunning;
+            toggleSimBtn.textContent = isSimRunning ? "Pausar Simulación" : "Reanudar Simulación";
+            if (isSimRunning) animate();
+        });
+
+        resetSimBtn.addEventListener('click', () => {
+            atoms = [];
+            ctx.clearRect(0, 0, width, height);
+            drawSubstrate();
+        });
+
+        // Inicializar
+        window.addEventListener('resize', resize);
+        resize();
+        animate();
+
+    </script>
+</body>
+</html>
