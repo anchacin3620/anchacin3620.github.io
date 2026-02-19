@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bibliografía y Anexos</title>
+    <style>
+        :root {
+            /* Tema Técnico (Teal/Cian) */
+            --bg-color: #0f172a;
+            --slide-bg: rgba(15, 23, 42, 0.98);
+            --text-color: #f1f5f9;
+            --secondary-text: #94a3b8;
+            --accent-color: #2dd4bf; /* Teal/Cian brillante */
+            --code-bg: #0f172a;
+            --code-font: 'Courier New', Courier, monospace;
+            --font-main: 'Segoe UI', Roboto, Helvetica, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Fondo Animado (Binary Rain Sutil) */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.15;
+            pointer-events: none;
+        }
+
+        .deck-container {
+            position: relative;
+            z-index: 10;
+            width: 95%;
+            max-width: 1300px;
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            background: var(--slide-bg);
+            border: 1px solid rgba(45, 212, 191, 0.2);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            border-radius: 8px;
+            height: 100%;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Tipografía */
+        h1 { 
+            font-size: 2.2rem; 
+            margin-bottom: 1rem; 
+            color: var(--accent-color);
+            font-weight: 700;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+        h2 { font-size: 1.5rem; margin-bottom: 1.5rem; color: #fff; }
+        p { font-size: 1.1rem; line-height: 1.6; margin-bottom: 1rem; color: var(--secondary-text); }
+
+        /* Estilo Bibliografía */
+        .references-list {
+            counter-reset: ref-counter;
+            padding-left: 1rem;
+        }
+        .ref-item {
+            margin-bottom: 1.2rem;
+            position: relative;
+            padding-left: 2.5rem;
+            color: #cbd5e1;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+        .ref-item::before {
+            counter-increment: ref-counter;
+            content: counter(ref-counter) ".";
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: var(--accent-color);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .ref-author { font-weight: bold; color: #fff; }
+        .ref-title { font-style: italic; }
+
+        /* Estilo de Código (Anexo A) */
+        .code-block {
+            background: #1e293b;
+            border-radius: 6px;
+            padding: 1.5rem;
+            font-family: var(--code-font);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            border-left: 4px solid var(--accent-color);
+            color: #e2e8f0;
+            max-height: 65vh;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
+        }
+        
+        .comment { color: #64748b; font-style: italic; }
+        .keyword { color: #f472b6; font-weight: bold; }
+        .type { color: #38bdf8; }
+        .variable { color: #fbbf24; }
+
+        /* Controles */
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 5%;
+            z-index: 20;
+            pointer-events: none;
+        }
+        .controls > * { pointer-events: auto; }
+
+        .nav-btn {
+            background: var(--accent-color);
+            color: #0f172a;
+            border: none;
+            padding: 12px 24px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+        .nav-btn:hover { transform: translateY(-2px); box-shadow: 0 0 15px rgba(45, 212, 191, 0.4); }
+
+        .progress { display: flex; gap: 8px; background: rgba(0,0,0,0.6); padding: 8px 16px; border-radius: 20px; }
+        .dot { width: 8px; height: 8px; background: rgba(255,255,255,0.3); border-radius: 50%; transition: 0.3s; cursor: pointer; }
+        .dot.active { background: var(--accent-color); transform: scale(1.3); }
+
+        /* Scrollbar personalizado */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent-color); }
+    </style>
+</head>
+<body>
+
+    <canvas id="bg-canvas"></canvas>
+
+    <main class="deck-container">
+        
+        <!-- Slide 1: Título -->
+        <section class="slide active">
+            <h1>Bibliografía y Anexos</h1>
+            <h2 style="margin-top: 1rem; color: var(--secondary-accent);">Materiales de Referencia y Código Fuente</h2>
+            <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 2rem 0;">
+            <p>Señores miembros del jurado:</p>
+            <p>Para cerrar la documentación de este trabajo de investigación, presentamos las referencias bibliográficas que fundamentan el marco teórico y el código fuente (Anexo A) utilizado en la simulación.</p>
+            <p>Esta sección garantiza la reproducibilidad del estudio y permite una revisión exhaustiva de la implementación técnica.</p>
+        </section>
+
+        <!-- Slide 2: Bibliografía (ACTUALIZADA A 10) -->
+        <section class="slide">
+            <h2>Referencias Bibliográficas</h2>
+            <p>Lista de consultas teóricas y metodológicas:</p>
+            <div class="references-list">
+                <div class="ref-item">
+                    <span class="ref-author">Landau, D. P., & Binder, K. (2009).</span> <span class="ref-title">A Guide to Monte Carlo Simulations in Statistical Physics (4th ed.).</span> Cambridge University Press.
+                </div>
+                <div class="ref-item">
+                    <span class="ref-author">Bortz, A. B., Kalos, M. H., & Lebowitz, J. L. (1975).</span> <span class="ref-title">A new algorithm for Monte Carlo simulation of Ising spin systems.</span> Journal of Computational Physics, 17(1), 10-18.
+                </div>
+                <div class="ref-item">
+                    <span class="ref-author">Venables, J. A., Spiller, G. D. T., & Hanbücken, M. (1984).</span> <span class="ref-title">Nucleation and growth of thin films.</span> Reports on Progress in Physics, 47(4), 399.
+                </div>
+                <div class="ref-item">
+                    <span class="ref-author">Barabási, A.-L., & Stanley, H. E. (1995).</span> <span class="ref-title">Fractal Concepts in Surface Growth.</span> Cambridge University Press.
+                </div>
+                <div class="ref-item">
+                    <span class="ref-author">Fichthorn, K. A., & Weinberg, W. H. (1991).</span> <span class="ref-title">Theoretical foundations of dynamical Monte Carlo simulations.</span> The Journal of Chemical Physics, 95(2), 1090.
+                </div>
+                <div class="ref-item">
+                    <span class="ref-author">Ohring, M. (1992).</span> <span class="ref-title">The Materials Science of Thin Films.</span> Academic Press.
+                </div>
+                <div class="ref-item">
+                    <span class="ref-author">Family, F., & Vicsek, T. (1985).</span> <span class="ref-title">Scaling of rough surfaces.</span> Journal of Physics A: Mathematical and General, 18(2), L75.
+                </div>
+                <div class="ref-item">
+                    <span class="ref-author">Raible, M., Linz, S. J., & Hanggi, P. (2000).</span> <span class="ref-title">Amorphous thin film growth: Effects of diffusion in a stochastic model.</span> Physical Review E, 61(2), R617.
+                </div>
+                <div class="ref-item">
+                    <span class="ref-author">Chattopadhyay, S. (2000).</span> <span class="ref-title">Introduction to Computational Materials Science.</span> Cambridge University Press.
+                </div>
+                <div class="ref-item">
+                    <span class="ref-author">Metcalf, M., & Reid, J. (1999).</span> <span class="ref-title">Fortran 90/95 Explained.</span> Oxford University Press.
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 3: Anexo A Intro -->
+        <section class="slide">
+            <h2>Anexo A: Código Fortran 90</h2>
+            <p><strong>Archivo:</strong> <code>simulation_kmc_unificado.f90</code></p>
+            <p>Este anexo contiene el código fuente principal de la simulación. El algoritmo está diseñado para manejar materiales distintos (Cr/Fe) y modos de deposición mediante variables de configuración.</p>
+            
+            <div class="code-block">
+<span class="keyword">PROGRAM</span> simulation_kmc_unificado
+<span class="keyword">IMPLICIT NONE</span>
+
+! Parámetros constantes (reducidos para pruebas)
+<span class="keyword">INTEGER</span>, <span class="keyword">PARAMETER</span> :: TAM_REJILLA = <span class="variable">50</span>, ALTURA_MAX = <span class="variable">30</span>
+<span class="keyword">REAL</span>, <span class="keyword">PARAMETER</span> :: <span class="variable">KB</span> = 8.617<span class="variable">E</span>-5, TEMP_SUBSTRATO = <span class="variable">500.0</span>
+
+! Parámetros específicos por material
+<span class="keyword">REAL</span> :: <span class="variable">ADHESION_BASE</span>, <span class="variable">ENERGIA_DIFUSION_MIN</span>, <span class="variable">ENERGIA_DIFUSION_MAX</span>
+<span class="keyword">INTEGER</span> :: <span class="variable">MATERIAL_ID</span>
+...
+            </div>
+            <p style="font-size: 0.9rem; margin-top: 0.5rem; color: var(--accent-color);">Fig. 1: Declaración de constantes y variables globales.</p>
+        </section>
+
+        <!-- Slide 4: Anexo A Configuración -->
+        <section class="slide">
+            <h2>Anexo A: Inicialización y Semilla</h2>
+            <p>Bloque de selección de material y configuración de números aleatorios:</p>
+            
+            <div class="code-block">
+! Selección de material
+<span class="keyword">PRINT</span> *, <span class="string">'Seleccione el material (1=Cr, 2=Fe):'</span>
+<span class="keyword">READ</span> *, <span class="variable">MATERIAL_ID</span>
+<span class="keyword">IF</span> (<span class="variable">MATERIAL_ID</span> == <span class="variable">1</span>) <span class="keyword">THEN</span>
+    <span class="variable">material_name</span> = <span class="string">'Cr'</span>
+    <span class="variable">ADHESION_BASE</span> = <span class="variable">0.98</span>
+    <span class="variable">ENERGIA_DIFUSION_MIN</span> = <span class="variable">0.01</span>
+    <span class="variable">ENERGIA_DIFUSION_MAX</span> = <span class="variable">0.25</span>
+<span class="keyword">ELSE IF</span> (<span class="variable">MATERIAL_ID</span> == <span class="variable">2</span>) <span class="keyword">THEN</span>
+    <span class="variable">material_name</span> = <span class="string">'Fe'</span>
+    <span class="variable">ADHESION_BASE</span> = <span class="variable">0.95</span>
+    <span class="variable">ENERGIA_DIFUSION_MIN</span> = <span class="variable">0.5</span>
+    <span class="variable">ENERGIA_DIFUSION_MAX</span> = <span class="variable">1.0</span>
+<span class="keyword">END IF</span>
+
+! Inicializar semilla para números aleatorios
+<span class="keyword">CALL SYSTEM_CLOCK</span>(i)
+<span class="variable">semilla</span> = i + <span class="variable">37</span> * (/ (j - <span class="variable">1</span>, j = <span class="variable">1</span>, <span class="variable">8</span>) /) + <span class="variable">corrida</span>
+<span class="keyword">CALL RANDOM_SEED</span>(<span class="keyword">PUT</span>=<span class="variable">semilla</span>)
+            </div>
+        </section>
+
+        <!-- Slide 5: Anexo A Bucle Principal -->
+        <section class="slide">
+            <h2>Anexo A: Bucle Principal de Simulación</h2>
+            <p>Lógica del ciclo de eventos (KMC) y generación de snapshots:</p>
+            
+            <div class="code-block">
+<span class="keyword">DO</span> <span class="keyword">WHILE</span> (<span class="variable">num_eventos</span> < <span class="variable">MAX_EVENTOS</span>)
+    <span class="keyword">CALL</span> simular_evento(<span class="variable">material</span>, <span class="variable">altura_max_local</span>, <span class="variable">num_eventos</span>, <span class="variable">MAX_EVENTOS</span>, &
+    <span class="variable">tasa_eventos</span>, <span class="variable">tiempo</span>, <span class="variable">energia_difusion</span>, <span class="variable">TEMP_SUBSTRATO</span>, &
+    <span class="variable">KB</span>, <span class="variable">adhesion</span>, <span class="variable">TEMP_PLASMA</span>, <span class="variable">TAM_REJILLA</span>, <span class="variable">ALTURA_MAX</span>, &
+    <span class="variable">depositos</span>, <span class="variable">difusiones</span>, <span class="variable">prob_difusion_const</span>, <span class="variable">energia_promedio</span>, <span class="variable">MATERIAL_ID</span>)
+
+    <span class="comment">! Guardar snapshot periódicamente</span>
+    <span class="keyword">IF</span> (<span class="keyword">MOD</span>(<span class="variable">num_eventos</span>, <span class="variable">INTERVALO_SNAPSHOT</span>) == <span class="variable">0</span> <span class="keyword">AND</span> <span class="variable">num_eventos</span> > <span class="variable">0</span>) <span class="keyword">THEN</span>
+        <span class="variable">snapshot_actual</span> = <span class="variable">snapshot_actual</span> + <span class="variable">1</span>
+        <span class="keyword">CALL</span> calcular_mecanismos(...)
+        <span class="keyword">CALL</span> guardar_datos(...)
+    <span class="keyword">END IF</span>
+<span class="keyword">END DO</span>
+            </div>
+        </section>
+
+        <!-- Slide 6: Anexo A Subrutinas y Final -->
+        <section class="slide">
+            <h2>Anexo A: Subrutinas de Métricas</h2>
+            <p>Cálculo de propiedades físicas (Rugosidad, Cobertura, etc.) y almacenamiento final.</p>
+            
+            <div class="code-block">
+<span class="keyword">SUBROUTINE</span> calcular_propiedades_fisicas(<span class="variable">material</span>, <span class="variable">altura_max_local</span>, <span class="variable">TAM_REJILLA</span>, <span class="variable">ALTURA_MAX</span>, &
+<span class="variable">cobertura_fraccional</span>, <span class="variable">rugosidad_rms</span>, <span class="variable">anisotropia_superficial</span>)
+    <span class="comment">! Cálculo de Rugosidad RMS</span>
+    <span class="variable">sum_heights</span> = <span class="variable">0.0</span>
+    <span class="variable">sum_sq_heights</span> = <span class="variable">0.0</span>
+    <span class="keyword">DO</span> i=<span class="variable">1</span>, <span class="variable">TAM_REJILLA</span>
+        <span class="keyword">DO</span> j=<span class="variable">1</span>, <span class="variable">TAM_REJILLA</span>
+            <span class="variable">sum_heights</span> = <span class="variable">sum_heights</span> + <span class="variable">altura_max_local</span>(i,j)
+            <span class="variable">sum_sq_heights</span> = <span class="variable">sum_sq_heights</span> + <span class="variable">altura_max_local</span>(i,j)**<span class="variable">2</span>
+        <span class="keyword">END DO</span>
+    <span class="keyword">END DO</span>
+    <span class="comment">! ... Lógica de cálculo estadístico ...</span>
+<span class="keyword">END SUBROUTINE</span> calcular_propiedades_fisicas
+            </div>
+            <p style="font-size: 0.9rem; margin-top: 10px;"><em>(El código continúa con la sección de subrutinas finales y finalización del programa).</em></p>
+        </section>
+
+        <!-- Slide 7: Final -->
+        <section class="slide" style="text-align: center; justify-content: center;">
+            <h1 style="font-size: 3rem;">Fin de la Presentación</h1>
+            <h2 style="margin-top: 1rem;">Bibliografía y Anexo A</h2>
+            
+            <div style="margin-top: 3rem; display: flex; justify-content: center; gap: 2rem;">
+                <div style="width: 100px; height: 2px; background: var(--accent-color);"></div>
+            </div>
+
+            <p style="font-size: 1.2rem; max-width: 800px; margin: 2rem auto; color: #d1d5db;">
+                Se presentan los fundamentos teóricos, la implementación técnica y el código fuente reproducible de la simulación Monte Carlo Cinética.
+            </p>
+            
+            <p style="margin-top: 2rem; font-weight: bold; color: var(--accent-color);">
+                Muchas gracias por su atención y evaluación.
+            </p>
+        </section>
+
+    </main>
+
+    <div class="controls">
+        <button class="nav-btn" id="prev">❮ Anterior</button>
+        <div class="progress" id="dots"></div>
+        <button class="nav-btn" id="next">Siguiente ❯</button>
+    </div>
+
+    <script>
+        // --- Lógica de Diapositivas ---
+        const slides = document.querySelectorAll('.slide');
+        const dotsContainer = document.getElementById('dots');
+        let currentSlide = 0;
+
+        // Crear dots
+        slides.forEach((_, i) => {
+            const dot = document.createElement('div');
+            dot.className = `dot ${i === 0 ? 'active' : ''}`;
+            dot.onclick = () => goToSlide(i);
+            dotsContainer.appendChild(dot);
+        });
+        const dots = document.querySelectorAll('.dot');
+
+        function updateSlide() {
+            slides.forEach((s, i) => {
+                s.classList.remove('active');
+                dots[i].classList.remove('active');
+                if(i === currentSlide) {
+                    s.classList.add('active');
+                    dots[i].classList.add('active');
+                }
+            });
+        }
+
+        function goToSlide(n) {
+            currentSlide = n;
+            if (currentSlide < 0) currentSlide = 0;
+            if (currentSlide >= slides.length) currentSlide = slides.length -1;
+            updateSlide();
+        }
+
+        document.getElementById('next').onclick = () => goToSlide(currentSlide + 1);
+        document.getElementById('prev').onclick = () => goToSlide(currentSlide - 1);
+        
+        document.addEventListener('keydown', (e) => {
+            if(e.key === 'ArrowRight') goToSlide(currentSlide + 1);
+            if(e.key === 'ArrowLeft') goToSlide(currentSlide - 1);
+        });
+
+        // --- Fondo Animado (Digital Rain/Binary) ---
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let drops = [];
+        const fontSize = 14;
+        const columns = Math.floor(window.innerWidth / fontSize);
+
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+            drops = [];
+            for(let i=0; i<columns; i++) drops[i] = 1;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        const characters = '01';
+        
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(15, 23, 42, 0.05)'; // Fade effect muy oscuro
+            ctx.fillRect(0, 0, width, height);
+            
+            ctx.fillStyle = '#2dd4bf'; // Teal color
+            ctx.font = fontSize + 'px monospace';
+
+            for(let i=0; i<drops.length; i++) {
+                const text = characters.charAt(Math.floor(Math.random() * characters.length));
+                ctx.fillText(text, i*fontSize, drops[i]*fontSize);
+                
+                if(drops[i]*fontSize > height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+        
+        // Reducir frecuencia de animación para rendimiento
+        setInterval(drawMatrix, 50);
+
+    </script>
+</body>
+</html>
