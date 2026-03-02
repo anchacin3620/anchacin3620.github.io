@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Hidráulica: Física del Fuego</title>
+    <style>
+        :root {
+            --primary: #0056b3;
+            --secondary: #00a8cc;
+            --accent: #ff9f1c;
+            --bg-light: #f4f7f6;
+            --text-dark: #2c3e50;
+            --border-radius: 8px;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem 2rem;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Navegación */
+        nav {
+            background-color: #fff;
+            padding: 0.5rem 1rem;
+            display: flex;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover {
+            color: var(--primary);
+            background-color: rgba(0, 86, 179, 0.05);
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        /* Contenido Principal */
+        main {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 2rem;
+        }
+
+        @media (max-width: 900px) {
+            main {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Área del Canvas */
+        .simulation-area {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            min-height: 500px;
+            overflow: hidden;
+        }
+
+        canvas {
+            background-color: #fafafa;
+            border-radius: 4px;
+            border: 1px solid #eee;
+            max-width: 100%;
+        }
+
+        /* Panel de Controles */
+        .controls-panel {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .control-group {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 1rem;
+        }
+
+        .control-group:last-child {
+            border-bottom: none;
+        }
+
+        .control-group h3 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+        }
+
+        select {
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .value-display {
+            font-size: 0.85rem;
+            color: #666;
+            text-align: right;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
+
+        .formula-box {
+            background-color: #eef7fa;
+            border-left: 4px solid var(--secondary);
+            padding: 1rem;
+            border-radius: 4px;
+            margin-top: 1rem;
+        }
+
+        .formula-box p {
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            font-size: 1.1rem;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .formula-box span {
+            display: block;
+            font-size: 0.8rem;
+            color: #555;
+            font-style: normal;
+            text-align: center;
+            font-family: sans-serif;
+        }
+
+        /* Toast Notification */
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            font-size: 17px;
+        }
+
+        #toast.show {
+            visibility: visible;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+
+        @keyframes fadein {
+            from {bottom: 0; opacity: 0;}
+            to {bottom: 30px; opacity: 1;}
+        }
+
+        @keyframes fadeout {
+            from {bottom: 30px; opacity: 1;}
+            to {bottom: 0; opacity: 0;}
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem 1rem;
+            font-size: 0.9rem;
+            color: #555;
+            background: #fff;
+            margin-top: auto;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>UNIDAD CURRICULAR: HIDRÁULICA</h1>
+    <p>Ciencias del Fuego - Simulador Interactivo de Mecánica de Fluidos</p>
+</header>
+
+<nav>
+    <button class="tab-btn active" onclick="switchTab('density')">1. Densidad</button>
+    <button class="tab-btn" onclick="switchTab('hydrostatic')">2. Presión Hidrostática</button>
+    <button class="tab-btn" onclick="switchTab('pascal')">3. Principio de Pascal</button>
+    <button class="tab-btn" onclick="switchTab('press')">4. Prensa Hidráulica</button>
+</nav>
+
+<main>
+    <!-- Visualización Gráfica -->
+    <section class="simulation-area">
+        <canvas id="simCanvas" width="600" height="500"></canvas>
+    </section>
+
+    <!-- Controles -->
+    <aside class="controls-panel" id="controlsContainer">
+        <!-- Los controles se inyectan dinámicamente con JS -->
+    </aside>
+</main>
+
+<div id="toast">Mensaje</div>
+
+<!-- FOOTER ACTUALIZADO SEGÚN SOLICITUD -->
+<footer>
+    Elaborado por el Profesor Ángel Chacín Ávila, para la Unidad Curricular de Hidráulica
+</footer>
+
+<script>
+    // --- Configuración y Estado Global ---
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+    const controlsContainer = document.getElementById('controlsContainer');
+    
+    // Física y Constantes
+    const G = 9.81; // Gravedad m/s^2
+    const RHO_WATER = 1000; // kg/m^3
+    const RHO_MERCURY = 13600; // kg/m^3
+    
+    // Estado de la aplicación
+    let currentTab = 'density';
+    let animationId;
+    
+    // Estados por simulación
+    const simState = {
+        density: {
+            mass: 5, // kg
+            volume: 5, // Litros (m3 * 1000 para vis)
+            fluidType: 'agua' // 'agua' | 'mercurio'
+        },
+        hydrostatic: {
+            height: 10, // metros
+            depth: 5, // metros de medición
+            fluidType: 'agua',
+            showAtmospheric: true
+        },
+        pascal: {
+            basePressure: 0, // Presión externa aplicada (Pa)
+            fluidType: 'agua'
+        },
+        press: {
+            radius1: 10, // cm (Émbolo pequeño)
+            radius2: 30, // cm (Émbolo grande)
+            force1: 100, // Newtons
+            fluidType: 'aceite' // Representa fluido hidráulico
+        }
+    };
+
+    // --- Utilidades de Dibujo ---
+
+    function clearCanvas() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#fafafa';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function drawTank(x, y, w, h, fluidHeight, fluidColor, levelOffset = 0) {
+        // Dibujar fluido
+        ctx.fillStyle = fluidColor;
+        // fluidHeight es porcentaje o valor relativo, levelOffset es desplazamiento animado
+        const fluidPixels = fluidHeight * (h / 100) + levelOffset;
+        
+        // Líquido dentro del tanque
+        ctx.fillRect(x, y + h - fluidPixels, w, fluidPixels);
+        
+        // Contenedor del tanque
+        ctx.strokeStyle = '#333';
+        ctx.lineWidth = 3;
+        ctx.strokeRect(x, y, w, h);
+        
+        // Marcas de medida
+        ctx.strokeStyle = 'rgba(0,0,0,0.3)';
+        ctx.lineWidth = 1;
+        ctx.font = '10px Arial';
+        ctx.fillStyle = '#666';
+        ctx.textAlign = 'right';
+        
+        for(let i=0; i<=10; i++) {
+            let markY = y + h - (h * (i/10));
+            ctx.beginPath();
+            ctx.moveTo(x - 5, markY);
+            ctx.lineTo(x, markY);
+            ctx.stroke();
+            ctx.fillText(i + 'm', x - 8, markY + 3);
+        }
+    }
+
+    function drawPiston(x, y, w, h, fillColor = '#aaa') {
+        ctx.fillStyle = fillColor;
+        ctx.fillRect(x, y, w, h);
+        ctx.strokeStyle = '#555';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(x, y, w, h);
+        
+        // Varilla del pistón
+        ctx.fillStyle = '#999';
+        ctx.fillRect(x + w/2 - 5, y - 40, 10, 40);
+    }
+
+    function drawForceArrow(x, y, magnitude, label) {
+        const scale = 0.1;
+        const length = Math.min(magnitude * scale, 100); // Limitar longitud visual
+        const color = '#e74c3c';
+        
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x, y + length);
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 4;
+        ctx.stroke();
+        
+        // Cabeza de flecha
+        ctx.beginPath();
+        ctx.moveTo(x - 5, y + length - 5);
+        ctx.lineTo(x, y + length);
+        ctx.lineTo(x + 5, y + length - 5);
+        ctx.fillStyle = color;
+        ctx.fill();
+        
+        // Etiqueta
+        ctx.fillStyle = '#000';
+        ctx.font = 'bold 12px Arial';
+        ctx.fillText(label + ': ' + magnitude.toFixed(0) + ' N', x + 10, y + length/2);
+    }
+
+    function drawPressureGauge(x, y, pressure, type = 'manométrica') {
+        const r = 25;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fillStyle = '#fff';
+        ctx.fill();
+        ctx.strokeStyle = '#333';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        
+        // Aguja
+        const angle = Math.PI * 0.8 + (Math.min(pressure, 200000) / 200000) * (Math.PI * 1.4); // Mapeo visual simple
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + Math.cos(angle) * (r-5), y + Math.sin(angle) * (r-5));
+        ctx.strokeStyle = 'red';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        
+        ctx.fillStyle = '#333';
+        ctx.font = '10px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText(type, x, y - r - 5);
+        ctx.fillText((pressure/1000).toFixed(1) + ' kPa', x, y + r + 15);
+    }
+
+    // --- Lógica de Simulaciones ---
+
+    // 1. DENSIDAD
+    function renderDensity() {
+        clearCanvas();
+        const s = simState.density;
+        
+        // Cálculos
+        // Ajustamos visualización: 1 Litro = 1 unidad de altura visual por simplicidad
+        const densityVal = (s.mass / s.volume).toFixed(2); // kg/L -> g/cm3
+        
+        let fluidColor = 'rgba(0, 168, 204, 0.6)';
+        let refDensity = 1.0;
+        let fluidName = "Agua";
+        
+        if (s.fluidType === 'mercurio') {
+            refDensity = 13.6;
+            fluidColor = 'rgba(169, 169, 169, 0.8)';
+            fluidName = "Mercurio";
+        }
+
+        // Dibujar tanque
+        const tankW = 150, tankH = 300, tankX = 200, tankY = 100;
+        
+        // Calcular altura visual basada en volumen
+        // Escala: Max visual 10L = 250px
+        const visualHeight = Math.min((s.volume / 10) * 250, 280);
+        
+        drawTank(tankX, tankY, tankW, tankH, (visualHeight/300)*100, fluidColor);
+        
+        // Bloque solido sumergido (opcional para representar masa/volumen desplazado)
+        // Aquí solo mostramos el líquido para simplificar
+        
+        // Textos informativos
+        ctx.fillStyle = '#2c3e50';
+        ctx.font = 'bold 16px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText(`Masa: ${s.mass} kg`, tankX + tankW/2, tankY + tankH + 30);
+        ctx.fillText(`Volumen: ${s.volume} L`, tankX + tankW/2, tankY + tankH + 50);
+        
+        ctx.fillStyle = '#d35400';
+        ctx.font = 'bold 24px Arial';
+        ctx.fillText(`ρ = ${densityVal} kg/L`, tankX + tankW/2, tankY + tankH + 90);
+        
+        // Fórmula
+        ctx.font = 'italic 16px Times New Roman';
+        ctx.fillStyle = '#555';
+        ctx.fillText(`Densidad Relativa (${fluidName}): ${refDensity}`, tankX + tankW/2, 50);
+    }
+
+    function renderDensityControls() {
+        return `
+            <div class="control-group">
+                <h3>Parámetros</h3>
+                <label>Fluido</label>
+                <select onchange="updateSim('density', 'fluidType', this.value)">
+                    <option value="agua" ${simState.density.fluidType === 'agua' ? 'selected' : ''}>Agua (H₂O)</option>
+                    <option value="mercurio" ${simState.density.fluidType === 'mercurio' ? 'selected' : ''}>Mercurio (Hg)</option>
+                </select>
+                
+                <label>Masa (kg): <span id="val-mass" class="value-display">${simState.density.mass} kg</span></label>
+                <input type="range" min="1" max="20" step="0.5" value="${simState.density.mass}" 
+                    oninput="updateSim('density', 'mass', parseFloat(this.value)); document.getElementById('val-mass').innerText = this.value + ' kg'">
+                
+                <label>Volumen (L): <span id="val-vol" class="value-display">${simState.density.volume} L</span></label>
+                <input type="range" min="1" max="10" step="0.5" value="${simState.density.volume}" 
+                    oninput="updateSim('density', 'volume', parseFloat(this.value)); document.getElementById('val-vol').innerText = this.value + ' L'">
+            </div>
+            <div class="formula-box">
+                <p>ρ = m / V</p>
+                <span>Densidad = Masa / Volumen</span>
+            </div>
+        `;
+    }
+
+    // 2. PRESIÓN HIDROSTÁTICA
+    function renderHydrostatic() {
+        clearCanvas();
+        const s = simState.hydrostatic;
+        
+        const rho = s.fluidType === 'agua' ? RHO_WATER : RHO_MERCURY;
+        const color = s.fluidType === 'agua' ? 'rgba(0, 168, 204, 0.6)' : 'rgba(169, 169, 169, 0.8)';
+        
+        // Dibujar Tanque
+        const tankW = 150, tankH = 300, tankX = 200, tankY = 100;
+        
+        // Altura del fluido (Max 12m -> 250px)
+        const visualH = (s.height / 12) * 250;
+        const visualDepth = (s.depth / 12) * 250;
+        
+        drawTank(tankX, tankY, tankW, tankH, (visualH/tankH)*100, color);
+        
+        // Indicador de profundidad
+        const pointY = (tankY + tankH) - visualDepth;
+        if (visualDepth <= visualH) {
+            ctx.beginPath();
+            ctx.arc(tankX + tankW + 20, pointY, 6, 0, Math.PI*2);
+            ctx.fillStyle = 'red';
+            ctx.fill();
+            
+            // Línea punteada
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(tankX + tankW, pointY);
+            ctx.lineTo(tankX + tankW + 20, pointY);
+            ctx.strokeStyle = 'red';
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // Cálculos de Presión
+            const Ph = rho * G * s.depth; // Presión hidrostática
+            const Patm = 101325; // Presión atmosférica estándar
+            let Pabs = 0, Pmano = 0;
+            
+            if (s.showAtmospheric) {
+                Pabs = Patm + Ph;
+                Pmano = Ph;
+                
+                drawPressureGauge(420, pointY, Pabs, 'Absoluta');
+                drawPressureGauge(500, pointY, Pmano, 'Manométrica');
+                
+                ctx.fillStyle = '#333';
+                ctx.font = '14px Arial';
+                ctx.fillText(`P_abs = P_atm + ρgh`, 420, 80);
+                ctx.fillText(`${(Pabs/1000).toFixed(1)} kPa`, 420, 100);
+                
+            } else {
+                // Caso teórico sin atmósfera (o tanque cerrado al vacío)
+                Pabs = Ph;
+                drawPressureGauge(420, pointY, Pabs, 'Solo ρgh');
+                
+                ctx.fillStyle = '#333';
+                ctx.font = '14px Arial';
+                ctx.fillText(`P = ρgh`, 450, 80);
+                ctx.fillText(`${(Ph/1000).toFixed(1)} kPa`, 450, 100);
+            }
+            
+            // Datos en el punto
+            ctx.textAlign = 'left';
+            ctx.fillText(`h = ${s.depth} m`, tankX + tankW + 30, pointY - 10);
+        }
+    }
+
+    function renderHydrostaticControls() {
+        return `
+            <div class="control-group">
+                <h3>Parámetros del Tanque</h3>
+                <label>Fluido</label>
+                <select onchange="updateSim('hydrostatic', 'fluidType', this.value)">
+                    <option value="agua" ${simState.hydrostatic.fluidType === 'agua' ? 'selected' : ''}>Agua</option>
+                    <option value="mercurio" ${simState.hydrostatic.fluidType === 'mercurio' ? 'selected' : ''}>Mercurio</option>
+                </select>
+                
+                <label>Nivel de Agua (h max): <span id="val-h-hydro" class="value-display">${simState.hydrostatic.height} m</span></label>
+                <input type="range" min="1" max="12" step="0.5" value="${simState.hydrostatic.height}" 
+                    oninput="updateSim('hydrostatic', 'height', parseFloat(this.value)); document.getElementById('val-h-hydro').innerText = this.value + ' m'">
+                    
+                <label>Profundidad de Medición: <span id="val-depth" class="value-display">${simState.hydrostatic.depth} m</span></label>
+                <input type="range" min="0.5" max="12" step="0.5" value="${simState.hydrostatic.depth}" 
+                    oninput="updateSim('hydrostatic', 'depth', parseFloat(this.value)); document.getElementById('val-depth').innerText = this.value + ' m'">
+            </div>
+            <div class="control-group">
+                <h3>Condiciones</h3>
+                <label>
+                    <input type="checkbox" ${simState.hydrostatic.showAtmospheric ? 'checked' : ''} 
+                    onchange="updateSim('hydrostatic', 'showAtmospheric', this.checked)">
+                    Incluir Presión Atmosférica (Patm)
+                </label>
+            </div>
+            <div class="formula-box">
+                <p>P_abs = P_atm + ρgh</p>
+                <span>Presión absoluta vs Manométrica</span>
+            </div>
+        `;
+    }
+
+    // 3. PRINCIPIO DE PASCAL
+    function renderPascal() {
+        clearCanvas();
+        const s = simState.pascal;
+        const color = s.fluidType === 'agua' ? 'rgba(0, 168, 204, 0.6)' : 'rgba(169, 169, 169, 0.8)';
+        
+        // Configuración de tubos en U
+        const tubeW = 40, tubeH = 250, baseY = 350, gap = 150;
+        const leftX = 150, rightX = leftX + tubeW + gap;
+        
+        // Dibujar tuberías conectadas
+        ctx.fillStyle = color;
+        // Tubo izquierdo
+        ctx.fillRect(leftX, baseY - tubeH, tubeW, tubeH);
+        // Conexión inferior
+        ctx.fillRect(leftX, baseY, tubeW + gap, 20);
+        // Tubo derecho
+        ctx.fillRect(rightX, baseY - tubeH, tubeW, tubeH);
+        
+        // Contornos
+        ctx.strokeStyle = '#333';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(leftX, baseY - tubeH);
+        ctx.lineTo(leftX, baseY + 20);
+        ctx.lineTo(rightX + tubeW, baseY + 20);
+        ctx.lineTo(rightX + tubeW, baseY - tubeH);
+        ctx.stroke();
+        
+        // Nivel base del líquido (sin presión extra) - 50% altura
+        let baseLevel = 100; 
+        // Incremento de presión visual
+        let pressureIncrease = (s.basePressure / 100000) * 50; // Escalar visualmente
+        
+        // Dibujar niveles (iguales en ambos lados según Pascal)
+        // Si aplicamos presión en uno, sube en ambos igual si están abiertos, 
+        // o si aplicamos presión en la superficie de uno, se transmite al fondo del otro.
+        // Simularemos: Un émbolo empuja a la izquierda, el líquido sube igual en ambos.
+        
+        const currentLevel = baseLevel + pressureIncrease;
+        
+        // Redibujar líquido con nuevo nivel
+        ctx.fillStyle = color;
+        ctx.fillRect(leftX + 2, baseY - currentLevel, tubeW - 4, currentLevel);
+        ctx.fillRect(leftX + 2, baseY, tubeW + gap - 4, 20); // Conector
+        ctx.fillRect(rightX + 2, baseY - currentLevel, tubeW - 4, currentLevel);
+        
+        // Émbolo izquierdo (aplica fuerza)
+        const pistonY = baseY - currentLevel - 10;
+        drawPiston(leftX, pistonY, tubeW, 10);
+        
+        // Flecha de fuerza
+        if (s.basePressure > 0) {
+            drawForceArrow(leftX + tubeW/2, pistonY - 30, s.basePressure / 10, "F1");
+        }
+        
+        // Sensor de presión en el fondo derecho
+        ctx.beginPath();
+        ctx.arc(rightX + tubeW/2, baseY + 10, 15, 0, Math.PI*2);
+        ctx.fillStyle = '#e74c3c';
+        ctx.fill();
+        
+        // Etiqueta
+        ctx.fillStyle = '#000';
+        ctx.textAlign = 'center';
+        ctx.font = '12px Arial';
+        ctx.fillText("P1 = P2", leftX + tubeW/2 + gap/2, baseY + 35);
+        ctx.fillText("La presión se transmite", leftX + tubeW/2 + gap/2, baseY + 50);
+        ctx.fillText("íntegramente", leftX + tubeW/2 + gap/2, baseY + 65);
+    }
+
+    function renderPascalControls() {
+        return `
+            <div class="control-group">
+                <h3>Aplicación de Presión</h3>
+                <label>Fuerza/Presión aplicada en A: <span id="val-pascal-p" class="value-display">${simState.pascal.basePressure}</span></label>
+                <input type="range" min="0" max="50000" step="1000" value="${simState.pascal.basePressure}" 
+                    oninput="updateSim('pascal', 'basePressure', parseFloat(this.value)); document.getElementById('val-pascal-p').innerText = parseInt(this.value)">
+            </div>
+            <div class="formula-box">
+                <p>P_A = P_B</p>
+                <span>Si incrementamos P en A, se incrementa en B igualmente.</span>
+            </div>
+            <div class="control-group">
+                <p style="font-size: 0.9rem; color: #666;">
+                    Nota: Al aplicar presión sobre el fluido en el lado izquierdo, el nivel sube equitativamente en ambos lados, demostrando que la presión se distribuye uniformemente.
+                </p>
+            </div>
+        `;
+    }
+
+    // 4. PRENSA HIDRÁULICA
+    function renderPress() {
+        clearCanvas();
+        const s = simState.press;
+        
+        // Cálculos Físicos
+        const area1 = Math.PI * Math.pow(s.radius1, 2);
+        const area2 = Math.PI * Math.pow(s.radius2, 2);
+        
+        // F1/A1 = F2/A2 => F2 = F1 * (A2/A1)
+        const force2 = s.force1 * (area2 / area1);
+        
+        // Desplazamiento (Volumen desplazado es constante: d1*A1 = d2*A2)
+        // d2 = d1 * (A1/A2)
+        // Visualmente, haremos que el pistón 1 baje 50px máximo
+        const disp1 = 20; // Desplazamiento fijo para la animación
+        const disp2 = disp1 * (area1 / area2);
+        
+        const baseY = 350;
+        const gap = 50;
+        const w1 = s.radius1 * 4; // Escala visual para radio
+        const w2 = s.radius2 * 4;
+        const x1 = 100;
+        const x2 = x1 + w1 + gap + (w2/2) - (w1/2); // Centrado aproximado
+        
+        // Dibujar conexión inferior
+        ctx.fillStyle = '#dba40a'; // Color aceite
+        ctx.fillRect(x1, baseY, x2 + w2 - x1, 20);
+        
+        // Dibujar Cilindro 1
+        ctx.strokeStyle = '#333';
+        ctx.lineWidth = 3;
+        ctx.strokeRect(x1, baseY - 150, w1, 150);
+        // Líquido Cil 1
+        ctx.fillRect(x1 + 2, baseY - 150 + disp1, w1 - 4, 150 - disp1);
+        
+        // Dibujar Pistón 1
+        drawPiston(x1 + 2, baseY - 150 + disp1, w1 - 4, 10);
+        // Flecha F1
+        drawForceArrow(x1 + w1/2, baseY - 180, s.force1, "F1");
+        
+        // Dibujar Cilindro 2
+        ctx.strokeRect(x2, baseY - 150, w2, 150);
+        // Líquido Cil 2
+        ctx.fillRect(x2 + 2, baseY - 150 + disp2, w2 - 4, 150 - disp2);
+        
+        // Dibujar Pistón 2
+        drawPiston(x2 + 2, baseY - 150 + disp2, w2 - 4, 10, '#888');
+        // Carga encima del pistón 2 (para visualizar F2)
+        ctx.fillStyle = '#555';
+        const carH = 40;
+        ctx.fillRect(x2 + 10, baseY - 150 + disp2 - carH, w2 - 20, carH);
+        ctx.fillStyle = '#fff';
+        ctx.textAlign = 'center';
+        ctx.fillText("CARGA", x2 + w2/2, baseY - 150 + disp2 - carH/2 + 5);
+        
+        // Flecha F2 resultante (hacia arriba o indicando peso)
+        // Dibujamos fuerza de resistencia o peso
+        ctx.beginPath();
+        ctx.moveTo(x2 + w2 + 20, baseY - 150 + disp2 - carH);
+        ctx.lineTo(x2 + w2 + 20, baseY - 150 + disp2);
+        ctx.strokeStyle = 'blue';
+        ctx.lineWidth = 4;
+        ctx.stroke();
+        // Cabeza flecha arriba
+        ctx.beginPath();
+        ctx.moveTo(x2 + w2 + 15, baseY - 150 + disp2);
+        ctx.lineTo(x2 + w2 + 20, baseY - 150 + disp2);
+        ctx.lineTo(x2 + w2 + 25, baseY - 150 + disp2);
+        ctx.stroke();
+        
+        ctx.fillStyle = 'blue';
+        ctx.font = 'bold 12px Arial';
+        ctx.textAlign = 'left';
+        // Acortar número si es muy grande
+        const f2Display = force2 > 10000 ? (force2/1000).toFixed(1) + ' kN' : force2.toFixed(0) + ' N';
+        ctx.fillText(`F2: ${f2Display}`, x2 + w2 + 30, baseY - 150 + disp2 - carH/2);
+
+        // Datos técnicos
+        ctx.fillStyle = '#333';
+        ctx.font = '14px Arial';
+        ctx.textAlign = 'left';
+        ctx.fillText(`Área 1: ${area1.toFixed(1)} cm²`, 50, 450);
+        ctx.fillText(`Área 2: ${area2.toFixed(1)} cm²`, 350, 450);
+    }
+
+    function renderPressControls() {
+        const s = simState.press;
+        return `
+            <div class="control-group">
+                <h3>Prensa Hidráulica</h3>
+                <label>Radio Pistón 1 (cm): <span id="val-r1" class="value-display">${s.radius1} cm</span></label>
+                <input type="range" min="5" max="20" step="1" value="${s.radius1}" 
+                    oninput="updateSim('press', 'radius1', parseFloat(this.value)); document.getElementById('val-r1').innerText = this.value + ' cm'">
+                
+                <label>Radio Pistón 2 (cm): <span id="val-r2" class="value-display">${s.radius2} cm</span></label>
+                <input type="range" min="20" max="50" step="1" value="${s.radius2}" 
+                    oninput="updateSim('press', 'radius2', parseFloat(this.value)); document.getElementById('val-r2').innerText = this.value + ' cm'">
+                    
+                <label>Fuerza Aplicada F1 (N): <span id="val-f1" class="value-display">${s.force1} N</span></label>
+                <input type="range" min="10" max="500" step="10" value="${s.force1}" 
+                    oninput="updateSim('press', 'force1', parseFloat(this.value)); document.getElementById('val-f1').innerText = this.value + ' N'">
+            </div>
+            <div class="formula-box">
+                <p>F1 / A1 = F2 / A2</p>
+                <span>La fuerza se multiplica por la razón de áreas.</span>
+            </div>
+        `;
+    }
+
+    // --- Gestión de Interfaz ---
+
+    function switchTab(tabName) {
+        currentTab = tabName;
+        
+        // Actualizar botones
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        // Encontrar el botón correcto (basado en el orden o texto, aquí simplificado por el onclick)
+        // Se puede mejorar agregando IDs, pero esto funciona para este scope.
+        const buttons = document.querySelectorAll('.tab-btn');
+        if(tabName === 'density') buttons[0].classList.add('active');
+        if(tabName === 'hydrostatic') buttons[1].classList.add('active');
+        if(tabName === 'pascal') buttons[2].classList.add('active');
+        if(tabName === 'press') buttons[3].classList.add('active');
+
+        updateControls();
+        renderLoop();
+    }
+
+    function updateControls() {
+        let html = '';
+        switch(currentTab) {
+            case 'density': html = renderDensityControls(); break;
+            case 'hydrostatic': html = renderHydrostaticControls(); break;
+            case 'pascal': html = renderPascalControls(); break;
+            case 'press': html = renderPressControls(); break;
+        }
+        controlsContainer.innerHTML = html;
+    }
+
+    function updateSim(sim, key, value) {
+        simState[sim][key] = value;
+        // No llamamos a renderLoop explícitamente, el loop ya corre.
+        // Pero podemos forzar actualización de UI específica si fuera necesario.
+    }
+
+    function showToast(msg) {
+        const t = document.getElementById("toast");
+        t.className = "show";
+        t.innerText = msg;
+        setTimeout(function(){ t.className = t.className.replace("show", ""); }, 3000);
+    }
+
+    function renderLoop() {
+        switch(currentTab) {
+            case 'density': renderDensity(); break;
+            case 'hydrostatic': renderHydrostatic(); break;
+            case 'pascal': renderPascal(); break;
+            case 'press': renderPress(); break;
+        }
+        animationId = requestAnimationFrame(renderLoop);
+    }
+
+    // Inicialización
+    updateControls();
+    renderLoop();
+
+</script>
+
+</body>
+</html>
