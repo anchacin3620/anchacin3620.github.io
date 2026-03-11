@@ -1,0 +1,273 @@
+<!-- ENLACE A FUENTES (Colócalo al inicio del código HTML) -->
+<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
+
+<!-- INICIO DEL CONTENEDOR PRINCIPAL -->
+<div id="contenedor-bolivar-1815">
+
+<style>
+    /* --- Reset local solo para este contenedor --- */
+    #contenedor-bolivar-1815 {
+        font-family: 'Lato', sans-serif;
+        color: #2C2C2C;
+        line-height: 1.8;
+        background-color: #F9F5EB; /* Fondo papel antiguo */
+        padding: 20px;
+        border-radius: 8px;
+        box-sizing: border-box;
+        width: 100%;
+        margin: 20px 0;
+        overflow: hidden; /* Evita desbordamiento */
+    }
+
+    #contenedor-bolivar-1815 * {
+        box-sizing: border-box;
+    }
+
+    /* --- Tipografía --- */
+    #contenedor-bolivar-1815 h1, 
+    #contenedor-bolivar-1815 h2, 
+    #contenedor-bolivar-1815 h3 {
+        font-family: 'Playfair Display', serif;
+        color: #800000;
+        margin-top: 0;
+        margin-bottom: 1rem;
+    }
+
+    #contenedor-bolivar-1815 p {
+        margin-bottom: 1.5rem;
+        text-align: justify;
+        font-size: 1rem; /* Tamaño ajustado para blog */
+    }
+
+    /* --- Header / Hero --- */
+    #contenedor-bolivar-1815 .hero-section {
+        position: relative;
+        height: 350px; /* Altura reducida para cabecer bien en el blog */
+        min-height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://picsum.photos/seed/history/1000/500');
+        background-size: cover;
+        background-position: center;
+        color: white;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+    }
+
+    #contenedor-bolivar-1815 .hero-content {
+        max-width: 800px;
+        z-index: 2;
+    }
+
+    #contenedor-bolivar-1815 .hero-overline {
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: #D4AF37;
+        margin-bottom: 10px;
+        font-weight: 700;
+    }
+
+    #contenedor-bolivar-1815 h1.hero-title {
+        font-size: 2.2rem; /* Título más pequeño para evitar desbordar en móviles */
+        color: #fff;
+        line-height: 1.1;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+
+    /* --- Tarjetas --- */
+    #contenedor-bolivar-1815 .card {
+        background: #FFFFFF;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
+        border-left: 5px solid #D4AF37; /* Detalle visual lateral */
+    }
+
+    #contenedor-bolivar-1815 .section-number {
+        display: block;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        color: #888;
+        margin-bottom: 0.5rem;
+        letter-spacing: 1px;
+    }
+
+    #contenedor-bolivar-1815 h2 {
+        font-size: 1.6rem;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+    }
+
+    /* --- Introducción Especial --- */
+    #contenedor-bolivar-1815 .intro-box {
+        background-color: rgba(128, 0, 0, 0.05);
+        padding: 1.5rem;
+        border-radius: 6px;
+        border-left: 4px solid #800000;
+    }
+
+    /* --- Listas --- */
+    #contenedor-bolivar-1815 ul.styled-list {
+        list-style: none;
+        padding-left: 0;
+    }
+
+    #contenedor-bolivar-1815 ul.styled-list li {
+        position: relative;
+        padding-left: 2rem;
+        margin-bottom: 1.2rem;
+    }
+
+    #contenedor-bolivar-1815 ul.styled-list li::before {
+        content: '⚔️';
+        position: absolute;
+        left: 0;
+        top: 2px;
+        color: #800000;
+    }
+
+    /* --- Bloque de Cita --- */
+    #contenedor-bolivar-1815 blockquote {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.3rem;
+        font-style: italic;
+        color: #800000;
+        text-align: center;
+        margin: 2rem 0;
+        padding: 1rem;
+        background: #fff8f8;
+        border-radius: 4px;
+    }
+
+    /* --- Tarjeta de Conclusión (Oscura) --- */
+    #contenedor-bolivar-1815 .card.conclusion {
+        background-color: #333;
+        color: #fff;
+        border-left: 5px solid #D4AF37;
+    }
+    #contenedor-bolivar-1815 .card.conclusion h2 {
+        color: #D4AF37;
+        border-bottom-color: #555;
+    }
+    #contenedor-bolivar-1815 .card.conclusion p {
+        color: #ddd;
+    }
+
+    /* --- Footer del Artículo --- */
+    #contenedor-bolivar-1815 .article-footer {
+        margin-top: 3rem;
+        text-align: center;
+        font-size: 0.85rem;
+        color: #666;
+        padding-top: 1rem;
+        border-top: 1px solid #ddd;
+    }
+
+    /* --- Responsive para móviles dentro del blog --- */
+    @media (max-width: 600px) {
+        #contenedor-bolivar-1815 .hero-section {
+            height: 250px;
+        }
+        #contenedor-bolivar-1815 h1.hero-title {
+            font-size: 1.8rem;
+        }
+        #contenedor-bolivar-1815 .card {
+            padding: 1.5rem;
+        }
+    }
+</style>
+
+<!-- Header -->
+<header class="hero-section">
+    <div class="hero-content">
+        <div class="hero-overline">Historia de Hispanoamérica</div>
+        <h1 class="hero-title">El Crisol de la República</h1>
+        <p style="text-align: center; color: #eee; font-style: italic;">Triunfo, Tragedia y Transfiguración (1813-1815)</p>
+    </div>
+</header>
+
+<!-- Introducción -->
+<div class="card">
+    <span class="section-number">Introducción</span>
+    <div class="intro-box">
+        <p>El periodo comprendido entre 1813 y 1815 no es simplemente un capítulo de la cronología independentista; es el epicentro de una transformación sociopolítica que definió el destino de la América española. En estos dos años, el proyecto bolivariano transitó desde la ofensiva relámpago de la Campaña Admirable hasta la desintegración total de la Segunda República, culminando en un exilio que, paradójicamente, dotaría al Libertador de la madurez intelectual necesaria para refundar la nación.</p>
+    </div>
+</div>
+
+<!-- Sección I -->
+<div class="card">
+    <span class="section-number">Capítulo I</span>
+    <h2>La Campaña Admirable: La Forja de la Identidad Civil</h2>
+    <p>Tras el colapso de la Primera República en 1812, Simón Bolívar se refugia en la Nueva Granada, donde publica el <em>Manifiesto de Cartagena</em>. Allí advierte que la caída de Venezuela se debió al sistema federal, la impunidad de los delitos y el terremoto de 1812. Con el respaldo del Congreso de las Provincias Unidas de la Nueva Granada, inicia en mayo de 1813 la Campaña Admirable.</p>
+    <p>Partiendo de San José de Cúcuta, Bolívar despliega una estrategia de movimiento que sorprende a las fuerzas realistas. El 15 de junio de 1813, en la ciudad de Trujillo, firma el <strong>Decreto de Guerra a Muerte</strong>. Este documento no fue un simple acto de crueldad, sino una herramienta geopolítica diseñada para forzar una ruptura definitiva con la metrópoli y crear una conciencia de patria que separara a los "americanos" de los "españoles".</p>
+    <p>Tras las victorias de Niquitao, Los Horcones y Taguanes, Bolívar entra triunfante en Caracas el 6 de agosto de 1813. Se instaura la Segunda República y el pueblo le otorga el título de Libertador. Sin embargo, este triunfo ocultaba una debilidad fatal: el apoyo popular seguía siendo esquivo y el ejército patriota estaba compuesto mayoritariamente por la aristocracia mantuana.</p>
+</div>
+
+<!-- Sección II -->
+<div class="card">
+    <span class="section-number">Capítulo II</span>
+    <h2>1814: El Año Terrible y la Reacción Realista de Boves</h2>
+    <p>Mientras Bolívar consolidaba su poder en Caracas, en los Llanos venezolanos se gestaba una fuerza telúrica. José Tomás Boves, un antiguo comerciante asturiano resentido con los patriotas, logró movilizar a las masas de pardos, negros y llaneros. Boves no peleaba por la Corona Española por convicción monárquica, sino que utilizaba la bandera del Rey para desatar una guerra de castas contra los terratenientes republicanos.</p>
+    <p>El año 1814 se convirtió en una sucesión de batallas sangrientas donde la República luchó por su supervivencia:</p>
+    <ul class="styled-list">
+        <li><strong>La Victoria (12 de febrero):</strong> José Félix Ribas, ante la falta de soldados regulares, armó a ochocientos estudiantes y seminaristas para detener a las fuerzas de Morales. La victoria impidió la toma de Caracas, pero a un costo humano devastador.</li>
+        <li><strong>San Mateo (marzo):</strong> Bolívar resiste durante meses el asedio de Boves. Es aquí donde ocurre el sacrificio de Antonio Ricaurte, quien al verse rodeado, prendió fuego al polvorín de la casa alta de la hacienda para evitar que las municiones cayeran en manos realistas, inmolándose en el acto.</li>
+        <li><strong>La Primera Batalla de Carabobo (28 de mayo):</strong> Un breve respiro donde Bolívar logra una victoria táctica frente a Juan Manuel de Cajigal.</li>
+        <li><strong>La Puerta (15 de junio):</strong> El desastre definitivo. Boves destruye al ejército unido de Bolívar y Santiago Mariño. Esta derrota dejó a Caracas totalmente desprotegida.</li>
+    </ul>
+</div>
+
+<!-- Sección III -->
+<div class="card">
+    <span class="section-number">Capítulo III</span>
+    <h2>La Caída y la Emigración a Oriente</h2>
+    <p>Con la derrota de La Puerta, el pánico se apoderó de la capital. Ante la inminente llegada de Boves y la certeza de una masacre, Bolívar organiza la <strong>Emigración a Oriente</strong> el 7 de julio de 1814. Cerca de veinte mil personas abandonaron la ciudad en una marcha penosa hacia Barcelona. Miles murieron de hambre, enfermedades o ataques de las partidas realistas en las montañas.</p>
+    <p>La República se fragmentó en caudillismos. Bolívar y Mariño llegaron a Oriente, pero fueron desconocidos por sus propios subordinados, como Ribas y Piar, quienes los culparon de los fracasos militares. Tras la derrota en Aragua de Barcelona, donde se masacró a la población civil en la iglesia local, Bolívar se vio obligado a abandonar Venezuela, embarcándose hacia Cartagena en septiembre de 1814.</p>
+</div>
+
+<!-- Sección IV -->
+<div class="card">
+    <span class="section-number">Capítulo IV</span>
+    <h2>El Manifiesto de Carúpano y el Interludio Granadino</h2>
+    <p>Antes de partir, Bolívar redacta el <em>Manifiesto de Carúpano</em> (7 de septiembre de 1814). En este texto, defiende su honor y analiza que la derrota no fue militar, sino social: el pueblo, sumido en la ignorancia y el fanatismo, había seguido a los tiranos realistas.</p>
+    <p>Al llegar a la Nueva Granada, Bolívar es recibido nuevamente por el Congreso en Tunja. Se le encomienda la misión de someter al estado de Cundinamarca, que se negaba a unirse a la federación. Bolívar toma Santa Fe de Bogotá en diciembre de 1814, pero su mirada estaba puesta en Santa Marta y Venezuela. Sin embargo, en Cartagena se encontró con la hostilidad de Manuel del Castillo y Rada, quien se negó a entregarle armas y suministros. La guerra civil entre patriotas era inminente en un momento crítico: desde España zarpaba la Expedición Pacificadora de Pablo Morillo con más de diez mil veteranos de las guerras napoleónicas.</p>
+</div>
+
+<!-- Sección V -->
+<div class="card">
+    <span class="section-number">Capítulo V</span>
+    <h2>Jamaica y la Visión del Futuro</h2>
+    <p>Para evitar un derramamiento de sangre fratricida, Bolívar renuncia al mando y parte al exilio hacia Jamaica en mayo de 1815. En Kingston, vive meses de penuria económica, llegando a sobrevivir gracias a la ayuda de amigos y comerciantes. Es en esta soledad donde escribe la <strong>Carta de Jamaica</strong> (6 de septiembre de 1815).</p>
+    
+    <blockquote>
+        Este documento es la síntesis de sus lecciones aprendidas.
+    </blockquote>
+
+    <ul class="styled-list">
+        <li>Abandona el idealismo de las "repúblicas aéreas" (federalismo).</li>
+        <li>Propone la creación de una gran nación: La Gran Colombia.</li>
+        <li>Realiza un análisis sociológico de la identidad americana, describiéndonos como un "pequeño género humano" atrapado entre los legítimos propietarios del país (los indígenas) y los usurpadores españoles.</li>
+        <li>Advierte sobre el peligro de la anarquía y la necesidad de gobiernos fuertes pero justos.</li>
+    </ul>
+</div>
+
+<!-- Conclusión -->
+<div class="card conclusion">
+    <h2>Conclusión</h2>
+    <p>El periodo 1813-1815 fue el laboratorio más cruel y necesario de la Independencia. La Campaña Admirable demostró que era posible vencer militarmente, pero 1814 enseñó que no habría República sin la integración de las clases populares. La huida a la Nueva Granada y el posterior exilio en Jamaica forjaron al Bolívar estadista. En 1815, el Libertador comprendió que para ganar la guerra debía cambiar la estrategia: ya no bastaba con el valor mantuano; se necesitaba la fuerza de los llaneros, el apoyo de potencias extranjeras y un proyecto político que unificara a Hispanoamérica frente a un mundo que lo observaba con cautela.</p>
+</div>
+
+<!-- Footer Solicitado -->
+<div class="article-footer">
+    <p>Elaborado por el <strong>Profesor Ángel Chacín Ávila</strong></p>
+    <p>UNES Núcleo Zulia @2026</p>
+</div>
+
+</div>
+<!-- FIN DEL CONTENEDOR PRINCIPAL -->
