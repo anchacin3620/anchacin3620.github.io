@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumen: Simulación Monte Carlo Cr y Fe</title>
+    <!-- Cargamos la librería PptxGenJS desde un CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
+    
+    <style>
+        /* Estilos para la vista web (Lectura) */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            font-family: 'Georgia', 'Times New Roman', Times, serif;
+            color: #333333;
+            line-height: 1.8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .paper-container {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 800px;
+            margin: 40px 20px;
+            padding: 50px 60px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 4px;
+            transition: font-size 0.3s ease;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-size: 1.5rem;
+            color: #2c3e50;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .meta-info {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+
+        .abstract-content {
+            font-size: 18px; 
+            text-align: justify;
+        }
+
+        .abstract-title {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-weight: bold;
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        p { margin-bottom: 20px; }
+
+        .keywords {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            font-style: italic;
+            color: #555;
+        }
+
+        .contact {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        /* Botón de descarga */
+        .download-section {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .btn-ppt {
+            background-color: #d24726; /* Color tipo PowerPoint */
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Helvetica Neue', sans-serif;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: background-color 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-ppt:hover {
+            background-color: #a8361b;
+        }
+
+        .btn-ppt svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        /* Controles de lectura */
+        .reading-controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #2c3e50;
+            padding: 10px;
+            border-radius: 30px;
+            display: flex;
+            gap: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            z-index: 100;
+        }
+
+        .control-btn {
+            background: none;
+            border: 1px solid #fff;
+            color: #fff;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .control-btn:hover { background: #fff; color: #2c3e50; }
+
+        @media (max-width: 600px) {
+            .paper-container { padding: 30px 25px; margin: 0; border-radius: 0; }
+            .abstract-content { font-size: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Botón para descargar -->
+    <div class="download-section">
+        <button class="btn-ppt" onclick="exportToPPT()">
+            <!-- Icono PPT -->
+            <svg viewBox="0 0 24 24"><path d="M4 2h16a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2m2 4v2h12V6H6m0 4v2h12v-2H6m0 4v2h8v-2H6Z"/></svg>
+            Descargar PowerPoint
+        </button>
+    </div>
+
+    <!-- Contenedor del documento -->
+    <article class="paper-container" id="paper">
+        <header>
+            <h1>Resumen</h1>
+            <div class="meta-info">
+                Chacín Ávila Ángel Alfredo.<br>
+                Trabajo de Investigación optar al título de Licenciado en Física.
+            </div>
+        </header>
+
+        <div class="abstract-content">
+            <span class="abstract-title">RESUMEN</span>
+            <p>
+                Este trabajo presenta una simulación computacional mediante el método Monte Carlo Cinético para modelar la deposición de películas delgadas de Cr y Fe sobre un sustrato de Magnesio (001), caracterizando los mecanismos de deposición, estudiando los efectos de la difusión superficial y analizando cómo el modo de deposición afecta las propiedades físicas de las películas. La implementación incluye un código en Fortran que simula el proceso con parámetros específicos para cada material: Cr (adhesión=0.98, energía de difusión=0.01-0.25 eV) y Fe (adhesión=0.95, energía de difusión=0.5-1.0 eV), utilizando el modo de deposición balístico.
+            </p>
+            <p>
+                Para el análisis se desarrollaron scripts en Python que generan mapas 2D/3D, calculan métricas de crecimiento (rugosidad, densidad de islas, cobertura) y realizan comparaciones entre materiales. Los resultados revelan que Fe muestra picos pronunciados y valles profundos, con transiciones abruptas, atribuible a su mayor energía de difusión que facilita la movilidad superficial, mientras que Cr presenta una estructura fragmentada con cambios bruscos de altura, formando estructuras más rígidas y rugosas.
+            </p>
+            <p>
+                Aunque ambos materiales mostraron valores similares de rugosidad (Fe: 7.28±2.62, Cr: 7.53±2.68) y espesor (Fe: 10.52±5.63, Cr: 10.81±5.71), sus patrones de crecimiento son morfológicamente distintos. El estudio demuestra que la simulación Monte Carlo permite modelar con alta precisión los procesos de deposición en películas delgadas, proporcionando una herramienta valiosa para predecir y controlar las propiedades morfológicas en función de los parámetros de deposición y las características intrínsecas de los materiales.
+            </p>
+        </div>
+
+        <div class="keywords">
+            <strong>PALABRAS CLAVES:</strong> Monte Carlo, Películas Delgadas, Deposición, Difusión, Sputtering
+        </div>
+
+        <div class="contact">
+            Dirección Electrónica: lordchacinavila@gmail.com
+        </div>
+    </article>
+
+    <!-- Controles de lectura -->
+    <div class="reading-controls">
+        <button class="control-btn" onclick="changeFontSize(-1)" title="Disminuir texto">A-</button>
+        <button class="control-btn" onclick="changeFontSize(1)" title="Aumentar texto">A+</button>
+    </div>
+
+    <script>
+        // --- 1. Lógica de lectura (Tamaño de fuente) ---
+        let currentFontSize = 18; 
+
+        function changeFontSize(direction) {
+            const paper = document.getElementById('paper');
+            currentFontSize += direction * 2;
+            if (currentFontSize < 14) currentFontSize = 14;
+            if (currentFontSize > 26) currentFontSize = 26;
+            paper.style.fontSize = currentFontSize + 'px';
+        }
+
+        // --- 2. Lógica de Exportación a PowerPoint ---
+        function exportToPPT() {
+            // Verificar si la librería está cargada
+            if (typeof PptxGenJS === 'undefined') {
+                alert("Error: La librería PptxGenJS no se cargó correctamente. Asegúrese de tener conexión a internet.");
+                return;
+            }
+
+            // Crear una nueva presentación
+            let pptx = new PptxGenJS();
+            
+            // Definir propiedades básicas
+            pptx.author = 'Ángel Chacín Ávila';
+            pptx.title = 'Resumen Simulación Monte Carlo';
+            pptx.subject = 'Física - Películas Delgadas';
+
+            // --- Diapositiva 1: Título ---
+            let slide1 = pptx.addSlide();
+            slide1.background = { color: "F1F5F9" }; // Fondo gris muy claro
+            slide1.addText("RESUMEN", { 
+                x: 0.5, y: 1.5, w: '90%', 
+                fontSize: 36, bold: true, color: "2C3E50", align: "center", fontFace: "Arial" 
+            });
+            slide1.addText("SIMULACIÓN MONTE CARLO DE LOS PROCESOS DE DEPOSICIÓN\nDE PELÍCULAS DELGADAS DE Cr y Fe SOBRE UN SUSTRATO SÓLIDO DE Mg (001)", { 
+                x: 0.5, y: 2.5, w: '90%', 
+                fontSize: 18, color: "555555", align: "center", fontFace: "Arial" 
+            });
+            slide1.addText("Autor: Br. Ángel Chacín Ávila\nTutora: Msc. Emily Chávez Rivas\nCotutor: Dr. José Fermín", { 
+                x: 0.5, y: 4.5, w: '90%', 
+                fontSize: 14, color: "7F8C8D", align: "center", fontFace: "Arial" 
+            });
+
+            // --- Diapositiva 2: Introducción y Método (Párrafo 1) ---
+            let slide2 = pptx.addSlide();
+            slide2.addText("INTRODUCCIÓN Y MÉTODO", { 
+                x: 0.5, y: 0.5, w: '90%', 
+                fontSize: 24, bold: true, color: "D24726", fontFace: "Arial" 
+            });
+            slide2.addText([
+                { text: "Este trabajo presenta una simulación computacional mediante el método Monte Carlo Cinético para modelar la deposición de películas delgadas de Cr y Fe sobre un sustrato de Magnesio (001), caracterizando los mecanismos de deposición, estudiando los efectos de la difusión superficial y analizando cómo el modo de deposición afecta las propiedades físicas de las películas.", options: { fontSize: 16, breakLine: true, color: "333333" } },
+                { text: "La implementación incluye un código en Fortran que simula el proceso con parámetros específicos para cada material:", options: { fontSize: 16, breakLine: true, color: "333333" } },
+                { text: "• Cr (adhesión=0.98, energía de difusión=0.01-0.25 eV)", options: { fontSize: 14, bullet: true, color: "555555" } },
+                { text: "• Fe (adhesión=0.95, energía de difusión=0.5-1.0 eV)", options: { fontSize: 14, bullet: true, color: "555555" } },
+                { text: "Utilizando el modo de deposición balístico.", options: { fontSize: 14, breakLine: true, color: "555555" } }
+            ], { x: 0.5, y: 1.2, w: '90%', h: '80%', valign: 'top', fontFace: "Arial" });
+
+            // --- Diapositiva 3: Análisis y Herramientas (Párrafo 2) ---
+            let slide3 = pptx.addSlide();
+            slide3.addText("HERRAMIENTAS Y RESULTADOS PRELIMINARES", { 
+                x: 0.5, y: 0.5, w: '90%', 
+                fontSize: 24, bold: true, color: "D24726", fontFace: "Arial" 
+            });
+            slide3.addText([
+                { text: "Para el análisis se desarrollaron scripts en Python que generan mapas 2D/3D, calculan métricas de crecimiento (rugosidad, densidad de islas, cobertura) y realizan comparaciones entre materiales.", options: { fontSize: 16, breakLine: true, color: "333333" } },
+                { text: "Los resultados revelan que:", options: { fontSize: 16, breakLine: true, bold: true, color: "333333" } },
+                { text: "Fe muestra picos pronunciados y valles profundos, con transiciones abruptas, atribuible a su mayor energía de difusión que facilita la movilidad superficial.", options: { fontSize: 15, breakLine: true, color: "D24726" } },
+                { text: "Cr presenta una estructura fragmentada con cambios bruscos de altura, formando estructuras más rígidas y rugosas.", options: { fontSize: 15, breakLine: true, color: "0078D4" } }
+            ], { x: 0.5, y: 1.2, w: '90%', h: '80%', valign: 'top', fontFace: "Arial" });
+
+            // --- Diapositiva 4: Conclusión (Párrafo 3) ---
+            let slide4 = pptx.addSlide();
+            slide4.addText("CONCLUSIÓN", { 
+                x: 0.5, y: 0.5, w: '90%', 
+                fontSize: 24, bold: true, color: "D24726", fontFace: "Arial" 
+            });
+            slide4.addText([
+                { text: "Aunque ambos materiales mostraron valores similares:", options: { fontSize: 16, breakLine: true, color: "333333" } },
+                { text: "• Rugosidad: Fe (7.28±2.62) vs Cr (7.53±2.68)", options: { fontSize: 14, bullet: true, color: "555555" } },
+                { text: "• Espesor: Fe (10.52±5.63) vs Cr (10.81±5.71)", options: { fontSize: 14, bullet: true, color: "555555" } },
+                { text: "Sus patrones de crecimiento son morfológicamente distintos.", options: { fontSize: 16, breakLine: true, color: "333333" } },
+                { text: "El estudio demuestra que la simulación Monte Carlo permite modelar con alta precisión los procesos de deposición en películas delgadas, proporcionando una herramienta valiosa para predecir y controlar las propiedades morfológicas en función de los parámetros de deposición y las características intrínsecas de los materiales.", options: { fontSize: 16, breakLine: true, color: "333333" } }
+            ], { x: 0.5, y: 1.2, w: '90%', h: '80%', valign: 'top', fontFace: "Arial" });
+
+            // --- Diapositiva 5: Palabras Clave ---
+            let slide5 = pptx.addSlide();
+            slide5.addText("PALABRAS CLAVES Y CONTACTO", { 
+                x: 0.5, y: 0.5, w: '90%', 
+                fontSize: 24, bold: true, color: "2C3E50", fontFace: "Arial" 
+            });
+            slide5.addText("Monte Carlo, Películas Delgadas, Deposición, Difusión, Sputtering", { 
+                x: 0.5, y: 1.5, w: '90%', 
+                fontSize: 20, color: "555555", italic: true, fontFace: "Arial" 
+            });
+            slide5.addText("Dirección Electrónica:", { 
+                x: 0.5, y: 3.5, w: '90%', 
+                fontSize: 14, color: "888888", fontFace: "Arial" 
+            });
+            slide5.addText("lordchacinavila@gmail.com", { 
+                x: 0.5, y: 3.8, w: '90%', 
+                fontSize: 18, color: "0078D4", underline: true, fontFace: "Arial", hyperlink: { url: "mailto:lordchacinavila@gmail.com" } 
+            });
+
+            // Guardar el archivo
+            pptx.writeFile({ fileName: "Resumen_Investigacion_Cr_Fe.pptx" });
+        }
+    </script>
+</body>
+</html>
