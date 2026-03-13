@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluación: Tecnologías de la Información y Comunicación</title>
+    <style>
+        :root {
+            --primary-color: #0d47a1; /* Azul Institucional */
+            --primary-dark: #002171;
+            --bg-color: #f0f2f5;
+            --text-color: #333;
+            --white: #ffffff;
+            --success: #2e7d32;
+            --error: #c62828;
+            --radius: 8px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            line-height: 1.6;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--white);
+            padding: 40px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        h2 {
+            color: var(--primary-dark);
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: var(--radius);
+            box-sizing: border-box;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.1s;
+            margin-top: 20px;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background-color: var(--white);
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            margin-top: 10px;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e3f2fd;
+        }
+
+        .question-card {
+            background: #fafafa;
+            border-left: 5px solid var(--primary-color);
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 0 var(--radius) var(--radius) 0;
+            transition: transform 0.2s;
+        }
+
+        .question-card:hover {
+            transform: translateX(5px);
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .question-text {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .options label {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: white;
+            border: 1px solid #eee;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: normal;
+            transition: all 0.2s;
+        }
+
+        .options label:hover {
+            background: #e3f2fd;
+            border-color: #bbdefb;
+        }
+
+        .options input[type="radio"] {
+            margin-right: 12px;
+            accent-color: var(--primary-color);
+        }
+
+        /* Pantalla de Resultados */
+        #result-screen {
+            display: none;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .score-circle {
+            width: 180px;
+            height: 180px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 40px auto;
+            box-shadow: 0 10px 25px rgba(13, 71, 161, 0.3);
+            border: 8px solid #e3f2fd;
+        }
+
+        .score-number {
+            font-size: 4rem;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        .score-label {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+
+        .student-data {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: var(--radius);
+            text-align: left;
+            margin-bottom: 30px;
+            border: 1px solid #e9ecef;
+        }
+
+        .student-data h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+            border-bottom: 1px solid #dee2e6;
+            padding-bottom: 10px;
+        }
+
+        .student-data p {
+            margin: 8px 0;
+            font-size: 1.1rem;
+        }
+
+        .student-data strong {
+            color: #555;
+            display: inline-block;
+            width: 120px;
+        }
+
+        /* Toast y Modal */
+        .toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1000;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            font-size: 17px;
+            opacity: 0;
+            transition: opacity 0.5s, bottom 0.5s;
+        }
+
+        .toast.show {
+            visibility: visible;
+            opacity: 1;
+            bottom: 50px;
+        }
+
+        .toast.error { background-color: var(--error); }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .modal {
+            background: white;
+            padding: 30px;
+            border-radius: var(--radius);
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {transform: translateY(-20px); opacity: 0;}
+            to {transform: translateY(0); opacity: 1;}
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .modal-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .modal-confirm { background: var(--primary-color); color: white; }
+        .modal-cancel { background: #ccc; color: #333; }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container { padding: 20px; }
+            h1 { font-size: 1.5rem; }
+            .score-circle { width: 140px; height: 140px; }
+            .score-number { font-size: 3rem; }
+        }
+
+        @media print {
+            body { background: white; -webkit-print-color-adjust: exact; padding: 0; }
+            .container { box-shadow: none; margin: 0; padding: 0; width: 100%; max-width: 100%; border: none; }
+            .no-print, .toast, .modal-overlay, button, header { display: none !important; }
+            #registration-screen, #quiz-screen { display: none !important; }
+            #result-screen { display: block !important; padding: 0; }
+            .score-circle { border: 2px solid #000; color: black; background: white !important; margin: 30px auto; }
+            .student-data { border: 1px solid #000; background: none !important; }
+            h1, h2 { color: black; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Evaluación de TIC</h1>
+        <p>Tecnologías de la Información y Comunicación</p>
+    </header>
+
+    <!-- PANTALLA 1: REGISTRO -->
+    <main id="registration-screen">
+        <h2>Registro del Estudiante</h2>
+        <p style="color: #666; font-size: 0.9rem;">Complete sus datos para acceder a la evaluación.</p>
+        
+        <div class="form-group">
+            <label for="reg-nombre">Nombre y Apellido:</label>
+            <input type="text" id="reg-nombre" placeholder="Ej: Carlos Pérez" autocomplete="name">
+        </div>
+        <div class="form-group">
+            <label for="reg-cedula">Cédula de Identidad:</label>
+            <input type="text" id="reg-cedula" placeholder="V-00000000" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="reg-seccion">Sección:</label>
+            <input type="text" id="reg-seccion" placeholder="Ej: 01">
+        </div>
+        <div class="form-group">
+            <label for="reg-pnf">PNF:</label>
+            <input type="text" id="reg-pnf" placeholder="Ej: Informática / Electrónica">
+        </div>
+        
+        <button class="btn" onclick="startQuiz()">Comenzar Evaluación</button>
+    </main>
+
+    <!-- PANTALLA 2: PREGUNTAS -->
+    <main id="quiz-screen" style="display:none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 id="student-header" style="margin: 0; font-size: 1.2rem;"></h2>
+            <span style="font-weight: bold; color: #666;">Pregunta <span id="current-q">1</span> de <span id="total-q">20</span></span>
+        </div>
+        
+        <div style="background: #eee; height: 5px; border-radius: 5px; margin-bottom: 25px; overflow: hidden;">
+            <div id="progress-bar" style="background: var(--primary-color); height: 100%; width: 0%; transition: width 0.3s;"></div>
+        </div>
+
+        <form id="quiz-form">
+            <div id="questions-list"></div>
+            <button type="button" class="btn" onclick="confirmFinish()">Finalizar Evaluación</button>
+        </form>
+    </main>
+
+    <!-- PANTALLA 3: RESULTADOS -->
+    <main id="result-screen">
+        <h1>Resultado de Evaluación</h1>
+        
+        <div class="student-data" id="print-data">
+            <h3>Datos del Estudiante</h3>
+            <p><strong>Nombre:</strong> <span id="res-nombre"></span></p>
+            <p><strong>Cédula:</strong> <span id="res-cedula"></span></p>
+            <p><strong>Sección:</strong> <span id="res-seccion"></span></p>
+            <p><strong>PNF:</strong> <span id="res-pnf"></span></p>
+            <p><strong>Fecha:</strong> <span id="res-fecha"></span></p>
+        </div>
+
+        <div class="score-circle">
+            <span class="score-number" id="final-score">0</span>
+            <span class="score-label">Puntos</span>
+        </div>
+        
+        <p id="feedback-text" style="font-weight: bold; font-size: 1.3rem; margin: 20px 0 40px 0; color: var(--primary-dark);"></p>
+
+        <div class="no-print">
+            <button class="btn" onclick="window.print()">🖨️ Imprimir Resultado</button>
+            <button class="btn btn-secondary" onclick="location.reload()">↻ Nueva Evaluación</button>
+        </div>
+    </main>
+</div>
+
+<!-- Notificaciones -->
+<div id="toast" class="toast">Mensaje de notificación</div>
+
+<div id="confirm-modal" class="modal-overlay">
+    <div class="modal">
+        <h3>¿Finalizar Evaluación?</h3>
+        <p>Se calculará su calificación final. ¿Desea continuar?</p>
+        <div class="modal-actions">
+            <button class="modal-btn modal-cancel" onclick="closeModal()">Cancelar</button>
+            <button class="modal-btn modal-confirm" onclick="calculateScore()">Sí, Finalizar</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // PREGUNTAS ESPECÍFICAS SOBRE TECNOLOGÍAS DE LA INFORMACIÓN Y COMUNICACIÓN (TIC)
+    const questions = [
+        {
+            q: "¿Qué significan las siglas TIC?",
+            a: ["Técnicas de Ingeniería y Computación", "Tecnologías de la Información y Comunicación", "Telecomunicaciones e Información Científica", "Tecnologías de Integración Cultural"],
+            c: 1
+        },
+        {
+            q: "¿Cuál de los siguientes es un ejemplo de Hardware?",
+            a: ["Windows 10", "Microsoft Word", "El Disco Duro", "Google Chrome"],
+            c: 2
+        },
+        {
+            q: "¿Qué es la memoria RAM en un computador?",
+            a: ["Memoria permanente de almacenamiento", "Memoria volátil donde se ejecutan los procesos activos", "Un componente de red", "Un tipo de antivirus"],
+            c: 1
+        },
+        {
+            q: "¿Cuál de estos dispositivos se considera principalmente de 'Entrada'?",
+            a: ["Monitor", "Impresora", "Teclado", "Altavoces"],
+            c: 2
+        },
+        {
+            q: "¿Qué función principal cumple el Sistema Operativo?",
+            a: ["Navegar por internet", "Gestionar los recursos del hardware y software del computador", "Redactar documentos de texto", "Crear hojas de cálculo"],
+            c: 1
+        },
+        {
+            q: "¿Qué es una red LAN?",
+            a: ["Una red de área amplia que conecta países", "Una red de área local que cubre un espacio físico pequeño (oficina, casa)", "Una red inalámbrica pública", "Una red de telefonía móvil"],
+            c: 1
+        },
+        {
+            q: "¿Qué significan las siglas WWW en una dirección web?",
+            a: ["World Wide Web", "Web Wide World", "World Web Wide", "Wireless Web World"],
+            c: 0
+        },
+        {
+            q: "¿Cuál es la diferencia principal entre Internet y la Web?",
+            a: ["Son lo mismo", "Internet es la red de redes y la Web es el sistema de información accedido a través de Internet", "La Web es solo para correos e Internet para videos", "Internet es lento y la Web es rápida"],
+            c: 1
+        },
+        {
+            q: "¿Qué es un Navegador Web?",
+            a: ["Un programa para buscar virus", "Una aplicación para acceder y visualizar páginas de internet", "Un tipo de conexión a red", "Un disco de almacenamiento externo"],
+            c: 1
+        },
+        {
+            q: "¿Qué es el 'Phishing' en seguridad informática?",
+            a: ["Un tipo de antivirus", "Una técnica de ingeniería social para robar información confidencial haciéndose pasar por una entidad confiable", "Un fallo físico en el disco duro", "Un lenguaje de programación"],
+            c: 1
+        },
+        {
+            q: "¿Qué es un 'Backup' o copia de seguridad?",
+            a: ["Una actualización de software", "Una copia de los datos originales para recuperarlos en caso de pérdida", "Un tipo de virus", "Un componente de la CPU"],
+            c: 1
+        },
+        {
+            q: "¿Qué es la Computación en la Nube (Cloud Computing)?",
+            a: ["Almacenar datos en un disco físico local", "La prestación de servicios de computación a través de Internet", "Usar el computador sin corriente eléctrica", "Un tipo de red LAN inalámbrica"],
+            c: 1
+        },
+        {
+            q: "¿Qué es un Firewall?",
+            a: ["Un programa para ver películas", "Un sistema de seguridad de red que controla el tráfico entrante y saliente", "Un tipo de memoria RAM", "Un periférico de salida"],
+            c: 1
+        },
+        {
+            q: "¿Cuál de las siguientes es una unidad de almacenamiento portátil?",
+            a: ["Disco Duro Interno", "Memoria USB (Pen Drive)", "Procesador", "Tarjeta Madre"],
+            c: 1
+        },
+        {
+            q: "¿Qué es el 'Big Data'?",
+            a: ["Un tamaño de pantalla gigante", "Conjuntos de datos tan grandes y complejos que requieren herramientas especiales para su procesamiento", "Un tipo de virus informático", "Una marca de computadores"],
+            c: 1
+        },
+        {
+            q: "¿Qué significa la sigla IoT (Internet of Things)?",
+            a: ["Internet of Tools", "Internet de las Cosas (conexión de objetos físicos a internet)", "Input of Technology", "Internal Operating Tools"],
+            c: 1
+        },
+        {
+            q: "¿Qué es un Hipervínculo?",
+            a: ["Un texto en negrita", "Un elemento en un documento que hace referencia a otro documento o recurso", "Un tipo de imagen", "Un error del sistema"],
+            c: 1
+        },
+        {
+            q: "¿Cuál es la función principal de una Hoja de Cálculo (como Excel)?",
+            a: ["Crear presentaciones animadas", "Organizar datos en filas y columnas y realizar cálculos matemáticos", "Diseñar gráficos vectoriales", "Navegar en internet"],
+            c: 1
+        },
+        {
+            q: "¿Qué es un Algoritmo?",
+            a: ["Un error de programación", "Un conjunto de instrucciones o reglas definidas y ordenadas para resolver un problema", "Un componente del hardware", "Un tipo de red social"],
+            c: 1
+        },
+        {
+            q: "¿Qué es el protocolo HTTP?",
+            a: ["HyperText Transfer Protocol (Protocolo de transferencia de hipertexto)", "High Tech Transfer Program", "Home Tool Transfer Protocol", "Hyper Text Technical Page"],
+            c: 0
+        }
+    ];
+
+    // Funciones de Utilidad
+    function showToast(message, isError = false) {
+        const toast = document.getElementById("toast");
+        toast.className = "toast show";
+        if (isError) toast.classList.add("error");
+        toast.innerText = message;
+        setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
+    }
+
+    function showModal() {
+        document.getElementById('confirm-modal').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('confirm-modal').style.display = 'none';
+    }
+
+    // Lógica Principal
+    function startQuiz() {
+        const nombre = document.getElementById('reg-nombre').value.trim();
+        const cedula = document.getElementById('reg-cedula').value.trim();
+        const seccion = document.getElementById('reg-seccion').value.trim();
+        const pnf = document.getElementById('reg-pnf').value.trim();
+
+        if (!nombre || !cedula || !seccion || !pnf) {
+            showToast("⚠️ Por favor complete todos los campos obligatorios.", true);
+            return;
+        }
+
+        document.getElementById('registration-screen').style.display = 'none';
+        document.getElementById('quiz-screen').style.display = 'block';
+        document.getElementById('student-header').innerText = `Estudiante: ${nombre}`;
+        document.getElementById('total-q').innerText = questions.length;
+
+        renderQuestions();
+    }
+
+    function renderQuestions() {
+        const list = document.getElementById('questions-list');
+        list.innerHTML = ''; 
+
+        questions.forEach((q, i) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+
+            const optionsHtml = q.a.map((opt, oi) => `
+                <label>
+                    <input type="radio" name="q${i}" value="${oi}" onchange="updateProgress()">
+                    ${opt}
+                </label>
+            `).join('');
+
+            card.innerHTML = `
+                <span class="question-text">${i+1}. ${q.q}</span>
+                <div class="options">${optionsHtml}</div>
+            `;
+            list.appendChild(card);
+        });
+        
+        updateProgress();
+    }
+
+    function updateProgress() {
+        const total = questions.length;
+        const answered = document.querySelectorAll('input[type="radio"]:checked').length;
+        const percent = (answered / total) * 100;
+        
+        document.getElementById('progress-bar').style.width = percent + "%";
+        document.getElementById('current-q').innerText = answered + 1 > total ? total : answered + 1;
+    }
+
+    function confirmFinish() {
+        const answered = document.querySelectorAll('input[type="radio"]:checked').length;
+        if (answered < questions.length) {
+            showToast(`Has respondido ${answered} de ${questions.length} preguntas.`, true);
+        }
+        showModal();
+    }
+
+    function calculateScore() {
+        closeModal();
+        let score = 0;
+
+        questions.forEach((q, i) => {
+            const selected = document.querySelector(`input[name="q${i}"]:checked`);
+            if(selected && parseInt(selected.value) === q.c) score++;
+        });
+
+        document.getElementById('quiz-screen').style.display = 'none';
+        document.getElementById('result-screen').style.display = 'block';
+
+        document.getElementById('res-nombre').innerText = document.getElementById('reg-nombre').value;
+        document.getElementById('res-cedula').innerText = document.getElementById('reg-cedula').value;
+        document.getElementById('res-seccion').innerText = document.getElementById('reg-seccion').value;
+        document.getElementById('res-pnf').innerText = document.getElementById('reg-pnf').value;
+        document.getElementById('res-fecha').innerText = new Date().toLocaleDateString();
+        
+        document.getElementById('final-score').innerText = score;
+
+        const percent = (score / questions.length) * 100;
+        let msg = "";
+        if (percent === 100) msg = "¡Excelente! Dominio total de las TIC.";
+        else if (percent >= 80) msg = "¡Muy Bien! Posees buenos conocimientos tecnológicos.";
+        else if (percent >= 60) msg = "Aprobado. Debes repasar algunos conceptos básicos.";
+        else msg = "Necesitas estudiar más sobre las Tecnologías de la Información.";
+        
+        document.getElementById('feedback-text').innerText = msg;
+    }
+</script>
+
+</body>
+</html>
