@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Derivación + Simulación Interactiva con Animación de Rejilla (Cr vs Fe)</title>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #0d1117;
+            color: #c9d1d9;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            background: #161b22;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        }
+        h1, h2 { color: #58a6ff; }
+        .step {
+            background: #21262d;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 5px solid #58a6ff;
+        }
+        .equation {
+            background: #0d1117;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            font-size: 1.1em;
+        }
+        button {
+            background: #238636;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 10px 5px;
+            font-weight: bold;
+        }
+        button:hover { background: #2ea043; }
+        .sim-panel {
+            display: flex;
+            gap: 25px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        .material {
+            flex: 1;
+            min-width: 340px;
+            background: #21262d;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .Cr { border: 3px solid #ff7b00; }
+        .Fe { border: 3px solid #00b4ff; }
+        input[type="range"] { width: 100%; }
+        .output {
+            background: #0d1117;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            font-family: monospace;
+        }
+        canvas {
+            background: #0d1117;
+            border: 2px solid #30363d;
+            border-radius: 8px;
+            display: block;
+            margin: 15px auto;
+        }
+        .result {
+            background: #21262d;
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 30px;
+            text-align: center;
+        }
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #30363d;
+            text-align: center;
+            color: #8b949e;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Derivación: Ecuación Maestra → Cadena de Markov Discreta + Simulación con Animación</h1>
+    <p><strong>Modelo balístico como primera aproximación</strong> – Parámetros exactos de tu tesis</p>
+
+    <!-- Derivación -->
+    <div class="step">
+        <h2>Paso 1: Ecuación Maestra Continua</h2>
+        <div class="equation">
+            \[
+            \frac{dP(\sigma,t)}{dt} = \sum_{\sigma' \neq \sigma} \Bigl[ W(\sigma'\to\sigma) P(\sigma',t) - W(\sigma\to\sigma') P(\sigma,t) \Bigr]
+            \]
+        </div>
+    </div>
+
+    <div class="step">
+        <h2>Paso 2: Integración → Forma discreta</h2>
+        <div class="equation">
+            \[
+            P(\sigma, t + \Delta t) = \mathbf{T}(\Delta t) \, \mathbf{P}(t)
+            \]
+        </div>
+    </div>
+
+    <div class="step">
+        <h2>Paso 3: Método de Gillespie (exacto en tu KMC)</h2>
+        <div class="equation">
+            \[
+            P_i = \frac{W_i}{W_{\text{total}}} \qquad \Delta t = -\frac{\ln(r)}{W_{\text{total}}}
+            \]
+        </div>
+    </div>
+
+    <!-- SIMULACIÓN INTERACTIVA CON ANIMACIÓN -->
+    <h2 style="margin-top:40px;">Simulación Interactiva + Animación de Rejilla 8×8</h2>
+    <p><strong>ν₀ = 10¹³ s⁻¹</strong> (frecuencia de intento usada en tu tesis) | T = 500 K</p>
+
+    <div class="sim-panel">
+        <!-- Cr -->
+        <div class="material Cr">
+            <h3 style="color:#ff7b00;">Cromo (Cr)</h3>
+            <label>Adherencia: <strong>0.98</strong></label><br>
+            <label>E_d (eV): <span id="edCrVal">0.13</span></label>
+            <input type="range" id="edCr" min="0.01" max="0.25" step="0.01" value="0.13">
+            <br><br>
+            <label>E_inc (eV): <span id="eincCrVal">5.0</span></label>
+            <input type="range" id="eincCr" min="3.5" max="6.5" step="0.1" value="5.0">
+            <br><br>
+            <canvas id="canvasCr" width="280" height="280"></canvas>
+            <button onclick="simular('Cr')">Simular paso KMC (Cr)</button>
+            <div class="output" id="outputCr">P_ads = ---<br>P_diff = ---<br>Evento: ---<br>Δt = ---</div>
+        </div>
+
+        <!-- Fe -->
+        <div class="material Fe">
+            <h3 style="color:#00b4ff;">Hierro (Fe)</h3>
+            <label>Adherencia: <strong>0.95</strong></label><br>
+            <label>E_d (eV): <span id="edFeVal">0.75</span></label>
+            <input type="range" id="edFe" min="0.5" max="1.0" step="0.01" value="0.75">
+            <br><br>
+            <label>E_inc (eV): <span id="eincFeVal">5.0</span></label>
+            <input type="range" id="eincFe" min="3.5" max="6.5" step="0.1" value="5.0">
+            <br><br>
+            <canvas id="canvasFe" width="280" height="280"></canvas>
+            <button onclick="simular('Fe')">Simular paso KMC (Fe)</button>
+            <div class="output" id="outputFe">P_ads = ---<br>P_diff = ---<br>Evento: ---<br>Δt = ---</div>
+        </div>
+    </div>
+
+    <div class="result">
+        <h2 id="resumenSim">Presiona “Simular” para ver la animación de la rejilla y el evento elegido según la ecuación maestra.</h2>
+    </div>
+
+    <!-- FOOTER AGREGADO -->
+    <div class="footer">
+        @2026 elaborado por Ángel Chacín Ávila, se pública con licencia GPL
+    </div>
+
+</div>
+
+<script>
+    MathJax = { tex: { inlineMath: [['\( ', ' \)']] } };
+
+    // Parámetros fijos de tu tesis
+    const NU = 1e13;
+    const T = 500;
+    const kB = 8.617333262145e-5;
+
+    function calcular(material) {
+        const isCr = material === 'Cr';
+        const Ed = parseFloat(document.getElementById(isCr ? 'edCr' : 'edFe').value);
+        const adhesion = isCr ? 0.98 : 0.95;
+        const Einc = parseFloat(document.getElementById(isCr ? 'eincCr' : 'eincFe').value);
+
+        const Pads = adhesion * (1 + 0.2 * (Einc / 5.0));
+        const Pdiff = Math.exp(-Ed / (kB * T));
+        return { Pads: Pads.toFixed(4), Pdiff: Pdiff.toFixed(8), Ed, Einc };
+    }
+
+    function dibujarRejilla(canvasId, color, evento) {
+        const canvas = document.getElementById(canvasId);
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        const size = 8;
+        const cell = canvas.width / size;
+
+        // Fondo rejilla
+        ctx.strokeStyle = '#30363d';
+        for (let i = 0; i <= size; i++) {
+            ctx.beginPath();
+            ctx.moveTo(i * cell, 0);
+            ctx.lineTo(i * cell, canvas.height);
+            ctx.moveTo(0, i * cell);
+            ctx.lineTo(canvas.width, i * cell);
+            ctx.stroke();
+        }
+
+        // Animación simple: 3 átomos aleatorios + nuevo evento
+        ctx.fillStyle = color;
+        for (let i = 0; i < 3; i++) {
+            const x = Math.floor(Math.random() * size) * cell + cell/2;
+            const y = Math.floor(Math.random() * size) * cell + cell/2;
+            ctx.beginPath();
+            ctx.arc(x, y, cell*0.35, 0, Math.PI*2);
+            ctx.fill();
+        }
+
+        // Evento animado
+        if (evento === 'ADSORCIÓN') {
+            ctx.fillStyle = '#39ff14';
+            ctx.font = 'bold 18px Arial';
+            ctx.fillText('↓ ADS', canvas.width/2 - 30, 40);
+        } else {
+            ctx.fillStyle = '#ffcc00';
+            ctx.font = 'bold 18px Arial';
+            ctx.fillText('→ DIF', canvas.width/2 - 30, 40);
+        }
+    }
+
+    function simular(material) {
+        const { Pads, Pdiff } = calcular(material);
+        const Wtotal = parseFloat(Pads) + parseFloat(Pdiff);
+        const r = Math.random();
+        const evento = (r < Pads / Wtotal) ? "ADSORCIÓN" : "DIFUSIÓN";
+        const deltaT = (-Math.log(Math.random()) / Wtotal).toFixed(6);
+
+        const output = document.getElementById('output' + material);
+        output.innerHTML = `
+            P_ads = ${Pads}<br>
+            P_diff = ${Pdiff}<br>
+            <strong>Evento: ${evento}</strong><br>
+            Δt = ${deltaT} s<br>
+            ν₀ = 10¹³ s⁻¹
+        `;
+
+        // Animación en el canvas
+        const canvasId = material === 'Cr' ? 'canvasCr' : 'canvasFe';
+        const color = material === 'Cr' ? '#ff7b00' : '#00b4ff';
+        dibujarRejilla(canvasId, color, evento);
+
+        document.getElementById('resumenSim').innerHTML = `
+            <strong>\( {material}</strong> – Evento: <span style="color:#58a6ff"> \){evento}</span><br>
+            Δt = ${deltaT} s | ν₀ = 10¹³ s⁻¹
+        `;
+    }
+
+    // Actualizar sliders en vivo
+    document.getElementById('edCr').addEventListener('input', () => document.getElementById('edCrVal').textContent = document.getElementById('edCr').value);
+    document.getElementById('edFe').addEventListener('input', () => document.getElementById('edFeVal').textContent = document.getElementById('edFe').value);
+    document.getElementById('eincCr').addEventListener('input', () => document.getElementById('eincCrVal').textContent = document.getElementById('eincCr').value);
+    document.getElementById('eincFe').addEventListener('input', () => document.getElementById('eincFeVal').textContent = document.getElementById('eincFe').value);
+
+    window.addEventListener('load', () => {
+        MathJax.typesetPromise();
+        // Dibujar rejillas vacías al inicio
+        dibujarRejilla('canvasCr', '#ff7b00', '');
+        dibujarRejilla('canvasFe', '#00b4ff', '');
+    });
+</script>
+</body>
+</html>
