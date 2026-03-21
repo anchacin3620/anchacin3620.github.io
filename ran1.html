@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis KMC y Validación Estocástica</title>
+    <style>
+        /* --- Variables CSS y Tema --- */
+        :root {
+            --bg-body: #f4f6f9;
+            --bg-card: #ffffff;
+            --text-primary: #2c3e50;
+            --text-secondary: #546e7a;
+            --accent-color: #3498db;
+            --accent-hover: #2980b9;
+            --border-color: #e0e0e0;
+            --code-bg: #eceff1;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            --radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        /* Modo Oscuro */
+        body.dark-mode {
+            --bg-body: #1a202c;
+            --bg-card: #2d3748;
+            --text-primary: #e2e8f0;
+            --text-secondary: #a0aec0;
+            --accent-color: #63b3ed;
+            --accent-hover: #4299e1;
+            --border-color: #4a5568;
+            --code-bg: #171923;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        /* --- Reset y Estilos Base --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            line-height: 1.7;
+            transition: background-color 0.3s, color 0.3s;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- Estructura de Layout --- */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* --- Cabecera --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        /* Botón de Tema */
+        .theme-toggle {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        /* --- Contenido Principal --- */
+        article {
+            background-color: var(--bg-card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            transition: var(--transition);
+        }
+
+        .intro-text {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            text-align: justify;
+        }
+
+        .highlight-phrase {
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        /* --- Secciones y Tarjetas --- */
+        section {
+            margin-bottom: 2.5rem;
+            border-left: 4px solid var(--accent-color);
+            padding-left: 1.5rem;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        ul {
+            list-style-type: none;
+            margin-top: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        li {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        li::before {
+            content: "•";
+            color: var(--accent-color);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-size: 1.2em;
+        }
+
+        /* --- Conclusión --- */
+        .conclusion-box {
+            background-color: var(--code-bg);
+            border-radius: var(--radius);
+            padding: 2rem;
+            margin-top: 3rem;
+            border-top: 4px solid var(--accent-color);
+        }
+
+        .conclusion-box h3 {
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .analogy {
+            font-style: italic;
+            color: var(--text-secondary);
+            margin-top: 1rem;
+            display: block;
+            padding: 1rem;
+            border-left: 2px dashed var(--text-secondary);
+        }
+
+        /* --- Footer --- */
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+
+            .theme-toggle {
+                align-self: flex-end;
+            }
+
+            article {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Cabecera -->
+        <header>
+            <h1>Validación de Simulación KMC</h1>
+            <button id="themeToggle" class="theme-toggle" aria-label="Cambiar tema">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <span>Tema</span>
+            </button>
+        </header>
+
+        <!-- Contenido Principal -->
+        <main>
+            <article>
+                <!-- Introducción -->
+                <p class="intro-text">
+                    Tu análisis es muy agudo y toca un punto crítico en la validez de cualquier simulación estocástica (basada en el azar). La respuesta corta es <span class="highlight-phrase">sí</span>, tu razonamiento es físicamente correcto y estadísticamente sólido, pero requiere desglosar por qué ese margen de seguridad es vital en el método <strong>Monte Carlo Cinético (KMC)</strong>.
+                </p>
+
+                <p style="margin-bottom: 2rem; color: var(--text-secondary);">
+                    Aquí te explico la justificación técnica de esta discrepancia entre los 50,000 del generador y los 20,000 del diagrama:
+                </p>
+
+                <!-- Punto 1 -->
+                <section>
+                    <h2>1. El concepto de "Periodo" del Generador</h2>
+                    <p>
+                        Todo generador de números aleatorios en computación es, en realidad, <em>pseudo-aleatorio</em>. Esto significa que después de una cantidad determinada de números generados, la secuencia comienza a repetirse exactamente igual.
+                    </p>
+                    <ul>
+                        <li>
+                            <strong>Techo de seguridad:</strong> Si el autor establece que el nivel de fiabilidad es de 50,000, está definiendo el "techo" de seguridad antes de que el generador pierda su calidad estadística o correlacione los datos.
+                        </li>
+                        <li>
+                            <strong>Zona lineal:</strong> Al ejecutar la simulación hasta 20,000, se asegura de trabajar en la zona "lineal" y segura del algoritmo, evitando cualquier patrón repetitivo que sesgaría los resultados de la deposición de los átomos.
+                        </li>
+                    </ul>
+                </section>
+
+                <!-- Punto 2 -->
+                <section>
+                    <h2>2. El Límite del Diagrama de Flujo (Aspecto Práctico)</h2>
+                    <p>
+                        En el diagrama de flujo (Lámina 10), el límite de 20,000 suele representar la <em>convergencia física</em> del sistema. En física de superficies, llega un punto donde añadir más átomos no cambia las propiedades estadísticas (como la rugosidad o la porosidad).
+                    </p>
+                    <ul>
+                        <li>
+                            <strong>Eficiencia:</strong> Si con 20,000 interacciones (eventos de adsorción/difusión) ya se estabilizó la formación de la película delgada, realizar 30,000 más sería un desperdicio de tiempo de cómputo.
+                        </li>
+                        <li>
+                            <strong>Dentro del rango:</strong> Al estar 20,000 muy por debajo del límite de fiabilidad del generador (50,000), el autor garantiza que cada uno de los eventos simulados fue impulsado por un número aleatorio "fresco" y no correlacionado.
+                        </li>
+                    </ul>
+                </section>
+
+                <!-- Punto 3 -->
+                <section>
+                    <h2>3. Fiabilidad en Fortran 90</h2>
+                    <p>
+                        Fortran 90 utiliza subrutinas como <code>RANDOM_NUMBER</code> y <code>RANDOM_SEED</code>. Aunque los generadores modernos de Fortran tienen periodos inmensos (mucho mayores a 50,000), en el contexto de una investigación académica, establecer un límite de control de 50k es una buena práctica de laboratorio virtual.
+                    </p>
+                    <p>Asegura que:</p>
+                    <ul>
+                        <li>
+                            <strong>Aleatoriedad uniforme:</strong> Todos los sitios de la red de Magnesio tienen la misma probabilidad de ser elegidos.
+                        </li>
+                        <li>
+                            <strong>Cinética realista:</strong> El tiempo de simulación (\(\Delta t\)) calculado a partir de esos números aleatorios sigue siendo coherente con la Ecuación Maestra de la lámina 5.
+                        </li>
+                    </ul>
+                </section>
+
+                <!-- Conclusión -->
+                <div class="conclusion-box">
+                    <h3>Conclusión</h3>
+                    <p>
+                        Efectivamente, no es un error, sino una estrategia de validación. El autor define un "espacio de trabajo seguro" (50,000) y opera dentro de él (20,000) para asegurar que los resultados mostrados en las láminas de resultados (13 a 18) sean estadísticamente significativos y no un artefacto del software.
+                    </p>
+                    <span class="analogy">
+                        Es como tener un tanque de combustible para 500 km pero planear un viaje de solo 200 km para nunca quedarse varado.
+                    </span>
+                </div>
+            </article>
+        </main>
+
+        <footer>
+            <p>Generado para análisis técnico y científico.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Funcionalidad para alternar entre Modo Claro y Oscuro
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleButton = document.getElementById('themeToggle');
+            const body = document.body;
+            
+            // Verificar si hay preferencia guardada
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                body.classList.add('dark-mode');
+            }
+
+            toggleButton.addEventListener('click', () => {
+                body.classList.toggle('dark-mode');
+                
+                // Guardar preferencia del usuario
+                if (body.classList.contains('dark-mode')) {
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    localStorage.setItem('theme', 'light');
+                }
+            });
+        });
+    </script>
+</body>
+      </html>
