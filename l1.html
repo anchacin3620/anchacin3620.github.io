@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lámina 3: Resumen del Proyecto</title>
+    <style>
+        :root {
+            --bg-dark: #0b1019;
+            --bg-card: #151e2e;
+            --primary: #00d4ff; /* Azul científico */
+            --secondary: #64748b;
+            --accent-cr: #ff6b6b; /* Color para Cromo */
+            --accent-fe: #4ecdc4; /* Color para Hierro */
+            --text-main: #e2e8f0;
+            --border: #334155;
+            --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            --max-width: 950px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            line-height: 1.6;
+            padding-bottom: 4rem;
+        }
+
+        /* --- Tipografía y Layout --- */
+        .container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            margin: 2.5rem 0 1.2rem;
+            color: #fff;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        h3 {
+            font-size: 1.1rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: #cbd5e1;
+            text-align: justify;
+        }
+
+        /* --- Componentes UI --- */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary);
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-right: 0.5rem;
+        }
+
+        .tag-kmc { background: rgba(0, 212, 255, 0.1); color: var(--primary); border: 1px solid var(--primary); }
+        .tag-fortran { background: rgba(100, 100, 100, 0.2); color: #a0a0a0; border: 1px solid #666; }
+        .tag-python { background: rgba(255, 212, 0, 0.1); color: #ffd700; border: 1px solid #ffd700; }
+
+        /* --- Sección 1: Modelo --- */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        /* --- Sección 2: Ejecución (Flujo) --- */
+        .flow-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .flow-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .flow-step::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 40px;
+            bottom: -20px;
+            width: 2px;
+            background: var(--border);
+            z-index: -1;
+        }
+
+        .flow-step:last-child::before {
+            display: none;
+        }
+
+        .step-number {
+            background: var(--primary);
+            color: #000;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        /* --- Sección 3: Descubrimiento (Interactivo) --- */
+        .comparison-wrapper {
+            background: #0f172a;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .toggle-container {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .toggle-btn {
+            background: transparent;
+            border: 2px solid var(--border);
+            color: var(--text-main);
+            padding: 0.8rem 2rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .toggle-btn.active-cr {
+            border-color: var(--accent-cr);
+            background: rgba(255, 107, 107, 0.1);
+            color: var(--accent-cr);
+            box-shadow: 0 0 15px rgba(255, 107, 107, 0.2);
+        }
+
+        .toggle-btn.active-fe {
+            border-color: var(--accent-fe);
+            background: rgba(78, 205, 196, 0.1);
+            color: var(--accent-fe);
+            box-shadow: 0 0 15px rgba(78, 205, 196, 0.2);
+        }
+
+        .result-display {
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .result-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .result-desc {
+            max-width: 600px;
+            font-size: 1.1rem;
+        }
+
+        /* --- Resumen Final --- */
+        .summary-box {
+            background: linear-gradient(135deg, var(--bg-card) 0%, #1e293b 100%);
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem;
+            margin-top: 3rem;
+            font-style: italic;
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 768px) {
+            .grid-2 { grid-template-columns: 1fr; }
+            h1 { font-size: 1.5rem; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Lámina 3: Resumen del Proyecto</h1>
+            <p style="text-align: center; color: var(--secondary); margin-bottom: 2rem;">Análisis Técnico de Modelado, Ejecución y Descubrimiento</p>
+        </header>
+
+        <!-- Introducción -->
+        <section id="intro-section">
+            <div class="card">
+                <p>
+                    La Lámina 3, titulada "Resumen del Proyecto", es fundamental porque actúa como el mapa conceptual de toda la investigación. En ella se sintetizan los tres pilares del trabajo: el modelo físico-matemático, la arquitectura del software y el hallazgo científico principal.
+                </p>
+                <p>A continuación, profundizo en cada una de sus secciones desde una perspectiva técnica:</p>
+            </div>
+        </section>
+
+        <!-- Sección 1: El Modelo -->
+        <section>
+            <h2>1. El Modelo: Representación de la Red Atómica</h2>
+            <div class="grid-2" id="modelo-container">
+                <!-- Inyectado por JS -->
+            </div>
+        </section>
+
+        <!-- Sección 2: La Ejecución -->
+        <section>
+            <h2>2. La Ejecución: Flujo de Trabajo Computacional</h2>
+            <p style="margin-bottom: 1.5rem;">El diagrama de flujo detalla cómo se transforman las leyes físicas en datos procesables:</p>
+            <div class="flow-container" id="ejecucion-container">
+                <!-- Inyectado por JS -->
+            </div>
+        </section>
+
+        <!-- Sección 3: El Descubrimiento (Interactivo) -->
+        <section>
+            <h2>3. El Descubrimiento: Movilidad vs. Arquitectura</h2>
+            <p style="margin-bottom: 1.5rem;">
+                Esta es la conclusión científica más relevante de la lámina, ilustrada por un gráfico de probabilidad de la Energía de Difusión. Seleccione un elemento para analizar su comportamiento:
+            </p>
+            
+            <div class="comparison-wrapper">
+                <div class="toggle-container">
+                    <button class="toggle-btn active-cr" id="btn-cr" onclick="cambiarVista('cr')">Cr (Cromo)</button>
+                    <button class="toggle-btn" id="btn-fe" onclick="cambiarVista('fe')">Fe (Hierro)</button>
+                </div>
+
+                <div class="result-display" id="resultado-display">
+                    <!-- Contenido dinámico -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Resumen -->
+        <section>
+            <div class="summary-box" id="resumen-final">
+                <!-- Inyectado por JS -->
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Script JavaScript -->
+    <script>
+        /**
+         * DATOS DEL PROYECTO
+         * Almacenamiento de la información técnica en objetos JavaScript.
+         */
+        
+        // Datos del Modelo Físico
+        const datosModelo = [
+            {
+                titulo: "Simulación Estocástica a Nanoescala",
+                contenido: "El modelo no es determinista; utiliza el método Monte Carlo Cinético (KMC) para tratar el sistema como una secuencia de eventos discretos (adsorción y difusión) seleccionados aleatoriamente según sus probabilidades físicas.",
+                tag: "Método KMC"
+            },
+            {
+                titulo: "Estructura de la Rejilla",
+                contenido: "Se trabaja sobre una celda unitaria de Magnesio orientada en el plano (001), lo que define los sitios donde los átomos incidentes pueden 'aterrizar' y posteriormente difundirse.",
+                tag: "Red (001)"
+            }
+        ];
+
+        // Datos del Flujo de Trabajo
+        const pasosEjecucion = [
+            {
+                titulo: "Definición de Parámetros",
+                desc: "Se establecen las condiciones iniciales, como la energía de deposición balística fijada en 5.0 eV."
+            },
+            {
+                titulo: "Simulación KMC",
+                desc: "El núcleo del cálculo se realiza en <strong>Fortran 90</strong> por su alta eficiencia en computación científica, resolviendo la evolución temporal del sistema fuera del equilibrio termodinámico.",
+                tech: "fortran"
+            },
+            {
+                titulo: "Mapeo Topográfico 3D",
+                desc: "Tras obtener las posiciones atómicas finales, se utilizan herramientas en <strong>Python</strong> para generar visualizaciones 3D y analizar la rugosidad de la película.",
+                tech: "python"
+            }
+        ];
+
+        // Datos Comparativos (Cr vs Fe)
+        const datosDescubrimiento = {
+            cr: {
+                titulo: "Cr (Baja Movilidad)",
+                texto: "Presenta una curva de energía de difusión más estrecha y hacia la izquierda. Su baja movilidad superficial hace que los átomos se 'queden' donde caen, construyendo columnas rígidas y fragmentadas que ofrecen una cobertura vertical rápida.",
+                color: "#ff6b6b"
+            },
+            fe: {
+                titulo: "Fe (Alta Movilidad)",
+                texto: "Su curva es más ancha y desplazada. Al tener mayor movilidad, los átomos de Hierro tienden a buscar sitios de menor energía, lo que genera una morfología de valles fluidos y transiciones más suaves.",
+                color: "#4ecdc4"
+            }
+        };
+
+        const textoResumen = "En resumen: La lámina 3 explica que, aunque macroscópicamente las películas de Cr y Fe puedan parecer similares, es la energía de difusión intrínseca la que dicta la arquitectura nanométrica final, determinando qué tan efectivo será el recubrimiento para proteger al Magnesio de la corrosión.";
+
+        /**
+         * FUNCIONES DE RENDERIZADO
+         */
+
+        function renderModelo() {
+            const container = document.getElementById('modelo-container');
+            let html = '';
+            datosModelo.forEach(item => {
+                html += `
+                    <div class="card">
+                        <h3>${item.titulo} <span class="tag tag-kmc">${item.tag}</span></h3>
+                        <p>${item.contenido}</p>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function renderEjecucion() {
+            const container = document.getElementById('ejecucion-container');
+            let html = '';
+            pasosEjecucion.forEach((paso, index) => {
+                let tagHtml = '';
+                if(paso.tech === 'fortran') tagHtml = '<span class="tag tag-fortran">Fortran 90</span>';
+                if(paso.tech === 'python') tagHtml = '<span class="tag tag-python">Python</span>';
+                
+                html += `
+                    <div class="flow-step">
+                        <div class="step-number">${index + 1}</div>
+                        <div class="card" style="width: 100%; margin-bottom: 0;">
+                            <h3>${paso.titulo} ${tagHtml}</h3>
+                            <p>${paso.desc}</p>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        // Función para manejar el cambio entre Cromo y Hierro
+        function cambiarVista(elemento) {
+            const display = document.getElementById('resultado-display');
+            const btnCr = document.getElementById('btn-cr');
+            const btnFe = document.getElementById('btn-fe');
+            const data = datosDescubrimiento[elemento];
+
+            // Actualizar botones
+            if(elemento === 'cr') {
+                btnCr.classList.add('active-cr');
+                btnFe.classList.remove('active-fe');
+            } else {
+                btnCr.classList.remove('active-cr');
+                btnFe.classList.add('active-fe');
+            }
+
+            // Renderizar contenido con animación simple
+            display.style.opacity = '0';
+            setTimeout(() => {
+                display.innerHTML = `
+                    <h3 class="result-title" style="color: ${data.color}">${data.titulo}</h3>
+                    <p class="result-desc">${data.texto}</p>
+                    <div style="margin-top:1rem; height: 4px; width: 100px; background: ${data.color}; border-radius: 2px;"></div>
+                `;
+                display.style.opacity = '1';
+            }, 200);
+        }
+
+        function renderResumen() {
+            document.getElementById('resumen-final').innerHTML = `<p>${textoResumen}</p>`;
+        }
+
+        /**
+         * INICIALIZACIÓN
+         */
+        document.addEventListener('DOMContentLoaded', () => {
+            renderModelo();
+            renderEjecucion();
+            renderResumen();
+            
+            // Cargar vista inicial (Cromo)
+            cambiarVista('cr');
+        });
+
+    </script>
+</body>
+</html>
