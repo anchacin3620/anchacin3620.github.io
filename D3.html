@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lámina 6: El Problema Nanométrico</title>
+    <style>
+        /* --- Variables de Diseño --- */
+        :root {
+            --primary-color: #5b2c6f; /* Púrpura Académico */
+            --primary-light: #d2b4de;
+            --accent-color: #c0392b; /* Rojo Alerta para el Problema */
+            --bg-body: #f4f6f7;
+            --bg-card: #ffffff;
+            --text-main: #2c3e50;
+            --text-light: #7f8c8d;
+            --shadow: 0 4px 6px rgba(0,0,0,0.05);
+            --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        /* Modo Oscuro */
+        body.dark-mode {
+            --bg-body: #121212;
+            --bg-card: #1e1e1e;
+            --text-main: #e0e0e0;
+            --text-light: #b0b0b0;
+            --primary-light: #4a235a;
+            --shadow: 0 4px 6px rgba(0,0,0,0.5);
+        }
+
+        /* --- Estilos Base --- */
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* --- Cabecera --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--primary-light);
+            padding-bottom: 1rem;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.6rem;
+            color: var(--primary-color);
+        }
+
+        /* En modo oscuro, el H1 se aclara */
+        body.dark-mode h1 { color: #a569bd; }
+
+        .theme-toggle {
+            background: transparent;
+            border: 1px solid var(--text-main);
+            color: var(--text-main);
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .theme-toggle:hover {
+            background: var(--text-main);
+            color: var(--bg-body);
+        }
+
+        /* --- Sección Intro --- */
+        .intro-text {
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+            text-align: justify;
+            background: var(--bg-card);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            border-left: 5px solid var(--primary-color);
+        }
+
+        /* --- Grid de Desafíos --- */
+        .challenges-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 3rem;
+        }
+
+        .challenge-card {
+            background: var(--bg-card);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            border-top: 4px solid var(--accent-color);
+            transition: transform 0.3s ease;
+        }
+
+        .challenge-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-number {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: white;
+            font-weight: bold;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            margin: 10px 0;
+            color: var(--text-main);
+        }
+
+        .card-content {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            text-align: justify;
+        }
+
+        .highlight {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        body.dark-mode .highlight { color: #a569bd; }
+
+        /* --- Síntesis (Jurado) --- */
+        .synthesis-section {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #2c3e50 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .synthesis-section h2 {
+            margin-top: 0;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+
+        .synthesis-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .key-concept {
+            background: rgba(255,255,255,0.2);
+            padding: 0 5px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        /* --- Footer --- */
+        footer {
+            margin-top: 3rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Cabecera -->
+        <header>
+            <h1>Lámina 6: El Problema a Escala Nanométrica</h1>
+            <button id="themeToggle" class="theme-toggle">Modo Oscuro</button>
+        </header>
+
+        <!-- Texto Introductorio -->
+        <div class="intro-text">
+            "Continuando con nuestra argumentación, es fundamental entender por qué este estudio se sitúa en la frontera de la física de la materia condensada y no en la metalurgia convencional. El problema que enfrentamos presenta <strong>tres desafíos críticos</strong> que solo pueden resolverse a escala atómica:
+        </div>
+
+        <!-- Tarjetas de Desafíos -->
+        <div class="challenges-grid">
+            
+            <!-- Desafío 1 -->
+            <article class="challenge-card">
+                <span class="card-number">Desafío 1</span>
+                <h3 class="card-title">La Invisibilidad del Proceso Real</h3>
+                <div class="card-content">
+                    En la formación de una película protectora, los procesos de adsorción y difusión ocurren en escalas de tiempo de <span class="highlight">picosegundos</span> y espaciales de <span class="highlight">Ángstroms</span>. 
+                    <br><br>
+                    Para un observador en el laboratorio, solo existe el 'antes' y el 'después'. El 'durante' —donde se decide si la película será porosa o compacta— es una <strong>'caja negra'</strong> que solo la simulación puede abrir.
+                </div>
+            </article>
+
+            <!-- Desafío 2 -->
+            <article class="challenge-card">
+                <span class="card-number">Desafío 2</span>
+                <h3 class="card-title">La Competencia de Energías</h3>
+                <div class="card-content">
+                    El problema central es un <strong>conflicto de tasas</strong>:
+                    <ul style="padding-left: 20px; margin-top: 10px;">
+                        <li><strong>Flujo de Deposición:</strong> átomos llegando.</li>
+                        <li><strong>Difusión Superficial:</strong> átomos moviéndose.</li>
+                    </ul>
+                    Si la difusión es lenta (ej. Hierro), los átomos se amontonan creando defectos. Si es óptima, la película <em>'sana'</em> sus propios huecos antes de la siguiente capa.
+                </div>
+            </article>
+
+            <!-- Desafío 3 -->
+            <article class="challenge-card">
+                <span class="card-number">Desafío 3</span>
+                <h3 class="card-title">Límite del Equilibrio</h3>
+                <div class="card-content">
+                    Los métodos industriales suelen operar <strong>fuera del equilibrio</strong>. Las leyes de la termodinámica clásica no bastan. 
+                    <br><br>
+                    Necesitamos la <span class="highlight">Física Estadística</span> para modelar cómo las fluctuaciones estocásticas a nivel nanométrico terminan definiendo una propiedad macroscópica vital: la resistencia a la corrosión.
+                </div>
+            </article>
+
+        </div>
+
+        <!-- Síntesis para el Jurado -->
+        <section class="synthesis-section">
+            <h2>En síntesis para el jurado:</h2>
+            <p class="synthesis-text">
+                El problema a escala nanométrico es que un solo defecto en la disposición de los primeros mil átomos de Cromo o Hierro puede determinar el fracaso total de una pieza de ingeniería de Magnesio. 
+                <br><br>
+                Nuestra simulación <span class="key-concept">KMC</span> es el <strong>'microscopio virtual'</strong> que nos permite entender y, eventualmente, controlar esa disposición atómica para garantizar la integridad del material.
+            </p>
+        </section>
+
+        <footer>
+            Defensa de Tesis | Física de Materia Condensada
+        </footer>
+    </div>
+
+    <script>
+        // Lógica para Modo Oscuro
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleBtn = document.getElementById('themeToggle');
+            const body = document.body;
+
+            // Recuperar preferencia
+            if (localStorage.getItem('theme') === 'dark') {
+                body.classList.add('dark-mode');
+                toggleBtn.textContent = 'Modo Claro';
+            }
+
+            toggleBtn.addEventListener('click', () => {
+                body.classList.toggle('dark-mode');
+                
+                if (body.classList.contains('dark-mode')) {
+                    localStorage.setItem('theme', 'dark');
+                    toggleBtn.textContent = 'Modo Claro';
+                } else {
+                    localStorage.setItem('theme', 'light');
+                    toggleBtn.textContent = 'Modo Oscuro';
+                }
+            });
+        });
+    </script>
+
+</body>
+  </html>
