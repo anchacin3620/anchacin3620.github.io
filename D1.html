@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guion de Defensa: Películas Delgadas Cr/Fe</title>
+    <style>
+        /* --- Variables de Diseño --- */
+        :root {
+            --primary-color: #003366; /* Azul académico */
+            --secondary-color: #0055a5;
+            --accent-color: #e67e22; /* Naranja para resaltar */
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-light: #666666;
+            --border-radius: 8px;
+            --shadow: 0 4px 15px rgba(0,0,0,0.08);
+            --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            --font-serif: 'Georgia', serif; /* Para el texto del discurso */
+        }
+
+        /* --- Estilos Base --- */
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: transparent;
+        }
+
+        /* --- Cabecera --- */
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* --- Navegación (Pestañas) --- */
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background-color: #e0e0e0;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-light);
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover {
+            background-color: #d0d0d0;
+        }
+
+        .tab-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 10px rgba(0,51,102,0.3);
+        }
+
+        /* --- Contenido de las Láminas --- */
+        .content-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            box-shadow: var(--shadow);
+            border-top: 5px solid var(--secondary-color);
+            display: none; /* Oculto por defecto */
+            animation: fadeIn 0.5s ease;
+        }
+
+        .content-card.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Tipografía del Discurso --- */
+        .speech-text {
+            font-family: var(--font-serif);
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #2c3e50;
+            text-align: justify;
+        }
+
+        .slide-title {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--accent-color);
+            display: inline-block;
+            margin-bottom: 20px;
+            padding-bottom: 5px;
+            font-size: 1.5rem;
+        }
+
+        /* --- Resaltado de términos --- */
+        .highlight {
+            background-color: #fff3cd;
+            padding: 0 4px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .term {
+            color: var(--secondary-color);
+            font-weight: bold;
+        }
+
+        /* --- Listas --- */
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        li {
+            margin-bottom: 15px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        li::before {
+            content: "▹";
+            color: var(--accent-color);
+            position: absolute;
+            left: 0;
+            top: 2px;
+            font-size: 1.2em;
+        }
+
+        /* --- Cita/Discurso --- */
+        .dialogue {
+            background-color: #f1f8ff;
+            border-left: 4px solid var(--secondary-color);
+            padding: 15px 20px;
+            margin: 20px 0;
+            font-style: italic;
+            color: #444;
+        }
+
+        /* --- Footer --- */
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 600px) {
+            .content-card {
+                padding: 20px;
+            }
+            .speech-text {
+                font-size: 1rem;
+            }
+            .tab-btn {
+                flex: 1 1 40%; /* Botones más grandes en móvil */
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Defensa de Tesis</h1>
+            <div class="subtitle">Crecimiento de Películas Delgadas: Cr y Fe sobre Mg</div>
+        </header>
+
+        <!-- Navegación -->
+        <nav class="nav-tabs">
+            <button class="tab-btn active" onclick="openTab('intro')">Inicio</button>
+            <button class="tab-btn" onclick="openTab('slide3')">Lámina 3: Resumen</button>
+            <button class="tab-btn" onclick="openTab('slide4')">Lámina 4: Definición</button>
+        </nav>
+
+        <main>
+            <!-- Sección: Introducción -->
+            <section id="intro" class="content-card active">
+                <h2 class="slide-title">Inicio de la Defensa</h2>
+                <div class="speech-text">
+                    <p>Honrado jurado, profesores y colegas. Para dar inicio formal a la defensa de este trabajo de investigación, me gustaría situarlos en el contexto estructural y conceptual de nuestro estudio.</p>
+                </div>
+                <div style="margin-top: 30px; text-align: center;">
+                    <button class="tab-btn" onclick="openTab('slide3')">Ir a la Lámina 3 →</button>
+                </div>
+            </section>
+
+            <!-- Sección: Lámina 3 -->
+            <section id="slide3" class="content-card">
+                <h2 class="slide-title">Lámina 3: Resumen del Proyecto</h2>
+                <p class="subtitle">El Mapa de Ruta</p>
+                
+                <div class="dialogue">
+                    "En esta lámina presento la arquitectura lógica de mi investigación. Para abordar el crecimiento de estas películas delgadas, hemos estructurado el trabajo en tres fases interconectadas:"
+                </div>
+
+                <div class="speech-text">
+                    <ul>
+                        <li>
+                            <strong>El Modelo Físico:</strong> Partimos de una base teórica sólida sobre la <span class="term">deposición balística</span>. No solo nos interesa que el átomo llegue a la superficie, sino cómo interactúa con ella. Modelamos un sistema donde el <span class="highlight">Cromo</span> y el <span class="highlight">Hierro</span> se enfrentan a un sustrato de Magnesio orientado en la dirección (001).
+                        </li>
+                        <li>
+                            <strong>La Ejecución Computacional:</strong> Aquí es donde la física teórica se vuelve experimental a través del código. Utilizamos el algoritmo <span class="term">Monte Carlo Cinético (KMC)</span> implementado en <span class="term">Fortran 90</span>. ¿Por qué Fortran? Por su eficiencia bruta en el manejo de matrices y cálculos estocásticos. Posteriormente, procesamos esos datos con <span class="term">Python</span> para obtener un mapeo topográfico que nos permita 'ver' la superficie que hemos creado virtualmente.
+                        </li>
+                        <li>
+                            <strong>El Análisis de Resultados:</strong> Finalmente, comparamos el comportamiento del Cr y el Fe. Como pueden ver en los gráficos de probabilidad, la clave reside en la <span class="term">Energía de Difusión</span>. El Cromo presenta una movilidad mucho menor, lo que anticipa una morfología de islas más compactas, mientras que el Hierro tiende a una distribución que hemos denominado de 'valles fluidos'.
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Sección: Lámina 4 -->
+            <section id="slide4" class="content-card">
+                <h2 class="slide-title">Lámina 4: De Nanómetros a Micrómetros</h2>
+                <p class="subtitle">¿Qué es una película Delgada?</p>
+
+                <div class="dialogue">
+                    "Para comprender el alcance de este estudio, debemos precisar qué define a nuestro objeto de interés desde la física fundamental."
+                </div>
+
+                <div class="speech-text">
+                    <p>
+                        En física, una película delgada no se define solo por ser 'fina', sino por ser un material cuya dimensión en una dirección —el <strong>espesor (d)</strong>— es comparable o menor a una longitud característica intrínseca del material. Esta longitud puede ser el camino libre medio de los electrones, la longitud de coherencia, o la longitud de onda de <span class="term">De Broglie (\(\lambda\))</span>.
+                    </p>
+                    <p>
+                        Al restringir el material en esta dimensión, abandonamos el comportamiento de un sistema volumétrico (bulk) de tres dimensiones para entrar en un régimen donde las propiedades están dominadas por el <span class="highlight">confinamiento cuántico</span> y los efectos de superficie. Es precisamente en este espacio, donde la escala del espesor interfiere con las longitudes de onda del material, donde buscamos optimizar la protección del Magnesio mediante las capas de Cromo y Hierro.
+                    </p>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Modo de Lectura para Presentación Académica</p>
+        </footer>
+    </div>
+
+    <script>
+        // Lógica para cambiar de pestañas (Láminas)
+        function openTab(tabId) {
+            // 1. Ocultar todos los contenidos
+            const contents = document.querySelectorAll('.content-card');
+            contents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // 2. Desactivar todos los botones
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // 3. Mostrar el contenido seleccionado
+            const selectedContent = document.getElementById(tabId);
+            if (selectedContent) {
+                selectedContent.classList.add('active');
+            }
+
+            // 4. Activar el botón correspondiente
+            // Buscamos el botón que tenga el onclick con el tabId
+            const activeButton = Array.from(buttons).find(btn => 
+                btn.getAttribute('onclick').includes(tabId)
+            );
+            if (activeButton) {
+                activeButton.classList.add('active');
+            }
+        }
+    </script>
+
+</body>
+  </html>
