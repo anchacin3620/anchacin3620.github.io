@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lámina 10: El Microscopio Virtual (KMC)</title>
+    <style>
+        /* --- Variables de Diseño --- */
+        :root {
+            --primary: #0f172a;       /* Azul oscuro profundo */
+            --accent: #0ea5e9;        /* Cyan brillante (Tecnológico) */
+            --secondary: #64748b;     /* Gris azulado */
+            --bg-body: #f1f5f9;
+            --bg-card: #ffffff;
+            --text-main: #334155;
+            --text-light: #64748b;
+            --gold: #d97706;          /* Para 'Estándar de Oro' */
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --font-main: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        /* Modo Oscuro */
+        body.dark-mode {
+            --primary: #e2e8f0;
+            --accent: #38bdf8;
+            --secondary: #94a3b8;
+            --bg-body: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f1f5f9;
+            --text-light: #cbd5e1;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+        }
+
+        /* --- Estilos Base --- */
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.7;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* --- Cabecera estilo HUD (Microscopio) --- */
+        header {
+            background: var(--bg-card);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            border-top: 5px solid var(--accent);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0; right: 0; bottom: 0;
+            width: 100px;
+            background: linear-gradient(90deg, transparent, rgba(14, 165, 233, 0.1));
+            pointer-events: none;
+        }
+
+        h1 { margin: 0; color: var(--primary); font-size: 1.8rem; }
+        .subtitle { color: var(--accent); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; display: block; }
+        
+        .theme-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.05);
+            border: none;
+            padding: 8px;
+            border-radius: 50%;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+        }
+        .theme-btn:hover { background: rgba(0,0,0,0.1); transform: rotate(15deg); }
+
+        /* --- Introducción --- */
+        .intro-text {
+            background: var(--bg-card);
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary);
+            margin-bottom: 30px;
+            font-style: italic;
+            color: var(--text-light);
+            box-shadow: var(--shadow);
+        }
+
+        /* --- Grid de Conceptos --- */
+        .concepts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .concept-card {
+            background: var(--bg-card);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s;
+        }
+
+        .concept-card:hover { transform: translateY(-5px); border-bottom: 3px solid var(--accent); }
+        
+        .card-icon {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: var(--accent);
+        }
+
+        h3 { margin-top: 0; color: var(--primary); font-size: 1.2rem; margin-bottom: 10px; }
+
+        /* --- Comparación MD vs KMC (Ventaja Competitiva) --- */
+        .comparison-section {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .section-title { text-align: center; color: var(--primary); margin-top: 0; }
+
+        .comparison-table {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-table { grid-template-columns: 1fr; }
+        }
+
+        .comp-box {
+            padding: 20px;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .md-box {
+            background-color: rgba(100, 116, 139, 0.1);
+            border: 1px solid var(--secondary);
+            opacity: 0.8;
+        }
+
+        .kmc-box {
+            background-color: rgba(14, 165, 233, 0.1);
+            border: 2px solid var(--accent);
+            transform: scale(1.02);
+            box-shadow: 0 0 15px rgba(14, 165, 233, 0.2);
+        }
+
+        .comp-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: block;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        .md-title { color: var(--text-light); }
+        .kmc-title { color: var(--accent); font-size: 1rem; }
+
+        .feature-list { margin: 0; padding-left: 20px; color: var(--text-main); }
+        .feature-list li { margin-bottom: 8px; }
+
+        /* --- Conclusión (Estándar de Oro) --- */
+        .conclusion-banner {
+            background: linear-gradient(135deg, var(--primary) 0%, #334155 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        body.dark-mode .conclusion-banner {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid var(--secondary);
+        }
+
+        .gold-star {
+            color: var(--gold);
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        /* --- Animación Sutil para KMC --- */
+        @keyframes pulse-border {
+            0% { border-color: rgba(14, 165, 233, 0.4); }
+            50% { border-color: rgba(14, 165, 233, 1); }
+            100% { border-color: rgba(14, 165, 233, 0.4); }
+        }
+        
+        .kmc-box { animation: pulse-border 3s infinite; }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Cabecera -->
+        <header>
+            <div>
+                <span class="subtitle">Motor Metodológico</span>
+                <h1>Lámina 10: El Microscopio Virtual</h1>
+                <p style="margin: 10px 0 0 0; color: var(--text-light); font-size: 1.1rem;">Método Monte Carlo Cinético (KMC)</p>
+            </div>
+            <button id="themeToggle" class="theme-btn" title="Cambiar Tema">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                </svg>
+            </button>
+        </header>
+
+        <!-- Introducción -->
+        <div class="intro-text">
+            "Honrado jurado, para estudiar fenómenos que ocurren en la escala de nanómetros y en tiempos tan breves como los de la deposición atómica, no podemos depender únicamente de la observación experimental directa. Por ello, recurrimos al Monte Carlo Cinético (KMC)."
+        </div>
+
+        <!-- Grid de Conceptos -->
+        <div class="concepts-grid">
+            <div class="concept-card">
+                <div class="card-icon">🎲</div>
+                <h3>Definición y Naturaleza</h3>
+                <p style="font-size: 0.95rem; color: var(--text-light);">
+                    A diferencia de otros métodos, el KMC es una técnica estocástica diseñada específicamente para simular procesos dinámicos <strong>fuera del equilibrio termodinámico</strong>. Esto es vital, ya que la formación de una película delgada es un proceso inherentemente lejano al equilibrio.
+                </p>
+            </div>
+
+            <div class="concept-card">
+                <div class="card-icon">⚖️</div>
+                <h3>Mecánica No Determinista</h3>
+                <p style="font-size: 0.95rem; color: var(--text-light);">
+                    El sistema evoluciona mediante una secuencia de eventos discretos (adsorción o difusión) seleccionados aleatoriamente, pero bajo un <strong>peso probabilístico físico</strong>. No estamos 'adivinando' el futuro; estamos dejando que la física de probabilidades dicte el siguiente paso.
+                </p>
+            </div>
+        </div>
+
+        <!-- Sección de Comparación (Ventaja Competitiva) -->
+        <div class="comparison-section">
+            <h2 class="section-title">La Ventaja Competitiva: ¿Por qué KMC?</h2>
+            <p style="text-align: center; max-width: 700px; margin: 0 auto; color: var(--text-light);">
+                ¿Por qué no usamos Dinámica Molecular (MD) estándar? La diferencia radica en la escala de tiempo y el enfoque computacional.
+            </p>
+
+            <div class="comparison-table">
+                <!-- Dinámica Molecular -->
+                <div class="comp-box md-box">
+                    <span class="comp-title md-title">Dinámica Molecular (MD)</span>
+                    <ul class="feature-list">
+                        <li>Excelente para escalas de tiempo extremadamente cortas (<strong>femtosegundos</strong>).</li>
+                        <li>Colapsa computacionalmente al intentar simular el crecimiento de capas completas.</li>
+                        <li>Se "atasca" calculando vibraciones atómicas irrelevantes para la morfología macroscópica.</li>
+                    </ul>
+                </div>
+
+                <!-- Monte Carlo Cinético -->
+                <div class="comp-box kmc-box">
+                    <span class="comp-title kmc-title">Monte Carlo Cinético (KMC)</span>
+                    <ul class="feature-list">
+                        <li>Permite <strong>saltar</strong> las vibraciones atómicas irrelevantes.</li>
+                        <li>Se concentra en los eventos que realmente transforman la morfología.</li>
+                        <li>Alcanza escalas de tiempo y espacio (nanómetros) que serían computacionalmente imposibles para MD.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conclusión -->
+        <div class="conclusion-banner">
+            <span class="gold-star">★ Conclusión Final</span>
+            <p style="font-size: 1.1rem; margin: 0;">
+                En resumen, el KMC es el puente que nos permite modelar la evolución temporal del sistema a través de una secuencia de eventos discretos, dándonos una resolución atómica que hoy por hoy es el <strong>estándar de oro</strong> en la física computacional de superficies.
+            </p>
+        </div>
+
+    </div>
+
+    <script>
+        // Lógica para cambio de tema
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleBtn = document.getElementById('themeToggle');
+            const body = document.body;
+
+            // Chequear preferencia guardada
+            if (localStorage.getItem('theme') === 'dark') {
+                body.classList.add('dark-mode');
+            }
+
+            toggleBtn.addEventListener('click', () => {
+                body.classList.toggle('dark-mode');
+                
+                // Guardar estado
+                if (body.classList.contains('dark-mode')) {
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    localStorage.setItem('theme', 'light');
+                }
+            });
+        });
+    </script>
+</body>
+                  </html>
