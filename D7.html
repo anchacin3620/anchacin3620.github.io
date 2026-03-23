@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lámina 11: Control Estocástico y Estabilidad Numérica</title>
+    <style>
+        /* --- Configuración Global y Variables --- */
+        :root {
+            --bg-color: #0f172a; /* Fondo oscuro técnico */
+            --card-bg: #1e293b;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --accent-blue: #38bdf8;
+            --accent-green: #4ade80;
+            --accent-red: #f87171;
+            --border-color: #334155;
+            --font-main: 'Segoe UI', system-ui, sans-serif;
+            --font-mono: 'Courier New', Courier, monospace;
+        }
+
+        /* --- Reset y Estilos Base --- */
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* --- Cabecera --- */
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1.5rem;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: var(--accent-blue);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .slide-number {
+            display: inline-block;
+            background: var(--accent-blue);
+            color: var(--bg-color);
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        /* --- Introducción --- */
+        .intro-box {
+            background-color: rgba(56, 189, 248, 0.1);
+            border-left: 4px solid var(--accent-blue);
+            padding: 20px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 2.5rem;
+            font-size: 1.1rem;
+        }
+
+        .intro-box p {
+            margin: 0;
+        }
+
+        /* --- Grid de Puntos Clave --- */
+        .points-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 3rem;
+        }
+
+        .point-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 25px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .point-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            border-color: var(--accent-blue);
+        }
+
+        .point-number {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            font-size: 5rem;
+            font-weight: 900;
+            color: rgba(255,255,255,0.03);
+            z-index: 0;
+        }
+
+        .point-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        h3 {
+            color: var(--accent-blue);
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- Estilos de Código y Términos Técnicos --- */
+        code {
+            font-family: var(--font-mono);
+            background-color: rgba(0,0,0,0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--accent-green);
+            font-size: 0.9em;
+        }
+
+        .highlight-number {
+            color: var(--accent-green);
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        /* --- Contador Visual (Animación JS) --- */
+        .counter-container {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+            border: 1px dashed var(--text-secondary);
+        }
+
+        .counter-value {
+            font-family: var(--font-mono);
+            font-size: 2.5rem;
+            color: var(--accent-green);
+            font-weight: bold;
+            display: block;
+        }
+
+        .counter-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* --- Conclusión --- */
+        .conclusion-section {
+            background: linear-gradient(135deg, var(--card-bg) 0%, rgba(74, 222, 128, 0.1) 100%);
+            border: 1px solid var(--accent-green);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .conclusion-section h3 {
+            color: var(--accent-green);
+            justify-content: center;
+            font-size: 1.4rem;
+        }
+
+        .metrics-tag {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 5px 15px;
+            border: 1px solid var(--text-secondary);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* --- Botón Interactivo --- */
+        .action-btn {
+            background-color: var(--accent-blue);
+            color: var(--bg-color);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+        
+        .action-btn:hover {
+            background-color: #0ea5e9;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <span class="slide-number">Lámina 11</span>
+            <h1>Control Estocástico y Estabilidad Numérica</h1>
+            <p style="color: var(--text-secondary);">Análisis de Integridad en Simulación KMC (Fortran 90)</p>
+        </header>
+
+        <!-- Introducción -->
+        <div class="intro-box">
+            <p>
+                "Honrado jurado, para garantizar que nuestra simulación <code>KMC</code> sea un reflejo fiel de la física y no un artefacto numérico, hemos implementado mecanismos de control rigurosos en el núcleo del algoritmo programado en <code>Fortran 90</code>."
+            </p>
+        </div>
+
+        <!-- Puntos Principales -->
+        <div class="points-grid">
+            
+            <!-- Punto 1 -->
+            <div class="point-card">
+                <div class="point-number">1</div>
+                <div class="point-content">
+                    <h3>El Límite de Interacciones</h3>
+                    <p>
+                        Aunque los resultados se centran en la morfología final tras <span class="highlight-number">20,000</span> eventos, el código está diseñado para operar con un límite de control de:
+                    </p>
+                    <div class="counter-container">
+                        <span class="counter-label">Límite de Seguridad del Generador</span>
+                        <span id="interactionCounter" class="counter-value">0</span>
+                    </div>
+                    <p>
+                        Este no es un número arbitrario; es la frontera que garantiza que el generador de números aleatorios mantenga sus propiedades estadísticas.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Punto 2 -->
+            <div class="point-card">
+                <div class="point-number">2</div>
+                <div class="point-content">
+                    <h3>Calidad de la Aleatoriedad</h3>
+                    <p>
+                        En un método de Monte Carlo, la calidad del resultado depende enteramente de la 'pureza' de la aleatoriedad.
+                    </p>
+                    <ul style="list-style-type: square; padding-left: 20px; color: var(--text-secondary);">
+                        <li>Evita ciclos repetitivos.</li>
+                        <li>Mantiene la uniformidad.</li>
+                    </ul>
+                    <p>
+                        Esto permite que cada 'salto' de un átomo de <code>Cr</code> o <code>Fe</code> sea genuinamente estocástico, respetando la <strong>Ecuación Maestra Probabilística</strong>.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Punto 3 -->
+            <div class="point-card">
+                <div class="point-number">3</div>
+                <div class="point-content">
+                    <h3>Convergencia y Ruido</h3>
+                    <p>
+                        Superar las 20,000 interacciones y monitorear hasta las 50,000 nos permite confirmar que las métricas de <code>Rugosidad RMS</code> y <code>Espesor Promedio</code> han convergido.
+                    </p>
+                    <p>
+                        Esto le da al jurado la certeza de que las columnas rígidas del Cromo o los valles fluidos del Hierro no son producto del azar computacional, sino de la física de difusión intrínseca.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Conclusión -->
+        <div class="conclusion-section">
+            <h3>Conclusión de la Lámina</h3>
+            <p style="font-size: 1.1rem; max-width: 800px; margin: 0 auto;">
+                El control de las 50,000 interacciones actúa como nuestro <strong>'seguro de calidad'</strong>. Nos permite afirmar que el comportamiento observado en la rejilla de <code>50×50×30</code> es estadísticamente significativo y reproducible, cumpliendo con los estándares de la física computacional moderna.
+            </p>
+            
+            <div class="metrics-tag">Estado: REPRODUCIBLE ✓</div>
+            <div class="metrics-tag">Confiabilidad: ALTA ✓</div>
+
+            <br>
+            <button class="action-btn" onclick="rerunAnimation()">Reiniciar Validación Numérica</button>
+        </div>
+    </div>
+
+    <script>
+        // Función para animar el contador de 0 a 50,000
+        function animateValue(obj, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                
+                // Efecto de 'salto' numérico para simular cálculo rápido
+                obj.innerHTML = Math.floor(progress * (end - start) + start).toLocaleString('es-ES');
+                
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                } else {
+                    obj.style.color = "#4ade80"; // Asegurar color final verde
+                    obj.innerHTML += " <span style='font-size:1rem'>MAX</span>";
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // Inicializar la animación al cargar
+        document.addEventListener("DOMContentLoaded", () => {
+            const counterElement = document.getElementById("interactionCounter");
+            animateValue(counterElement, 0, 50000, 2000); // 2 segundos de duración
+        });
+
+        // Función para el botón de reinicio
+        function rerunAnimation() {
+            const counterElement = document.getElementById("interactionCounter");
+            counterElement.innerHTML = "0";
+            counterElement.style.color = "#e2e8f0"; // Resetear color temporalmente
+            setTimeout(() => {
+                animateValue(counterElement, 0, 50000, 1500);
+            }, 100);
+        }
+    </script>
+
+</body>
+  </html>
