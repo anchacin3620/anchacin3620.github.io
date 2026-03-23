@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fundamentos Matemáticos: KMC</title>
+    <style>
+        /* --- Variables de Diseño --- */
+        :root {
+            --primary: #2c3e50;    /* Azul oscuro académico */
+            --secondary: #16a085;  /* Verde azulado para acentos */
+            --accent: #8e44ad;     /* Púrpura para conceptos matemáticos */
+            --bg-body: #ecf0f1;
+            --bg-card: #ffffff;
+            --text-main: #34495e;
+            --text-light: #7f8c8d;
+            --shadow: 0 4px 15px rgba(0,0,0,0.08);
+            --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            --font-math: 'Times New Roman', Times, serif; /* Para variables */
+        }
+
+        /* Modo Oscuro */
+        body.dark-mode {
+            --primary: #ecf0f1;
+            --secondary: #1abc9c;
+            --accent: #9b59b6;
+            --bg-body: #1a1a1a;
+            --bg-card: #2d2d2d;
+            --text-main: #bdc3c7;
+            --text-light: #95a5a6;
+            --shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        /* --- Estilos Base --- */
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 0 auto;
+        }
+
+        /* --- Cabecera --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--text-light);
+            padding-bottom: 1rem;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        /* Botón Tema */
+        .theme-btn {
+            background: none;
+            border: 1px solid var(--text-main);
+            color: var(--text-main);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        .theme-btn:hover { background: var(--text-main); color: var(--bg-body); }
+
+        /* --- Navegación (Pestañas) --- */
+        .nav-tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .tab-btn {
+            background-color: var(--bg-card);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-light);
+            box-shadow: var(--shadow);
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .tab-btn:hover { transform: translateY(-2px); }
+        
+        .tab-btn.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        body.dark-mode .tab-btn.active {
+            background-color: var(--secondary);
+            color: #1a1a1a;
+        }
+
+        /* --- Contenido de las Láminas --- */
+        .slide-content {
+            background-color: var(--bg-card);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            display: none; /* Oculto por defecto */
+            animation: fadeIn 0.5s ease;
+            border-left: 6px solid var(--accent);
+        }
+
+        .slide-content.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 { margin-top: 0; color: var(--primary); }
+        body.dark-mode h2 { color: var(--secondary); }
+
+        /* --- Estilo Matemático --- */
+        .math-var {
+            font-family: var(--font-math);
+            font-style: italic;
+            font-weight: bold;
+            color: var(--accent);
+            font-size: 1.1em;
+        }
+        body.dark-mode .math-var { color: #d2b4de; }
+
+        .math-block {
+            background-color: var(--bg-body);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 1px dashed var(--text-light);
+            text-align: center;
+            font-family: var(--font-math);
+            font-size: 1.2rem;
+        }
+
+        .dialogue {
+            font-style: italic;
+            color: var(--text-main);
+            border-left: 4px solid var(--text-light);
+            padding-left: 15px;
+            margin-bottom: 20px;
+        }
+
+        /* --- Listas y Tarjetas --- */
+        ul { list-style: none; padding: 0; }
+        li { margin-bottom: 15px; position: relative; padding-left: 25px; }
+        li::before {
+            content: "•";
+            color: var(--secondary);
+            font-weight: bold;
+            font-size: 1.5em;
+            position: absolute;
+            left: 0;
+            top: -5px;
+        }
+
+        .sub-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0,0,0,0.02);
+            border-radius: 8px;
+        }
+
+        .sub-section h4 {
+            color: var(--accent);
+            margin-top: 0;
+            border-bottom: 1px solid var(--text-light);
+            padding-bottom: 5px;
+        }
+
+        /* --- Footer --- */
+        footer { text-align: center; margin-top: 30px; font-size: 0.8rem; color: var(--text-light); }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Cabecera -->
+        <header>
+            <h1>Fundamentos del Algoritmo KMC</h1>
+            <button id="toggleTheme" class="theme-btn">Modo Oscuro</button>
+        </header>
+
+        <!-- Navegación -->
+        <nav class="nav-tabs">
+            <button class="tab-btn active" onclick="openTab('slide7')">Lámina 7: Ecuación Maestra</button>
+            <button class="tab-btn" onclick="openTab('slide8')">Lámina 8: Cadenas de Markov</button>
+        </nav>
+
+        <main>
+            <!-- LÁMINA 7 -->
+            <section id="slide7" class="slide-content active">
+                <h2>La Ecuación Maestra Probabilística (El Fundamento)</h2>
+                
+                <div class="dialogue">
+                    "Honrado jurado, para que nuestra simulación no sea un simple ejercicio visual, debe estar gobernada por las leyes de la probabilidad que rigen la materia a escala atómica. Aquí introducimos la Ecuación Maestra."
+                </div>
+
+                <p>
+                    En un sistema fuera del equilibrio termodinámico, como es la deposición de Cromo o Hierro, no podemos usar termodinámica clásica. En su lugar, describimos la evolución temporal del sistema mediante la probabilidad <span class="math-var">P(&sigma;, t)</span> de que el sistema se encuentre en una configuración atómica <span class="math-var">&sigma;</span> en un tiempo <span class="math-var">t</span>.
+                </p>
+
+                <div class="math-block">
+                    <span style="display:block; margin-bottom:10px; color:var(--text-light); font-size:0.9rem; font-family:var(--font-main);">Concepto del Balance Probabilístico:</span>
+                    dP(&sigma;)/dt = &Sigma; [ Transiciones entrantes desde &sigma;' ] - &Sigma; [ Transiciones salientes hacia &sigma;' ]
+                </div>
+
+                <p>
+                    La ecuación que ven en pantalla establece un balance crítico: la variación de la probabilidad en el tiempo es igual a la suma de las transiciones que entran al estado <span class="math-var">&sigma;</span> desde otros estados <span class="math-var">&sigma;'</span>, menos las transiciones que salen de <span class="math-var">&sigma;</span> hacia <span class="math-var">&sigma;'</span>.
+                </p>
+
+                <p style="margin-top:20px; font-weight:500;">
+                    Es, en esencia, un principio de conservación de la probabilidad que asegura que nuestro 'microscopio virtual' respete las leyes de la física estadística en cada paso de tiempo.
+                </p>
+            </section>
+
+            <!-- LÁMINA 8 -->
+            <section id="slide8" class="slide-content">
+                <h2>Transiciones y Cadenas de Markov</h2>
+                
+                <div class="dialogue">
+                    "Pasando a la lámina 8, explicamos cómo resolvemos operacionalmente esa Ecuación Maestra. Dado que es imposible resolverla analíticamente para miles de átomos, recurrimos a un proceso estocástico conocido como Cadena de Markov."
+                </div>
+
+                <ul>
+                    <li>
+                        <strong>Memoria del Sistema:</strong> El sistema evoluciona bajo la premisa de que el siguiente evento (donde se mueve un átomo de Cr o Fe) depende únicamente de la configuración actual <span class="math-var">&sigma;</span> y no de su historia pasada. Esto simplifica el cálculo computacional sin perder realismo físico.
+                    </li>
+                    <li>
+                        <strong>Tasas de Transición (<span class="math-var">W<sub>&sigma; &rarr; &sigma;'</sub></span>):</strong> Aquí es donde incorporamos los parámetros intrínsecos del material que mencioné anteriormente. Las tasas de transición están dictadas por las barreras energéticas:
+                        
+                        <div class="sub-section">
+                            <h4>Tipos de Eventos</h4>
+                            <ul style="margin-top:10px;">
+                                <li>
+                                    <strong>Eventos de Adsorción:</strong> Dictados por el flujo de partículas incidentes.
+                                </li>
+                                <li>
+                                    <strong>Eventos de Difusión:</strong> Gobernados por la energía de activación <span class="math-var">E<sub>d</sub></span>.
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+
+                <p style="margin-top:20px; padding:15px; border-top:1px solid var(--text-light);">
+                    Al implementar esto en el algoritmo KMC, garantizamos que el tiempo en la simulación avance de manera física y no lineal. Cada 'salto' en la cadena de Markov representa un proceso físico real, permitiéndonos observar cómo la competencia entre estas tasas de transición termina esculpiendo la morfología de la película delgada, ya sea hacia los picos del Hierro o la estructura más cohesiva del Cromo.
+                </p>
+            </section>
+        </main>
+
+        <footer>
+            Simulaciones de Física Estadística | Defensa de Tesis
+        </footer>
+    </div>
+
+    <script>
+        // Lógica de Pestañas
+        function openTab(slideId) {
+            // Ocultar todas las láminas
+            const contents = document.querySelectorAll('.slide-content');
+            contents.forEach(content => content.classList.remove('active'));
+
+            // Desactivar botones
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // Mostrar la seleccionada
+            document.getElementById(slideId).classList.add('active');
+
+            // Activar botón correspondiente
+            const activeBtn = Array.from(buttons).find(btn => 
+                btn.getAttribute('onclick').includes(slideId)
+            );
+            if(activeBtn) activeBtn.classList.add('active');
+        }
+
+        // Lógica de Tema Oscuro
+        document.getElementById('toggleTheme').addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+        });
+    </script>
+</body>
+</html>
