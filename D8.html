@@ -1,0 +1,165 @@
+<!-- INICIO DASHBOARD DE SIMULACIÓN -->
+<div class="sim-wrapper">
+    
+    <!-- ESTILOS CSS (DISEÑO TÉCNICO) -->
+    <style>
+        .sim-wrapper {
+            background-color: #121212;
+            color: #e0e0e0;
+            font-family: 'Courier New', Courier, monospace; /* Fuente tipo código */
+            padding: 20px;
+            border: 1px solid #333;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            max-width: 850px;
+            margin: 20px auto;
+            overflow: hidden; /* Para contener el efecto del reloj */
+            position: relative;
+        }
+
+        .sim-header {
+            border-bottom: 2px solid #00ff41; /* Verde terminal */
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sim-title {
+            color: #00ff41;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .sim-intro {
+            font-style: italic;
+            color: #aaa;
+            margin-bottom: 30px;
+            border-left: 3px solid #00ff41;
+            padding-left: 15px;
+        }
+
+        /* Cajas de los pasos */
+        .sim-step {
+            background-color: #1e1e1e;
+            border: 1px solid #444;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .sim-step h3 {
+            margin-top: 0;
+            color: #ff9800; /* Naranja para destacados */
+            font-size: 1.1rem;
+        }
+
+        .sim-step p, .sim-step li {
+            font-size: 0.95rem;
+            color: #ccc;
+        }
+
+        /* Sección de Importancia */
+        .sim-importance {
+            background-color: #002244; /* Azul oscuro */
+            border: 1px solid #0055aa;
+            padding: 20px;
+            border-radius: 4px;
+            margin-top: 30px;
+        }
+
+        .sim-importance h3 {
+            color: #4da6ff;
+            margin-top: 0;
+        }
+
+        /* Animación del Bucle (Reloj) */
+        #sim-counter {
+            color: #00ff41;
+            font-weight: bold;
+        }
+
+        ul {
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .sim-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+    </style>
+
+    <!-- ENCABEZADO -->
+    <div class="sim-header">
+        <div class="sim-title">> Arquitectura del Bucle Algorítmico</div>
+        <div style="font-size: 0.8rem;">
+            EVENTOS PROCESADOS: <span id="sim-counter">0</span>
+        </div>
+    </div>
+
+    <!-- INTRODUCCIÓN -->
+    <div class="sim-intro">
+        "Honrado jurado, tras establecer las condiciones de contorno y la rejilla, entramos ahora en la lógica operativa de nuestro código: la Arquitectura del Bucle Algorítmico. Este diagrama representa el flujo de decisiones que el programa ejecuta miles de veces para construir la película delgada."
+    </div>
+
+    <!-- PASO 1 -->
+    <div class="sim-step">
+        <h3>1. El Motor de Selección</h3>
+        <p>El proceso comienza con la generación de un número aleatorio robusto. Este número es el que decide qué evento ocurre a continuación. En nuestro sistema, el algoritmo debe elegir entre:</p>
+        <ul>
+            <li><strong>Adsorción:</strong> La llegada de un nuevo átomo de Cr o Fe.</li>
+            <li><strong>Difusión:</strong> El movimiento de un átomo que ya se encuentra en la superficie.</li>
+        </ul>
+    </div>
+
+    <!-- PASO 2 -->
+    <div class="sim-step">
+        <h3>2. La Verificación de Sitios de Red</h3>
+        <p>Una vez seleccionado el evento, el algoritmo verifica la disponibilidad en la rejilla de <strong>50 x 50 x 30</strong>. Si se trata de un salto de difusión, el programa calcula las probabilidades de transición hacia los sitios vecinos basándose en la barrera energética <em>E_d</em>.</p>
+        <p style="margin-bottom:0;">Es aquí donde el límite de las <strong>50,000 interacciones</strong> que mencioné anteriormente asegura que el generador de números aleatorios no pierda su integridad estadística.</p>
+    </div>
+
+    <!-- PASO 3 -->
+    <div class="sim-step">
+        <h3>3. Actualización de la Configuración y el Tiempo</h3>
+        <p>Una característica única de esta arquitectura es que el 'reloj' de la simulación <strong>no avanza en intervalos fijos</strong>. El tiempo se actualiza estocásticamente después de cada evento exitoso.</p>
+        <p style="margin-bottom:0;">Esto permite que el crecimiento de la película en el 'microscopio virtual' sea dinámicamente fiel a lo que ocurriría en un experimento real.</p>
+    </div>
+
+    <!-- IMPORTANCIA -->
+    <div class="sim-importance">
+        <h3>Importancia para la Investigación:</h3>
+        <p>Esta arquitectura garantiza que el crecimiento no sea una simple acumulación de capas, sino un proceso dinámico donde los átomos 'compiten' por su posición final. Gracias a este bucle, podemos observar cómo el Cromo logra su estructura rígida y por qué el Hierro tiende a formar esos valles pronunciados que analizaremos en las láminas de resultados.</p>
+    </div>
+
+</div>
+
+<!-- SCRIPT JAVASCRIPT (SIMULACIÓN DEL BUCLE) -->
+<script>
+    // Esperamos a que la página cargue para iniciar el contador
+    document.addEventListener("DOMContentLoaded", function() {
+        let counter = 0;
+        const counterElement = document.getElementById("sim-counter");
+        
+        // Función para simular el paso del tiempo en el algoritmo
+        setInterval(function() {
+            // Aumentamos el contador aleatoriamente para simular eventos estocásticos
+            counter += Math.floor(Math.random() * 5); 
+            
+            // Si el elemento existe en el DOM (por seguridad en Blogger)
+            if(counterElement) {
+                counterElement.innerText = counter.toLocaleString();
+            }
+        }, 100); // Se actualiza cada 100 milisegundos
+    });
+</script>
+
+<!-- FIN DEL CÓDIGO -->
