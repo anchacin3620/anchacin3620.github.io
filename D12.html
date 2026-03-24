@@ -1,0 +1,242 @@
+<!-- INICIO LÁMINA 16 (GRÁFICA) -->
+<div class="slide-16-graph-container">
+
+    <!-- ESTILOS CSS -->
+    <style>
+        .slide-16-graph-container {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            max-width: 950px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 30px;
+            border: 1px solid #dcdcdc;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border-radius: 8px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .slide-16-graph-container h2 {
+            text-align: center;
+            color: #2c3e50;
+            border-bottom: 2px solid #b71c1c;
+            padding-bottom: 15px;
+            margin-top: 0;
+        }
+
+        /* CONTENEDOR DEL GRÁFICO SVG */
+        .graph-wrapper {
+            width: 100%;
+            max-width: 700px;
+            margin: 30px auto;
+            border: 1px solid #eee;
+            background: #fafafa;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.03);
+        }
+
+        /* Estilos del SVG */
+        svg {
+            width: 100%;
+            height: auto;
+            overflow: visible;
+        }
+
+        .axis {
+            stroke: #555;
+            stroke-width: 2;
+        }
+
+        .axis-label {
+            font-size: 14px;
+            fill: #333;
+            font-weight: bold;
+            font-family: monospace;
+        }
+
+        .grid-line {
+            stroke: #e0e0e0;
+            stroke-width: 1;
+            stroke-dasharray: 4;
+        }
+
+        .trend-line {
+            fill: none;
+            stroke: #7f8c8d;
+            stroke-width: 3;
+            stroke-linecap: round;
+            /* Animación de dibujo */
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: drawLine 2s ease-out forwards;
+        }
+
+        @keyframes drawLine {
+            to { stroke-dashoffset: 0; }
+        }
+
+        /* Puntos de Datos */
+        .data-point {
+            cursor: pointer;
+            transition: r 0.3s ease, stroke-width 0.3s ease;
+        }
+        
+        .data-point:hover {
+            r: 8;
+            stroke-width: 3;
+        }
+
+        .point-cr { fill: #2980b9; stroke: #fff; stroke-width: 2; }
+        .point-fe { fill: #c0392b; stroke: #fff; stroke-width: 2; }
+
+        /* Etiquetas de los puntos */
+        .point-label {
+            font-size: 12px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.5s ease 1s; /* Aparece después de la línea */
+            animation: fadeIn 0.5s ease-out 1.5s forwards;
+        }
+
+        .label-cr { fill: #2980b9; }
+        .label-fe { fill: #c0392b; }
+
+        @keyframes fadeIn { to { opacity: 1; } }
+
+        /* SECCIONES DE TEXTO */
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .text-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            border-top: 4px solid #ccc;
+        }
+        
+        .card-general { border-color: #2c3e50; }
+        .card-contrast { border-color: #e67e22; }
+
+        .text-card h3 {
+            margin-top: 0;
+            color: #2c3e50;
+            font-size: 1.1rem;
+        }
+
+        .conclusion-box {
+            margin-top: 30px;
+            background-color: #eaf2f8;
+            border: 1px solid #d6eaf8;
+            padding: 20px;
+            border-radius: 5px;
+            border-left: 5px solid #2980b9;
+        }
+
+        .math-symbol {
+            font-family: "Times New Roman", Times, serif;
+            font-style: italic;
+            font-weight: bold;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .analysis-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+
+    <!-- CONTENIDO -->
+
+    <h2>Lámina 16: Rugosidad vs. Energía de Difusión</h2>
+
+    <!-- GRÁFICO SVG (Dibujo Vectorial) -->
+    <div class="graph-wrapper">
+        <!-- viewBox: 0 0 600 400 -->
+        <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+            
+            <!-- Grid lines (Fondo) -->
+            <line x1="60" y1="100" x2="560" y2="100" class="grid-line" />
+            <line x1="60" y1="200" x2="560" y2="200" class="grid-line" />
+            <line x1="60" y1="300" x2="560" y2="300" class="grid-line" />
+
+            <!-- Ejes -->
+            <!-- Eje Y (Rugosidad) -->
+            <line x1="60" y1="40" x2="60" y2="340" class="axis" />
+            <text x="30" y="200" class="axis-label" transform="rotate(-90 30,200)">Rugosidad (&sigma;)</text>
+            
+            <!-- Eje X (Energía) -->
+            <line x1="60" y1="340" x2="560" y2="340" class="axis" />
+            <text x="300" y="380" class="axis-label" text-anchor="middle">Energía de Difusión (E_d) [eV]</text>
+
+            <!-- Flechas Ejes -->
+            <polygon points="60,30 55,45 65,45" fill="#555"/>
+            <polygon points="570,340 555,335 555,345" fill="#555"/>
+
+            <!-- Curva de Tendencia (Decaimiento y estabilización) -->
+            <!-- Empieza alta (izquierda, baja energia) y baja (derecha, alta energia) -->
+            <path d="M 60,80 C 150,80 250,300 560,310" class="trend-line" />
+
+            <!-- Puntos de Datos -->
+            <!-- Cr: Izquierda (Ed bajo), Arriba (Rugosidad alta ~7.53) -->
+            <circle cx="100" cy="120" r="6" class="data-point point-cr">
+                <title>Cromo: Ed Bajo, Rugosidad 7.53</title>
+            </circle>
+            <text x="100" y="105" text-anchor="middle" class="point-label label-cr">Cr (7.53)</text>
+
+            <!-- Fe: Derecha (Ed alto), Abajo (Rugosidad mas baja/estable ~7.28) -->
+            <circle cx="480" cy="305" r="6" class="data-point point-fe">
+                <title>Hierro: Ed Alto, Rugosidad 7.28</title>
+            </circle>
+            <text x="480" y="290" text-anchor="middle" class="point-label label-fe">Fe (7.28)</text>
+
+            <!-- Flechas indicativas (Opcional para claridad) -->
+            <text x="570" y="320" font-size="10" fill="#7f8c8d">Estabilidad</text>
+            <path d="M 550,315 L 530,315" stroke="#7f8c8d" stroke-width="1" marker-end="url(#arrow)" />
+
+        </svg>
+        <div style="text-align:center; font-size:0.85rem; color:#666; margin-top:10px;">
+            Figura: Tendencia de la rugosidad en función de la barrera energética.
+        </div>
+    </div>
+
+    <p style="text-align:center; font-style:italic; color:#555; margin-top:-10px;">
+        "Señores del jurado, llegamos a uno de los puntos más críticos de nuestra investigación. En esta Lámina 16, presentamos la gráfica de Rugosidad (&sigma;) en función de la Energía de Difusión (E_d), la cual nos permite validar matemáticamente el comportamiento de los dos sistemas estudiados."
+    </p>
+
+    <div class="analysis-grid">
+        <!-- 1. Tendencia General -->
+        <div class="text-card card-general">
+            <h3>1. Tendencia General: El Efecto de la Movilidad</h3>
+            <p>La gráfica muestra una tendencia clara: a medida que aumentamos la Energía de Difusión en el eje horizontal, la rugosidad en el eje vertical tiende a estabilizarse.</p>
+            <p><strong>Físicamente:</strong> Una mayor E_d implica que el átomo necesita más 'esfuerzo' térmico para moverse; sin embargo, cuando el sistema alcanza los valores de equilibrio (como vemos hacia la derecha de la gráfica), la rugosidad deja de crecer de forma caótica y tiende a un valor constante o de saturación.</p>
+        </div>
+
+        <!-- 2. Contraste de Sistemas -->
+        <div class="text-card card-contrast">
+            <h3>2. Contraste de los Sistemas (Cr vs. Fe)</h3>
+            <p>Lo más revelador de esta lámina es la ubicación de nuestros materiales en la curva:</p>
+            <ul>
+                <li><strong>Cromo (Cr):</strong> Zona de baja Energía (0.01 - 0.25 eV). Región de pendiente variable. <span class="math-symbol">&sigma;</span> = 7.53 capas. Inestabilidad morfológica.</li>
+                <li><strong>Hierro (Fe):</strong> Zona de mayor Energía (0.5 - 1.0 eV). Curva estable. <span class="math-symbol">&sigma;</span> = 7.28 capas. Crecimiento más suave.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 3. Conclusión -->
+    <div class="conclusion-box">
+        <h3 style="color:#2980b9; margin-top:0;">3. Conclusión Técnica de la Gráfica</h3>
+        <p>
+            Esta lámina demuestra que la rugosidad no es un valor arbitrario, sino una consecuencia directa de la barrera energética del material.
+        </p>
+        <p style="margin-bottom:0">
+            Podemos concluir que, bajo las mismas condiciones de deposición balística, el <strong>Cromo siempre presentará una mayor inestabilidad morfológica que el Hierro</strong> debido a su posición en esta curva de energía. Este resultado es fundamental porque nos permite predecir la calidad de la película basándonos únicamente en las propiedades intrínsecas del metal utilizado.
+        </p>
+    </div>
+
+</div>
+
+<!-- FIN LÁMINA 16 -->
