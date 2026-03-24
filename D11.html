@@ -1,0 +1,306 @@
+<!-- INICIO LÁMINA 15 -->
+<div class="slide-15-container">
+
+    <!-- ESTILOS CSS -->
+    <style>
+        .slide-15-container {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            max-width: 950px;
+            margin: 20px auto;
+            background: #fdfdfd;
+            padding: 30px;
+            border: 1px solid #dcdcdc;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border-radius: 8px;
+            color: #333;
+        }
+
+        .slide-15-container h2 {
+            text-align: center;
+            color: #2c3e50;
+            border-bottom: 2px solid #b71c1c;
+            padding-bottom: 15px;
+            margin-top: 0;
+        }
+
+        .intro-script {
+            background-color: #eef2f3;
+            padding: 20px;
+            border-left: 5px solid #34495e;
+            margin-bottom: 30px;
+            border-radius: 4px;
+            font-style: italic;
+        }
+
+        /* Contenedor de Comparación */
+        .comparison-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        /* Tarjeta de Material */
+        .material-card {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .material-header {
+            padding: 15px;
+            text-align: center;
+            color: white;
+        }
+
+        .header-cr { background-color: #2980b9; }
+        .header-fe { background-color: #c0392b; }
+
+        .material-header h3 {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .material-header span {
+            font-size: 0.8rem;
+            opacity: 0.9;
+            display: block;
+            margin-top: 5px;
+        }
+
+        /* ÁREA DE VISUALIZACIÓN MONTE CARLO (SIMULADA CON CSS) */
+        .mc-visualizer {
+            height: 150px;
+            background: #222; /* Sustrato oscuro */
+            position: relative;
+            padding: 10px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 2px;
+            overflow: hidden;
+        }
+
+        /* Átomos/Columnas Cromo (Fragmentados) */
+        .atom-cr {
+            background-color: #5dade2;
+            width: 6px; /* Estrechos */
+            border-radius: 2px 2px 0 0;
+            opacity: 0.8;
+            animation: grow 1s ease-out forwards;
+        }
+
+        /* Átomos/Islas Hierro (Coalescentes) */
+        .atom-fe {
+            background-color: #e74c3c;
+            width: 12px; /* Más anchos */
+            border-radius: 50% 50% 0 0; /* Redondeados */
+            margin: 0 2px; /* Espacio para "respirar" */
+            opacity: 0.8;
+            animation: grow 1s ease-out forwards;
+            z-index: 1; /* Permitir solapamiento */
+        }
+        
+        /* Efecto de Coalescencia (seudo-sombra/fusión) */
+        .atom-fe::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 4px;
+            width: 12px;
+            height: 100%;
+            background: inherit;
+            border-radius: inherit;
+            z-index: -1;
+            opacity: 0.5;
+        }
+
+        @keyframes grow {
+            from { height: 0; opacity: 0; }
+            to { opacity: 0.8; } /* El alto lo pone JS */
+        }
+
+        .visual-label {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            color: #666;
+            font-size: 0.7rem;
+            font-family: monospace;
+        }
+
+        /* Cuerpo de la Tarjeta */
+        .card-body {
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        .data-point {
+            margin-bottom: 15px;
+        }
+
+        .data-label {
+            font-weight: bold;
+            color: #555;
+            display: block;
+            font-size: 0.9rem;
+        }
+
+        .data-value {
+            font-family: 'Courier New', monospace;
+            color: #b71c1c;
+            font-weight: bold;
+        }
+
+        /* Conclusión */
+        .conclusion-box {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 25px;
+            border-radius: 8px;
+            position: relative;
+            border-left: 8px solid #f1c40f;
+        }
+
+        .conclusion-box h3 {
+            margin-top: 0;
+            color: #f1c40f;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .comparison-wrapper { grid-template-columns: 1fr; }
+        }
+    </style>
+
+    <!-- CONTENIDO -->
+
+    <h2>Guion para el Expositor: Análisis de la Lámina 15</h2>
+
+    <div class="intro-script">
+        "Continuando con la exposición, en esta Lámina 15 entramos en la fase comparativa de los resultados visuales de nuestra simulación Monte Carlo Cinético. Aquí presentamos las Morfologías Superficiales para los sistemas de Cromo y Hierro tras la deposición de aproximadamente 10 capas sobre el sustrato de Magnesio (001)."
+    </div>
+
+    <div class="comparison-wrapper">
+        
+        <!-- TARJETA CROMO -->
+        <div class="material-card">
+            <div class="material-header header-cr">
+                <h3>1. Sistema Cr/Mg(001)</h3>
+                <span>El Régimen de Baja Movilidad</span>
+            </div>
+            
+            <!-- Visualización Conceptual: Columnas Fragmentadas -->
+            <div class="mc-visualizer" id="visualizer-cr">
+                <div class="visual-label">Simulación Visual: Cr</div>
+                <!-- Los barras se generan con JS -->
+            </div>
+
+            <div class="card-body">
+                <div class="data-point">
+                    <span class="data-label">Energía de Difusión (E_d)</span>
+                    <span class="data-value">≈ 0.01 eV (Extremadamente baja)</span>
+                </div>
+                
+                <p><strong>Interpretación:</strong> Debido a esta baja barrera energética, los átomos de Cr quedan prácticamente "atrapados" en el sitio de impacto.</p>
+                
+                <p style="margin-bottom:0"><strong>Resultado:</strong> Esto genera una superficie con una alta densidad de columnas estrechas y una fragmentación severa. No hay flujo lateral significativo; crecimiento limitado por la cinética.</p>
+            </div>
+        </div>
+
+        <!-- TARJETA HIERRO -->
+        <div class="material-card">
+            <div class="material-header header-fe">
+                <h3>2. Sistema Fe/Mg(001)</h3>
+                <span>El Régimen de Difusión Activa</span>
+            </div>
+
+            <!-- Visualización Conceptual: Islas Coalescentes -->
+            <div class="mc-visualizer" id="visualizer-fe">
+                <div class="visual-label">Simulación Visual: Fe</div>
+                <!-- Los barras se generan con JS -->
+            </div>
+
+            <div class="card-body">
+                <div class="data-point">
+                    <span class="data-label">Energía de Difusión (E_d)</span>
+                    <span class="data-value">≈ 0.5 eV (Mayor)</span>
+                </div>
+
+                <p><strong>Interpretación:</strong> Los átomos de Fe tienen la energía térmica suficiente para realizar saltos superficiales antes de ser enterrados por la siguiente capa.</p>
+                
+                <p style="margin-bottom:0"><strong>Resultado:</strong> Esto favorece la formación de islas más anchas y redondeadas. La "textura" es más suave y conectada. Existe un proceso de coalescencia.</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- CONCLUSIÓN -->
+    <div class="conclusion-box">
+        <h3>3. Conclusión Comparativa para el Jurado</h3>
+        <p>
+            Lo fundamental de esta lámina es demostrar que, aunque ambos materiales crecen bajo condiciones de flujo balístico, la naturaleza intrínseca del elemento (su barrera energética de difusión) es el factor determinante en la calidad de la película.
+        </p>
+        <p>
+            Mientras el Cr tiende a la <strong>porosidad y estructuras columnares</strong>, el Fe permite un crecimiento más <strong>compacto</strong> debido a su mayor movilidad superficial. Este análisis visual es el que nos permite validar los histogramas de altura que analizaremos a continuación.
+        </p>
+    </div>
+
+</div>
+
+<!-- JAVASCRIPT PARA GENERAR LA MORFOLOGÍA VISUAL (MONTE CARLO ESTILIZADO) -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        
+        // Función para generar el patrón de Cromo (Columnas angostas y altas, fragmentación)
+        function generateCr() {
+            const container = document.getElementById('visualizer-cr');
+            const width = container.offsetWidth;
+            const numAtoms = Math.floor(width / 10); // Muchos átomos pequeños
+
+            for (let i = 0; i < numAtoms; i++) {
+                const atom = document.createElement('div');
+                atom.className = 'atom-cr';
+                
+                // Altura aleatoria (Crecimiento vertical desigual)
+                const height = Math.random() * 100 + 20; // Entre 20px y 120px
+                atom.style.height = height + 'px';
+                
+                container.appendChild(atom);
+            }
+        }
+
+        // Función para generar el patrón de Hierro (Islas anchas y bajas, coalescencia)
+        function generateFe() {
+            const container = document.getElementById('visualizer-fe');
+            const width = container.offsetWidth;
+            const numIslands = Math.floor(width / 25); // Menos islas, más anchas
+
+            for (let i = 0; i < numIslands; i++) {
+                const island = document.createElement('div');
+                island.className = 'atom-fe';
+                
+                // Altura aleatoria pero más suave
+                const height = Math.random() * 60 + 30; // Entre 30px y 90px (más bajo que Cr promedio)
+                island.style.height = height + 'px';
+                
+                // Simular coalescencia aleatoria desplazando algunos
+                if (Math.random() > 0.5) {
+                    island.style.marginLeft = (Math.random() * 10 - 5) + 'px';
+                }
+
+                container.appendChild(island);
+            }
+        }
+
+        // Ejecutar generadores
+        generateCr();
+        generateFe();
+    });
+</script>
+
+<!-- FIN LÁMINA 15 -->
