@@ -1,0 +1,337 @@
+<!-- INICIO LÁMINA 14 (ACTUALIZADA) -->
+<div class="slide-14-updated-container">
+
+    <!-- ESTILOS CSS -->
+    <style>
+        .slide-14-updated-container {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            max-width: 950px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 30px;
+            border: 1px solid #dcdcdc;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            border-radius: 8px;
+            line-height: 1.6;
+        }
+
+        /* Títulos */
+        .slide-14-updated-container h2 {
+            text-align: center;
+            color: #2c3e50;
+            border-bottom: 2px solid #b71c1c;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        .slide-14-updated-container h4 {
+            text-align: center;
+            color: #7f8c8d;
+            font-weight: 400;
+            margin-top: -15px;
+            margin-bottom: 30px;
+        }
+
+        /* Caja de Introducción Experta */
+        .expert-intro {
+            background-color: #e8f6f3;
+            border-left: 5px solid #1abc9c;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 0 5px 5px 0;
+            font-size: 0.95rem;
+            color: #16a085;
+        }
+
+        .expert-intro strong {
+            color: #0e6655;
+        }
+
+        /* --- VISUALIZACIÓN DEL EFECTO APANTALLAMIENTO (CSS PURO) --- */
+        .shadowing-demo {
+            position: relative;
+            height: 150px;
+            background: #f4f4f4;
+            border: 1px dashed #bbb;
+            margin: 0 auto 40px auto;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .demo-label {
+            position: absolute;
+            top: 5px;
+            left: 10px;
+            font-size: 0.7rem;
+            color: #999;
+            text-transform: uppercase;
+        }
+
+        /* Fuente de energía */
+        .energy-source {
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle, #f1c40f 40%, transparent 70%);
+            border-radius: 50%;
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 15px #f1c40f;
+        }
+
+        /* Columnas */
+        .col-tall {
+            width: 40px;
+            height: 100px;
+            background: #34495e;
+            position: absolute;
+            bottom: 0;
+            left: 30%;
+            border-radius: 3px 3px 0 0;
+            z-index: 2;
+        }
+
+        .col-short {
+            width: 40px;
+            height: 20px;
+            background: #95a5a6;
+            position: absolute;
+            bottom: 0;
+            left: 60%;
+            border-radius: 3px 3px 0 0;
+            z-index: 1;
+        }
+
+        /* Línea de sombra (visualización cinética) */
+        .shadow-line {
+            position: absolute;
+            top: 50px; /* Altura punta columna alta */
+            left: 30%; /* Inicio columna alta */
+            width: 130px; /* Hasta donde llega la sombra */
+            height: 100px;
+            background: linear-gradient(to right, rgba(0,0,0,0.1), transparent);
+            transform: skewX(-30deg);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Partículas Animadas */
+        .particle {
+            width: 6px;
+            height: 6px;
+            background-color: #e67e22;
+            border-radius: 50%;
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            z-index: 5;
+        }
+
+        /* Animación Partícula 1: Choca con punta alta */
+        .p1 { animation: fall-hit-high 3s infinite linear; }
+        @keyframes fall-hit-high {
+            0% { top: 30px; left: 45%; opacity: 0; }
+            10% { opacity: 1; }
+            70% { top: 50px; left: 45%; } /* Choca con punta */
+            80% { top: 55px; left: 48%; opacity: 1; } /* Se pega */
+            100% { opacity: 0; }
+        }
+
+        /* Animación Partícula 2: Va al valle pero la sombra la desvía */
+        .p2 { animation: fall-shadowed 3s infinite linear 1s; }
+        @keyframes fall-shadowed {
+            0% { top: 30px; left: 55%; opacity: 0; }
+            10% { opacity: 1; }
+            50% { top: 60px; left: 55%; } /* Entra en zona sombra */
+            60% { top: 70px; left: 50%; } /* Desviada */
+            75% { top: 90px; left: 40%; } /* Se pega al lado de la alta */
+            90% { top: 95px; left: 38%; opacity: 1; }
+            100% { opacity: 0; }
+        }
+        /* -------------------------------------------------------- */
+
+
+        /* Secciones de Texto */
+        .text-section {
+            margin-bottom: 30px;
+        }
+
+        .text-section h3 {
+            color: #b71c1c;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+            font-size: 1.2rem;
+        }
+
+        /* Grid Comparativo */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .mat-card {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .mat-card.cr { border-top: 4px solid #2980b9; }
+        .mat-card.fe { border-top: 4px solid #c0392b; }
+
+        .mat-card h4 {
+            margin-top: 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Barra de progreso para datos */
+        .stat-row {
+            margin: 15px 0;
+        }
+        .stat-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .stat-bar-bg {
+            background: #eee;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .stat-bar-fill {
+            height: 100%;
+            width: 0;
+            transition: width 1.5s ease-out;
+        }
+        .fill-cr { background: #2980b9; }
+        .fill-fe { background: #c0392b; }
+
+        /* Conclusión */
+        .conclusion-box {
+            background: #2c3e50;
+            color: white;
+            padding: 25px;
+            border-radius: 8px;
+            position: relative;
+        }
+        .conclusion-box strong {
+            color: #f1c40f;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        /* Responsive */
+        @media (max-width: 700px) {
+            .comparison-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+
+    <!-- CONTENIDO -->
+
+    <h2>Lámina 14: Matriz Diagnóstica</h2>
+    <h4>Cromo vs. Hierro (Deposición Balística)</h4>
+
+    <!-- Introducción Técnica (Nueva) -->
+    <div class="expert-intro">
+        <p><strong>Excelente observación técnica.</strong> Ese matiz es el que separa una interpretación superficial de un análisis de física de superficies de alto nivel. El apantallamiento cinético (shadowing effect) es un fenómeno puramente geométrico-dinámico: las columnas más altas "atrapan" los átomos incidentes antes de que lleguen a los valles, lo que genera una retroalimentación positiva en el crecimiento vertical.</p>
+    </div>
+
+    <!-- Diagrama Visual del Apantallamiento -->
+    <div class="shadowing-demo">
+        <span class="demo-label">Simulación: Efecto Sombra (Shadowing)</span>
+        <div class="energy-source"></div> <!-- Sol/Fuente -->
+        <div class="shadow-line"></div>  <!-- Sombra -->
+        
+        <div class="col-tall"></div>     <!-- Columna Alta (Cr) -->
+        <div class="col-short"></div>    <!-- Valle (Fe) -->
+        
+        <!-- Partículas animadas -->
+        <div class="particle p1"></div>
+        <div class="particle p2"></div>
+    </div>
+
+    <!-- Cuerpo de la Lámina -->
+    <div class="text-section">
+        <p>"Honrado jurado, esta lámina presenta una aparente paradoja que es, en realidad, la clave física de nuestro descubrimiento. Al observar las Métricas de Salida, notamos que la rugosidad y el espesor son casi idénticos, pero el comportamiento interno es radicalmente opuesto debido al fenómeno de apantallamiento cinético.</p>
+    </div>
+
+    <div class="text-section">
+        <h3>1. La Paradoja de la Movilidad y el Apantallamiento</h3>
+        <p>Aunque el Cromo tiene una movilidad intrínseca alta (baja E_d), en este régimen de <strong>Modo Balístico (5.0 eV)</strong>, la energía de las partículas incidentes favorece el crecimiento de columnas que 'sombrean' o apantallan las zonas bajas.</p>
+        <p><em>Esto explica por qué el Cromo presenta una Cobertura >30 capas del 3.33% (superior al Hierro). El Cr utiliza su movilidad no para aplanar la película, sino para consolidar estas estructuras verticales que interceptan el flujo de plasma, exacerbando el apantallamiento.</em></p>
+    </div>
+
+    <div class="text-section">
+        <h3>2. Divergencia en Alturas Extremas</h3>
+        <p>Es aquí donde la matriz revela la 'firma' de cada material:</p>
+        
+        <div class="comparison-grid">
+            <!-- Cromo -->
+            <div class="mat-card cr">
+                <h4>Cromo (Cr)</h4>
+                <p>Sus columnas son más audaces. Al tener una adherencia de 0.98, cada átomo que choca con la punta de una columna se queda allí, haciendo que la columna crezca aún más y 'robe' material a las zonas adyacentes.</p>
+                
+                <div class="stat-row">
+                    <div class="stat-label">
+                        <span>Cobertura >30 capas</span>
+                        <span>3.33%</span>
+                    </div>
+                    <div class="stat-bar-bg">
+                        <div class="stat-bar-fill fill-cr" data-width="85%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hierro -->
+            <div class="mat-card fe">
+                <h4>Hierro (Fe)</h4>
+                <p>Con una cobertura >30 capas menor (2.50%), vemos que su estructura es más castigada por su baja movilidad relativa. No logra 'estirarse' verticalmente con la misma eficiencia que el Cromo bajo el mismo estrés balístico.</p>
+                
+                <div class="stat-row">
+                    <div class="stat-label">
+                        <span>Cobertura >30 capas</span>
+                        <span>2.50%</span>
+                    </div>
+                    <div class="stat-bar-bg">
+                        <div class="stat-bar-fill fill-fe" data-width="65%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="conclusion-box">
+        <strong>3. Hallazgo Final y Diagnóstico</strong>
+        <p>Como indica el hallazgo al pie: 'Ambos exhiben rugosidad y espesor macroscópicos similares'. Sin embargo, el apantallamiento cinético actúa como un amplificador de las diferencias de movilidad.</p>
+        <hr style="border-color: rgba(255,255,255,0.2); margin: 15px 0;">
+        <p style="margin:0; font-size: 0.9rem; line-height: 1.5;">
+            En conclusión para el jurado: El hecho de que el Cromo tenga una cobertura de alturas extremas significativamente mayor nos indica que su 'arquitectura interna' es de columnas más densas y prominentes. En términos de protección para el Magnesio, el Cromo está aprovechando el apantallamiento cinético para crear una barrera de mayor alcance vertical, mientras que el Hierro genera una película más homogénea en su mediocridad, pero con menor capacidad de crecimiento defensivo extremo.
+        </p>
+    </div>
+
+</div>
+
+<!-- JAVASCRIPT -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Animar las barras de estadísticas al cargar
+        setTimeout(function() {
+            const bars = document.querySelectorAll('.stat-bar-fill');
+            bars.forEach(bar => {
+                const width = bar.getAttribute('data-width');
+                bar.style.width = width;
+            });
+        }, 500);
+    });
+</script>
+
+<!-- FIN LÁMINA 14 -->
