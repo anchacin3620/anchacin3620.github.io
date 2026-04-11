@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador Balístico Forense Avanzado (RK4)</title>
+    <style>
+        /* --- Estilos CSS3 --- */
+        :root {
+            --primary-color: #1a237e; /* Azul Forense */
+            --secondary-color: #283593;
+            --accent-color: #c62828; /* Rojo Alerta */
+            --bg-color: #f5f7fa;
+            --panel-bg: #ffffff;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .container {
+            background-color: var(--panel-bg);
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 1400px;
+            margin: 20px auto;
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 25px;
+            flex-grow: 1;
+        }
+
+        h1 { margin: 0; font-size: 1.5rem; }
+        h2 { font-size: 1.1rem; color: var(--primary-color); border-bottom: 2px solid #eee; padding-bottom: 5px; margin-top: 0; }
+        .subtitle { font-size: 0.85rem; opacity: 0.8; margin-top: 5px; }
+
+        /* Controles */
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .control-section {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .control-group {
+            margin-bottom: 12px;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #444;
+        }
+
+        .control-group input, .control-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 0.9rem;
+        }
+
+        .control-group input[type="range"] { cursor: pointer; }
+        
+        .range-wrapper { display: flex; align-items: center; gap: 10px; }
+        .range-value { width: 50px; text-align: right; font-weight: bold; color: var(--primary-color); }
+
+        .invalid { border-color: var(--accent-color) !important; background-color: #ffebee !important; }
+
+        .buttons-group { display: flex; gap: 10px; margin-top: 10px; }
+        .buttons-group button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            color: white;
+        }
+        .buttons-group button:hover { opacity: 0.9; }
+        #simulateBtn { background-color: var(--primary-color); }
+        #exportBtn { background-color: #2e7d32; }
+
+        /* Visualización */
+        .visualization {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .canvas-container {
+            position: relative;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #fafafa;
+            overflow: hidden;
+        }
+
+        canvas { display: block; width: 100%; }
+
+        /* Resultados Forenses */
+        .results-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            background: #e8eaf6;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 5px solid var(--primary-color);
+        }
+
+        .result-item h4 { margin: 0 0 5px 0; font-size: 0.8rem; color: #555; text-transform: uppercase; }
+        .result-item p { margin: 0; font-size: 1.2rem; font-weight: bold; color: var(--primary-color); font-family: 'Courier New', monospace; }
+        .result-item.warning p { color: var(--accent-color); }
+
+        footer {
+            background-color: #263238;
+            color: #b0bec5;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.85rem;
+            margin-top: auto;
+            border-top: 4px solid var(--primary-color);
+        }
+
+        footer p {
+            margin: 5px 0;
+            line-height: 1.4;
+        }
+
+        footer a {
+            color: #4fc3f7;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Scrollbar personalizada */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #888; border-radius: 3px; }
+
+        @media (max-width: 900px) {
+            .container { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Sistema de Reconstrucción Balística (Forense)</h1>
+    <div class="subtitle">Método RK4 | Análisis de Trayectoria, Viento y Energía</div>
+</header>
+
+<div class="container">
+    <!-- Panel de Control -->
+    <div class="controls">
+        
+        <!-- 1. Proyectil -->
+        <div class="control-section">
+            <h2>1. Proyectil</h2>
+            <div class="control-group">
+                <label for="preset">Preset Calibre / Objeto</label>
+                <select id="preset">
+                    <option value="custom">Personalizado</option>
+                    <option value="9mm">9mm FMJ (Pistola)</option>
+                    <option value="556">5.56mm NATO (Rifle)</option>
+                    <option value="762">7.62mm NATO (Fusil)</option>
+                    <option value="38">.38 Special (Revolver)</option>
+                    <option value="12ga">Posta 12ga (Escopeta)</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="mass">Masa (m) [kg]</label>
+                <input type="number" id="mass" value="0.008" step="0.0001" min="0.0001">
+            </div>
+            <div class="control-group">
+                <label for="dragCoeff">Coeficiente de Arrastre (Cd)</label>
+                <input type="number" id="dragCoeff" value="0.295" step="0.001" min="0">
+            </div>
+            <div class="control-group">
+                <label for="area">Área Transversal (A) [m²]</label>
+                <input type="number" id="area" value="0.000064" step="0.000001" min="0.000001">
+            </div>
+        </div>
+
+        <!-- 2. Condiciones de Disparo -->
+        <div class="control-section">
+            <h2>2. Condiciones de Disparo</h2>
+            <div class="control-group">
+                <label for="velocity">Velocidad Inicial (v₀) [m/s]</label>
+                <input type="number" id="velocity" value="350" step="1" min="1">
+            </div>
+            <div class="control-group">
+                <label for="angle">Ángulo de Disparo (θ) [grados]</label>
+                <div class="range-wrapper">
+                    <input type="range" id="angle" value="0" min="-10" max="45">
+                    <span class="range-value" id="angleValue">0°</span>
+                </div>
+            </div>
+            <div class="control-group">
+                <label for="shooterHeight">Altura del Tirador [m]</label>
+                <input type="number" id="shooterHeight" value="1.70" step="0.01" min="0">
+            </div>
+        </div>
+
+        <!-- 3. Ambiente y Escena -->
+        <div class="control-section">
+            <h2>3. Ambiente y Escena</h2>
+            <div class="control-group">
+                <label for="targetHeight">Altura del Impacto [m]</label>
+                <input type="number" id="targetHeight" value="0.00" step="0.01" min="0">
+                <small style="color:#666; font-size:0.75rem;">(0 = Impacto en suelo)</small>
+            </div>
+            <div class="control-group">
+                <label for="windSpeed">Velocidad del Viento [m/s]</label>
+                <input type="number" id="windSpeed" value="0" step="0.1" min="0">
+            </div>
+            <div class="control-group">
+                <label for="windDir">Dirección del Viento</label>
+                <select id="windDir">
+                    <option value="0">Sin Viento (Calma)</option>
+                    <option value="180">En Contra (Frente)</option>
+                    <option value="0">A Favor (Cola)</option>
+                    <option value="90">Cruzado Derecha (Izq->Der)</option>
+                    <option value="-90">Cruzado Izquierda (Der->Izq)</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="density">Densidad del Aire (ρ) [kg/m³]</label>
+                <input type="number" id="density" value="1.225" step="0.01" min="0.1">
+            </div>
+        </div>
+
+        <div class="buttons-group">
+            <button id="simulateBtn">SIMULAR ESCENARIO</button>
+            <button id="exportBtn">EXPORTAR DATOS</button>
+        </div>
+    </div>
+
+    <!-- Visualización y Resultados -->
+    <div class="visualization">
+        <div class="canvas-container">
+            <canvas id="trajectoryCanvas" height="400"></canvas>
+        </div>
+        
+        <div class="results-panel">
+            <div class="result-item">
+                <h4>Alcance Horizontal (R)</h4>
+                <p id="rangeResult">- m</p>
+            </div>
+            <div class="result-item">
+                <h4>Altura Máxima (Hmax)</h4>
+                <p id="heightResult">- m</p>
+            </div>
+            <div class="result-item">
+                <h4>Tiempo de Vuelo</h4>
+                <p id="timeResult">- s</p>
+            </div>
+            <div class="result-item warning">
+                <h4>Velocidad Impacto</h4>
+                <p id="impactVelResult">- m/s</p>
+            </div>
+            <div class="result-item warning">
+                <h4>Energía Impacto (E)</h4>
+                <p id="energyResult">- J</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p><strong>@2026 - Elaborado por el Profesor Ángel Chacín Ávila</strong></p>
+    <p>Licenciado en Física, Especialista en Ciencias Computacionales, Diplomado en Educación Policial</p>
+    <p>Docente e Investigador de la Universidad Nacional Experimental de la Seguridad Núcleo Zulia</p>
+    <p>Se publica bajo licencia <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank" rel="noopener noreferrer">GPLv3</a></p>
+</footer>
+
+<script>
+    // --- CONFIGURACIÓN Y DATOS ---
+    const presets = {
+        custom: {},
+        // Datos aproximados para proyectiles comunes (Cd promedio estimado)
+        '9mm':   { mass: 0.008, dragCoeff: 0.35, area: 0.000064, velocity: 350, angle: 0 }, // 8g, ~9mm
+        '556':   { mass: 0.004, dragCoeff: 0.29, area: 0.000024, velocity: 940, angle: 0 }, // 4g, 5.56mm
+        '762':   { mass: 0.0095, dragCoeff: 0.30, area: 0.000048, velocity: 850, angle: 0 }, // 9.5g, 7.62mm
+        '38':    { mass: 0.010, dragCoeff: 0.25, area: 0.000100, velocity: 250, angle: 0 }, // 10g, .38
+        '12ga':  { mass: 0.025, dragCoeff: 0.45, area: 0.000283, velocity: 400, angle: 0 }  // Posta esférica
+    };
+
+    const PhysicsEngine = {
+        g: 9.81,
+        dt: 0.005, // Paso de tiempo más fino para mayor precisión forense
+
+        toRadians(deg) { return deg * (Math.PI / 180); }, // Corregido para usar el argumento correcto
+
+        // Cálculo de derivadas considerando viento
+        derivatives(state, params) {
+            const { x, y, vx, vy } = state;
+            const { m, Cd, A, rho, windVx, windVy } = params;
+
+            // Velocidad relativa respecto al aire (viento)
+            const vRelX = vx - windVx;
+            const vRelY = vy - windVy;
+            const vRelMag = Math.sqrt(vRelX * vRelX + vRelY * vRelY);
+
+            // Evitar división por cero
+            if (vRelMag === 0) return { dxdt: vx, dydt: vy, dvxdt: 0, dvydt: -this.g };
+
+            const Fd = 0.5 * rho * Cd * A * vRelMag * vRelMag;
+            
+            // F = ma -> a = F/m
+            // La fuerza de arrastre se opone a la velocidad relativa
+            const ax = -(Fd / m) * (vRelX / vRelMag);
+            const ay = -this.g - (Fd / m) * (vRelY / vRelMag);
+
+            return { dxdt: vx, dydt: vy, dvxdt: ax, dvydt: ay };
+        },
+
+        rk4Step(state, params, h) {
+            const k1 = this.derivatives(state, params);
+            const state2 = { 
+                x: state.x + 0.5 * h * k1.dxdt, y: state.y + 0.5 * h * k1.dydt, 
+                vx: state.vx + 0.5 * h * k1.dvxdt, vy: state.vy + 0.5 * h * k1.dvydt 
+            };
+            const k2 = this.derivatives(state2, params);
+            const state3 = { 
+                x: state.x + 0.5 * h * k2.dxdt, y: state.y + 0.5 * h * k2.dydt, 
+                vx: state.vx + 0.5 * h * k2.dvxdt, vy: state.vy + 0.5 * h * k2.dvydt 
+            };
+            const k3 = this.derivatives(state3, params);
+            const state4 = { 
+                x: state.x + h * k3.dxdt, y: state.y + h * k3.dydt, 
+                vx: state.vx + h * k3.dvxdt, vy: state.vy + h * k3.dvydt 
+            };
+            const k4 = this.derivatives(state4, params);
+
+            return {
+                x: state.x + (h / 6.0) * (k1.dxdt + 2 * k2.dxdt + 2 * k3.dxdt + k4.dxdt),
+                y: state.y + (h / 6.0) * (k1.dydt + 2 * k2.dydt + 2 * k3.dydt + k4.dydt),
+                vx: state.vx + (h / 6.0) * (k1.dvxdt + 2 * k2.dvxdt + 2 * k3.dvxdt + k4.dvxdt),
+                vy: state.vy + (h / 6.0) * (k1.dvydt + 2 * k2.dvydt + 2 * k3.dvydt + k4.dvydt),
+            };
+        },
+
+        calculateTrajectory(params) {
+            const trajectory = [];
+            const angleRad = this.toRadians(params.angle);
+            
+            // Estado inicial: posición (0, altura tirador), velocidad descompuesta
+            let state = { 
+                x: 0, 
+                y: params.shooterHeight, 
+                vx: params.v0 * Math.cos(angleRad), 
+                vy: params.v0 * Math.sin(angleRad) 
+            };
+            
+            // Vector de viento (descompuesto)
+            let windForceX = 0;
+            if(params.windDir == "180") windForceX = -params.windSpeed; // En contra
+            if(params.windDir == "0") windForceX = params.windSpeed;   // A favor
+            
+            const physicsParams = {
+                ...params,
+                windVx: windForceX,
+                windVy: 0
+            };
+
+            let time = 0;
+            let maxHeight = params.shooterHeight;
+            let impactVelocity = 0;
+            
+            // Bucle hasta que Y sea menor o igual a la altura del objetivo
+            while (state.y >= params.targetHeight) {
+                trajectory.push({ x: state.x, y: state.y, vx: state.vx, vy: state.vy, t: time });
+                
+                if (state.y > maxHeight) maxHeight = state.y;
+                
+                state = this.rk4Step(state, physicsParams, this.dt);
+                time += this.dt;
+                
+                // Parada de emergencia
+                if (time > 200) break; 
+            }
+
+            // Interpolación fina para el punto exacto de impacto (y = targetHeight)
+            let finalState = state;
+            if (trajectory.length > 1 && state.y < params.targetHeight) {
+                const prev = trajectory[trajectory.length - 1];
+                const curr = state;
+                // Interpolación lineal: y = prev.y + t * (curr.y - prev.y)
+                // Buscamos t donde y = targetHeight
+                const fraction = (params.targetHeight - prev.y) / (curr.y - prev.y);
+                finalState = {
+                    x: prev.x + fraction * (curr.x - prev.x),
+                    y: params.targetHeight,
+                    vx: prev.vx + fraction * (curr.vx - prev.vx),
+                    vy: prev.vy + fraction * (curr.vy - prev.vy),
+                    t: prev.t + fraction * (curr.t - prev.t)
+                };
+                trajectory.push(finalState);
+            } else if (trajectory.length > 0) {
+                finalState = trajectory[trajectory.length - 1];
+            }
+
+            // Cálculo de energía final E = 0.5 * m * v^2
+            const finalV = Math.sqrt(finalState.vx * finalState.vx + finalState.vy * finalState.vy);
+            const finalEnergy = 0.5 * params.m * finalV * finalV;
+
+            return { 
+                points: trajectory, 
+                maxHeight: maxHeight, 
+                time: finalState.t,
+                impactVel: finalV,
+                impactEnergy: finalEnergy
+            };
+        }
+    };
+
+    const Renderer = {
+        canvas: null,
+        ctx: null,
+
+        init() {
+            this.canvas = document.getElementById('trajectoryCanvas');
+            this.ctx = this.canvas.getContext('2d');
+            // Ajustar resolución alta
+            const dpr = window.devicePixelRatio || 1;
+            const rect = this.canvas.getBoundingClientRect();
+            this.canvas.width = rect.width * dpr;
+            this.canvas.height = rect.height * dpr;
+            this.ctx.scale(dpr, dpr);
+            this.canvas.style.width = `${rect.width}px`;
+            this.canvas.style.height = `${rect.height}px`;
+        },
+
+        drawTrajectory(trajectory, params) {
+            const width = this.canvas.width / (window.devicePixelRatio || 1);
+            const height = this.canvas.height / (window.devicePixelRatio || 1);
+            
+            this.ctx.clearRect(0, 0, width, height);
+            
+            if (trajectory.length < 2) return;
+
+            // Determinar límites
+            const maxX = Math.max(...trajectory.map(p => p.x));
+            const maxY = Math.max(...trajectory.map(p => p.y));
+            const minY = 0; // Suelo siempre es 0 visualmente
+
+            const padding = 40;
+            const scaleX = (width - 2 * padding) / maxX;
+            // Escalar Y basado en la altura máxima o la altura del tirador si el tiro es muy plano
+            const scaleY = (height - 2 * padding) / Math.max(maxY * 1.2, params.shooterHeight * 3);
+            const scale = Math.min(scaleX, scaleY);
+
+            // Transformada
+            const toCanvas = (x, y) => ({
+                x: padding + x * scale,
+                y: height - padding - y * scale // Invertir Y para coordenadas de pantalla
+            });
+
+            // 1. Dibujar Suelo y Grid
+            this.ctx.fillStyle = '#e0e0e0';
+            this.ctx.fillRect(0, height - padding, width, padding); // Suelo
+            
+            this.ctx.strokeStyle = '#e0e0e0';
+            this.ctx.lineWidth = 1;
+            this.ctx.beginPath();
+            // Líneas verticales cada 10m o 100m
+            const gridStepX = Math.pow(10, Math.floor(Math.log10(maxX / 5))); 
+            for(let x = 0; x <= maxX; x += gridStepX) {
+                const p = toCanvas(x, 0);
+                this.ctx.moveTo(p.x, 0);
+                this.ctx.lineTo(p.x, height - padding);
+                // Texto
+                this.ctx.fillStyle = '#999';
+                this.ctx.font = '10px Arial';
+                this.ctx.fillText(x + 'm', p.x - 10, height - padding + 15);
+            }
+            this.ctx.stroke();
+
+            // 2. Dibujar Tirador y Objetivo
+            const startPos = toCanvas(0, params.shooterHeight);
+            const endPos = toCanvas(trajectory[trajectory.length-1].x, params.targetHeight);
+
+            // Tirador (Punto azul)
+            this.ctx.fillStyle = '#1a237e';
+            this.ctx.beginPath();
+            this.ctx.arc(startPos.x, startPos.y, 5, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.fillText("Tirador", startPos.x, startPos.y - 10);
+
+            // Objetivo (Punto rojo)
+            this.ctx.fillStyle = '#c62828';
+            this.ctx.beginPath();
+            this.ctx.arc(endPos.x, endPos.y, 5, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.fillText("Impacto", endPos.x, endPos.y - 10);
+
+            // 3. Dibujar Trayectoria
+            this.ctx.strokeStyle = '#d32f2f'; // Rojo balístico
+            this.ctx.lineWidth = 2.5;
+            this.ctx.setLineDash([5, 5]); // Línea punteada para indicar trayectoria estimada
+            this.ctx.beginPath();
+            this.ctx.moveTo(startPos.x, startPos.y);
+            for (let i = 1; i < trajectory.length; i++) {
+                const p = toCanvas(trajectory[i].x, trajectory[i].y);
+                this.ctx.lineTo(p.x, p.y);
+            }
+            this.ctx.stroke();
+            this.ctx.setLineDash([]);
+            
+            // 4. Línea de referencia visual (Línea de visión recta)
+            this.ctx.strokeStyle = '#aaa';
+            this.ctx.lineWidth = 1;
+            this.ctx.beginPath();
+            this.ctx.moveTo(startPos.x, startPos.y);
+            this.ctx.lineTo(endPos.x, endPos.y);
+            this.ctx.stroke();
+        }
+    };
+
+    const UIController = {
+        init() {
+            // Listeners
+            const inputs = ['mass', 'velocity', 'angle', 'dragCoeff', 'area', 'density', 'shooterHeight', 'targetHeight', 'windSpeed', 'windDir'];
+            inputs.forEach(id => {
+                const el = document.getElementById(id);
+                if(el) {
+                    el.addEventListener('input', () => this.runSimulation());
+                    if(id === 'angle') {
+                        el.addEventListener('input', (e) => document.getElementById('angleValue').textContent = `${e.target.value}°`);
+                    }
+                }
+            });
+
+            document.getElementById('preset').addEventListener('change', (e) => this.handlePreset(e));
+            document.getElementById('simulateBtn').addEventListener('click', () => this.runSimulation());
+            document.getElementById('exportBtn').addEventListener('click', () => this.exportToCSV());
+            
+            // Ajustar canvas al redimensionar
+            window.addEventListener('resize', () => {
+                Renderer.init();
+                this.runSimulation();
+            });
+
+            // Inicializar
+            Renderer.init();
+            this.runSimulation();
+        },
+
+        getParams() {
+            // Validación básica
+            const getVal = (id) => parseFloat(document.getElementById(id).value) || 0;
+            
+            return {
+                m: Math.max(0.0001, getVal('mass')),
+                v0: Math.max(1, getVal('velocity')),
+                angle: getVal('angle'),
+                Cd: Math.max(0, getVal('dragCoeff')),
+                A: Math.max(0.000001, getVal('area')),
+                rho: Math.max(0.1, getVal('density')),
+                shooterHeight: Math.max(0, getVal('shooterHeight')),
+                targetHeight: Math.max(0, getVal('targetHeight')),
+                windSpeed: getVal('windSpeed'),
+                windDir: document.getElementById('windDir').value
+            };
+        },
+
+        handlePreset(e) {
+            const data = presets[e.target.value];
+            if (data) {
+                document.getElementById('mass').value = data.mass;
+                document.getElementById('dragCoeff').value = data.dragCoeff;
+                document.getElementById('area').value = data.area;
+                document.getElementById('velocity').value = data.velocity;
+                document.getElementById('angle').value = data.angle;
+                document.getElementById('angleValue').textContent = data.angle + '°';
+                this.runSimulation();
+            }
+        },
+
+        runSimulation() {
+            const params = this.getParams();
+            const result = PhysicsEngine.calculateTrajectory(params);
+            
+            Renderer.drawTrajectory(result.points, params);
+            this.displayResults(result);
+            window.lastSimulationResult = { result, params }; // Guardar para exportar
+        },
+
+        displayResults(res) {
+            document.getElementById('rangeResult').textContent = res.points[res.points.length-1].x.toFixed(2) + ' m';
+            document.getElementById('heightResult').textContent = res.maxHeight.toFixed(2) + ' m';
+            document.getElementById('timeResult').textContent = res.time.toFixed(3) + ' s';
+            
+            // Formatear velocidad y energía con color si es letal (aprox > 60m/s o > 80J para piel)
+            const vEl = document.getElementById('impactVelResult');
+            vEl.textContent = res.impactVel.toFixed(1) + ' m/s';
+            
+            const eEl = document.getElementById('energyResult');
+            eEl.textContent = res.impactEnergy.toFixed(1) + ' J';
+        },
+
+        exportToCSV() {
+            if (!window.lastSimulationResult) return alert("Primero realiza una simulación.");
+            const { result, params } = window.lastSimulationResult;
+            
+            let csv = "Tiempo(s),Pos_X(m),Pos_Y(m),Vel_X(m/s),Vel_Y(m/s)\n";
+            result.points.forEach(p => {
+                csv += `${p.t.toFixed(3)},${p.x.toFixed(4)},${p.y.toFixed(4)},${p.vx.toFixed(2)},${p.vy.toFixed(2)}\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('hidden', '');
+            a.setAttribute('href', url);
+            a.setAttribute('download', 'reporte_balistico_forense.csv');
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+    };
+
+    // Arrancar
+    UIController.init();
+</script>
+
+</body>
+</html>
