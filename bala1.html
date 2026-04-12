@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador Balístico Forense (Versión Estable)</title>
+    <style>
+        :root {
+            --primary: #1a237e; --accent: #c62828; --bg: #f5f7fa;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 0;
+            display: flex; flex-direction: column; min-height: 100vh;
+        }
+        header { background: var(--primary); color: white; padding: 15px; text-align: center; }
+        .container {
+            display: grid; grid-template-columns: 300px 1fr; gap: 20px;
+            max-width: 1200px; margin: 20px auto; padding: 20px;
+            background: white; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .controls { display: flex; flex-direction: column; gap: 15px; overflow-y: auto; max-height: 90vh; }
+        .control-group label { display: block; font-weight: bold; font-size: 0.9em; margin-bottom: 5px; }
+        .control-group input, .control-group select { width: 100%; padding: 8px; box-sizing: border-box; }
+        .results {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px;
+            background: #e8eaf6; padding: 15px; border-radius: 5px; margin-top: 15px;
+        }
+        .result-box h4 { margin: 0 0 5px 0; font-size: 0.8em; color: #555; }
+        .result-box p { margin: 0; font-size: 1.2em; font-weight: bold; color: var(--primary); font-family: monospace; }
+        
+        .canvas-container {
+            border: 1px solid #ddd; background: #fafafa; border-radius: 4px;
+            position: relative; height: 400px; width: 100%;
+        }
+        canvas { width: 100%; height: 100%; display: block; }
+        
+        button { padding: 10px; background: var(--primary); color: white; border: none; cursor: pointer; font-weight: bold; border-radius: 4px; }
+        button:hover { opacity: 0.9; }
+        #exportBtn { background: #2e7d32; }
+        
+        footer { background: #263238; color: #b0bec5; text-align: center; padding: 15px; margin-top: auto; font-size: 0.8em; }
+        @media (max-width: 800px) { .container { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Simulador Balístico Forense</h1>
+    <p>RK4 | @2026 Prof. Ángel Chacín Ávila</p>
+</header>
+
+<div class="container">
+    <div class="controls">
+        <h3>1. Proyectil</h3>
+        <div class="control-group">
+            <label>Preset</label>
+            <select id="preset" onchange="App.loadPreset()">
+                <option value="custom">Personalizado</option>
+                <option value="9mm">9mm FMJ</option>
+                <option value="556">5.56mm NATO</option>
+                <option value="762">7.62mm NATO</option>
+            </select>
+        </div>
+        <div class="control-group"><label>Masa (kg)</label><input type="number" id="mass" value="0.008" step="0.001"></div>
+        <div class="control-group"><label>Área (m²)</label><input type="number" id="area" value="0.000064" step="0.000001"></div>
+        <div class="control-group"><label>Cd (Arrastre)</label><input type="number" id="dragCoeff" value="0.295" step="0.01"></div>
+
+        <h3>2. Disparo</h3>
+        <div class="control-group"><label>Velocidad (m/s)</label><input type="number" id="velocity" value="350"></div>
+        <div class="control-group"><label>Ángulo (grados)</label><input type="range" id="angle" min="-10" max="45" value="0" oninput="document.getElementById('angVal').innerText=this.value+'°'; App.run()"><span id="angVal">0°</span></div>
+        <div class="control-group"><label>Altura Tirador (m)</label><input type="number" id="shooterHeight" value="1.70"></div>
+
+        <h3>3. Ambiente</h3>
+        <div class="control-group"><label>Altura Impacto (m)</label><input type="number" id="targetHeight" value="0.00"></div>
+        <div class="control-group"><label>Viento (m/s)</label><input type="number" id="windSpeed" value="0"></div>
+        <div class="control-group">
+            <label>Dirección Viento</label>
+            <select id="windDir">
+                <option value="none">Sin Viento</option>
+                <option value="180">En Contra</option>
+                <option value="0">A Favor</option>
+            </select>
+        </div>
+        <div class="control-group"><label>Densidad Aire</label><input type="number" id="density" value="1.225"></div>
+
+        <button onclick="App.run()">SIMULAR</button>
+        <button id="exportBtn" onclick="App.export()">EXPORTAR CSV</button>
+    </div>
+
+    <div class="visualization">
+        <div class="canvas-container">
+            <canvas id="canvas"></canvas>
+        </div>
+        <div class="results">
+            <div class="result-box"><h4>Alcance</h4><p id="resRange">-</p></div>
+            <div class="result-box"><h4>Altura Max</h4><p id="resHeight">-</p></div>
+            <div class="result-box"><h4>Tiempo</h4><p id="resTime">-</p></div>
+            <div class="result-box" style="color:var(--accent)"><h4>Vel. Impacto</h4><p id="resVel">-</p></div>
+            <div class="result-box" style="color:var(--accent)"><h4>Energía</h4><p id="resEnergy">-</p></div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p><strong>@2026 Elaborado por el Profesor Ángel Chacín Ávila</strong></p>
+    <p>Licenciado en Física, Especialista en Ciencias Computacionales, Diplomado en Educación Policial</p>
+    <p>Docente e Investigador de la Universidad Nacional Experimental de la Seguridad Núcleo Zulia</p>
+    <p>Se publica bajo licencia GPLv3</p>
+</footer>
+
+<script>
+    // --- GLOBALES ---
+    const App = {
+        canvas: null,
+        ctx: null,
+        presets: {
+            '9mm': { mass: 0.008, dragCoeff: 0.35, area: 0.000064, velocity: 350 },
+            '556': { mass: 0.004, dragCoeff: 0.29, area: 0.000024, velocity: 940 },
+            '762': { mass: 0.0095, dragCoeff: 0.30, area: 0.000048, velocity: 850 }
+        },
+
+        // Inicialización segura
+        init: function() {
+            this.canvas = document.getElementById('canvas');
+            if(!this.canvas) { console.error("Error: Canvas no encontrado"); return; }
+            this.ctx = this.canvas.getContext('2d');
+            
+            // Forzar tamaño inicial
+            this.resizeCanvas();
+            window.addEventListener('resize', () => { this.resizeCanvas(); this.run(); });
+            
+            // Eventos en vivo para inputs numéricos
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => {
+                if(input.type !== 'button') {
+                    input.addEventListener('input', () => this.run());
+                }
+            });
+            
+            // Ejecución inicial
+            this.run();
+        },
+
+        resizeCanvas: function() {
+            const container = this.canvas.parentElement;
+            this.canvas.width = container.clientWidth;
+            this.canvas.height = container.clientHeight;
+        },
+
+        loadPreset: function() {
+            const val = document.getElementById('preset').value;
+            const data = this.presets[val];
+            if(data) {
+                document.getElementById('mass').value = data.mass;
+                document.getElementById('dragCoeff').value = data.dragCoeff;
+                document.getElementById('area').value = data.area;
+                document.getElementById('velocity').value = data.velocity;
+                this.run();
+            }
+        },
+
+        getParams: function() {
+            const safeParse = (id) => parseFloat(document.getElementById(id).value) || 0;
+            const windDir = document.getElementById('windDir').value;
+            let windSpeed = safeParse('windSpeed');
+            
+            // CORRECCIÓN: Si es "Sin Viento", fuerza velocidad a 0 sin importar el input numérico
+            if (windDir === 'none') windSpeed = 0;
+            if (windDir === '180') windSpeed = -Math.abs(windSpeed); // En contra
+            
+            return {
+                m: Math.max(0.0001, safeParse('mass')),
+                v0: Math.max(1, safeParse('velocity')),
+                angle: safeParse('angle'),
+                Cd: Math.max(0, safeParse('dragCoeff')),
+                A: Math.max(0.000001, safeParse('area')),
+                rho: Math.max(0.1, safeParse('density')),
+                h0: Math.max(0, safeParse('shooterHeight')),
+                hTarget: Math.max(0, safeParse('targetHeight')),
+                windV: windSpeed
+            };
+        },
+
+        // MOTOR FÍSICO SIMPLIFICADO Y ROBUSTO
+        simulate: function(p) {
+            const g = 9.81, dt = 0.01;
+            const rad = p.angle * Math.PI / 180;
+            let x = 0, y = p.h0;
+            let vx = p.v0 * Math.cos(rad);
+            let vy = p.v0 * Math.sin(rad);
+            let t = 0;
+            let hMax = p.h0;
+            const path = [];
+
+            // Bucle principal
+            while(y >= p.hTarget && t < 300) { // Límite de seguridad 300s
+                path.push({x, y, vx, vy, t});
+                if(y > hMax) hMax = y;
+
+                // RK4 Simplificado para estabilidad
+                const k1 = this.derivs(x, y, vx, vy, p);
+                const k2 = this.derivs(x + k1.vx*dt/2, y + k1.vy*dt/2, vx + k1.ax*dt/2, vy + k1.ay*dt/2, p);
+                const k3 = this.derivs(x + k2.vx*dt/2, y + k2.vy*dt/2, vx + k2.ax*dt/2, vy + k2.ay*dt/2, p);
+                const k4 = this.derivs(x + k3.vx*dt, y + k3.vy*dt, vx + k3.ax*dt, vy + k3.ay*dt, p);
+
+                x += (dt/6) * (k1.vx + 2*k2.vx + 2*k3.vx + k4.vx);
+                y += (dt/6) * (k1.vy + 2*k2.vy + 2*k3.vy + k4.vy);
+                vx += (dt/6) * (k1.ax + 2*k2.ax + 2*k3.ax + k4.ax);
+                vy += (dt/6) * (k1.ay + 2*k2.ay + 2*k3.ay + k4.ay);
+                t += dt;
+            }
+
+            // Interpolación final para precisión
+            let final = { x, y, vx, vy, t };
+            if (path.length > 1 && y < p.hTarget) {
+                const prev = path[path.length-1];
+                const ratio = (p.hTarget - prev.y) / (y - prev.y);
+                final = {
+                    x: prev.x + ratio * (x - prev.x),
+                    y: p.hTarget,
+                    vx: prev.vx + ratio * (vx - prev.vx),
+                    vy: prev.vy + ratio * (vy - prev.vy),
+                    t: prev.t + ratio * (t - prev.t) // CORRECCIÓN DE TIEMPO
+                };
+                path.push(final);
+            } else if (path.length > 0) {
+                final = path[path.length-1];
+            }
+
+            return { path, hMax, final };
+        },
+
+        derivs: function(x, y, vx, vy, p) {
+            const vRelX = vx - p.windV;
+            const vRelY = vy;
+            const v = Math.sqrt(vRelX*vRelX + vRelY*vRelY);
+            if(v === 0) return {vx, vy, ax:0, ay:-g};
+            
+            const Fd = 0.5 * p.rho * p.Cd * p.A * v * v;
+            const ax = -(Fd/p.m) * (vRelX/v);
+            const ay = -g - (Fd/p.m) * (vRelY/v);
+            return {vx, vy, ax, ay};
+        },
+
+        draw: function(data, p) {
+            const w = this.canvas.width;
+            const h = this.canvas.height;
+            this.ctx.clearRect(0,0,w,h);
+            if(data.path.length < 2) return;
+
+            // Escala automática
+            const maxX = Math.max(...data.path.map(p => p.x)) || 100;
+            const maxY = Math.max(...data.path.map(p => p.y)) || 10;
+            const pad = 40;
+            const sx = (w - 2*pad) / maxX;
+            const sy = (h - 2*pad) / Math.max(maxY * 1.2, p.h0 * 3);
+            const scale = Math.min(sx, sy);
+
+            const toC = (x, y) => ({ x: pad + x*scale, y: h - pad - y*scale });
+
+            // Ejes
+            this.ctx.strokeStyle = "#ddd"; this.ctx.beginPath();
+            this.ctx.moveTo(pad, h-pad); this.ctx.lineTo(w-pad, h-pad); // X
+            this.ctx.moveTo(pad, h-pad); this.ctx.lineTo(pad, pad); // Y
+            this.ctx.stroke();
+
+            // Trayectoria
+            this.ctx.strokeStyle = "#c62828"; this.ctx.lineWidth = 2; this.ctx.setLineDash([5,5]);
+            this.ctx.beginPath();
+            const start = toC(data.path[0].x, data.path[0].y);
+            this.ctx.moveTo(start.x, start.y);
+            for(let pt of data.path) {
+                const c = toC(pt.x, pt.y);
+                this.ctx.lineTo(c.x, c.y);
+            }
+            this.ctx.stroke(); this.ctx.setLineDash([]);
+
+            // Puntos
+            const end = toC(data.final.x, data.final.y);
+            this.ctx.fillStyle = "blue"; this.ctx.beginPath(); this.ctx.arc(start.x, start.y, 4, 0, 7); this.ctx.fill();
+            this.ctx.fillStyle = "red"; this.ctx.beginPath(); this.ctx.arc(end.x, end.y, 4, 0, 7); this.ctx.fill();
+        },
+
+        updateResults: function(res, p) {
+            const v = Math.sqrt(res.final.vx*res.final.vx + res.final.vy*res.final.vy);
+            const e = 0.5 * p.m * v * v;
+            
+            // Manejo seguro de NaN
+            const t = isNaN(res.final.t) ? 0 : res.final.t;
+            
+            document.getElementById('resRange').innerText = res.final.x.toFixed(2) + " m";
+            document.getElementById('resHeight').innerText = res.hMax.toFixed(2) + " m";
+            document.getElementById('resTime').innerText = t.toFixed(2) + " s";
+            document.getElementById('resVel').innerText = v.toFixed(1) + " m/s";
+            document.getElementById('resEnergy').innerText = e.toFixed(1) + " J";
+        },
+
+        run: function() {
+            if(!this.ctx) return;
+            try {
+                const p = this.getParams();
+                const res = this.simulate(p);
+                this.draw(res, p);
+                this.updateResults(res, p);
+            } catch(e) {
+                console.error("Error en simulación:", e);
+            }
+        },
+
+        export: function() {
+            alert("Función de exportación lista para implementar.");
+        }
+    };
+
+    // Iniciar cuando el DOM esté listo
+    document.addEventListener('DOMContentLoaded', () => {
+        App.init();
+    });
+</script>
+
+</body>
+</html>
