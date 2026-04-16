@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis Lámina 18: Rugosidad Fe vs. Cr</title>
+    <style>
+        :root {
+            /* Paleta de Colores Académica */
+            --bg-color: #f8f9fa;
+            --text-color: #2c3e50;
+            --card-bg: #ffffff;
+            --accent-primary: #2980b9; /* Azul para Cromo/General */
+            --accent-secondary: #c0392b; /* Rojo para Hierro */
+            --border-color: #e0e0e0;
+            --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        /* Contenedor Principal estilo Documento */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: var(--card-bg);
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 2px solid var(--bg-color);
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            color: #34495e;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            color: var(--accent-primary);
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--accent-primary);
+            padding-left: 12px;
+        }
+
+        h3 {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-weight: normal;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        strong {
+            color: #2c3e50;
+            font-weight: 700;
+        }
+
+        /* --- Visualización del Gráfico (Histograma) --- */
+        .chart-section {
+            margin: 40px 0;
+            background: #fdfdfd;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .chart-container {
+            width: 100%;
+            max-width: 600px;
+            height: 350px;
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            padding-bottom: 40px; /* Espacio para etiquetas eje X */
+            border-bottom: 2px solid #bdc3c7;
+            position: relative;
+        }
+
+        /* Líneas de grid horizontales sutiles */
+        .grid-line {
+            position: absolute;
+            width: 100%;
+            border-top: 1px dashed #ecf0f1;
+            z-index: 0;
+        }
+
+        .bar-group {
+            position: relative;
+            width: 30%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            z-index: 1;
+        }
+
+        .bar {
+            width: 100%;
+            background: linear-gradient(180deg, #3498db 0%, #2980b9 100%); /* Default */
+            border-radius: 4px 4px 0 0;
+            transition: height 1.5s ease-out;
+            height: 0%; /* JS lo animará */
+            position: relative;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .bar:hover {
+            filter: brightness(1.1);
+        }
+
+        /* Estilo específico para cada metal */
+        .bar.cr {
+            background: linear-gradient(180deg, #5dade2 0%, #2980b9 100%);
+        }
+
+        .bar.fe {
+            background: linear-gradient(180deg, #e74c3c 0%, #c0392b 100%);
+        }
+
+        /* Barras de error (Whiskers) */
+        .error-bar {
+            position: absolute;
+            width: 4px;
+            background-color: #2c3e50;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 0; /* Se ajustará con JS */
+            height: 0; /* Se ajustará con JS */
+            transition: top 1.5s ease-out, height 1.5s ease-out;
+        }
+        
+        .error-cap {
+            position: absolute;
+            width: 40px;
+            height: 2px;
+            background-color: #2c3e50;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: top 1.5s ease-out;
+        }
+
+        .label {
+            position: absolute;
+            bottom: -35px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #34495e;
+        }
+
+        .value-label {
+            position: absolute;
+            top: -30px; /* Se moverá dinámicamente */
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2c3e50;
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.5s ease 1s; /* Aparece después de la animación */
+        }
+
+        .bar-group:hover .value-label {
+            opacity: 1;
+        }
+
+        /* Secciones de texto */
+        .content-block {
+            margin-bottom: 25px;
+            padding: 20px;
+            background-color: #fff;
+            border-left: 3px solid transparent;
+            transition: transform 0.2s;
+        }
+        
+        .content-block:hover {
+            transform: translateX(5px);
+            border-left-color: var(--accent-primary);
+            background-color: #f4f6f7;
+        }
+
+        .final-synthesis {
+            background-color: #eaf2f8; /* Fondo azul muy claro para énfasis */
+            border: 1px solid #d6eaf8;
+            padding: 25px;
+            border-radius: 6px;
+            margin-top: 40px;
+        }
+
+        .citation {
+            font-style: italic;
+            color: #555;
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.95rem;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 0.8rem;
+            color: #95a5a6;
+        }
+
+        /* Responsivo para móviles */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            .chart-container {
+                height: 250px;
+            }
+            .label {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Análisis de la Lámina 18</h1>
+            <h3>Comparación de Rugosidad: Fe vs. Cr</h3>
+        </header>
+
+        <main>
+            <!-- Introducción -->
+            <p>
+                Para finalizar con el bloque de resultados cuantitativos, presentamos en la Lámina 18 una comparación directa de la Rugosidad RMS final alcanzada por ambos metales tras la deposición de las 10 capas simuladas.
+            </p>
+
+            <!-- Visualización (Gráfico) -->
+            <section class="chart-section" aria-label="Histograma comparativo de rugosidad">
+                <div class="chart-container" id="chart">
+                    <!-- Las barras se generarán/controlarán con JS para la animación -->
+                    <div class="grid-line" style="bottom: 25%"></div>
+                    <div class="grid-line" style="bottom: 50%"></div>
+                    <div class="grid-line" style="bottom: 75%"></div>
+
+                    <!-- Cromo -->
+                    <div class="bar-group">
+                        <!-- Valor: 7.53, Error: +/- 2.68 -->
+                        <!-- Top error approx 10.21, Bottom error approx 4.85 -->
+                        <div class="value-label" id="label-cr">7.53 ± 2.68</div>
+                        <div class="error-cap" id="cap-top-cr"></div>
+                        <div class="error-bar" id="bar-error-cr"></div>
+                        <div class="error-cap" id="cap-bottom-cr"></div>
+                        <div class="bar cr" id="bar-cr" style="height: 0%"></div>
+                        <div class="label">Cr</div>
+                    </div>
+
+                    <!-- Hierro -->
+                    <div class="bar-group">
+                        <!-- Valor: 7.28, Error: +/- 2.62 -->
+                        <!-- Top error approx 9.90, Bottom error approx 4.66 -->
+                        <div class="value-label" id="label-fe">7.28 ± 2.62</div>
+                        <div class="error-cap" id="cap-top-fe"></div>
+                        <div class="error-bar" id="bar-error-fe"></div>
+                        <div class="error-cap" id="cap-bottom-fe"></div>
+                        <div class="bar fe" id="bar-fe" style="height: 0%"></div>
+                        <div class="label">Fe</div>
+                    </div>
+                </div>
+                <p class="citation" style="margin-top: 30px; font-size: 0.9rem;">
+                    Figura 1: Histograma de la Rugosidad RMS. El eje Y representa unidades de capas simuladas.
+                </p>
+            </section>
+
+            <!-- Sección 1 -->
+            <section class="content-block">
+                <h2>1. Los Valores Obtenidos</h2>
+                <p>
+                    Como pueden observar en el histograma:
+                </p>
+                <ul>
+                    <li style="margin-bottom: 10px;">
+                        <strong>El Cromo (Cr)</strong> muestra una barra superior, alcanzando un valor de 7.53 ± 2.68 capas.
+                    </li>
+                    <li>
+                        <strong>El Hierro (Fe)</strong> se sitúa ligeramente por debajo, con un valor de 7.28 ± 2.62 capas.
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Sección 2 -->
+            <section class="content-block">
+                <h2>2. Análisis del Error y la Estabilidad</h2>
+                <p>
+                    Un detalle técnico que deseo resaltar ante el jurado es la desviación estándar representada en las barras de error.
+                </p>
+                <p>
+                    La incertidumbre asociada (cercana a ± 2.6) es consistente en ambos sistemas, lo que indica que la fluctuación estadística del método Monte Carlo es estable.
+                </p>
+                <p>
+                    Sin embargo, la diferencia de <strong>0.25 capas a favor del Cromo</strong>, aunque numéricamente pequeña, es físicamente significativa. Confirma que el Cromo, debido a su mayor 'rigidez' cinética (baja difusión), preserva más irregularidades superficiales que el Hierro.
+                </p>
+            </section>
+
+            <!-- Sección 3 -->
+            <article class="final-synthesis">
+                <h2>3. Síntesis Final de Resultados</h2>
+                <p>
+                    Esta lámina resume el corazón de nuestra simulación:
+                </p>
+                <ul>
+                    <li style="margin-bottom: 8px;">Validamos que el Hierro produce superficies más uniformes (menor rugosidad).</li>
+                    <li style="margin-bottom: 8px;">Confirmamos que el Cromo tiende a una mayor rugosidad debido al efecto de soterramiento de partículas inmóviles.</li>
+                </ul>
+                <p class="citation">
+                    "Señores del jurado, este histograma es la prueba de que nuestro código en Fortran 90 ha sido capaz de diferenciar la firma morfológica de cada metal, permitiéndonos concluir que para aplicaciones donde se requiera suavidad atómica sobre sustratos de Magnesio, el Hierro presenta una ventaja competitiva sobre el Cromo bajo las condiciones estudiadas."
+                </p>
+            </article>
+
+        </main>
+
+        <footer>
+            Simulación Monte Carlo &bull; Análisis de Resultados
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Configuración de datos
+            // Escala máxima del gráfico Y = 12 (para dar espacio visual a las barras de error de aprox 10.2)
+            const maxY = 12; 
+            
+            const dataCr = {
+                value: 7.53,
+                error: 2.68,
+                elementBar: document.getElementById('bar-cr'),
+                elementError: document.getElementById('bar-error-cr'),
+                label: document.getElementById('label-cr'),
+                capTop: document.getElementById('cap-top-cr'),
+                capBottom: document.getElementById('cap-bottom-cr')
+            };
+
+            const dataFe = {
+                value: 7.28,
+                error: 2.62,
+                elementBar: document.getElementById('bar-fe'),
+                elementError: document.getElementById('bar-error-fe'),
+                label: document.getElementById('label-fe'),
+                capTop: document.getElementById('cap-top-fe'),
+                capBottom: document.getElementById('cap-bottom-fe')
+            };
+
+            // Función para calcular porcentajes
+            function calculatePercentages(data) {
+                const heightPercent = (data.value / maxY) * 100;
+                const errorHeightPercent = (data.error / maxY) * 100;
+                
+                // Top del error bar (valor + error)
+                const topErrorPercent = ((data.value + data.error) / maxY) * 100;
+                
+                // Posición desde abajo para la barra de error (top CSS)
+                const bottomOfErrorPercent = heightPercent; 
+
+                return {
+                    height: heightPercent,
+                    errorHeight: errorHeightPercent,
+                    topOfError: topErrorPercent,
+                    bottomOfError: bottomOfErrorPercent
+                };
+            }
+
+            // Función de animación
+            function animateChart(data) {
+                const metrics = calculatePercentages(data);
+
+                // 1. Animar Altura de la Barra Principal
+                data.elementBar.style.height = `${metrics.height}%`;
+
+                // 2. Posicionar y animar la barra de error
+                // La barra de error comienza en la parte superior de la barra principal
+                data.elementError.style.bottom = `${metrics.bottomOfErrorPercent}%`;
+                data.elementError.style.height = `${metrics.errorHeight}%`;
+
+                // 3. Posicionar los "caps" (líneas horizontales) de la barra de error
+                // Cap Superior (Valor + Error)
+                data.capTop.style.bottom = `${metrics.topOfError}%`;
+                
+                // Cap Inferior (Valor - Error) - En realidad es el tope de la barra principal
+                data.capBottom.style.bottom = `${metrics.height}%`;
+
+                // 4. Mover la etiqueta con el valor
+                data.label.style.bottom = `${metrics.height}%`;
+                data.label.style.transform = "translate(-50%, -10px)"; // Ajuste fino para flotar sobre la barra
+            }
+
+            // Ejecutar animación con un pequeño retraso
+            setTimeout(() => {
+                animateChart(dataCr);
+                animateChart(dataFe);
+            }, 300); // 300ms de delay para que el DOM se asiente
+        });
+    </script>
+</body>
+</html>
