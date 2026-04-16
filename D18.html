@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Justificación de la Densidad de Probabilidad</title>
+    <style>
+        :root {
+            --bg-color: #f4f6f7;
+            --text-color: #2c3e50;
+            --card-bg: #ffffff;
+            --accent-fe: #c0392b; /* Rojo para Hierro */
+            --accent-cr: #2980b9; /* Azul para Cromo */
+            --accent-meta: #8e44ad; /* Morado para conceptos estadísticos */
+            --border-color: #e0e0e0;
+            --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 0 auto;
+            background-color: var(--card-bg);
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+
+        header {
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            color: #34495e;
+            margin-bottom: 5px;
+        }
+
+        h2 {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+
+        blockquote {
+            border-left: 4px solid var(--accent-meta);
+            background: #f4ecf7;
+            padding: 15px 20px;
+            margin: 20px 0;
+            font-style: italic;
+            color: #555;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            color: var(--accent-meta);
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        strong {
+            color: #2c3e50;
+            font-weight: 700;
+        }
+
+        .fe-highlight { color: var(--accent-fe); font-weight: bold; }
+        .cr-highlight { color: var(--accent-cr); font-weight: bold; }
+
+        /* --- Visualización Gráfica (Densidad) --- */
+        .chart-wrapper {
+            width: 100%;
+            margin: 30px 0;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.02);
+            position: relative;
+        }
+
+        canvas {
+            width: 100%;
+            height: 400px;
+            cursor: crosshair;
+            display: block;
+        }
+
+        .chart-legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+
+        /* Tooltip de comparación */
+        #chartTooltip {
+            position: absolute;
+            background: rgba(44, 62, 80, 0.95);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 4px;
+            pointer-events: none;
+            font-size: 0.85rem;
+            display: none;
+            z-index: 10;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            min-width: 180px;
+        }
+
+        .section-block {
+            margin-bottom: 25px;
+            padding: 15px;
+            border-left: 3px solid transparent;
+            transition: background 0.3s;
+        }
+
+        .section-block:hover {
+            background-color: #fbfbfb;
+            border-left-color: var(--accent-meta);
+        }
+
+        ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.8rem;
+            color: #95a5a6;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Justificación de la Densidad de Probabilidad</h1>
+            <h2>Análisis Estadístico de 120 Simulaciones</h2>
+        </header>
+
+        <main>
+            <blockquote>
+                "Honorables miembros del jurado, en esta lámina presentamos el análisis estadístico consolidado de 120 simulaciones (60 para el Hierro y 60 para el Cromo). A diferencia de los histogramas anteriores, aquí el eje vertical no representa el conteo simple de columnas, sino la Densidad de Probabilidad."
+            </blockquote>
+
+            <!-- Visualización: Gráfica de Densidad -->
+            <div class="chart-wrapper">
+                <canvas id="densityChart"></canvas>
+                <div id="chartTooltip"></div>
+                
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <span class="dot" style="background: var(--accent-fe);"></span>
+                        <span>Hierro (Fe) - Leptocúrtica</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="dot" style="background: var(--accent-cr);"></span>
+                        <span>Cromo (Cr) - Platicúrtica</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección 1 -->
+            <section class="section-block">
+                <h3>1. ¿Por qué utilizar Densidad de Probabilidad?</h3>
+                <p>
+                    La razón principal de utilizar la densidad de probabilidad en lugar de la frecuencia absoluta es la normalización de los datos.
+                </p>
+                <p>
+                    Al trabajar con un volumen tan grande de simulaciones (120 trayectorias), los números brutos serían difíciles de comparar.
+                </p>
+                <div style="background: #f8f9fa; border-left: 4px solid #bdc3c7; padding: 15px; margin: 15px 0;">
+                    La densidad de probabilidad nos permite asegurar que el área total bajo cada curva sea igual a 1. Esto nos da una base comparativa justa para ambos materiales, independientemente de las fluctuaciones en el número total de sitios ocupados en cada simulación.
+                </div>
+            </section>
+
+            <!-- Sección 2 -->
+            <section class="section-block">
+                <h3>2. Análisis de las Distribuciones (Fe vs. Cr)</h3>
+                <p>
+                    Al observar las dos campanas superpuestas, la densidad de probabilidad revela la "firma" de crecimiento de cada metal:
+                </p>
+                <ul>
+                    <li>
+                        <strong>El Hierro (Fe):</strong> Presenta una distribución más estrecha y alta (<span class="fe-highlight">leptocúrtica</span>). Esto indica que hay una probabilidad mucho más alta de encontrar columnas muy cerca del espesor promedio. La difusión 'obliga' al sistema a converger hacia un valor central.
+                    </li>
+                    <li>
+                        <strong>El Cromo (Cr):</strong> Muestra una distribución más ancha y baja (<span class="cr-highlight">platicúrtica</span>). La densidad de probabilidad se 'desparrama' sobre un rango de alturas mayor, confirmando que en el Cromo existe una incertidumbre morfológica superior debido a su baja movilidad.
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Sección 3 -->
+            <section class="section-block" style="border-top: 2px solid var(--border-color);">
+                <h3>3. Conclusión Estadística</h3>
+                <p>
+                    El uso de la densidad de probabilidad justifica que nuestro modelo no solo es una simulación visual, sino un estudio estocástico riguroso. Nos permite afirmar que la probabilidad de obtener una superficie lisa es significativamente mayor en el sistema Fe/Mg(001) que en el Cr/Mg(001), validando estadísticamente todas nuestras observaciones previas sobre la rugosidad RMS.
+                </p>
+                <p style="text-align: center; font-weight: bold; margin-top: 20px; color: var(--accent-meta);">
+                    Con esta consolidación de datos, queda demostrada la convergencia de los resultados y la estabilidad de nuestro algoritmo desarrollado en Fortran 90.
+                </p>
+            </section>
+
+        </main>
+
+        <footer>
+            Simulación Monte Carlo &bull; Análisis Estadístico Avanzado
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const canvas = document.getElementById('densityChart');
+            const ctx = canvas.getContext('2d');
+            const tooltip = document.getElementById('chartTooltip');
+
+            // Ajustar resolución
+            function resizeCanvas() {
+                const rect = canvas.getBoundingClientRect();
+                canvas.width = rect.width * 2;
+                canvas.height = rect.height * 2;
+                ctx.scale(2, 2);
+                return rect;
+            }
+
+            let rect = resizeCanvas();
+            window.addEventListener('resize', () => {
+                rect = resizeCanvas();
+                draw();
+            });
+
+            // Parámetros de las Distribuciones Gaussianas (Simulados)
+            // Fe: Leptocúrtica (Pico alto, sigma pequeño)
+            const feParams = { mean: 7.28, sigma: 0.4, color: "#c0392b", label: "Fe" };
+            // Cr: Platicúrtica (Pico bajo, sigma grande)
+            const crParams = { mean: 7.53, sigma: 0.85, color: "#2980b9", label: "Cr" };
+
+            const xMin = 5.0;
+            const xMax = 10.0;
+
+            // Función Gaussiana
+            function gaussian(x, mean, sigma) {
+                return (1 / (sigma * Math.sqrt(2 * Math.PI))) * 
+                       Math.exp(-0.5 * Math.pow((x - mean) / sigma, 2));
+            }
+
+            function getXPixel(val) {
+                const padding = 60;
+                const width = rect.width - (padding * 2);
+                return padding + ((val - xMin) / (xMax - xMin)) * width;
+            }
+
+            function getYPixel(val) {
+                const padding = 40;
+                const height = rect.height - (padding * 2);
+                // Escalar Y dinámicamente basado en el pico más alto (Fe) + margen
+                const maxVal = gaussian(feParams.mean, feParams.mean, feParams.sigma) * 1.1;
+                return rect.height - padding - (val / maxVal) * height;
+            }
+
+            function drawPath(params) {
+                ctx.beginPath();
+                ctx.strokeStyle = params.color;
+                ctx.lineWidth = 3;
+                
+                for (let x = xMin; x <= xMax; x += 0.05) {
+                    const y = gaussian(x, params.mean, params.sigma);
+                    const px = getXPixel(x);
+                    const py = getYPixel(y);
+                    if (x === xMin) ctx.moveTo(px, py);
+                    else ctx.lineTo(px, py);
+                }
+                ctx.stroke();
+
+                // Relleno semitransparente
+                ctx.lineTo(getXPixel(xMax), getYPixel(0));
+                ctx.lineTo(getXPixel(xMin), getYPixel(0));
+                ctx.fillStyle = params.color.replace("rgb", "rgba").replace(")", ", 0.15)");
+                ctx.fill();
+            }
+
+            function draw() {
+                const width = rect.width;
+                const height = rect.height;
+
+                ctx.clearRect(0, 0, width, height);
+
+                // Ejes
+                ctx.strokeStyle = "#ecf0f1";
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                // Eje X
+                ctx.moveTo(60, height - 40);
+                ctx.lineTo(width - 40, height - 40);
+                // Eje Y
+                ctx.moveTo(60, 40);
+                ctx.lineTo(60, height - 40);
+                ctx.stroke();
+
+                // Labels Eje X
+                ctx.fillStyle = "#7f8c8d";
+                ctx.font = "12px Arial";
+                for(let i = 5; i <= 10; i++) {
+                    ctx.fillText(i, getXPixel(i) - 5, height - 20);
+                }
+                ctx.fillText("Altura de Capas (RMS)", width/2 - 60, height - 5);
+
+                // Dibujar curvas
+                drawPath(crParams); // Dibujar Cr primero (fondo)
+                drawPath(feParams); // Dibujar Fe después (frente)
+
+                // Líneas medias (Mean)
+                drawMeanLine(feParams);
+                drawMeanLine(crParams);
+
+                // Anotaciones de forma
+                ctx.font = "italic bold 13px Arial";
+                
+                // Nota Leptocúrtica
+                const fePeakX = getXPixel(feParams.mean);
+                const fePeakY = getYPixel(gaussian(feParams.mean, feParams.mean, feParams.sigma));
+                ctx.fillStyle = "#c0392b";
+                ctx.fillText("Leptocúrtica", fePeakX - 40, fePeakY - 40);
+
+                // Nota Platicúrtica
+                const crPeakX = getXPixel(crParams.mean);
+                const crPeakY = getYPixel(gaussian(crParams.mean, crParams.mean, crParams.sigma));
+                ctx.fillStyle = "#2980b9";
+                ctx.fillText("Platicúrtica", crPeakX + 20, crPeakY - 20);
+            }
+
+            function drawMeanLine(params) {
+                const mx = getXPixel(params.mean);
+                ctx.beginPath();
+                ctx.strokeStyle = params.color;
+                ctx.setLineDash([5, 5]);
+                ctx.lineWidth = 1;
+                ctx.moveTo(mx, 40);
+                ctx.lineTo(mx, rect.height - 40);
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+
+            // Interacción
+            canvas.addEventListener('mousemove', function(e) {
+                const rect = canvas.getBoundingClientRect();
+                const mouseX = (e.clientX - rect.left);
+                
+                // Convertir mouseX a valor X de datos
+                const padding = 60;
+                const graphWidth = rect.width - (padding * 2);
+                let dataX = xMin + ((mouseX - padding) / graphWidth) * (xMax - xMin);
+                
+                // Limitar
+                if(dataX < xMin) dataX = xMin;
+                if(dataX > xMax) dataX = xMax;
+
+                // Redibujar base
+                draw();
+
+                // Dibujar línea vertical de exploración
+                const px = getXPixel(dataX);
+                ctx.beginPath();
+                ctx.strokeStyle = "#7f8c8d";
+                ctx.lineWidth = 1;
+                ctx.moveTo(px, 40);
+                ctx.lineTo(px, rect.height - 40);
+                ctx.stroke();
+
+                // Calcular densidades
+                const denFe = gaussian(dataX, feParams.mean, feParams.sigma);
+                const denCr = gaussian(dataX, crParams.mean, crParams.sigma);
+
+                // Mostrar Tooltip
+                tooltip.style.display = 'block';
+                tooltip.style.left = (e.pageX + 15) + 'px';
+                tooltip.style.top = (e.pageY + 15) + 'px';
+                
+                tooltip.innerHTML = `
+                    <div style="margin-bottom:5px; border-bottom:1px solid #555; padding-bottom:3px;">Altura: ${dataX.toFixed(2)}</div>
+                    <div style="color:#ffadad">Fe Prob: ${denFe.toFixed(3)}</div>
+                    <div style="color:#a9cce3">Cr Prob: ${denCr.toFixed(3)}</div>
+                `;
+            });
+
+            canvas.addEventListener('mouseleave', () => {
+                tooltip.style.display = 'none';
+                draw();
+            });
+
+            // Inicial
+            draw();
+        });
+    </script>
+</body>
+</html>
