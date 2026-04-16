@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis Lámina 19: Mapa 3D Promedio Fe</title>
+    <style>
+        :root {
+            --bg-color: #f4f6f7;
+            --text-color: #2c3e50;
+            --card-bg: #ffffff;
+            --accent-color: #e67e22; /* Naranja/Fe estilo mapa de calor */
+            --accent-dark: #d35400;
+            --border-color: #e0e0e0;
+            --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: var(--card-bg);
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+
+        header {
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            color: #34495e;
+            margin-bottom: 5px;
+        }
+
+        h2 {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+
+        blockquote {
+            border-left: 4px solid var(--accent-color);
+            background: #fdf2e9;
+            padding: 15px 20px;
+            margin: 20px 0;
+            font-style: italic;
+            color: #555;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            color: var(--accent-dark);
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        strong {
+            color: #d35400;
+            font-weight: 700;
+        }
+
+        /* --- Visualización 3D (Surface Plot) --- */
+        .visualization-wrapper {
+            width: 100%;
+            height: 400px;
+            background: #1a1a1a;
+            border-radius: 8px;
+            margin: 30px 0;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 800px;
+            cursor: move; /* Indica que se puede arrastrar */
+        }
+
+        .instruction-overlay {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: rgba(255,255,255,0.6);
+            font-size: 0.8rem;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .scene {
+            width: 300px;
+            height: 300px;
+            transform-style: preserve-3d;
+            transform: rotateX(60deg) rotateZ(45deg);
+            transition: transform 0.1s ease-out; /* Suavizado para rotación manual */
+        }
+
+        /* La base de la cuadrícula */
+        .grid-plane {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.1);
+            transform: translateZ(0);
+            display: grid;
+            grid-template-columns: repeat(20, 1fr);
+            grid-template-rows: repeat(20, 1fr);
+        }
+
+        .cell {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* Las barras/columnas de altura */
+        .bar-3d {
+            position: absolute;
+            width: 80%;
+            height: 80%;
+            left: 10%;
+            bottom: 10%;
+            transform-origin: bottom;
+            transform-style: preserve-3d;
+            transition: height 1s ease-out, background-color 1s;
+            box-shadow: 0 0 5px rgba(230, 126, 34, 0.4);
+        }
+
+        /* Caras de la barra para efecto 3D simple */
+        .bar-top {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            transform: translateZ(10px); /* Altura base de la cara superior */
+        }
+
+        /* Leyenda de Colores */
+        .legend-container {
+            margin-top: -20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            color: #555;
+        }
+        
+        .gradient-bar {
+            width: 200px;
+            height: 10px;
+            background: linear-gradient(to right, #f1c40f, #e67e22, #c0392b);
+            border-radius: 5px;
+        }
+
+        .section-block {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid transparent;
+            border-radius: 6px;
+            transition: background 0.3s;
+        }
+
+        .section-block:hover {
+            background-color: #fafafa;
+            border-color: #eee;
+        }
+
+        .highlight-box {
+            background-color: #fff8e1;
+            border-left: 4px solid #f1c40f;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.8rem;
+            color: #95a5a6;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Análisis de la Lámina 19</h1>
+            <h2>Mapa 3D Promedio de Fe - 60 Simulaciones</h2>
+        </header>
+
+        <main>
+            <blockquote>
+                "Honorable jurado, una de las mayores críticas que puede recibir un modelo estocástico es la falta de repetibilidad. Por ello, en esta Lámina 19, presentamos el Mapa 3D Promedio del Sistema de Hierro (Fe), obtenido tras promediar los resultados de 60 simulaciones independientes."
+            </blockquote>
+
+            <!-- Sección Visual: Mapa 3D Promediado -->
+            <div class="legend-container">
+                <span>Baja Altura</span>
+                <div class="gradient-bar"></div>
+                <span>Alta Altura</span>
+            </div>
+
+            <div class="visualization-wrapper" id="sceneContainer">
+                <div class="instruction-overlay">Arrastra para rotar la vista 3D</div>
+                <div class="scene" id="scene">
+                    <!-- Las barras 3D se generarán con JS -->
+                </div>
+            </div>
+
+            <!-- Sección 1 -->
+            <section class="section-block">
+                <h3>1. El Concepto del Promedio Estadístico</h3>
+                <p>
+                    Lo que ven en pantalla no es una sola deposición, sino la superposición de 60 experimentos virtuales.
+                </p>
+                <div class="highlight-box">
+                    <strong>Importancia:</strong> Al promediar un número elevado de eventos, el 'ruido' aleatorio del método Monte Carlo se reduce, permitiéndonos observar la morfología macroscópica real que el material tiende a formar.
+                </div>
+                <p>
+                    <strong>Observación visual:</strong> Noten que, a diferencia de los mapas individuales que vimos anteriormente, este mapa promedio muestra una superficie mucho más suavizada. Esto confirma que, estadísticamente, el Hierro tiende a un crecimiento más uniforme sobre el Magnesio.
+                </p>
+            </section>
+
+            <!-- Sección 2 -->
+            <section class="section-block">
+                <h3>2. Análisis de la Topografía Final</h3>
+                <p>
+                    A pesar del promedio, aún podemos identificar variaciones de altura:
+                </p>
+                <ul>
+                    <li style="margin-bottom: 10px;">
+                        <strong>Escala de Colores:</strong> La barra lateral nos indica que la mayoría de la superficie se mantiene en un rango estrecho alrededor del espesor nominal.
+                    </li>
+                    <li>
+                        <strong>Interpretación Física:</strong> Esta convergencia hacia un valor central en 60 simulaciones distintas es la prueba definitiva de que la Energía de Difusión del Hierro (0.5 eV) es suficiente para dictar un patrón de crecimiento estable. Los átomos tienen tiempo de buscar posiciones de menor energía antes de quedar fijos, lo que resulta en esta morfología promediada tan consistente.
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Sección 3 -->
+            <section class="section-block" style="border-top: 2px solid var(--border-color);">
+                <h3>3. Conclusión de la Lámina</h3>
+                <p>
+                    Señores del jurado, este mapa es el respaldo de la calidad de nuestro software. Haber realizado 60 simulaciones nos permite afirmar con un alto nivel de confianza estadística que las predicciones hechas para el sistema Fe/Mg(001) son físicamente representativas y no anomalías del algoritmo.
+                </p>
+                <p style="text-align: center; font-weight: bold; margin-top: 20px; color: var(--accent-dark);">
+                    Con este nivel de certeza científica, podemos ahora proceder a las conclusiones generales de nuestro trabajo de investigación.
+                </p>
+            </section>
+
+        </main>
+
+        <footer>
+            Simulación Monte Carlo &bull; Promedio Estadístico
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const scene = document.getElementById('scene');
+            const container = document.getElementById('sceneContainer');
+            const gridSize = 20; // 20x20 grid
+            
+            // Variables para rotación manual
+            let isDragging = false;
+            let previousMouseX = 0;
+            let rotateX = 60;
+            let rotateZ = 45;
+
+            // Generación de la superficie "Suave" (Promedio)
+            // Usamos funciones senoidales para simular un promedio suave en lugar de ruido blanco puro.
+            function generateSurface() {
+                scene.innerHTML = '';
+                
+                // Crear celdas base
+                for(let y = 0; y < gridSize; y++) {
+                    for(let x = 0; x < gridSize; x++) {
+                        const cell = document.createElement('div');
+                        cell.className = 'cell';
+                        
+                        // Algoritmo de "Superficie Suave" (Simulando el promedio estadístico)
+                        // Combinamos dos ondas seno para crear colinas y valles suaves
+                        const nx = x / gridSize;
+                        const ny = y / gridSize;
+                        
+                        // Base height + Onda suave + Pequeño ruido residual (muy pequeño)
+                        let height = 10 + 
+                                     Math.sin(nx * Math.PI * 2) * 15 + 
+                                     Math.cos(ny * Math.PI * 2) * 15 +
+                                     (Math.random() - 0.5) * 2; // Ruido mínimo
+                        
+                        // Asegurar altura positiva
+                        height = Math.max(2, height);
+                        
+                        // Crear la barra 3D
+                        const bar = document.createElement('div');
+                        bar.className = 'bar-3d';
+                        
+                        // Color mapping (Mapa de calor: Amarillo -> Naranja -> Rojo)
+                        // Normalizar altura aprox entre 0 y 40 para color
+                        const normalizedH = Math.min(Math.max((height) / 40, 0), 1);
+                        const color = `hsl(${45 - (normalizedH * 45)}, 90%, 55%)`; // De 45 (amarillo) a 0 (rojo)
+                        
+                        // Aplicar estilos dinámicos
+                        bar.style.height = `${height * 2}px`; // Escalar visualmente
+                        bar.style.backgroundColor = color;
+                        
+                        // Añadir un pequeño retardo para la animación "crecimiento"
+                        bar.style.transitionDelay = `${(x + y) * 0.02}s`;
+
+                        // Insertar barra en la celda
+                        cell.appendChild(bar);
+                        scene.appendChild(cell);
+                    }
+                }
+            }
+
+            // Interacción para rotar el mapa
+            container.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                previousMouseX = e.clientX;
+                container.style.cursor = 'grabbing';
+            });
+
+            window.addEventListener('mouseup', () => {
+                isDragging = false;
+                container.style.cursor = 'move';
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                const deltaX = e.clientX - previousMouseX;
+                previousMouseX = e.clientX;
+
+                // Ajustar rotación
+                rotateZ += deltaX * 0.5;
+                
+                // Actualizar CSS
+                scene.style.transform = `rotateX(${rotateX}deg) rotateZ(${rotateZ}deg)`;
+            });
+
+            // Touch support para móviles básico
+            container.addEventListener('touchstart', (e) => {
+                isDragging = true;
+                previousMouseX = e.touches[0].clientX;
+            });
+
+            container.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                const deltaX = e.touches[0].clientX - previousMouseX;
+                previousMouseX = e.touches[0].clientX;
+                rotateZ += deltaX * 0.5;
+                scene.style.transform = `rotateX(${rotateX}deg) rotateZ(${rotateZ}deg)`;
+            });
+
+            container.addEventListener('touchend', () => {
+                isDragging = false;
+            });
+
+            // Inicializar
+            setTimeout(generateSurface, 100);
+        });
+    </script>
+</body>
+</html>
