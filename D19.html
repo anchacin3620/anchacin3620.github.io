@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis Lámina 24: Efecto Balístico</title>
+    <style>
+        :root {
+            --bg-color: #f4f6f7;
+            --text-color: #2c3e50;
+            --card-bg: #ffffff;
+            /* Paleta Cromo/Metálica Oscura */
+            --accent-color: #5d6d7e; 
+            --accent-dark: #2c3e50;
+            --border-color: #d5dbdb;
+            --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: var(--card-bg);
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+
+        header {
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            color: #34495e;
+            margin-bottom: 5px;
+        }
+
+        h2 {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+
+        blockquote {
+            border-left: 4px solid var(--accent-color);
+            background: #eaeded;
+            padding: 15px 20px;
+            margin: 20px 0;
+            font-style: italic;
+            color: #555;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            color: var(--accent-dark);
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        strong {
+            color: #2c3e50;
+            font-weight: 700;
+        }
+
+        /* --- Visualización Simulación Balística --- */
+        .simulation-wrapper {
+            width: 100%;
+            background: #1a1a1d;
+            border-radius: 8px;
+            margin: 30px 0;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #444;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 400px;
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            display: flex;
+            gap: 10px;
+            background: rgba(0,0,0,0.6);
+            padding: 8px;
+            border-radius: 4px;
+        }
+
+        button {
+            background: #ecf0f1;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #bdc3c7;
+        }
+
+        .overlay-label {
+            position: absolute;
+            color: rgba(255,255,255,0.4);
+            font-size: 0.9rem;
+            pointer-events: none;
+        }
+
+        .section-block {
+            margin-bottom: 25px;
+            padding: 15px;
+            border-left: 3px solid transparent;
+            transition: background 0.3s;
+        }
+
+        .section-block:hover {
+            background-color: #fbfbfb;
+            border-left-color: var(--accent-color);
+        }
+
+        .highlight-concept {
+            background-color: #f7f9f9;
+            border: 1px solid #d6dbdf;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.8rem;
+            color: #95a5a6;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Análisis Lámina 24</h1>
+            <h2>Efecto Balístico</h2>
+        </header>
+
+        <main>
+            <blockquote>
+                "Honorable jurado, para comprender por qué el Cromo presenta esa topografía tan accidentada, debemos analizar la física del Efecto Balístico, que es el mecanismo dominante cuando la difusión superficial es despreciable."
+            </blockquote>
+
+            <!-- Visualización: Simulación Balística -->
+            <div class="simulation-wrapper">
+                <canvas id="simCanvas"></canvas>
+                
+                <div class="overlay-label" style="top: 10px; left: 10px;">
+                    Simulación: Deposición sin difusión (Cr)<br>
+                    <small>Átomos caen y se pegan al primer contacto</small>
+                </div>
+
+                <div class="overlay-label" id="shadowLabel" style="display:none; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #e74c3c; font-weight: bold;">
+                    ZONA DE SOMBRA
+                </div>
+
+                <div class="controls">
+                    <button id="btnPause">Pausar</button>
+                    <button id="btnReset">Reiniciar</button>
+                    <button id="btnSpeed">x1 Velocidad</button>
+                </div>
+            </div>
+
+            <!-- Sección 1 -->
+            <section class="section-block">
+                <h3>1. El Mecanismo de Soterramiento</h3>
+                <p>
+                    Como pueden observar en el esquema (simulación) de la lámina, el crecimiento balístico ocurre cuando los átomos incidentes (representados por las esferas que caen) se adhieren permanentemente en el primer punto de contacto con la superficie o con otros átomos ya depositados.
+                </p>
+                <div class="highlight-concept">
+                    <strong>Física del proceso:</strong> En materiales como el Cromo, con una energía de difusión tan baja (0.01 eV), el átomo no tiene tiempo ni energía para 'rodar' hacia un valle o un sitio de mayor coordinación. Simplemente queda soterrado por la siguiente partícula que llega del plasma.
+                </div>
+            </section>
+
+            <!-- Sección 2 -->
+            <section class="section-block">
+                <h3>2. Formación de Columnas y Sombras</h3>
+                <p>
+                    Un concepto clave que ilustra esta lámina es el efecto de sombra atómica:
+                </p>
+                <ul>
+                    <li>
+                        Las partículas que llegan tienden a acumularse en las zonas más altas (los picos), ya que estas 'protegen' o ensombrecen las zonas bajas.
+                    </li>
+                    <li>
+                        <strong>Resultado:</strong> Esto genera un crecimiento vertical desproporcionado. Los picos crecen más rápido que los valles, dando lugar a la estructura columnar que identificamos en los mapas 3D y de contorno del Cromo.
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Sección 3 -->
+            <section class="section-block" style="border-top: 2px solid var(--border-color);">
+                <h3>3. Conclusión de la Lámina</h3>
+                <p>
+                    Este efecto balístico es el responsable directo de la alta rugosidad. Al no haber un mecanismo de suavizado (difusión), la superficie 'hereda' y amplifica el ruido estadístico de la deposición.
+                </p>
+                <p style="text-align: center; font-weight: bold; margin-top: 20px; color: var(--accent-dark);">
+                    Señores del jurado, esta lámina demuestra que nuestro modelo no solo arroja números, sino que reproduce fielmente los fenómenos físicos de la ciencia de materiales: el predominio del flujo balístico sobre la termodinámica en condiciones de baja movilidad atómica.
+                </p>
+            </section>
+
+        </main>
+
+        <footer>
+            Simulación Monte Carlo &bull; Mecánica de Deposición Balística
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const canvas = document.getElementById('simCanvas');
+            const ctx = canvas.getContext('2d');
+            const btnPause = document.getElementById('btnPause');
+            const btnReset = document.getElementById('btnReset');
+            const btnSpeed = document.getElementById('btnSpeed');
+            
+            // Ajustar tamaño del canvas
+            canvas.width = canvas.parentElement.offsetWidth;
+            canvas.height = 400;
+
+            // Configuración de Simulación
+            const particleRadius = 4;
+            let particles = []; // Partículas cayendo
+            let settledParticles = []; // Partículas fijas en el suelo
+            let isPaused = false;
+            let speedMultiplier = 1;
+            let animationId;
+
+            // Clase Partícula
+            class Particle {
+                constructor(x, y, isSettled = false) {
+                    this.x = x;
+                    this.y = y;
+                    this.r = particleRadius;
+                    this.isSettled = isSettled;
+                    this.color = `hsl(210, ${20 + Math.random()*10}%, ${50 + Math.random()*10}%)`; // Gris azulado metálico
+                }
+
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+                    ctx.strokeStyle = "rgba(255,255,255,0.3)";
+                    ctx.stroke();
+                }
+
+                update() {
+                    if (this.isSettled) return;
+
+                    this.y += 2 * speedMultiplier; // Velocidad de caída
+
+                    // Colisión con el suelo
+                    if (this.y + this.r >= canvas.height) {
+                        this.y = canvas.height - this.r;
+                        this.settle();
+                        return;
+                    }
+
+                    // Colisión con otras partículas (Modelo de Pegajoso / Sticky)
+                    // Chequeamos contra todas las partículas asentadas
+                    // Para optimizar, en una simulación real se usaría un grid espacial, 
+                    // pero con ~1000 partículas es viable O(N^2) simple.
+                    for (let other of settledParticles) {
+                        const dx = this.x - other.x;
+                        const dy = this.y - other.y;
+                        const distance = Math.sqrt(dx*dx + dy*dy);
+
+                        if (distance < this.r + other.r) {
+                            // Pegarse inmediatamente (sin rodar) -> Efecto Balístico Puro
+                            this.y = other.y - (this.r + other.r) + 1; // Corrección visual simple
+                            // Ajuste fino para evitar superposiciones
+                            // En un modelo riguroso resolveríamos el vector de colisión,
+                            // aquí simplemente paramos el movimiento vertical para visualizar el "apilamiento"
+                            this.settle();
+                            break; 
+                        }
+                    }
+                }
+
+                settle() {
+                    this.isSettled = true;
+                    settledParticles.push(this);
+                    // Remover de array de cayendo (opcional, filtrado en loop principal)
+                }
+            }
+
+            // Loop de Animación
+            function loop() {
+                if (!isPaused) {
+                    // Limpiar con efecto trail muy suave o completo
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                    // Dibujar fondo del sustrato
+                    ctx.fillStyle = "#2c3e50";
+                    ctx.fillRect(0, canvas.height - 5, canvas.width, 5);
+
+                    // Generar nuevas partículas aleatoriamente
+                    if (Math.random() < 0.3 * speedMultiplier) {
+                        const spawnX = Math.random() * canvas.width;
+                        particles.push(new Particle(spawnX, -10));
+                    }
+
+                    // Actualizar y dibujar partículas
+                    // Dibujamos las asentadas primero (fondo)
+                    settledParticles.forEach(p => p.draw());
+
+                    // Actualizar las cayentes
+                    for (let i = particles.length - 1; i >= 0; i--) {
+                        let p = particles[i];
+                        p.update();
+                        if (p.isSettled) {
+                            // Se movió al array settledParticles en settle(), la removemos de aquí
+                            particles.splice(i, 1);
+                        } else {
+                            p.draw();
+                        }
+                    }
+                    
+                    // Detener simulación si se llena demasiado
+                    if (settledParticles.length > 1200) {
+                        isPaused = true;
+                        btnPause.textContent = "Reanudar (Lleno)";
+                    }
+                }
+
+                animationId = requestAnimationFrame(loop);
+            }
+
+            // Controles
+            btnPause.addEventListener('click', () => {
+                isPaused = !isPaused;
+                btnPause.textContent = isPaused ? "Reanudar" : "Pausar";
+            });
+
+            btnReset.addEventListener('click', () => {
+                particles = [];
+                settledParticles = [];
+                isPaused = false;
+                btnPause.textContent = "Pausar";
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            });
+
+            btnSpeed.addEventListener('click', () => {
+                if (speedMultiplier === 1) {
+                    speedMultiplier = 3;
+                    btnSpeed.textContent = "x3 Velocidad";
+                } else if (speedMultiplier === 3) {
+                    speedMultiplier = 5;
+                    btnSpeed.textContent = "x5 Velocidad";
+                } else {
+                    speedMultiplier = 1;
+                    btnSpeed.textContent = "x1 Velocidad";
+                }
+            });
+
+            // Iniciar
+            loop();
+        });
+    </script>
+</body>
+</html>
