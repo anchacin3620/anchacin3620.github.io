@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis Lámina 21: Mapa 3D Promedio Cr</title>
+    <style>
+        :root {
+            --bg-color: #f0f2f5;
+            --text-color: #2c3e50;
+            --card-bg: #ffffff;
+            /* Paleta Cromo/Acero */
+            --accent-color: #34495e; /* Azul oscuro */
+            --accent-light: #95a5a6; /* Gris plata */
+            --accent-highlight: #7f8c8d;
+            --border-color: #dcdde1;
+            --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: var(--card-bg);
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+
+        header {
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        h2 {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+
+        blockquote {
+            border-left: 4px solid var(--accent-color);
+            background: #ecf0f1;
+            padding: 15px 20px;
+            margin: 20px 0;
+            font-style: italic;
+            color: #555;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            color: var(--accent-color);
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        strong {
+            color: #2c3e50;
+            font-weight: 700;
+        }
+
+        /* --- Visualización 3D (Superficie "Picuda") --- */
+        .visualization-wrapper {
+            width: 100%;
+            height: 450px; /* Un poco más alto para ver las columnas */
+            background: #1a1a1d; /* Fondo oscuro para contraste metálico */
+            border-radius: 8px;
+            margin: 30px 0;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 900px;
+            cursor: move;
+        }
+
+        .instruction-overlay {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: rgba(255,255,255,0.5);
+            font-size: 0.8rem;
+            pointer-events: none;
+            z-index: 10;
+            background: rgba(0,0,0,0.5);
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .scene {
+            width: 350px;
+            height: 350px;
+            transform-style: preserve-3d;
+            transform: rotateX(65deg) rotateZ(45deg);
+            transition: transform 0.1s ease-out;
+        }
+
+        .grid-plane {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.05);
+            transform: translateZ(0);
+            display: grid;
+            grid-template-columns: repeat(25, 1fr); /* Mayor resolución para picos finos */
+            grid-template-rows: repeat(25, 1fr);
+        }
+
+        .cell {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border: 1px solid rgba(255,255,255,0.02);
+        }
+
+        /* Barras Columnares */
+        .bar-3d {
+            position: absolute;
+            width: 90%;
+            height: 90%;
+            left: 5%;
+            bottom: 5%;
+            transform-origin: bottom;
+            transform-style: preserve-3d;
+            transition: height 1s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 1s;
+            box-shadow: 0 0 2px rgba(255,255,255,0.1);
+        }
+
+        /* Leyenda */
+        .legend-container {
+            margin-top: -20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            color: #555;
+        }
+        
+        .gradient-bar {
+            width: 200px;
+            height: 10px;
+            background: linear-gradient(to right, #2c3e50, #7f8c8d, #bdc3c7);
+            border-radius: 5px;
+        }
+
+        .section-block {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid transparent;
+            border-radius: 6px;
+            transition: background 0.3s;
+        }
+
+        .section-block:hover {
+            background-color: #fcfcfc;
+            border-color: #eee;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+
+        .physics-note {
+            background-color: #e8f6f3; /* Un tono muy suave verdoso/grisáceo */
+            border-left: 4px solid var(--accent-highlight);
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.8rem;
+            color: #95a5a6;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Análisis de la Lámina 21</h1>
+            <h2>Mapa 3D Promedio de Cr - 60 Simulaciones</h2>
+        </header>
+
+        <main>
+            <blockquote>
+                "Siguiendo con el rigor estadístico de nuestra investigación, presentamos en la Lámina 21 el mapa topográfico promediado para el sistema de Cromo. Al igual que con el Hierro, este gráfico es el resultado de consolidar 60 ejecuciones del código, lo que nos permite extraer la tendencia morfológica real de este metal."
+            </blockquote>
+
+            <!-- Visualización: Mapa 3D "Picudo" -->
+            <div class="legend-container">
+                <span>Baja Altura</span>
+                <div class="gradient-bar"></div>
+                <span>Alta Altura (Crestas)</span>
+            </div>
+
+            <div class="visualization-wrapper" id="sceneContainer">
+                <div class="instruction-overlay">Arrastra para rotar | Vista Columnar</div>
+                <div class="scene" id="scene">
+                    <!-- Barras generadas por JS -->
+                </div>
+            </div>
+
+            <!-- Sección 1 -->
+            <section class="section-block">
+                <h3>1. Morfología "Rígida" y Acumulativa</h3>
+                <p>
+                    A diferencia del mapa que vimos anteriormente para el Hierro, observen que la superficie del Cromo presenta una apariencia mucho más irregular y 'picuda', incluso después de haber sido promediada 60 veces.
+                </p>
+                <div class="physics-note">
+                    <strong>Física del proceso:</strong> Esto es una prueba directa de la baja energía de difusión (E_d &approx; 0.01 eV) del Cromo. Al no existir un movimiento lateral significativo de los átomos, el promedio no logra 'suavizar' la superficie tanto como en el caso del Fe. Los defectos y las columnas se mantienen en posiciones muy similares en todas las simulaciones debido al anclaje casi inmediato del átomo al impactar.
+                </div>
+            </section>
+
+            <!-- Sección 2 -->
+            <section class="section-block">
+                <h3>2. Comparativa de Dispersión</h3>
+                <p>
+                    Noten la escala de colores y las crestas en el mapa. Mientras que el Hierro tendía a formar mesetas conectadas, el Cromo muestra una tendencia a formar agregados verticales.
+                </p>
+                <p>
+                    <strong>Interpretación:</strong> Esto confirma que el Cromo crece bajo un régimen de soterramiento balístico severo. Cada átomo que llega 'sepulta' al anterior antes de que este pueda buscar una posición de equilibrio, resultando en esta topografía accidentada que vemos en pantalla.
+                </p>
+            </section>
+
+            <!-- Sección 3 -->
+            <section class="section-block" style="border-top: 2px solid var(--border-color);">
+                <h3>3. Conclusión de la Lámina</h3>
+                <p>
+                    Señores del jurado, este mapa promedio es la validación visual de por qué la rugosidad del Cromo (7.53) es superior a la del Hierro. A pesar del tratamiento estadístico de 60 muestras, la naturaleza del Cr lo obliga a mantener una estructura fragmentada.
+                </p>
+                <p style="text-align: center; font-weight: bold; margin-top: 20px; color: var(--accent-color);">
+                    Con este análisis comparativo entre los mapas promedio de Fe y Cr, queda demostrado que nuestro modelo KMC captura fielmente cómo la cinética atómica define la calidad final de la película delgada.
+                </p>
+            </section>
+
+        </main>
+
+        <footer>
+            Simulación Monte Carlo &bull; Análisis de Regimen Balístico
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const scene = document.getElementById('scene');
+            const container = document.getElementById('sceneContainer');
+            const gridSize = 25; // Resolución ligeramente mayor para definición de picos
+            
+            // Variables para rotación manual
+            let isDragging = false;
+            let previousMouseX = 0;
+            let rotateX = 65; // Ángulo un poco más vertical para ver mejor las columnas
+            let rotateZ = 45;
+
+            // Generación de Superficie "Picuda" (Cromo)
+            // Simula agregación de columnas y valles profundos (Soterramiento)
+            function generateChromiumSurface() {
+                scene.innerHTML = '';
+                
+                // Crear semillas de picos (Centros de columnas)
+                // Usamos menos centros con mayor intensidad para simular "islas/columnas"
+                const numPeaks = 15; 
+                const peaks = [];
+                for(let i=0; i<numPeaks; i++) {
+                    peaks.push({
+                        x: Math.random() * gridSize,
+                        y: Math.random() * gridSize,
+                        strength: 20 + Math.random() * 30, // Altura de la columna
+                        width: 2 + Math.random() * 1.5      // Ancho estrecho (picudo)
+                    });
+                }
+                
+                for(let y = 0; y < gridSize; y++) {
+                    for(let x = 0; x < gridSize; x++) {
+                        const cell = document.createElement('div');
+                        cell.className = 'cell';
+                        
+                        // Calcular altura basada en suma de gaussianas (picos)
+                        let totalHeight = 0;
+                        
+                        peaks.forEach(p => {
+                            const dist = Math.sqrt(Math.pow(x - p.x, 2) + Math.pow(y - p.y, 2));
+                            // Contribución del pico (función campana estrecha)
+                            totalHeight += p.strength * Math.exp(-(dist * dist) / (2 * p.width * p.width));
+                        });
+
+                        // Añadir ruido base pequeño ( rugosidad de fondo )
+                        totalHeight += Math.random() * 2;
+
+                        // Asegurar altura mínima para que se vea la base
+                        totalHeight = Math.max(1, totalHeight);
+
+                        // Crear la barra 3D
+                        const bar = document.createElement('div');
+                        bar.className = 'bar-3d';
+                        
+                        // Color metálico (Gris/Azul Acero)
+                        // Más alto = más brillante (simulando reflexión metálica en la punta)
+                        const lightness = 30 + Math.min(totalHeight * 1.5, 50); 
+                        bar.style.backgroundColor = `hsl(210, 20%, ${lightness}%)`;
+                        
+                        // Altura visual escalada
+                        bar.style.height = `${totalHeight * 2}px`;
+                        
+                        // Retraso de animación escalonado
+                        bar.style.transitionDelay = `${(x + y) * 0.015}s`;
+
+                        cell.appendChild(bar);
+                        scene.appendChild(cell);
+                    }
+                }
+            }
+
+            // Interacción (Reutilizada de lámina anterior)
+            container.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                previousMouseX = e.clientX;
+                container.style.cursor = 'grabbing';
+            });
+
+            window.addEventListener('mouseup', () => {
+                isDragging = false;
+                container.style.cursor = 'move';
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                const deltaX = e.clientX - previousMouseX;
+                previousMouseX = e.clientX;
+
+                rotateZ += deltaX * 0.5;
+                scene.style.transform = `rotateX(${rotateX}deg) rotateZ(${rotateZ}deg)`;
+            });
+
+            // Touch support
+            container.addEventListener('touchstart', (e) => {
+                isDragging = true;
+                previousMouseX = e.touches[0].clientX;
+            });
+
+            container.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                const deltaX = e.touches[0].clientX - previousMouseX;
+                previousMouseX = e.touches[0].clientX;
+                rotateZ += deltaX * 0.5;
+                scene.style.transform = `rotateX(${rotateX}deg) rotateZ(${rotateZ}deg)`;
+            });
+
+            container.addEventListener('touchend', () => {
+                isDragging = false;
+            });
+
+            // Inicializar
+            setTimeout(generateChromiumSurface, 100);
+        });
+    </script>
+</body>
+</html>
