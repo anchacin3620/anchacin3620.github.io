@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador Balístico Forense (RK4 Pro 3D)</title>
+    
+    <!-- Import Map para Three.js (Motor 3D) -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+
+    <style>
+        :root { --primary: #1a237e; --bg: #f5f7fa; --accent: #c62828; --grid: #e0e0e0; --text: #555; --tab-bg: #e0e0e0; --tab-active: #fff; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh; }
+        header { background: var(--primary); color: white; padding: 15px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        
+        .container {
+            display: grid; grid-template-columns: 320px 1fr; gap: 20px;
+            max-width: 1400px; margin: 20px auto; padding: 20px;
+            background: white; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            min-width: 0; height: calc(100vh - 100px); /* Ocupar toda la altura disponible */
+        }
+        
+        /* Panel de Control (Scrollable si es necesario) */
+        .controls { 
+            display: flex; flex-direction: column; gap: 10px; padding-right: 15px; 
+            border-right: 1px solid #eee; height: 100%; overflow-y: auto; 
+            box-sizing: border-box;
+        }
+        h3 { margin: 10px 0 5px 0; color: var(--primary); font-size: 0.95em; border-bottom: 2px solid #eee; padding-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        .control-group label { display: block; font-weight: 600; font-size: 0.8em; margin-bottom: 4px; color: #444; }
+        .control-group input[type="number"], .control-group select { 
+            width: 100%; padding: 8px; box-sizing: border-box; margin-bottom: 5px; 
+            border: 1px solid #ccc; border-radius: 4px; font-size: 0.9em; background: #fafafa;
+        }
+        
+        .input-group { display: flex; gap: 5px; align-items: center; }
+        .input-group input[type="range"] { flex-grow: 1; cursor: pointer; }
+        .input-group input[type="number"] { width: 60px; margin-bottom: 0; }
+
+        /* Resultados */
+        .results {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
+            background: #e8eaf6; padding: 15px; border-radius: 6px; margin-top: 15px; border-left: 5px solid var(--primary);
+        }
+        .result-box h4 { margin: 0 0 5px 0; font-size: 0.7em; color: #666; text-align: center; text-transform: uppercase; }
+        .result-box p { margin: 0; font-size: 1em; font-weight: bold; color: var(--primary); font-family: 'Consolas', monospace; text-align: center; }
+        .result-box .impact { color: var(--accent); }
+        
+        /* Contenedor de Visualización (Tabs + Canvas) */
+        .visualization { display: flex; flex-direction: column; position: relative; height: 100%; overflow: hidden; }
+        
+        /* Tabs Switcher */
+        .view-tabs {
+            display: flex; gap: 5px; margin-bottom: 10px;
+        }
+        .tab-btn {
+            flex: 1; padding: 10px; background: var(--tab-bg); border: none; 
+            cursor: pointer; font-weight: bold; border-radius: 4px 4px 0 0; color: #666;
+        }
+        .tab-btn.active { background: var(--tab-active); color: var(--primary); border-bottom: 2px solid var(--primary); }
+        
+        /* Canvas Wrappers */
+        .canvas-wrapper {
+            flex-grow: 1; position: relative; border: 1px solid #ddd; border-radius: 4px;
+            background: #fff; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.02);
+            display: none; /* Oculto por defecto */
+        }
+        .canvas-wrapper.active { display: block; }
+        
+        canvas { display: block; width: 100%; height: 100%; outline: none; }
+        
+        button { 
+            padding: 12px; background: var(--primary); color: white; border: none; 
+            cursor: pointer; font-weight: bold; border-radius: 4px; width: 100%; margin-top: 10px;
+            transition: background 0.2s;
+        }
+        button:hover { background-color: #283593; }
+        #exportBtn { background: #2e7d32; margin-top: 5px; }
+        
+        @media (max-width: 900px) { .container { grid-template-columns: 1fr; height: auto; } .controls { border-right: none; border-bottom: 1px solid #eee; padding-bottom: 20px; } }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Simulador Balístico Forense (RK4 Pro 3D)</h1>
+    <p style="margin:0; font-size:0.8em; opacity: 0.9;">Reconstrucción de Escena | Integración Numérica Avanzada</p>
+</header>
+
+<div class="container">
+    <!-- CONTROLES -->
+    <aside class="controls">
+        <h3>1. Configuración Proyectil</h3>
+        <div class="control-group">
+            <label>Preset Calibre</label>
+            <select id="preset" onchange="cargarPreset()">
+                <option value="custom">Personalizado</option>
+                <option value="9mm" selected>9mm FMJ (Pistola)</option>
+                <option value="556">5.56mm NATO (Rifle)</option>
+                <option value="762">7.62mm NATO (Fusil)</option>
+                <option value="12ga">Cartucho Escopeta (Posta)</option>
+            </select>
+        </div>
+        <div class="control-group"><label>Masa (kg)</label><input type="number" id="mass" value="0.008" step="0.001" onchange="debouncedRun()"></div>
+        <div class="control-group"><label>Área (m²)</label><input type="number" id="area" value="0.000064" step="0.000001" onchange="debouncedRun()"></div>
+        <div class="control-group"><label>Cd (Arrastre)</label><input type="number" id="dragCoeff" value="0.295" step="0.01" onchange="debouncedRun()"></div>
+
+        <h3>2. Condiciones Iniciales</h3>
+        <div class="control-group"><label>Velocidad (m/s)</label><input type="number" id="velocity" value="350" onchange="debouncedRun()"></div>
+        <div class="control-group">
+            <label>Ángulo</label>
+            <div class="input-group">
+                <input type="range" id="angle" min="-45" max="60" value="0" step="0.1" oninput="syncAngle(this.value)">
+                <input type="number" id="angleNum" value="0" step="0.1" onchange="syncAngleNum(this.value)">
+            </div>
+        </div>
+        <div class="control-group"><label>Altura Tirador (m)</label><input type="number" id="shooterHeight" value="1.70" step="0.1" onchange="debouncedRun()"></div>
+
+        <h3>3. Escenario</h3>
+        <div class="control-group">
+            <label style="color:var(--accent);">Altura Objetivo (m)</label>
+            <input type="number" id="targetHeight" value="1.70" step="0.1" onchange="debouncedRun()">
+        </div>
+        <div class="control-group"><label>Viento (m/s)</label><input type="number" id="windSpeed" value="0" onchange="debouncedRun()"></div>
+        <div class="control-group"><label>Densidad Aire</label><input type="number" id="density" value="1.225" step="0.001" onchange="debouncedRun()"></div>
+
+        <div class="results">
+            <div class="result-box"><h4>Dist. Impacto</h4><p id="resTargetDist">-</p></div>
+            <div class="result-box impact"><h4>Energía (J)</h4><p id="resEnergy">-</p></div>
+            <div class="result-box"><h4>Alcance (Suelo)</h4><p id="resRange">-</p></div>
+            <div class="result-box"><h4>Vel. Impacto</h4><p id="resVel">-</p></div>
+        </div>
+
+        <button onclick="runSimulation()">ACTUALIZAR SIMULACIÓN</button>
+        <button id="exportBtn" onclick="exportarCSV()">EXPORTAR DATOS (CSV)</button>
+    </aside>
+
+    <!-- VISUALIZACIÓN 2D/3D -->
+    <main class="visualization">
+        <div class="view-tabs">
+            <button class="tab-btn active" onclick="switchView('2d')">Vista 2D (Perfil)</button>
+            <button class="tab-btn" onclick="switchView('3d')">Vista 3D (Escena)</button>
+        </div>
+
+        <!-- Canvas 2D -->
+        <div id="container2d" class="canvas-wrapper active">
+            <canvas id="canvas2d"></canvas>
+        </div>
+
+        <!-- Canvas 3D -->
+        <div id="container3d" class="canvas-wrapper"></div>
+    </main>
+</div>
+
+<!-- SCRIPTS -->
+<script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+    // --- VARIABLES GLOBALES 2D ---
+    let canvas2d, ctx2d;
+    let simulationData = null;
+    let debounceTimer;
+
+    // --- VARIABLES GLOBALES 3D ---
+    let scene, camera, renderer, controls;
+    let trajectoryLine, shooterMesh, targetMesh, groundGrid;
+    let is3DInitialized = false;
+
+    // --- INICIALIZACIÓN GENERAL ---
+    window.onload = function() {
+        // Inicializar 2D
+        canvas2d = document.getElementById('canvas2d');
+        ctx2d = canvas2d.getContext('2d');
+        resizeCanvas2d();
+        
+        // Listeners
+        window.addEventListener('resize', () => {
+            resizeCanvas2d();
+            if(is3DInitialized) resizeCanvas3d();
+            runSimulation();
+        });
+
+        // Ejecutar inicial
+        runSimulation();
+    };
+
+    // --- GESTIÓN DE VISTAS (TABS) ---
+    window.switchView = function(mode) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.canvas-wrapper').forEach(c => c.classList.remove('active'));
+        
+        if(mode === '2d') {
+            document.querySelector('.tab-btn:nth-child(1)').classList.add('active');
+            document.getElementById('container2d').classList.add('active');
+        } else {
+            document.querySelector('.tab-btn:nth-child(2)').classList.add('active');
+            document.getElementById('container3d').classList.add('active');
+            if(!is3DInitialized) init3D();
+            resizeCanvas3d();
+        }
+    };
+
+    // --- LÓGICA 2D (EXISTENTE) ---
+    function resizeCanvas2d() {
+        const container = document.getElementById('container2d');
+        const dpr = window.devicePixelRatio || 1;
+        canvas2d.width = container.clientWidth * dpr;
+        canvas2d.height = container.clientHeight * dpr;
+        ctx2d.scale(dpr, dpr);
+    }
+
+    function syncAngle(val) {
+        document.getElementById('angleNum').value = val;
+        debouncedRun();
+    }
+    function syncAngleNum(val) {
+        document.getElementById('angle').value = val;
+        runSimulation();
+    }
+    function debouncedRun() {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(runSimulation, 100);
+    }
+
+    function cargarPreset() {
+        const val = document.getElementById('preset').value;
+        const data = {
+            '9mm': { mass: 0.008, dragCoeff: 0.35, area: 0.000064, velocity: 350 },
+            '556': { mass: 0.004, dragCoeff: 0.295, area: 0.000024, velocity: 940 },
+            '762': { mass: 0.0097, dragCoeff: 0.305, area: 0.000047, velocity: 850 },
+            '12ga': { mass: 0.024, dragCoeff: 0.45, area: 0.000285, velocity: 400 }
+        };
+        if(data[val]) {
+            document.getElementById('mass').value = data[val].mass;
+            document.getElementById('dragCoeff').value = data[val].dragCoeff;
+            document.getElementById('area').value = data[val].area;
+            document.getElementById('velocity').value = data[val].velocity;
+            runSimulation();
+        }
+    }
+
+    function runSimulation() {
+        // 1. Obtener Parámetros
+        const getVal = (id) => parseFloat(document.getElementById(id).value) || 0;
+        const params = {
+            m: Math.max(0.0001, getVal('mass')),
+            v0: Math.max(1, getVal('velocity')),
+            angle: getVal('angle'),
+            Cd: Math.max(0, getVal('dragCoeff')),
+            A: Math.max(0.000001, getVal('area')),
+            rho: Math.max(0.1, getVal('density')),
+            h0: Math.max(0, getVal('shooterHeight')),
+            hTarget: getVal('targetHeight'),
+            windV: getVal('windSpeed')
+        };
+
+        // 2. RK4 Engine (Misma lógica)
+        const dt = 0.001; const g = 9.81;
+        let angRad = params.angle * Math.PI / 180;
+        let vx = params.v0 * Math.cos(angRad);
+        let vy = params.v0 * Math.sin(angRad);
+        let x = 0, y = params.h0, t = 0, hMax = params.h0;
+        const path = [];
+        
+        // Función aceleración
+        const getAcc = (vx, vy) => {
+            const vRelX = vx - params.windV;
+            const vRel = Math.sqrt(vRelX**2 + vy**2);
+            if (vRel === 0) return { ax: 0, ay: -g };
+            const Fd = 0.5 * params.rho * params.Cd * params.A * vRel * vRel;
+            return { ax: -(Fd/params.m)*(vRelX/vRel), ay: -g - (Fd/params.m)*(vy/vRel) };
+        };
+
+        while (y >= 0 && t < 300) {
+            path.push({x, y, vx, vy, t});
+            if (y > hMax) hMax = y;
+            // RK4 Steps...
+            let a1 = getAcc(vx, vy);
+            let k1_vx = a1.ax*dt, k1_vy = a1.ay*dt, k1_x = vx*dt, k1_y = vy*dt;
+            let a2 = getAcc(vx + k1_vx/2, vy + k1_vy/2);
+            let k2_vx = a2.ax*dt, k2_vy = a2.ay*dt, k2_x = (vx+k1_vx/2)*dt, k2_y = (vy+k1_vy/2)*dt;
+            let a3 = getAcc(vx + k2_vx/2, vy + k2_vy/2);
+            let k3_vx = a3.ax*dt, k3_vy = a3.ay*dt, k3_x = (vx+k2_vx/2)*dt, k3_y = (vy+k2_vy/2)*dt;
+            let a4 = getAcc(vx + k3_vx, vy + k3_vy);
+            let k4_vx = a4.ax*dt, k4_vy = a4.ay*dt, k4_x = (vx+k3_vx)*dt, k4_y = (vy+k3_vy)*dt;
+            
+            vx += (k1_vx + 2*k2_vx + 2*k3_vx + k4_vx)/6;
+            vy += (k1_vy + 2*k2_vy + 2*k3_vy + k4_vy)/6;
+            x += (k1_x + 2*k2_x + 2*k3_x + k4_x)/6;
+            y += (k1_y + 2*k2_y + 2*k3_y + k4_y)/6;
+            t += dt;
+        }
+
+        // Interpolación suelo
+        let final = {x, y, vx, vy, t};
+        if (path.length > 1 && y < 0) {
+            let prev = path[path.length-1];
+            let r = (0 - prev.y) / (y - prev.y);
+            final = { x: prev.x + r*(x-prev.x), y:0, vx: prev.vx+r*(vx-prev.vx), vy: prev.vy+r*(vy-prev.vy), t: prev.t+r*(t-prev.t) };
+            path.push(final);
+        }
+
+        // Interpolación objetivo
+        let targetImpact = null;
+        if(params.hTarget > 0 && params.hTarget !== params.h0) {
+            for(let i=0; i<path.length-1; i++) {
+                if((path[i].y >= params.hTarget && path[i+1].y <= params.hTarget) || (path[i].y <= params.hTarget && path[i+1].y >= params.hTarget)) {
+                    let p1 = path[i], p2 = path[i+1];
+                    let r = (params.hTarget - p1.y) / (p2.y - p1.y);
+                    targetImpact = {
+                        x: p1.x + r*(p2.x - p1.x), y: params.hTarget,
+                        vx: p1.vx + r*(p2.vx - p1.vx), vy: p1.vy + r*(p2.vy - p1.vy), t: p1.t + r*(p2.t - p1.t)
+                    };
+                    break;
+                }
+            }
+        }
+
+        simulationData = { path, params, targetImpact };
+
+        // Renderizar
+        draw2D(path, params, targetImpact);
+        if(is3DInitialized) update3D(path, params, targetImpact);
+        updateUI(final, hMax, targetImpact, params);
+    }
+
+    // --- RENDERIZADO 2D ---
+    function draw2D(path, params, targetImpact) {
+        const w = canvas2d.width / (window.devicePixelRatio || 1);
+        const h = canvas2d.height / (window.devicePixelRatio || 1);
+        ctx2d.clearRect(0,0, canvas2d.width, canvas2d.height);
+        ctx2d.save();
+        
+        const maxX = Math.max(...path.map(p => p.x)) || 100;
+        const maxY = Math.max(...path.map(p => p.y)) || 10;
+        const pad = 50;
+        const scaleX = (w - 2*pad) / maxX;
+        const scaleY = (h - 2*pad) / Math.max(maxY * 1.2, params.h0 * 2 + 10);
+        const scale = Math.min(scaleX, scaleY);
+        const toC = (x, y) => ({ x: pad + x * scale, y: h - pad - y * scale });
+
+        // Grid
+        ctx2d.strokeStyle = "#e0e0e0"; ctx2d.lineWidth = 1;
+        ctx2d.beginPath(); ctx2d.moveTo(pad, pad); ctx2d.lineTo(pad, h-pad); ctx2d.lineTo(w-pad, h-pad); ctx2d.stroke();
+        
+        // Target Line
+        if(targetImpact) {
+            const yC = toC(0, targetImpact.y).y;
+            ctx2d.strokeStyle = "rgba(198,40,40,0.4)"; ctx2d.setLineDash([5,5]);
+            ctx2d.beginPath(); ctx2d.moveTo(pad, yC); ctx2d.lineTo(w-pad, yC); ctx2d.stroke(); ctx2d.setLineDash([]);
+            ctx2d.fillStyle = "#c62828"; ctx2d.fillText(`OBJETIVO`, pad+5, yC-5);
+        }
+
+        // Path
+        ctx2d.strokeStyle = "#1a237e"; ctx2d.lineWidth = 2.5; ctx2d.beginPath();
+        ctx2d.moveTo(toC(path[0].x, path[0].y).x, toC(path[0].x, path[0].y).y);
+        const stride = path.length > 5000 ? 10 : 1;
+        for(let i = stride; i < path.length; i += stride) {
+            const pt = path[i];
+            ctx2d.lineTo(toC(pt.x, pt.y).x, toC(pt.x, pt.y).y);
+        }
+        ctx2d.stroke();
+        
+        // Markers
+        const start = toC(path[0].x, path[0].y);
+        ctx2d.fillStyle = "#2e7d32"; ctx2d.beginPath(); ctx2d.arc(start.x, start.y, 5, 0, 7); ctx2d.fill();
+        const end = toC(path[path.length-1].x, path[path.length-1].y);
+        ctx2d.fillStyle = "#000"; ctx2d.beginPath(); ctx2d.arc(end.x, end.y, 4, 0, 7); ctx2d.fill();
+        if(targetImpact) {
+            const tPos = toC(targetImpact.x, targetImpact.y);
+            ctx2d.fillStyle = "#c62828"; ctx2d.beginPath(); ctx2d.arc(tPos.x, tPos.y, 6, 0, 7); ctx2d.fill();
+        }
+        ctx2d.restore();
+    }
+
+    // --- RENDERIZADO 3D (THREE.JS) ---
+    function init3D() {
+        const container = document.getElementById('container3d');
+        
+        // Escena
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xf5f7fa);
+        scene.fog = new THREE.Fog(0xf5f7fa, 200, 2000); // Niebla para profundidad
+
+        // Cámara
+        camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 5000);
+        camera.position.set(200, 100, 200); // Posición inicial isométrica
+
+        // Renderer
+        renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        renderer.shadowMap.enabled = true;
+        container.appendChild(renderer.domElement);
+
+        // Controles Orbitales
+        controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.maxPolarAngle = Math.PI / 2 - 0.05; // No ir bajo el suelo
+
+        // Luces
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        dirLight.position.set(100, 200, 100);
+        dirLight.castShadow = true;
+        dirLight.shadow.mapSize.width = 2048;
+        dirLight.shadow.mapSize.height = 2048;
+        scene.add(dirLight);
+
+        // Suelo (Grid)
+        groundGrid = new THREE.GridHelper(2000, 100, 0xcccccc, 0xe0e0e0);
+        scene.add(groundGrid);
+        
+        // Suelo físico (para sombras)
+        const planeGeometry = new THREE.PlaneGeometry(2000, 2000);
+        const planeMaterial = new THREE.MeshLambertMaterial({ color: 0xffffff });
+        const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+        plane.rotation.x = -Math.PI / 2;
+        plane.position.y = -0.1;
+        plane.receiveShadow = true;
+        scene.add(plane);
+
+        // Objetos iniciales (Placeholders)
+        const shooterGeo = new THREE.BoxGeometry(2, 4, 2);
+        const shooterMat = new THREE.MeshLambertMaterial({ color: 0x2e7d32 }); // Verde
+        shooterMesh = new THREE.Mesh(shooterGeo, shooterMat);
+        shooterMesh.castShadow = true;
+        scene.add(shooterMesh);
+
+        const targetGeo = new THREE.CylinderGeometry(0.5, 0.5, 3, 16);
+        const targetMat = new THREE.MeshLambertMaterial({ color: 0xc62828 }); // Rojo
+        targetMesh = new THREE.Mesh(targetGeo, targetMat);
+        targetMesh.position.y = 1.5;
+        targetMesh.castShadow = true;
+        scene.add(targetMesh);
+
+        // Línea de trayectoria (inicialmente vacía)
+        const material = new THREE.LineBasicMaterial({ color: 0x1a237e, linewidth: 2 });
+        const geometry = new THREE.BufferGeometry();
+        trajectoryLine = new THREE.Line(geometry, material);
+        trajectoryLine.frustumCulled = false; // Para evitar parpadeos en actualizaciones
+        scene.add(trajectoryLine);
+
+        is3DInitialized = true;
+        animate3D();
+    }
+
+    function update3D(path, params, targetImpact) {
+        if(!is3DInitialized) return;
+
+        // 1. Actualizar Posición Tirador
+        shooterMesh.position.set(0, params.h0 / 2, 0);
+        // Ajustar altura de la caja visualmente
+        shooterMesh.scale.y = params.h0 / 4; 
+
+        // 2. Actualizar Posición Objetivo
+        targetMesh.position.x = targetImpact ? targetImpact.x : (path[path.length-1].x);
+        targetMesh.position.y = params.hTarget;
+
+        // 3. Actualizar Trayectoria
+        // Convertir path 2D (x, y) a Vector3 3D (x, y, 0)
+        const points = path.map(p => new THREE.Vector3(p.x, p.y, 0));
+        
+        // Muestreo para rendimiento (sino son demasiados puntos para una línea)
+        const stride = path.length > 2000 ? 5 : 1;
+        const sampledPoints = [];
+        for(let i=0; i<points.length; i+=stride) {
+            sampledPoints.push(points[i]);
+        }
+        
+        trajectoryLine.geometry.setFromPoints(sampledPoints);
+        trajectoryLine.geometry.attributes.position.needsUpdate = true;
+
+        // 4. Centrar Cámara (Suave)
+        const targetX = (path[path.length-1].x) / 2;
+        const targetY = params.h0;
+        controls.target.set(targetX, targetY, 0);
+    }
+
+    function resizeCanvas3d() {
+        const container = document.getElementById('container3d');
+        if(!container || !camera || !renderer) return;
+        camera.aspect = container.clientWidth / container.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(container.clientWidth, container.clientHeight);
+    }
+
+    function animate3D() {
+        requestAnimationFrame(animate3D);
+        if(controls) controls.update();
+        if(renderer && scene && camera) renderer.render(scene, camera);
+    }
+
+    // --- UI Updates ---
+    function updateUI(final, hMax, target, p) {
+        const vFinal = Math.sqrt(final.vx*final.vx + final.vy*final.vy);
+        const eFinal = 0.5 * p.m * vFinal * vFinal;
+        document.getElementById('resRange').innerText = final.x.toFixed(2) + " m";
+        document.getElementById('resTargetDist').innerText = target ? target.x.toFixed(2) + " m" : final.x.toFixed(2) + " m";
+        document.getElementById('resVel').innerText = (target ? Math.sqrt(target.vx**2 + target.vy**2) : vFinal).toFixed(1) + " m/s";
+        document.getElementById('resEnergy').innerText = (target ? 0.5 * p.m * (Math.sqrt(target.vx**2+target.vy**2))**2 : eFinal).toFixed(1) + " J";
+    }
+
+    function exportarCSV() {
+        if(!simulationData) return alert("Ejecute la simulación primero.");
+        const { path } = simulationData;
+        let csv = "Tiempo(s),Pos_X(m),Pos_Y(m)\n";
+        const stride = path.length > 10000 ? 10 : 1;
+        for(let i=0; i<path.length; i+=stride) {
+            csv += `${path[i].t.toFixed(4)},${path[i].x.toFixed(4)},${path[i].y.toFixed(4)}\n`;
+        }
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob); a.download = 'balistica_3d.csv'; a.click();
+    }
+</script>
+</body>
+</html>
