@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador Balístico Forense (RK4 Pro - Corregido)</title>
+    <style>
+        :root { --primary: #1a237e; --bg: #f5f7fa; --accent: #c62828; --grid: #e0e0e0; --text: #555; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh; }
+        header { background: var(--primary); color: white; padding: 15px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); flex-shrink: 0;}
+        
+        .container {
+            display: grid; grid-template-columns: 340px 1fr; gap: 20px;
+            max-width: 1400px; margin: 20px auto; padding: 20px;
+            background: white; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            min-width: 0; flex-grow: 1; 
+        }
+        
+        .visualization { min-width: 0; display: flex; flex-direction: column; position: relative; }
+        
+        .controls { display: flex; flex-direction: column; gap: 8px; padding-right: 15px; border-right: 1px solid #eee; height: fit-content; overflow-y: auto; max-height: 90vh; }
+        h3 { margin: 15px 0 5px 0; color: var(--primary); font-size: 0.9em; border-bottom: 2px solid #eee; padding-bottom: 3px; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        .control-group label { display: block; font-weight: 600; font-size: 0.75em; margin-bottom: 2px; color: #444; }
+        .control-group input[type="number"], .control-group select { 
+            width: 100%; padding: 6px; box-sizing: border-box; margin-bottom: 4px; 
+            border: 1px solid #ccc; border-radius: 4px; font-size: 0.85em; background: #fafafa;
+        }
+        .control-group small { font-size: 0.7em; color: #777; display: block; margin-top: -2px; }
+
+        .input-group { display: flex; gap: 5px; align-items: center; }
+        .input-group input[type="range"] { flex-grow: 1; cursor: pointer; }
+        .input-group input[type="number"] { width: 60px; margin-bottom: 0; }
+        .checkbox-group { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; font-size: 0.85em; }
+
+        .results {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px;
+            background: #e8eaf6; padding: 15px; border-radius: 6px; margin-top: 15px; border-left: 5px solid var(--primary);
+        }
+        .result-box h4 { margin: 0 0 4px 0; font-size: 0.7em; color: #666; text-align: center; text-transform: uppercase; letter-spacing: 0.5px; }
+        .result-box p { margin: 0; font-size: 1.1em; font-weight: bold; color: var(--primary); font-family: 'Consolas', monospace; text-align: center; word-wrap: break-word; }
+        .result-box .impact { color: var(--accent); }
+        .result-box .drift { color: #0277bd; }
+        
+        .canvas-container {
+            border: 1px solid #ddd; background: #fff; border-radius: 4px;
+            position: relative; height: 500px; width: 100%; overflow: hidden;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.02);
+            cursor: crosshair;
+            display: flex;
+        }
+        canvas { display: block; width: 100%; height: 100%; } 
+        
+        button { 
+            padding: 10px; background: var(--primary); color: white; border: none; 
+            cursor: pointer; font-weight: bold; border-radius: 4px; width: 100%; margin-top: 8px;
+            transition: background 0.2s; font-size: 0.9em;
+        }
+        button:hover { background-color: #283593; }
+        #exportBtn { background: #2e7d32; margin-top: 5px; }
+        #exportBtn:hover { background: #388e3c; }
+
+        .canvas-tooltip {
+            position: absolute; background: rgba(20, 20, 30, 0.9); color: white; padding: 8px 12px; 
+            border-radius: 4px; font-size: 0.8em; pointer-events: none; display: none; z-index: 10;
+            border: 1px solid #555; box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            line-height: 1.4;
+        }
+        
+        footer { background: #263238; color: #b0bec5; text-align: center; padding: 15px; margin-top: auto; font-size: 0.8em; border-top: 4px solid var(--accent); flex-shrink: 0;}
+        @media (max-width: 900px) { .container { grid-template-columns: 1fr; } .controls { border-right: none; border-bottom: 1px solid #eee; padding-bottom: 20px; max-height: none; } }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Simulador Balístico Forense (RK4 Pro)</h1>
+    <p style="margin:0; font-size:0.8em; opacity: 0.9;">Precisión Forense 3D | Modelo de Arrastre Variable | Corrección ISA</p>
+</header>
+
+<div class="container">
+    <div class="controls">
+        <h3>1. Configuración Proyectil</h3>
+        <div class="control-group">
+            <label>Preset Calibre</label>
+            <select id="preset" onchange="cargarPreset()">
+                <option value="custom">Personalizado</option>
+                <option value="9mm" selected>9mm FMJ (Pistola)</option>
+                <option value="556">5.56mm NATO (Rifle)</option>
+                <option value="762">7.62mm NATO (Fusil)</option>
+                <option value="338">.338 Lapua Mag (Francotirador)</option>
+                <option value="12ga">Cartucho Escopeta (Posta)</option>
+            </select>
+        </div>
+        <div class="control-group">
+            <label>Perfil Balístico</label>
+            <select id="profile" onchange="debouncedRun()">
+                <option value="standard">Estándar (G1 Aprox)</option>
+                <option value="custom">Personalizado</option>
+            </select>
+            <small>Determina la curva de Cd vs Mach.</small>
+        </div>
+        <div class="control-group">
+            <label>Masa (kg)</label>
+            <input type="number" id="mass" value="0.008" step="0.001" onchange="debouncedRun()">
+        </div>
+        <div class="control-group">
+            <label>Diámetro / Área (m²)</label>
+            <input type="number" id="area" value="0.000064" step="0.000001" onchange="debouncedRun()">
+        </div>
+        
+        <h3>2. Condiciones Iniciales</h3>
+        <div class="control-group">
+            <label>Velocidad Inicial (m/s)</label>
+            <input type="number" id="velocity" value="350" onchange="debouncedRun()">
+        </div>
+        <div class="control-group">
+            <label>Ángulo de Disparo (grados)</label>
+            <div class="input-group">
+                <input type="range" id="angle" min="-45" max="60" value="0" step="0.1" oninput="syncAngle(this.value)">
+                <input type="number" id="angleNum" value="0" step="0.1" onchange="syncAngleNum(this.value)">
+            </div>
+        </div>
+        <div class="control-group">
+            <label>Altura del Tirador (m)</label>
+            <input type="number" id="shooterHeight" value="1.70" step="0.1" onchange="debouncedRun()">
+        </div>
+        
+        <div class="control-group">
+            <label>Sentido del Giro (Ánima)</label>
+            <select id="twistDir" onchange="debouncedRun()">
+                <option value="right">Dextrógira (Deriva Derecha)</option>
+                <option value="left">Levógira (Deriva Izquierda)</option>
+            </select>
+        </div>
+
+        <h3>3. Escenario y Objetivo</h3>
+        <div class="control-group">
+            <label style="color:var(--accent);">Altura Impacto Objetivo (m)</label>
+            <input type="number" id="targetHeight" value="1.70" step="0.1" onchange="debouncedRun()">
+        </div>
+
+        <h3>4. Factores Ambientales</h3>
+        <div class="checkbox-group">
+            <input type="checkbox" id="useISA" onchange="debouncedRun()">
+            <label for="useISA">Modelo Atmosférico ISA</label>
+        </div>
+        <div class="control-group">
+            <label>Altitud del Lugar (m)</label>
+            <input type="number" id="altitude" value="0" step="10" onchange="debouncedRun()">
+        </div>
+        <div class="control-group">
+            <label>Densidad Aire (kg/m³)</label>
+            <input type="number" id="density" value="1.225" step="0.001" onchange="debouncedRun()">
+        </div>
+        
+        <div class="control-group">
+            <label>Viento Longitudinal (m/s)</label>
+            <input type="number" id="windSpeed" value="0" step="1" onchange="debouncedRun()">
+            <small>Negativo = Frente, Positivo = Cola.</small>
+        </div>
+        <div class="control-group">
+            <label style="color:#0277bd;">Viento Cruzado (m/s)</label>
+            <input type="number" id="windCross" value="0" step="1" onchange="debouncedRun()">
+            <small>Positivo = Derecha, Negativo = Izquierda.</small>
+        </div>
+        <div class="control-group">
+            <label>Velocidad del Sonido (m/s)</label>
+            <input type="number" id="speedOfSound" value="343" step="1" onchange="debouncedRun()">
+        </div>
+
+        <button onclick="runSimulation()">FORZAR RECÁLCULO</button>
+        <button id="exportBtn" onclick="exportarCSV()">EXPORTAR DATOS (CSV)</button>
+    </div>
+
+    <div class="visualization">
+        <div class="canvas-container" id="canvasContainer">
+            <canvas id="canvas" width="800" height="500"></canvas>
+            <div id="tooltip" class="canvas-tooltip"></div>
+        </div>
+        <div class="results">
+            <div class="result-box"><h4>Alcance Total (Suelo)</h4><p id="resRange">-</p></div>
+            <div class="result-box"><h4>Altura Máxima</h4><p id="resHeight">-</p></div>
+            <div class="result-box"><h4>Tiempo Vuelo</h4><p id="resTime">-</p></div>
+            <div class="result-box impact"><h4>Dist. Impacto</h4><p id="resTargetDist">-</p></div>
+            <div class="result-box impact"><h4>Vel. Impacto</h4><p id="resVel">-</p></div>
+            <div class="result-box impact"><h4>Energía (J)</h4><p id="resEnergy">-</p></div>
+            <div class="result-box drift"><h4>Desv. Lateral (Suelo)</h4><p id="resDrift">-</p></div>
+            <div class="result-box drift"><h4>Desv. Lat. (Objetivo)</h4><p id="resTargetDrift">-</p></div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p><strong>@2026 Prof. Ángel Chacín Ávila | UNES</strong></p>
+    <p>Herramienta de Código Abierto para la Enseñanza de la Criminalística (Versión 3D Avanzada)</p>
+    <p>Se publica con licencia GPL</p>
+</footer>
+
+<script>
+    let canvas, ctx, tooltip;
+    let simulationData = null;
+    let debounceTimer;
+    let scaleFactors = { scale: 1, pad: 50, w: 800, h: 500, maxX: 100, maxY: 10 };
+
+    window.onload = function() {
+        try {
+            canvas = document.getElementById('canvas');
+            tooltip = document.getElementById('tooltip');
+            if(!canvas) throw new Error("Canvas no encontrado");
+            ctx = canvas.getContext('2d');
+            if(!ctx) throw new Error("Contexto 2D no soportado");
+
+            resizeCanvas();
+            runSimulation();
+
+            window.addEventListener('resize', () => { resizeCanvas(); runSimulation(); });
+            canvas.addEventListener('mousemove', handleCanvasHover);
+            canvas.addEventListener('mouseleave', () => { tooltip.style.display = 'none'; });
+        } catch (e) {
+            alert("Error de inicialización: " + e.message);
+            console.error(e);
+        }
+    };
+
+    function syncAngle(val) {
+        document.getElementById('angleNum').value = val;
+        debouncedRun();
+    }
+    function syncAngleNum(val) {
+        document.getElementById('angle').value = val;
+        runSimulation();
+    }
+
+    function debouncedRun() {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(runSimulation, 50);
+    }
+
+    function resizeCanvas() {
+        if(!canvas) return;
+        const contenedor = document.getElementById('canvasContainer');
+        let w = contenedor ? contenedor.clientWidth : 800;
+        let h = contenedor ? contenedor.clientHeight : 500;
+        if (w < 100) w = 800;
+        if (h < 100) h = 500;
+
+        const dpr = window.devicePixelRatio || 1;
+        if (canvas.width !== w * dpr || canvas.height !== h * dpr) {
+            canvas.width = w * dpr;
+            canvas.height = h * dpr;
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
+            ctx.scale(dpr, dpr);
+            canvas.style.width = w + 'px';
+            canvas.style.height = h + 'px';
+        }
+    }
+
+    function cargarPreset() {
+        const val = document.getElementById('preset').value;
+        const data = {
+            '9mm': { mass: 0.008, area: 0.000064, velocity: 350 },
+            '556': { mass: 0.004, area: 0.000024, velocity: 940 },
+            '762': { mass: 0.0097, area: 0.000047, velocity: 850 },
+            '338': { mass: 0.0162, area: 0.000090, velocity: 880 },
+            '12ga': { mass: 0.024, area: 0.000285, velocity: 400 }
+        };
+        if(data[val]) {
+            document.getElementById('mass').value = data[val].mass;
+            document.getElementById('area').value = data[val].area;
+            document.getElementById('velocity').value = data[val].velocity;
+            runSimulation();
+        }
+    }
+
+    function getCd(mach) {
+        if (mach < 0.8) return 0.25;
+        if (mach < 1.0) return 0.30;
+        if (mach < 1.2) return 0.45;
+        if (mach < 2.5) return 0.35;
+        return 0.30;
+    }
+
+    function getISADensity(altitude) {
+        const T0 = 288.15, L = 0.0065, g = 9.80665, R = 8.31447, M = 0.0289644;
+        const exponent = (g * M) / (R * L);
+        const term = (1 - (L * altitude) / T0);
+        if (term <= 0) return 0.0;
+        return 1.225 * Math.pow(term, exponent);
+    }
+
+    function drawErrorMessage(msg) {
+        if(!ctx) return;
+        ctx.fillStyle = "#ffcccc";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "red";
+        ctx.font = "bold 20px monospace";
+        ctx.fillText("ERROR EN SIMULACIÓN:", 20, 40);
+        ctx.font = "16px monospace";
+        ctx.fillText(msg, 20, 70);
+    }
+
+    function runSimulation() {
+        if(!ctx) return;
+
+        try {
+            const getVal = (id) => {
+                const el = document.getElementById(id);
+                if (!el) return 0;
+                const v = parseFloat(el.value);
+                return isNaN(v) ? 0 : v;
+            };
+
+            const params = {
+                m: Math.max(0.0001, getVal('mass')),
+                v0: Math.max(1, getVal('velocity')),
+                angle: getVal('angle'),
+                A: Math.max(0.000001, getVal('area')),
+                rho: Math.max(0.1, getVal('density')),
+                h0: Math.max(0, getVal('shooterHeight')),
+                hTarget: getVal('targetHeight'),
+                windX: getVal('windSpeed'),
+                windZ: getVal('windCross'),
+                speedOfSound: Math.max(100, getVal('speedOfSound')),
+                twist: document.getElementById('twistDir') ? document.getElementById('twistDir').value : 'right',
+                useISA: document.getElementById('useISA') ? document.getElementById('useISA').checked : false,
+                altitude: getVal('altitude')
+            };
+
+            if(params.useISA) {
+                params.rho = getISADensity(params.altitude);
+                if(params.rho <= 0) params.rho = 0.1;
+                document.getElementById('density').value = params.rho.toFixed(4);
+            }
+
+            const g = 9.81;
+            let angRad = params.angle * Math.PI / 180;
+            let vx = params.v0 * Math.cos(angRad);
+            let vy = params.v0 * Math.sin(angRad);
+            let vz = 0;
+            let x = 0, y = params.h0, z = 0;
+            let t = 0;
+            let hMax = params.h0;
+            const path = [];
+            let dt = (params.v0 > 1500) ? 0.0005 : 0.001;
+            let K_spin = 0.001 * (params.v0 / 300);
+            if(params.twist === 'left') K_spin *= -1;
+
+            const getAccel = (state) => {
+                let vRx = state.vx - params.windX;
+                let vRy = state.vy;
+                let vRz = state.vz - params.windZ;
+                let vRel = Math.sqrt(vRx*vRx + vRy*vRy + vRz*vRz);
+                let mach = vRel / params.speedOfSound;
+                let Cd = getCd(mach);
+                let Fd = 0.5 * params.rho * Cd * params.A * vRel * vRel;
+                let ax_drag = 0, ay_drag = 0, az_drag = 0;
+                if (vRel > 0) {
+                    ax_drag = -(Fd / params.m) * (vRx / vRel);
+                    ay_drag = -(Fd / params.m) * (vRy / vRel);
+                    az_drag = -(Fd / params.m) * (vRz / vRel);
+                }
+                let a_spin = 0;
+                if (vRel > 0) a_spin = K_spin * (state.vx / vRel);
+                return { ax: ax_drag, ay: ay_drag - g, az: az_drag + a_spin, mach: mach, cd: Cd };
+            };
+
+            const MAX_STEPS = 1000000;
+            let steps = 0;
+
+            while (y >= 0 && t < 300 && steps < MAX_STEPS && isFinite(y)) {
+                const currentAccel = getAccel({vx, vy, vz});
+                path.push({ x, y, z, vx, vy, vz, t, mach: currentAccel.mach, cd: currentAccel.cd });
+                if (y > hMax) hMax = y;
+
+                const a1 = getAccel({vx, vy, vz});
+                const k1_vx = a1.ax * dt, k1_vy = a1.ay * dt, k1_vz = a1.az * dt;
+                const k1_x = vx * dt, k1_y = vy * dt, k1_z = vz * dt;
+
+                const a2 = getAccel({vx: vx + k1_vx/2, vy: vy + k1_vy/2, vz: vz + k1_vz/2});
+                const k2_vx = a2.ax * dt, k2_vy = a2.ay * dt, k2_vz = a2.az * dt;
+                const k2_x = (vx + k1_vx/2) * dt, k2_y = (vy + k1_vy/2) * dt, k2_z = (vz + k1_vz/2) * dt;
+
+                const a3 = getAccel({vx: vx + k2_vx/2, vy: vy + k2_vy/2, vz: vz + k2_vz/2});
+                const k3_vx = a3.ax * dt, k3_vy = a3.ay * dt, k3_vz = a3.az * dt;
+                const k3_x = (vx + k2_vx/2) * dt, k3_y = (vy + k2_vy/2) * dt, k3_z = (vz + k2_vz/2) * dt;
+
+                const a4 = getAccel({vx: vx + k3_vx, vy: vy + k3_vy, vz: vz + k3_vz});
+                const k4_vx = a4.ax * dt, k4_vy = a4.ay * dt, k4_vz = a4.az * dt;
+                const k4_x = (vx + k3_vx) * dt, k4_y = (vy + k3_vy) * dt, k4_z = (vz + k3_vz) * dt;
+
+                vx += (k1_vx + 2*k2_vx + 2*k3_vx + k4_vx)/6;
+                vy += (k1_vy + 2*k2_vy + 2*k3_vy + k4_vy)/6;
+                vz += (k1_vz + 2*k2_vz + 2*k3_vz + k4_vz)/6;
+                x  += (k1_x  + 2*k2_x  + 2*k3_x  + k4_x)/6;
+                y  += (k1_y  + 2*k2_y  + 2*k3_y  + k4_y)/6;
+                z  += (k1_z  + 2*k2_z  + 2*k3_z  + k4_z)/6;
+                t += dt;
+                steps++;
+            }
+
+            // Si no se generó ningún punto (ej. ángulo 90° puro), agregar el punto inicial
+            if (path.length === 0) {
+                path.push({ x:0, y:params.h0, z:0, vx, vy, vz, t:0, mach:0, cd:getCd(0) });
+            }
+
+            let final = { ...path[path.length-1] };
+            if (path.length > 1 && y < 0) {
+                const prev = path[path.length-1];
+                const ratio = (0 - prev.y) / (y - prev.y);
+                final = {
+                    x: prev.x + ratio * (x - prev.x), y: 0,
+                    z: prev.z + ratio * (z - prev.z),
+                    vx: prev.vx + ratio * (vx - prev.vx),
+                    vy: prev.vy + ratio * (vy - prev.vy),
+                    vz: prev.vz + ratio * (vz - prev.vz),
+                    t: prev.t + ratio * (t - prev.t),
+                    mach: prev.mach, cd: prev.cd
+                };
+                path.push(final);
+            }
+
+            let targetImpact = null;
+            if (params.hTarget > 0 && Math.abs(params.hTarget - params.h0) > 0.001) {
+                for (let i = 0; i < path.length-1; i++) {
+                    const p1 = path[i], p2 = path[i+1];
+                    if ((p1.y >= params.hTarget && p2.y <= params.hTarget) ||
+                        (p1.y <= params.hTarget && p2.y >= params.hTarget)) {
+                        const r = (params.hTarget - p1.y) / (p2.y - p1.y);
+                        targetImpact = {
+                            x: p1.x + r * (p2.x - p1.x), y: params.hTarget,
+                            z: p1.z + r * (p2.z - p1.z),
+                            vx: p1.vx + r * (p2.vx - p1.vx),
+                            vy: p1.vy + r * (p2.vy - p1.vy),
+                            vz: p1.vz + r * (p2.vz - p1.vz),
+                            t: p1.t + r * (p2.t - p1.t),
+                            mach: p1.mach, cd: p1.cd
+                        };
+                        break;
+                    }
+                }
+            }
+
+            drawGraph(path, params, targetImpact);
+            updateUI(final, hMax, targetImpact, params);
+            simulationData = { path, params, targetImpact };
+        } catch (err) {
+            console.error("Error en simulación:", err);
+            drawErrorMessage(err.message);
+            // Asegurar que la UI muestre algo
+            document.getElementById('resRange').innerText = "ERROR";
+            document.getElementById('resHeight').innerText = "ERROR";
+            document.getElementById('resTime').innerText = "ERROR";
+        }
+    }
+
+    function drawGraph(path, params, targetImpact) {
+        const w = canvas.width / (window.devicePixelRatio || 1);
+        const h = canvas.height / (window.devicePixelRatio || 1);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.save();
+
+        if (path.length < 2) {
+            ctx.restore();
+            return;
+        }
+
+        let maxX = Math.max(...path.map(p => p.x));
+        let maxY = Math.max(...path.map(p => p.y));
+        if (!isFinite(maxX) || maxX <= 0) maxX = 100;
+        if (!isFinite(maxY) || maxY <= 0) maxY = 10;
+
+        const pad = 50;
+        const scaleX = (w - 2*pad) / maxX;
+        const scaleY = (h - 2*pad) / Math.max(maxY * 1.2, params.h0 * 2 + 10);
+        const scale = Math.min(scaleX, scaleY);
+        scaleFactors = { scale, pad, w, h, maxX, maxY };
+
+        const toC = (x, y) => ({ x: pad + x * scale, y: h - pad - y * scale });
+
+        // Grid
+        ctx.lineWidth = 1;
+        ctx.font = "10px sans-serif";
+        ctx.fillStyle = "#666";
+        ctx.strokeStyle = "#e0e0e0";
+        const gridStepX = Math.max(1, calculateNiceStep(maxX));
+        for (let d = 0; d <= maxX + gridStepX; d += gridStepX) {
+            let px = toC(d, 0).x;
+            if (px > w) break;
+            ctx.beginPath();
+            ctx.moveTo(px, pad);
+            ctx.lineTo(px, h-pad);
+            ctx.stroke();
+            if (d % (gridStepX*2) === 0) ctx.fillText(d + "m", px - 10, h - pad + 15);
+        }
+        const gridStepY = calculateNiceStep(Math.max(maxY, params.h0));
+        for (let m = 0; m <= maxY * 1.2 + gridStepY; m += gridStepY) {
+            let py = toC(0, m).y;
+            if (py < pad) break;
+            ctx.beginPath();
+            ctx.moveTo(pad, py);
+            ctx.lineTo(w-pad, py);
+            ctx.stroke();
+            ctx.fillText(m + "m", pad - 35, py + 3);
+        }
+
+        ctx.strokeStyle = "#333";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(pad, pad);
+        ctx.lineTo(pad, h-pad);
+        ctx.lineTo(w-pad, h-pad);
+        ctx.stroke();
+
+        ctx.fillStyle = "#8d6e63";
+        ctx.fillRect(pad, h-pad, w-2*pad, 4);
+
+        if (targetImpact) {
+            const yC = toC(0, targetImpact.y).y;
+            ctx.strokeStyle = "rgba(198, 40, 40, 0.4)";
+            ctx.setLineDash([5,5]);
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(pad, yC);
+            ctx.lineTo(w-pad, yC);
+            ctx.stroke();
+            ctx.fillStyle = "#c62828";
+            ctx.fillText(`OBJETIVO (${params.hTarget}m)`, pad + 5, yC - 5);
+            ctx.setLineDash([]);
+        }
+
+        ctx.strokeStyle = "#1a237e";
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        const start = toC(path[0].x, path[0].y);
+        ctx.moveTo(start.x, start.y);
+        const stride = path.length > 5000 ? 10 : 1;
+        for (let i = stride; i < path.length; i += stride) {
+            const pt = path[i];
+            ctx.lineTo(toC(pt.x, pt.y).x, toC(pt.x, pt.y).y);
+        }
+        ctx.stroke();
+
+        ctx.fillStyle = "#2e7d32";
+        ctx.beginPath();
+        ctx.arc(start.x, start.y, 5, 0, 2*Math.PI);
+        ctx.fill();
+        const end = toC(path[path.length-1].x, path[path.length-1].y);
+        ctx.fillStyle = "#000";
+        ctx.beginPath();
+        ctx.arc(end.x, end.y, 4, 0, 2*Math.PI);
+        ctx.fill();
+
+        if (targetImpact) {
+            const tPos = toC(targetImpact.x, targetImpact.y);
+            ctx.fillStyle = "#c62828";
+            ctx.beginPath();
+            ctx.arc(tPos.x, tPos.y, 6, 0, 2*Math.PI);
+            ctx.fill();
+            ctx.strokeStyle = "white";
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(tPos.x-4, tPos.y);
+            ctx.lineTo(tPos.x+4, tPos.y);
+            ctx.moveTo(tPos.x, tPos.y-4);
+            ctx.lineTo(tPos.x, tPos.y+4);
+            ctx.stroke();
+        }
+        ctx.restore();
+    }
+
+    function calculateNiceStep(range) {
+        if (range <= 0) return 10;
+        const roughStep = range / 10;
+        const magnitude = Math.pow(10, Math.floor(Math.log10(roughStep)));
+        const normalizedStep = roughStep / magnitude;
+        let step = (normalizedStep < 1.5) ? 1 : (normalizedStep < 3) ? 2 : (normalizedStep < 7) ? 5 : 10;
+        return step * magnitude;
+    }
+
+    function handleCanvasHover(e) {
+        if (!simulationData || !simulationData.path.length) return;
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const { scale, pad } = scaleFactors;
+        const realX = (mouseX - pad) / scale;
+        const path = simulationData.path;
+        let closest = path[0];
+        let minDist = Infinity;
+        const step = path.length > 20000 ? 20 : 1;
+        for (let i = 0; i < path.length; i += step) {
+            let dist = Math.abs(path[i].x - realX);
+            if (dist < minDist) {
+                minDist = dist;
+                closest = path[i];
+            }
+        }
+        tooltip.style.left = (e.clientX + 15) + 'px';
+        tooltip.style.top = (e.clientY + 15) + 'px';
+        tooltip.style.display = 'block';
+        tooltip.innerHTML = `
+            <strong style="color:#aaa">Datos en trayectoria:</strong><br>
+            Distancia X: ${closest.x.toFixed(2)} m<br>
+            Altura Y: ${closest.y.toFixed(2)} m<br>
+            <span style="color:#4fc3f7">Desv. Lateral Z: ${closest.z.toFixed(3)} m</span><br>
+            Velocidad: ${Math.sqrt(closest.vx**2 + closest.vy**2 + closest.vz**2).toFixed(1)} m/s<br>
+            Mach: ${closest.mach.toFixed(2)}<br>
+            Cd: ${closest.cd.toFixed(3)}
+        `;
+    }
+
+    function updateUI(final, hMax, target, p) {
+        try {
+            const setText = (id, txt) => {
+                const el = document.getElementById(id);
+                if (el) el.innerText = txt;
+            };
+            if (!final) {
+                setText('resRange', "Error");
+                setText('resHeight', "Error");
+                setText('resTime', "Error");
+                return;
+            }
+            const vFinal = Math.sqrt(final.vx*final.vx + final.vy*final.vy + final.vz*final.vz);
+            const eFinal = 0.5 * p.m * vFinal * vFinal;
+            setText('resRange', final.x.toFixed(2) + " m");
+            setText('resHeight', hMax.toFixed(2) + " m");
+            setText('resTime', final.t.toFixed(3) + " s");
+            setText('resDrift', (final.z >= 0 ? "+" : "") + final.z.toFixed(3) + " m");
+
+            if (target) {
+                const vT = Math.sqrt(target.vx*target.vx + target.vy*target.vy + target.vz*target.vz);
+                const eT = 0.5 * p.m * vT * vT;
+                setText('resTargetDist', target.x.toFixed(2) + " m");
+                setText('resVel', vT.toFixed(1) + " m/s");
+                setText('resEnergy', eT.toFixed(1) + " J");
+                setText('resTargetDrift', (target.z >= 0 ? "+" : "") + target.z.toFixed(3) + " m");
+            } else {
+                setText('resTargetDist', final.x.toFixed(2) + " m (suelo)");
+                setText('resVel', vFinal.toFixed(1) + " m/s");
+                setText('resEnergy', eFinal.toFixed(1) + " J");
+                setText('resTargetDrift', (final.z >= 0 ? "+" : "") + final.z.toFixed(3) + " m");
+            }
+        } catch(e) {
+            console.error("Error actualizando UI:", e);
+        }
+    }
+
+    function exportarCSV() {
+        if (!simulationData || !simulationData.path.length) return alert("Ejecute la simulación primero.");
+        const { path } = simulationData;
+        let csv = "Tiempo(s),Pos_X(m),Pos_Y(m),Pos_Z(m),Vel_X(m/s),Vel_Y(m/s),Vel_Z(m/s),Vel_Total(m/s),Mach,Cd\n";
+        const stride = path.length > 10000 ? 10 : 1;
+        for (let i = 0; i < path.length; i += stride) {
+            const p = path[i];
+            const vTot = Math.sqrt(p.vx**2 + p.vy**2 + p.vz**2);
+            csv += `${p.t.toFixed(4)},${p.x.toFixed(4)},${p.y.toFixed(4)},${p.z.toFixed(4)},${p.vx.toFixed(3)},${p.vy.toFixed(3)},${p.vz.toFixed(3)},${vTot.toFixed(3)},${p.mach.toFixed(3)},${p.cd.toFixed(4)}\n`;
+        }
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'balistica_forense_3d_trayectoria.csv';
+        a.click();
+        window.URL.revokeObjectURL(url);
+    }
+</script>
+</body>
+</html>
