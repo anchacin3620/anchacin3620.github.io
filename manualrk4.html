@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual de Usuario - Simulador Balístico RK4 Pro</title>
+    <style>
+        :root { 
+            --primary: #1a237e; 
+            --secondary: #3949ab; 
+            --accent: #c62828; 
+            --bg: #f5f7fa; 
+            --text: #37474f; 
+            --light-gray: #eceff1;
+        }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            margin: 0; 
+            padding: 0; 
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header { 
+            background: var(--primary); 
+            color: white; 
+            padding: 1.5rem; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2); 
+        }
+        header h1 { margin: 0; font-size: 1.8rem; }
+        header p { margin: 5px 0 0; opacity: 0.8; font-size: 0.9rem; }
+
+        /* Layout */
+        .container {
+            display: flex;
+            flex: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 20px;
+            gap: 30px;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 250px;
+            flex-shrink: 0;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+        .sidebar h3 { margin-top: 0; color: var(--primary); border-bottom: 2px solid var(--bg); padding-bottom: 10px; }
+        .nav-links { list-style: none; padding: 0; }
+        .nav-links li { margin-bottom: 10px; }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            display: block;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        .nav-links a:hover { background: var(--light-gray); color: var(--primary); }
+        .nav-links a.active { background: var(--secondary); color: white; }
+
+        /* Main Content */
+        .content { flex: 1; }
+        .section {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            scroll-margin-top: 20px;
+        }
+        .section h2 { color: var(--primary); border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 0; }
+        .section h3 { color: var(--secondary); margin-top: 25px; }
+        
+        p { margin-bottom: 15px; text-align: justify; }
+        ul { margin-bottom: 15px; padding-left: 20px; }
+        li { margin-bottom: 8px; }
+
+        /* Callouts / Tips */
+        .tip-box {
+            background-color: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .warning-box {
+            background-color: #ffebee;
+            border-left: 5px solid var(--accent);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .code-block {
+            background: #263238;
+            color: #aed581;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Consolas', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        /* Footer */
+        footer { 
+            background: #263238; 
+            color: #b0bec5; 
+            text-align: center; 
+            padding: 20px; 
+            font-size: 0.8em; 
+            margin-top: auto; 
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container { flex-direction: column; }
+            .sidebar { width: 100%; position: static; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Manual de Usuario y Análisis Técnico</h1>
+    <p>Simulador Balístico Forense (RK4 Pro) - Versión 3D Avanzada</p>
+</header>
+
+<div class="container">
+    <!-- NAVEGACIÓN LATERAL -->
+    <nav class="sidebar">
+        <h3>Contenido</h3>
+        <ul class="nav-links">
+            <li><a href="#intro" onclick="setActive(this)">1. Introducción</a></li>
+            <li><a href="#interfaz" onclick="setActive(this)">2. Interfaz de Usuario</a></li>
+            <li><a href="#parametros" onclick="setActive(this)">3. Parámetros de Entrada</a></li>
+            <li><a href="#resultados" onclick="setActive(this)">4. Interpretación de Resultados</a></li>
+            <li><a href="#analisis" onclick="setActive(this)">5. Análisis Físico y Forense</a></li>
+            <li><a href="#faq" onclick="setActive(this)">6. Preguntas Frecuentes</a></li>
+        </ul>
+    </nav>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="content">
+        
+        <!-- SECCIÓN 1: INTRODUCCIÓN -->
+        <div id="intro" class="section">
+            <h2>1. Introducción</h2>
+            <p>El <strong>Simulador Balístico Forense (RK4 Pro)</strong> es una herramienta de cálculo avanzada diseñada para la reconstrucción de trayectorias balísticas con precisión científica. A diferencia de los modelos parabólicos simples, este software integra las ecuaciones diferenciales del movimiento en 3 grados de libertad (3-DOF) utilizando el método de integración numérica <strong>Runge-Kutta 4</strong>.</p>
+            
+            <p>Esta herramienta está orientada a peritos forenses, estudiantes de criminalística e investigadores que requieren determinar:</p>
+            <ul>
+                <li>Alcance exacto y tiempo de vuelo.</li>
+                <li>Energía cinética remanente en el impacto.</li>
+                <li>Desviaciones laterales por viento cruzado y efecto de giro (Spin Drift).</li>
+                <li>Influencia de la densidad del aire según la altitud (Modelo ISA).</li>
+            </ul>
+        </div>
+
+        <!-- SECCIÓN 2: INTERFAZ -->
+        <div id="interfaz" class="section">
+            <h2>2. Interfaz de Usuario</h2>
+            <p>La pantalla se divide en dos grandes áreas:</p>
+            
+            <h3>Panel Izquierdo: Controles</h3>
+            <p>Contiene 4 bloques de configuración. Cualquier cambio en estos valores activa automáticamente el recalculo de la trayectoria (o tras soltar el control en el caso de deslizadores).</p>
+            
+            <h3>Panel Derecho: Visualización y Resultados</h3>
+            <ul>
+                <li><strong>Gráfico (Canvas):</strong> Muestra la trayectoria lateral (Distancia vs. Altura). Soporta interacción con el ratón para ver datos instantáneos.</li>
+                <li><strong>Panel de Resultados:</strong> Grid inferior con valores clave como alcance total, energía, y desviación lateral.</li>
+            </ul>
+        </div>
+
+        <!-- SECCIÓN 3: PARÁMETROS -->
+        <div id="parametros" class="section">
+            <h2>3. Parámetros de Entrada</h2>
+            
+            <h3>3.1 Configuración del Proyectil</h3>
+            <p>Aquí se definen las propiedades físicas del disparo.</p>
+            <ul>
+                <li><strong>Preset Calibre:</strong> Carga automática de masa, área y velocidad típica para proyectiles comunes (9mm, 5.56mm, 7.62mm, etc.).</li>
+                <li><strong>Masa y Área:</strong> Valores fundamentales para calcular la inercia y la resistencia aerodinámica.</li>
+                <li><strong>Perfil Balístico:</strong> Determina cómo varía el Coeficiente de Arrastre (Cd) según la velocidad. El modelo por defecto es G1.</li>
+            </ul>
+
+            <h3>3.2 Condiciones Iniciales</h3>
+            <ul>
+                <li><strong>Velocidad Inicial (V0):</strong> Velocidad a la que sale el proyectil del cañón.</li>
+                <li><strong>Ángulo de Disparo:</strong> Elevación respecto a la horizontal. Positivo hacia arriba, negativo hacia abajo.</li>
+                <li><strong>Altura del Tirador:</strong> Altura del eje del arma sobre el suelo al momento del disparo.</li>
+                <li><strong>Sentido del Giro:</strong> Define el estriado del cañón (Dextrógira/Levógira), lo cual afecta la deriva lateral magnus.</li>
+            </ul>
+
+            <h3>3.3 Factores Ambientales</h3>
+            <div class="tip-box">
+                <strong>Nota Técnica:</strong> El modelo atmosférico ISA ajusta automáticamente la densidad del aire basándose en la altitud ingresada, mejorando la precisión en disparos de larga distancia.
+            </div>
+            <ul>
+                <li><strong>Viento Longitudinal:</strong> A favor (+) o en contra (-) de la trayectoria. Afecta el alcance y la velocidad remanente.</li>
+                <li><strong>Viento Cruzado:</strong> Viento lateral perpendicular al disparo. Causa desviación en el eje Z.</li>
+                <li><strong>Velocidad del Sonido:</strong> Necesaria para calcular el número de Mach y aplicar la variación del Coeficiente de Arrastre.</li>
+            </ul>
+        </div>
+
+        <!-- SECCIÓN 4: RESULTADOS -->
+        <div id="resultados" class="section">
+            <h2>4. Interpretación de Resultados</h2>
+            <p>Una vez calculada la simulación, observe el panel inferior derecho:</p>
+            
+            <h3>Alcance y Altura</h3>
+            <ul>
+                <li><strong>Alcance Total (Suelo):</strong> Distancia horizontal exacta donde el proyectil impacta el suelo (Y=0).</li>
+                <li><strong>Altura Máxima:</strong> El punto más alto de la parábola respecto al suelo.</li>
+            </ul>
+
+            <h3>Impacto en Objetivo</h3>
+            <p>Si se define una "Altura Impacto Objetivo" diferente a la del tirador, el sistema calcula los datos en ese cruce:</p>
+            <ul>
+                <li><strong>Vel. Impacto:</strong> Velocidad vectorial total al llegar a esa altura.</li>
+                <li><strong>Energía (J):strong> Energía cinética ($E_k = 0.5 \cdot m \cdot v^2$). Crítico para evaluar el poder de detención.</li>
+            </ul>
+
+            <h3>Desviación Lateral (Drift)</h3>
+            <p>Datos en color azul:</p>
+            <ul>
+                <li><strong>Desv. Lateral (Suelo):</strong> Cuánto se ha movido la bala hacia la derecha o izquierda cuando toca el suelo.</li>
+                <li><strong>Desv. Lat. (Objetivo):</strong> Deriva lateral a la altura específica del objetivo.</li>
+            </ul>
+        </div>
+
+        <!-- SECCIÓN 5: ANÁLISIS FÍSICO -->
+        <div id="analisis" class="section">
+            <h2>5. Análisis Físico y Algoritmo</h2>
+            <p>Este software no utiliza fórmulas simplificadas de física pre-universitaria. Emplea integración numérica para resolver las ecuaciones de Newton en tiempo real.</p>
+
+            <h3>Integración RK4 (Runge-Kutta 4)</h3>
+            <p>Para garantizar la estabilidad y precisión, se utiliza el método de Runge-Kutta de cuarto orden. Esto divide el tiempo en pasos infinitesimales (<code>dt = 0.001s</code>) calculando la aceleración en cuatro puntos distintos dentro de cada paso para predecir la siguiente posición y velocidad con un error mínimo.</p>
+
+            <h3>Coeficiente de Arrastre Variable (Cd vs Mach)</h3>
+            <p>El software implementa una aproximación del modelo G1:</p>
+            <div class="code-block">
+                Mach < 0.8  -> Cd = 0.25 (Subsónico)<br>
+                Mach < 1.2  -> Cd = 0.45 (Transónico - Onda de Choque)<br>
+                Mach > 2.5  -> Cd = 0.30 (Hipersónico)
+            </div>
+            <p>Esto es crucial para peritajes, ya que una bala de rifle sufre una drástica pérdida de velocidad al cruzar la barrera del sonido, lo cual este modelo simula correctamente.</p>
+
+            <h3>Efecto de Giro (Spin Drift)</h3>
+            <p>Se incluye una aceleración lateral simplificada:</p>
+            <div class="code-block">
+                a_spin = K * (vx / v)
+            </div>
+            <p>Esto simula la precesión y el efecto Magnus que hace que las balas giratorias se desvíen ligeramente hacia la derecha (en ánimas dextróginas) a larga distancia.</p>
+        </div>
+
+        <!-- SECCIÓN 6: FAQ -->
+        <div id="faq" class="section">
+            <h2>6. Preguntas Frecuentes (FAQ)</h2>
+            
+            <details>
+                <summary><strong>¿Por qué cambia el tamaño del gráfico cuando modifico el ángulo?</strong></summary>
+                <p style="margin-top:10px;">El simulador utiliza un "Zoom Automático" (Autoscaling). Si dispara a 0°, la trayectoria es plana y el software hace zoom vertical para ver los detalles. Si dispara a 45°, la bala sube muy alto, por lo que el software aleja la vista para que quepa toda la curva. Esto <strong>no</strong> cambia la altura del tirador, solo la escala visual.</p>
+            </details>
+            <hr style="border:0; border-top:1px solid #eee; margin: 10px 0;">
+
+            <details>
+                <summary><strong>¿Qué significa el "Eje Z" en los resultados?</strong></summary>
+                <p style="margin-top:10px;">El eje Z representa la profundidad o lateralidad. En el gráfico 2D de la pantalla solo ves X (distancia) e Y (altura). Sin embargo, el cálculo interno es 3D. El "Eje Z" te indica cuánto se ha movido la bala hacia la derecha o izquierda debido al viento cruzado y al giro del proyectil.</p>
+            </details>
+            <hr style="border:0; border-top:1px solid #eee; margin: 10px 0;">
+
+            <details>
+                <summary><strong>¿Por qué la pantalla sale en blanco al abrir el archivo?</strong></summary>
+                <p style="margin-top:10px;">Esto puede ocurrir en entornos de vista previa lentos. Asegúrese de que el navegador tenga permisos para ejecutar JavaScript. Presione el botón "FORZAR RECÁLCULO" si los datos no aparecen automáticamente.</p>
+            </details>
+        </div>
+
+    </main>
+</div>
+
+<footer>
+    <p><strong>@2026 Prof. Ángel Chacín Ávila | UNES</strong></p>
+    <p>Herramienta de Código Abierto para la Enseñanza de la Criminalística (Versión 3D Avanzada)</p>
+    <p>Se publica con licencia GPL</p>
+</footer>
+
+<script>
+    // Función simple para manejar la navegación activa visualmente
+    function setActive(element) {
+        // Remover clase active de todos
+        const links = document.querySelectorAll('.nav-links a');
+        links.forEach(link => link.classList.remove('active'));
+        
+        // Añadir clase active al clickeado
+        element.classList.add('active');
+    }
+
+    // Smooth scroll para navegadores antiguos (aunque CSS scroll-behavior suele bastar)
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+</script>
+
+</body>
+</html>
