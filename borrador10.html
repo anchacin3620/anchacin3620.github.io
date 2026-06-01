@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Defensa de Tesis: Simulación Monte Carlo - Br. Ángel Chacín</title>
+<style>
+  /* --- RESET Y ESTILOS BASE --- */
+  :root {
+    --primary-color: #003366; /* Azul Académico LUZ aproximado */
+    --secondary-color: #f0f4f8;
+    --accent-color: #e63946;
+    --text-color: #333;
+    --light-text: #666;
+    --border-radius: 8px;
+    --shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+
+  /* Contenedor principal para evitar conflictos con el tema del blog */
+  #luz-defensa-container {
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    max-width: 900px;
+    margin: 20px auto;
+    border-radius: var(--border-radius);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    overflow: hidden;
+    border: 1px solid #ddd;
+  }
+
+  /* --- HEADER --- */
+  .defensa-header {
+    background: var(--primary-color);
+    color: white;
+    padding: 15px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .defensa-title {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+
+  .defensa-subtitle {
+    font-size: 0.9rem;
+    opacity: 0.9;
+  }
+
+  /* --- SLIDE STAGE --- */
+  .slide-stage {
+    background: white;
+    min-height: 500px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    position: relative;
+  }
+
+  /* Número de lámina */
+  .slide-badge {
+    background: #eee;
+    color: #555;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    align-self: flex-start;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+
+  /* Área Visual (Simulación de Gráficas/Imágenes) */
+  .visual-container {
+    background: #f8f9fa;
+    border: 1px dashed #ccc;
+    border-radius: var(--border-radius);
+    min-height: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+    position: relative;
+  }
+
+  .visual-icon {
+    font-size: 4rem;
+    margin-bottom: 15px;
+    color: var(--primary-color);
+  }
+
+  .visual-description {
+    font-style: italic;
+    color: var(--light-text);
+    max-width: 80%;
+    font-size: 0.95rem;
+  }
+
+  /* Área de Discurso (Texto) */
+  .speech-container {
+    background: #fff;
+    border-left: 4px solid var(--primary-color);
+    padding: 20px;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #2c3e50;
+  }
+
+  .speech-label {
+    display: block;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    color: var(--accent-color);
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  /* --- CONTROLES --- */
+  .controls-bar {
+    background: #e9ecef;
+    padding: 15px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #dee2e6;
+  }
+
+  .btn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn:hover {
+    background: #002244;
+  }
+
+  .btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+
+  .slide-counter {
+    font-weight: bold;
+    color: var(--light-text);
+  }
+
+  /* Select de salto rápido */
+  .jump-select {
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    margin-left: 10px;
+  }
+
+  /* Animaciones */
+  .fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .slide-stage { padding: 15px; }
+    .defensa-title { font-size: 1rem; }
+    .visual-container { min-height: 180px; }
+    .btn span { display: none; } /* Ocultar texto en botones móviles */
+    .btn { padding: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="luz-defensa-container">
+  <!-- Header -->
+  <header class="defensa-header">
+    <div>
+      <div class="defensa-title">Simulación Monte Carlo de Procesos de Deposición</div>
+      <div class="defensa-subtitle">Br. Ángel Chacín Ávila | LUZ | Abril 2026</div>
+    </div>
+    <!-- Icono universitario simulado -->
+    <div style="font-size: 1.5rem;">🎓</div>
+  </header>
+
+  <!-- Main Stage -->
+  <main class="slide-stage" id="slide-stage">
+    <!-- El contenido se inyectará aquí vía JavaScript -->
+  </main>
+
+  <!-- Controls -->
+  <footer class="controls-bar">
+    <button class="btn" id="btn-prev" onclick="prevSlide()">
+      ⬅️ <span>Anterior</span>
+    </button>
+
+    <div style="display: flex; align-items: center;">
+      <span class="slide-counter" id="slide-counter">1 / 29</span>
+      <select class="jump-select" id="jump-select" onchange="goToSlide(this.value)">
+        <!-- Opciones generadas por JS -->
+      </select>
+    </div>
+
+    <button class="btn" id="btn-next" onclick="nextSlide()">
+      <span>Siguiente</span> ➡️
+    </button>
+  </footer>
+</div>
+
+<script>
+  // --- DATOS DE LAS 29 LÁMINAS ---
+  const slides = [
+    {
+      title: "Lámina 1: Portada Oficial",
+      visualIcon: "🏛️",
+      visualDesc: "Logotipo de la Universidad del Zulia (LUZ) y de la Facultad Experimental de Ciencias (FEC). Texto completo con los nombres y fecha (Abril del 2026).",
+      speech: "Buenos días, distinguidos miembros del jurado, profesores y tutores presentes. A continuación, tengo el honor de presentar la defensa de mi Trabajo de Investigación titulado: 'Simulación Monte Carlo de los Procesos de Deposición de Películas Delgadas de Cr y Fe sobre un Sustrato Sólido de Mg(001)', desarrollado como requisito fundamental para optar al título de Licenciado en Física en nuestra ilustre Universidad del Zulia."
+    },
+    {
+      title: "Lámina 2: Ficha Técnica de la Defensa",
+      visualIcon: "👤",
+      visualDesc: "Resumen institucional con datos del autor (Br. Ángel Chacín Ávila), tutores (Msc. Emily Chávez Rivas y Dr. José Fermín) y adscripción académica.",
+      speech: "Esta investigación se consolidó bajo la tutoría de la Msc. Emily Chávez Rivas y el cotutor Dr. José Fermín en el departamento de Física de la Facultad Experimental de Ciencias. El estudio se centra en el modelado computacional y la caracterización estadística de frentes de crecimiento interfacial."
+    },
+    {
+      title: "Lámina 3: Resumen del Proyecto",
+      visualIcon: "📝",
+      visualDesc: "Texto descriptivo sobre la simulación estocástica a nanoescala mediante Monte Carlo Cinético (KMC) para la deposición de Cromo y Hierro sobre Magnesio (001).",
+      speech: "A modo de resumen, este proyecto consiste en una simulación estocástica a nanoescala que emplea el método de Monte Carlo Cinético (KMC). El objetivo es evaluar de forma comparativa cómo se deponen e interactúan átomos de Cromo y Hierro sobre una base cristalina de Magnesio orientada en la dirección (001)."
+    },
+    {
+      title: "Lámina 4: El Modelo (Esquema de la Red)",
+      visualIcon: "🧊",
+      visualDesc: "Ilustración tridimensional de una celda cúbica con los átomos coloreados en azul para el Cr, naranja para el Fe y la base etiquetada como Magnesio (001).",
+      speech: "En esta lámina podemos observar la representación geométrica del modelo. Se define una rejilla tridimensional donde los sitios de la red simulan las posiciones cristatográficas del sustrato de Magnesio (001), sirviendo de matriz receptora para los átomos incidentes de Cromo y Hierro, representados aquí esquemáticamente."
+    },
+    {
+      title: "Lámina 5: La Ejecución (Flujograma Algorítmico)",
+      visualIcon: "🔄",
+      visualDesc: "Diagrama de bloques lógicos: [Inicio] → [Definir Parámetros] → [Deposición Balística] → [Cálculo de Energía: 5.0 eV] → [Simulación KMC en Fortran 90] → [Mapeo Topográfico 3D en Python] → [Análisis] → [Fin].",
+      speech: "La ejecución del sistema sigue este riguroso bucle algorítmico. Tras inicializar y definir los parámetros, el flujo entra en el régimen de deposición balística a 5.0 eV. El procesamiento principal se realiza a través de un código original programado en Fortran 90, cuyos resultados numéricos se exportan hacia scripts de Python para generar el mapeo topográfico tridimensional."
+    },
+    {
+      title: "Lámina 6: El Descubrimiento (Resumen Gráfico Causal)",
+      visualIcon: "📈",
+      visualDesc: "Gráfica curva de densidad de probabilidad frente a energía de difusión mostrando la campana del Cr (Baja Movilidad) y del Fe (Alta Movilidad). Texto: 'A pesar de métricas macroscópicas similares, la energía de difusión intrínseca dicta la arquitectura...'.",
+      speech: "Este bloque metodológico nos condujo a un descubrimiento físico fundamental. Aunque las métricas macroscópicas de ambos sistemas resulten numéricamente muy cercanas, la energía de difusión intrínseca de cada elemento es la que dicta la arquitectura interna del crecimiento. Mientras el Hierro tiende a generar valles fluidos debido a su movilidad, el Cromo construye columnas rígidas y fragmentadas."
+    },
+    {
+      title: "Lámina 7: Concepto Fundamental: ¿Qué es una Película Delgada?",
+      visualIcon: "🥪",
+      visualDesc: "Gráfico conceptual dividido en tres niveles: Nivel 1 (El Bombardeo de partículas), Nivel 2 (El Escudo o Película Delgada nanométrica) y Nivel 3 (El Sustrato base de Magnesio).",
+      speech: "Para situarnos en el contexto físico, debemos definir qué es una película delgada. Concebimos el proceso en tres niveles interconectados: primero, el bombardeo, donde partículas metálicas son disparadas hacia la superficie; segundo, la formación del escudo o película, que consiste en capas de espesor nanométrico que alteran las propiedades superficiales; y tercero, el sustrato de Magnesio, que actúa como la base sólida receptora."
+    },
+    {
+      title: "Lámina 8: El Problema a Escala Nanométrica",
+      visualIcon: "🔬",
+      visualDesc: "Tres recuadros explicativos: Nivel Macro (Contexto Industrial del Mg y su corrosión), Nivel Micro (La Limitación Experimental de capturar dinámicas ultrarrápidas) y Nivel Nano (La Solución Computacional mediante modelos estocásticos fuera del equilibrio).",
+      speech: "Esta lámina delimita la problemática en tres escalas. A nivel macro e industrial, sabemos que el Magnesio es muy ligero pero altamente propenso a la corrosión, requiriendo protección. A nivel micro, nos topamos con una limitación experimental, ya que capturar estas dinámicas de adsorción en tiempo real es sumamente complejo. Por ello, a nivel nano, planteamos la solución computacional mediante simulaciones estocásticas fuera del equilibrio."
+    },
+    {
+      title: "Lámina 9: El Corazón Matemático: La Ecuación Maestra Probabilística",
+      visualIcon: "∑",
+      visualDesc: "Ecuación diferencial formal para la probabilidad de configuración dP(σ,t)/dt = Σ [W(σ'→σ)P(σ',t) - W(σ→σ')P(σ,t)] con glosario de términos (Estado del sistema, El Balance y Tasa de Transición).",
+      speech: "El corazón matemático que gobierna de forma rigurosa las reglas de probabilidad en la simulación es la Ecuación Maestra Probabilística. Esta ecuación describe formalmente el balance continuo de estados en el sistema, computando la ganancia y pérdida de probabilidad de que la superficie adopte una configuración espacial específica (σ) en el tiempo, en función de las tasas de transición microscópicas (W)."
+    },
+    {
+      title: "Lámina 10: Ecuación Maestra y Procesos Estocásticos",
+      visualIcon: "🎲",
+      visualDesc: "Texto analítico que conecta la ecuación con una Cadena de Markov de tiempo continuo. Define los subprocesos de Adsorción (P_ads) dependiente del impacto de 5.0 eV y la Difusión Superficial (P_diff) ligada a Arrhenius.",
+      speech: "Desde la perspectiva de los procesos estocásticos, esta ecuación describe la evolución de una Cadena de Markov de tiempo continuo. En nuestro modelo, desglosamos las tasas de transición en dos subprocesos competitivos: la Adsorción y la Difusión Superficial. Como resolver analíticamente este sistema acoplado para una rejilla de 50x50x30 es matemáticamente inviable, se justifica plenamente recurrir al método de simulación Monte Carlo Cinético."
+    },
+    {
+      title: "Lámina 11: Las Reglas del Juego Atómico: Adsorción y Difusión",
+      visualIcon: "⚛️",
+      visualDesc: "Ilustraciones vectoriales de: 1. Adsorción (partícula impactando la rejilla, gobernada por P_ads > aleatorio). 2. Difusión (átomo saltando a un sitio vecino vacío, gobernada por rate = ν exp(-Ed/kB T)).",
+      speech: "Aquí observamos las reglas mecánicas implementadas en el código. En la Adsorción, la partícula llega desde el plasma e impacta la superficie según su coeficiente de adherencia y energía. En la Difusión, el átomo ya depositado 'camina' o salta hacia un sitio vecino desocupado buscando estabilidad térmica, un evento gobernado estrictamente por la barrera de energía cuántica (Ed) en la Ecuación de Arrhenius."
+    },
+    {
+      title: "Lámina 12: El 'Microscopio Virtual' (Definición de KMC)",
+      visualIcon: "🕰️",
+      visualDesc: "Ilustración de un dado sobre una red cristalina fragmentada. Puntos clave: Técnica estocástica fuera del equilibrio, evolución mediante eventos discretos aleatorios y ventajas de escala frente a la Dinámica Molecular estándar.",
+      speech: "Para materializar estas reglas, empleamos el algoritmo de Monte Carlo Cinético, nuestro microscopio virtual. Al basarse en la selección estadística de eventos discretos a través de números pseudoaleatorios, el KMC supera con creces la limitación temporal de la Dinámica Molecular convencional, permitiéndonos alcanzar escalas de tiempo reales de deposición manteniendo la resolución nanométrica."
+    },
+    {
+      title: "Lámina 13: Configuración del Experimento Virtual",
+      visualIcon: "⚙️",
+      visualDesc: "Interfaz gráfica simulada con los parámetros de control: Sustrato (Magnesio 001, Rejilla 50x50x30), Ambiente (Temp: 500 K, Energía Incidente: 5.0 eV) y Modo (Balístico, Iteraciones: 50,000).",
+      speech: "La parametrización exacta de nuestro experimento virtual quedó fijada de la siguiente manera: modelamos un sustrato de Magnesio (001) estructurado en una rejilla de 50x50x30 sitios cristalinos. Fijamos la temperatura ambiente del sustrato en 500 Kelvin y la energía de bombardeo incidente en 5.0 eV bajo el régimen balístico puro, ejecutando un total de 50,000 iteraciones en el sistema."
+    },
+    {
+      title: "Lámina 14: Arquitectura del Bucle Algorítmico (KMC)",
+      visualIcon: "🧱",
+      visualDesc: "Bloques detallados del programa: 1. Inicialización (matriz con valor -1 para el Mg). 2. Evaluación de Tasas (Suma de eventos posibles). 3. Selección Estocástica (uso de Random_Number de Fortran 90). 4. Actualización Espaciotemporal.",
+      speech: "La arquitectura interna del programa desarrollado en Fortran 90 consta de cuatro etapas clave: la inicialización de la matriz asignando valores específicos para el sustrato; la evaluación dinámica de las tasas de adsorción y difusión; la selección estocástica del evento mediante la rutina nativa Random_Number; y finalmente, la actualización espacial de las coordenadas en la matriz 3D junto al cálculo del avance temporal estocástico (Δt)."
+    },
+    {
+      title: "Lámina 15: Los Contendientes: Cromo (Cr) vs. Hierro (Fe)",
+      visualIcon: "⚔️",
+      visualDesc: "Gráficos de un avión (velocidad/movilidad) y un ancla (fijación). Ficha técnica: Cromo (Adhesión 0.98, Ed: 0.01-0.25 eV, Movilidad ALTA). Hierro (Adhesión 0.95, Ed: 0.5-1.0 eV, Movilidad BAJA).",
+      speech: "Esta lámina presenta las especificaciones físicas de nuestros dos contendientes. El Cromo se caracteriza por una probabilidad de adhesión de 0.98 y una barrera de energía de difusión sumamente baja, de 0.01 a 0.25 eV, lo que se traduce en una alta movilidad superficial. Por el contrario, el Hierro cuenta con una adhesión de 0.95 y una alta barrera de difusión de 0.5 a 1.0 eV, restringiendo su movilidad y actuando como un ancla cinética."
+    },
+    {
+      title: "Lámina 16: El 'Cañón de Partículas': Modo Balístico a 90°",
+      visualIcon: "🚀",
+      visualDesc: "Esquema de bombardeo perpendicular a alta energía (5.0 eV) sobre el sustrato de Magnesio (001). Gráfico de sectores: Predominio del Crecimiento (70% Crecimiento Vertical, 30% Coalescencia).",
+      speech: "Al activar el régimen de deposición balística pura, configuramos una incidencia perpendicular exacta a 90 grados respecto al plano del sustrato. Este bombardeo direccional de alta energía promueve de forma nítida el crecimiento vertical, el cual domina la cinética con un 70% frente a un 30% de coalescencia o empaquetamiento lateral, forzando la superación rápida de las 30 capas de espesor."
+    },
+    {
+      title: "Lámina 17: Morfología y Nanoestructura Teórica",
+      visualIcon: "🏔️",
+      visualDesc: "Comparativa de perfiles. Cromo: 'Estructuras Fragmentadas y Rígidas: Islas altas con bordes extremadamente nítidos'. Hierro: 'Picos Pronunciados y Valles Profundos: Transiciones abruptas, picos de hasta 14 capas'.",
+      speech: "Desde el punto de vista cualitativo, las diferencias morfológicas esperadas son drásticas. El Cromo tiende a agrupar sus átomos en estructuras fragmentadas y rígidas, caracterizadas por islas altas con bordes geométricos sumamente nítidos. El Hierro, debido al confinamiento provocado por su alta barrera, genera un relieve de picos pronunciados y valles profundos con transiciones abruptas y picos individuales de gran altura."
+    },
+    {
+      title: "Lámina 18: Métricas Clave del Crecimiento (Pre-Matriz)",
+      visualIcon: "📊",
+      visualDesc: "Tabla comparativa tras 20,000 eventos. Muestra los valores de Rugosidad RMS, Espesor Promedio y Altura Máxima (28.22±7.12 para Cr y 27.83±7.01 para Fe).",
+      speech: "Al realizar la cuantificación estadística tras procesar un bloque uniforme de 20,000 eventos de simulación, extraemos las primeras métricas clave. Aquí comenzamos a notar la paridad en los promedios globales de rugosidad y espesor, pero una divergencia latente en las desviaciones estándar y las alturas máximas alcanzadas por los frentes de crecimiento."
+    },
+    {
+      title: "Lámina 19: Matriz Diagnóstica: Cromo vs. Hierro (Deposición Balística)",
+      visualIcon: "🧾",
+      visualDesc: "Cuadro comparativo completo organizado con parámetros de entrada, métricas de salida de rugosidad, espesor y porcentajes de cobertura extrema (>20 y >30 capas) para ambos metales, cerrando con el bloque de 'Hallazgo'.",
+      speech: "Llegamos así a la Matriz Diagnóstica, la lámina cumbre que sintetiza numéricamente el comportamiento balístico. A nivel macroscópico, observamos que tanto el Cromo como el Hierro exhiben una rugosidad promedio (7.53 y 7.28 capas) y un espesor similares dentro del error estadístico. Sin embargo, la profunda divergencia se revela en la Cobertura Extrema: el Cromo presenta un 21.67% de ocupación por encima de las 20 capas y un 3.33% por encima de las 30 capas, superando al Hierro que registra 20.83% y 2.50%. Esto demuestra que los modos de crecimiento arquitectónico interno son drásticamente distintos."
+    },
+    {
+      title: "Lámina 20: Resultados Globales: Similitud Estadística",
+      visualIcon: "📊",
+      visualDesc: "Gráfico de barras que compara directamente los valores numéricos cercanos de Rugosidad (7.28 vs 7.53) y Espesor (10.52 vs 10.81) para el Fe y el Cr. Texto: 'Los números ocultan la estructura'.",
+      speech: "Para que el jurado aprecie visualmente esta paradoja, proyectamos este gráfico de barras. Como pueden ver, los promedios numéricos son prácticamente gemelos. Si nos limitáramos a un análisis estadístico elemental, concluiríamos erróneamente que los materiales crecen igual. No obstante, confirmamos que los números globales ocultan la verdadera ordenación geométrica de la estructura."
+    },
+    {
+      title: "Lámina 21: Gráfica — Rugosidad vs. Energía de Difusión",
+      visualIcon: "📉",
+      visualDesc: "Gráfica de dispersión de puntos ordenados verticalmente en bandas discretas. Puntos naranjas a la izquierda (Cr, 0.0 - 0.25 eV) y puntos azules a la derecha (Fe, 0.5 - 1.0 eV).",
+      speech: "Al mapear la Rugosidad en función de la Energía de Difusión, desvelamos un comportamiento físico fascinante. Los puntos de simulación correspondientes al Cromo y al Hierro se agrupan en bandas horizontales discretas bien definidas. Esto evidencia que el relieve de la película no evoluciona de manera caótica o continua, sino que se estabiliza en escalones o niveles cuánticos de rugosidad determinados por el acoplamiento con la rejilla."
+    },
+    {
+      title: "Lámina 22: Gráfica — Comparación de Rugosidad: Fe vs. Cr",
+      visualIcon: "📊",
+      visualDesc: "Histograma de densidad de probabilidad frente a rugosidad (capas). Se observa la superposición y coincidencia exacta en los picos discretos de rugosidad situados entre las 3 y 10 capas.",
+      speech: "Este histograma comparativo de densidad de probabilidad ratifica dicha observación. Bajo el estricto control del modo balístico, las curvas de ambos metales muestran una coincidencia matemática en picos discretos de rugosidad. Al estar anulada la influencia de la relajación térmica de gran alcance, el relieve queda condicionado puramente por las leyes estadísticas de empaquetamiento geométrico sobre el sustrato."
+    },
+    {
+      title: "Lámina 23: Topografía 3D y Mapas de Contorno (Modelos Conceptuales)",
+      visualIcon: "🗺️",
+      visualDesc: "Ilustraciones tridimensionales conceptuales y curvas de nivel de topografía. Muestra el Hierro como 'Dinámica Fluida' (valles suaves y transiciones continuas) y el Cromo como 'Dinámica Rígida' (islas aisladas y bordes nítidos).",
+      speech: "Antes de inspeccionar las matrices de datos de la simulación, analicemos los modelos topográficos conceptuales. El Hierro, debido a su ventana de energía, tiende a una dinámica que busca transiciones espaciales más continuas y suavizadas en los valles. En cambio, la dinámica del Cromo favorece un crecimiento vertical agresivo con el aislamiento de islas y bordes estructurales marcadamente definidos."
+    },
+    {
+      title: "Lámina 24: Gráficas — Resultados Reales para el Hierro (Fe)",
+      visualIcon: "🟠",
+      visualDesc: "Dos gráficas reales generadas a partir de 60 simulaciones: 1. Mapa 3D Promedio de Altura para el Fe. 2. Mapa de Contorno 2D para el Fe, mostrando un patrón pixelado y continuo en una escala de alturas de 0.0 a 14.4 capas.",
+      speech: "Al observar los resultados reales exportados por el simulador para el Hierro —obtenidos tras promediar estadísticamente 60 simulaciones independientes— el mapa tridimensional a la izquierda y el mapa de contorno a la derecha revelan la morfología de la superficie. El frente presenta un gradiente de altura elevado pero con una distribución de parches térmicamente influenciados, alcanzando un rango de hasta 14.4 capas en sus picas más prominentes."
+    },
+    {
+      title: "Lámina 25: Gráficas — Resultados Reales para el Cromo (Cr)",
+      visualIcon: "🔵",
+      visualDesc: "Dos gráficas del Cromo: 1. Mapa 3D Promedio de Altura para el Cr. 2. Mapa de Contorno 2D para el Cr, detallando la topografía y acumulación local bajo el mismo gradiente cromático de 0.0 a 14.4 capas.",
+      speech: "Las gráficas correspondientes al Cromo exhiben el relieve real del material bajo el mismo esquema de visualización. Noten cómo el mapa tridimensional de alturas muestra una estructura de crestas más escarpadas y afiladas. El mapa de contorno en dos dimensiones expone una organización espacial distinta de los cúmulos, confirmando que la baja barrera de difusión local modifica el empaquetamiento atómico fino."
+    },
+    {
+      title: "Lámina 26: El Escultor Nanométrico: Energía vs. Morfología",
+      visualIcon: "🗿",
+      visualDesc: "Ilustraciones de bloques cúbicos (Cromo) frente a ondas suaves (Hierro). Texto conclusivo: 'Cuantitativamente, crecen a tasas macroscópicas similares... Cualitativamente, son opuestos topológicos. La energía de difusión... es el mecanismo primario que esculpe la arquitectura...'.",
+      speech: "Esta lámina engloba la física fundamental de la tesis bajo el concepto del 'Escultor Nanométrico'. Cuantitativamente, el Cromo y el Hierro crecen a tasas macroscópicas casi idénticas bajo deposición balística a 5.0 eV. Sin embargo, cualitativamente, actúan como opuestos topológicos. La energía de difusión de cada elemento no es una simple variable de cálculo; es el mecanismo físico primario que esculpe la arquitectura protectora final de la película."
+    },
+    {
+      title: "Lámina 27: Gráfica — El Efecto de la Energía de Difusión (Clusters)",
+      visualIcon: "🔬",
+      visualDesc: "Gráfica de dispersión final que muestra el 'Cr Cluster' agrupado herméticamente a la izquierda y el 'Fe Cluster' con una dispersión vertical mucho más amplia a la derecha.",
+      speech: "Para validar la reproducibilidad estadística, evaluamos la formación de cúmulos o clusters. Como se aprecia en la gráfica, el cúmulo del Cromo se concentra de forma muy homogénea, mientras que el cúmulo del Hierro muestra una dispersión vertical significativamente mayor. Esto confirma que la alta barrera energética del Hierro induce fluctuaciones locales que incrementan la varianza estructural del frente de crecimiento."
+    },
+    {
+      title: "Lámina 28: Gráfica — Distribución de Alturas Promedio e Impacto Vertical",
+      visualIcon: "📊",
+      visualDesc: "Dos histogramas finales: 1. Distribución de Alturas Promedio para 120 simulaciones (Media: 9.28, Desviación: 8.99). 2. Gráfica de Frecuencia vs Altura detallando el efecto de crecimiento columnar vertical agresivo superando las 30 capas.",
+      speech: "Las últimas gráficas analíticas consolidan el comportamiento global a través de un set masivo de 120 simulaciones independientes. El sistema arroja una altura media general de 9.28 capas. Al evaluar la frecuencia de ocupación, el perfil demuestra de forma contundente el efecto balístico puro: un crecimiento vertical agresivo que llega a perforar el umbral de las 30 capas, pero manteniendo una baja ocupación lateral en las cimas, comportamiento típico de las estructuras columnares."
+    },
+    {
+      title: "Lámina 29: Hoja de Ruta, Recomendaciones y Cierre",
+      visualIcon: "🚀",
+      visualDesc: "Tres ejes de desarrollo futuro: 1. Optimización Computacional (Mersenne Twister, OpenMP/MPI). 2. Expansión Física (barridos térmicos 300K-800K, aleaciones). 3. Validación Experimental (AFM y XRD).",
+      speech: "Finalmente, establecemos la hoja de ruta y recomendaciones de nuestro trabajo. En el ámbito computacional, recomendamos migrar hacia el generador Mersenne Twister e implementar paralelización en OpenMP o MPI para escalar el código a rejillas masivas. En el aspecto físico, sugerimos realizar barridos térmicos dinámicos entre 300 y 800 Kelvin para simular aleaciones binarias. Y en lo metodológico, el paso definitivo será correlacionar estos mapas 3D con mediciones empíricas de Microscopía de Fuerza Atómica (AFM) en el laboratorio. Con esto concluyo mi presentación, quedando a la entera disposición de este honorable jurado para la sesión de preguntas y respuestas. Muchas gracias."
+    }
+  ];
+
+  // --- LÓGICA DE LA APLICACIÓN ---
+  let currentSlideIndex = 0;
+  const stage = document.getElementById('slide-stage');
+  const counter = document.getElementById('slide-counter');
+  const btnPrev = document.getElementById('btn-prev');
+  const btnNext = document.getElementById('btn-next');
+  const jumpSelect = document.getElementById('jump-select');
+
+  // Inicializar select de salto
+  slides.forEach((slide, index) => {
+    const option = document.createElement('option');
+    option.value = index;
+    option.text = slide.title;
+    jumpSelect.appendChild(option);
+  });
+
+  function renderSlide(index) {
+    const slide = slides[index];
+    
+    // Efecto de desvanecimiento: removemos clase, forzamos reflow, añadimos clase
+    stage.classList.remove('fade-in');
+    void stage.offsetWidth; // trigger reflow
+    stage.classList.add('fade-in');
+
+    stage.innerHTML = `
+      <div class="slide-badge">Lámina ${index + 1} de ${slides.length}</div>
+      <h2 style="margin-top:0; color: var(--primary-color);">${slide.title}</h2>
+      
+      <div class="visual-container">
+        <div class="visual-icon">${slide.visualIcon}</div>
+        <div class="visual-description">${slide.visualDesc}</div>
+      </div>
+
+      <div class="speech-container">
+        <span class="speech-label">Guión de Presentación:</span>
+        ${slide.speech}
+      </div>
+    `;
+
+    // Actualizar estado de controles
+    counter.innerText = `${index + 1} / ${slides.length}`;
+    jumpSelect.value = index;
+    
+    btnPrev.disabled = index === 0;
+    btnNext.disabled = index === slides.length - 1;
+
+    // Scroll suave hacia el inicio de la presentación en móviles
+    if(window.innerWidth < 600) {
+       document.getElementById('luz-defensa-container').scrollIntoView({behavior: 'smooth'});
+    }
+  }
+
+  function nextSlide() {
+    if (currentSlideIndex < slides.length - 1) {
+      currentSlideIndex++;
+      renderSlide(currentSlideIndex);
+    }
+  }
+
+  function prevSlide() {
+    if (currentSlideIndex > 0) {
+      currentSlideIndex--;
+      renderSlide(currentSlideIndex);
+    }
+  }
+
+  function goToSlide(value) {
+    currentSlideIndex = parseInt(value);
+    renderSlide(currentSlideIndex);
+  }
+
+  // Soporte para teclas de flecha
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') nextSlide();
+    if (e.key === 'ArrowLeft') prevSlide();
+  });
+
+  // Render inicial
+  renderSlide(0);
+
+</script>
+
+</body>
+</html>
