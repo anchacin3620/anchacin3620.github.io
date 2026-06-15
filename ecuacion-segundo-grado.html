@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Ecuación 2º grado - Animación + Grabación de vídeo</title>
+
+    <!-- MathJax 3 - Configuración ANTES de cargar -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['$$', '$$']],
+                processEscapes: true
+            },
+            startup: {
+                pageReady: function () {
+                    return MathJax.startup.defaultPageReady().then(function () {
+                        console.log('MathJax: renderizado inicial completado');
+                    });
+                }
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            background: linear-gradient(145deg, #1a2a3a 0%, #0f1a24 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            padding: 20px;
+        }
+
+        .contenedor {
+            background: rgba(10, 20, 30, 0.6);
+            border-radius: 2rem;
+            backdrop-filter: blur(2px);
+            box-shadow: 0 25px 45px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1);
+            padding: 1rem;
+            max-width: 1020px;
+            width: 100%;
+        }
+
+        /* ===== Zona de ecuaciones (HTML + MathJax) ===== */
+        .zona-ecuaciones {
+            background: #fef9e8;
+            border-radius: 1.5rem;
+            padding: 30px 20px;
+            min-height: 420px;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .zona-ecuaciones .paso {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeIn 0.5s ease;
+            text-align: center;
+            width: 100%;
+        }
+
+        .zona-ecuaciones .paso.activo {
+            display: flex;
+        }
+
+        .zona-ecuaciones h2 {
+            font-size: 1.6rem;
+            color: #1f4b6e;
+            margin-bottom: 10px;
+        }
+
+        .zona-ecuaciones .subtitulo {
+            font-size: 1.15rem;
+            color: #2c5e72;
+            margin-bottom: 18px;
+        }
+
+        .zona-ecuaciones .formula-box {
+            background: #f0f4f8;
+            border: 2px solid #d0dce6;
+            border-radius: 12px;
+            padding: 18px 30px;
+            margin: 12px 0;
+            font-size: 1.3rem;
+        }
+
+        .zona-ecuaciones .formula-box mjx-container {
+            font-size: 130% !important;
+        }
+
+        .zona-ecuaciones .nota {
+            font-size: 1rem;
+            color: #2c6e4e;
+            margin-top: 8px;
+        }
+
+        .zona-ecuaciones .casos {
+            text-align: left;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .zona-ecuaciones .casos li {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: #2c6e4e;
+        }
+
+        .zona-ecuaciones .ejemplo {
+            font-size: 1.1rem;
+            color: #206694;
+            margin-top: 10px;
+        }
+
+        .zona-ecuaciones .resultado {
+            font-size: 1.15rem;
+            color: #2b7a3e;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .zona-ecuaciones .resumen {
+            font-size: 1rem;
+            color: #135c7a;
+            margin-top: 8px;
+        }
+
+        .zona-ecuaciones .cierre {
+            font-style: italic;
+            color: #445d6e;
+            margin-top: 10px;
+        }
+
+        /* ===== Canvas para la gráfica ===== */
+        .zona-grafica {
+            display: none;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.5);
+        }
+
+        .zona-grafica.activo {
+            display: block;
+        }
+
+        .zona-grafica canvas {
+            display: block;
+            margin: 0 auto;
+            border-radius: 1.5rem;
+            background: #fef9e8;
+        }
+
+        .zona-grafica .titulo-grafica {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #1f5e7e;
+            font-weight: bold;
+            padding: 8px;
+            background: #fef9e8;
+        }
+
+        /* ===== Controles ===== */
+        .panel {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.2rem;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: #2c3e4e;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: bold;
+            padding: 0.6rem 1.4rem;
+            border-radius: 3rem;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            font-family: inherit;
+        }
+
+        button:hover:not(:disabled) {
+            background: #1e5f7a;
+            transform: scale(1.02);
+        }
+        button:active:not(:disabled) {
+            transform: scale(0.98);
+        }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .grabar-btn {
+            background: #b44c2a;
+        }
+        .grabar-btn:hover:not(:disabled) {
+            background: #c25e3a;
+        }
+
+        .info-paso {
+            text-align: center;
+            margin-top: 1rem;
+            color: #cdedff;
+            font-weight: 500;
+            background: #00000066;
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.9rem;
+            backdrop-filter: blur(4px);
+        }
+
+        .barra-progreso {
+            width: 100%;
+            height: 5px;
+            background: #334455;
+            border-radius: 5px;
+            margin-top: 1rem;
+            overflow: hidden;
+        }
+
+        .progreso {
+            width: 0%;
+            height: 100%;
+            background: #4c9aff;
+            transition: width 0.2s linear;
+        }
+
+        .status-rec {
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #ffaa77;
+            text-align: center;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 0.8rem;
+            font-size: 0.75rem;
+            color: #aac8e0;
+        }
+
+        /* ===== Área de captura para grabación ===== */
+        #areaCaptura {
+            position: relative;
+        }
+
+        /* ===== Pantalla de captura oculta para grabación ===== */
+        #pantallaGrabacion {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 1000px;
+            height: 650px;
+            background: #fef9e8;
+            z-index: -9999;
+            overflow: hidden;
+        }
+
+        #pantallaGrabacion canvas {
+            width: 1000px;
+            height: 650px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 700px) {
+            .contenedor {
+                padding: 0.5rem;
+            }
+            .zona-ecuaciones {
+                padding: 20px 12px;
+                min-height: 350px;
+            }
+            .zona-ecuaciones h2 {
+                font-size: 1.3rem;
+            }
+            button {
+                font-size: 0.95rem;
+                padding: 0.5rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div>
+    <div class="contenedor">
+        <div id="areaCaptura">
+            <!-- Zona de ecuaciones (pasos 0-9) -->
+            <div class="zona-ecuaciones" id="zonaEcuaciones">
+
+                <!-- Paso 0: Forma general -->
+                <div class="paso" data-paso="0">
+                    <h2>Ecuación de Segundo Grado</h2>
+                    <div class="formula-box">
+                        $$ax^2 + bx + c = 0$$
+                    </div>
+                    <div class="subtitulo">Forma general de la ecuación cuadrática</div>
+                </div>
+
+                <!-- Paso 1: Significado de coeficientes -->
+                <div class="paso" data-paso="1">
+                    <h2>Significado de los coeficientes</h2>
+                    <div class="formula-box">
+                        $$ax^2 + bx + c = 0$$
+                    </div>
+                    <div class="subtitulo">
+                        Donde \(a\), \(b\) y \(c\) son números reales, y \(a \neq 0\)
+                    </div>
+                </div>
+
+                <!-- Paso 2: Fórmula general -->
+                <div class="paso" data-paso="2">
+                    <h2>Fórmula General (Resolvente)</h2>
+                    <div class="formula-box">
+                        $$x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$$
+                    </div>
+                    <div class="nota">Esta fórmula permite encontrar las soluciones de cualquier ecuación cuadrática.</div>
+                </div>
+
+                <!-- Paso 3: Discriminante -->
+                <div class="paso" data-paso="3">
+                    <h2>El Discriminante</h2>
+                    <div class="formula-box">
+                        $$\Delta = b^2 - 4ac$$
+                    </div>
+                    <div class="nota">El discriminante determina la naturaleza de las soluciones.</div>
+                </div>
+
+                <!-- Paso 4: Casos del discriminante -->
+                <div class="paso" data-paso="4">
+                    <h2>Casos según el Discriminante</h2>
+                    <ul class="casos">
+                        <li>Si \(\Delta > 0\): dos soluciones reales distintas</li>
+                        <li>Si \(\Delta = 0\): una solución real doble</li>
+                        <li>Si \(\Delta < 0\): dos soluciones complejas conjugadas</li>
+                    </ul>
+                </div>
+
+                <!-- Paso 5: Ejemplo -->
+                <div class="paso" data-paso="5">
+                    <h2>Ejemplo</h2>
+                    <div class="formula-box">
+                        $$2x^2 - 4x - 6 = 0$$
+                    </div>
+                    <div class="ejemplo">Resolvamos esta ecuación paso a paso.</div>
+                </div>
+
+                <!-- Paso 6: Identificar a, b, c -->
+                <div class="paso" data-paso="6">
+                    <h2>Identificamos los coeficientes</h2>
+                    <div class="formula-box">
+                        $$a = 2 \qquad b = -4 \qquad c = -6$$
+                    </div>
+                    <div class="nota">Comparamos con la forma general \(ax^2 + bx + c = 0\).</div>
+                </div>
+
+                <!-- Paso 7: Cálculo del discriminante -->
+                <div class="paso" data-paso="7">
+                    <h2>Cálculo del Discriminante</h2>
+                    <div class="formula-box">
+                        $$\Delta = (-4)^2 - 4(2)(-6) = 16 + 48 = 64$$
+                    </div>
+                    <div class="nota">Como \(\Delta = 64 > 0\), hay dos soluciones reales distintas.</div>
+                </div>
+
+                <!-- Paso 8: Sustitución en la fórmula -->
+                <div class="paso" data-paso="8">
+                    <h2>Sustitución en la Fórmula</h2>
+                    <div class="formula-box">
+                        $$x = \frac{-(-4) \pm \sqrt{64}}{2(2)} = \frac{4 \pm 8}{4}$$
+                    </div>
+                </div>
+
+                <!-- Paso 9: Soluciones -->
+                <div class="paso" data-paso="9">
+                    <h2>Soluciones Reales</h2>
+                    <div class="formula-box">
+                        $$x_1 = \frac{4 + 8}{4} = 3 \qquad\qquad x_2 = \frac{4 - 8}{4} = -1$$
+                    </div>
+                    <div class="resultado">Las soluciones son \(x_1 = 3\) y \(x_2 = -1\)</div>
+                </div>
+
+            </div>
+
+            <!-- Zona de gráfica (pasos 10-13) -->
+            <div class="zona-grafica" id="zonaGrafica">
+                <div class="titulo-grafica">Representación Gráfica</div>
+                <canvas id="canvasEcuacion" width="1000" height="600" style="width:100%; max-width:1000px;"></canvas>
+            </div>
+        </div>
+
+        <div class="panel">
+            <button id="playBtn">▶ REPRODUCIR</button>
+            <button id="resetBtn">↺ REINICIAR</button>
+            <button id="grabarBtn" class="grabar-btn">⬇ GRABAR VÍDEO (WebM)</button>
+        </div>
+        <div class="barra-progreso">
+            <div class="progreso" id="progresoAnim"></div>
+        </div>
+        <div style="text-align:center; margin-top:0.8rem;">
+            <span class="info-paso" id="infoPaso">Explicación paso a paso</span>
+        </div>
+        <div class="status-rec" id="statusRec">Listo</div>
+        <footer>Grabación automática de toda la animación. Al terminar, se descarga el vídeo.</footer>
+    </div>
+</div>
+
+<!-- Canvas oculto para grabación de vídeo -->
+<canvas id="canvasGrabacion" width="1000" height="650" style="position:fixed; top:-9999px; left:-9999px;"></canvas>
+
+<script>
+(function(){
+    // ===== CONFIGURACIÓN =====
+    const canvas = document.getElementById('canvasEcuacion');
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width;
+    const h = canvas.height;
+
+    // Canvas oculto para grabación
+    const canvasGrab = document.getElementById('canvasGrabacion');
+    const ctxGrab = canvasGrab.getContext('2d');
+
+    // Referencias DOM
+    const zonaEcuaciones = document.getElementById('zonaEcuaciones');
+    const zonaGrafica = document.getElementById('zonaGrafica');
+    const pasosDOM = zonaEcuaciones.querySelectorAll('.paso');
+
+    // Estado
+    let animacionActiva = false;
+    let pasoActual = -1;
+    let timeoutId = null;
+    let grabando = false;
+    let mediaRecorder = null;
+    let recordedChunks = [];
+    let stream = null;
+    let grabFrameId = null;
+
+    const DURACION_PASO = 4000;
+
+    const pasosDescripcion = [
+        "Forma general de la ecuación",
+        "Significado de coeficientes",
+        "Fórmula general (resolvente)",
+        "Discriminante",
+        "Casos según el discriminante",
+        "Ejemplo: 2x² − 4x − 6 = 0",
+        "Identificamos a, b, c",
+        "Cálculo del discriminante",
+        "Sustitución en la fórmula",
+        "Soluciones reales: x₁ = 3, x₂ = −1",
+        "Gráfica de la parábola",
+        "Raíces (intersecciones con eje X)",
+        "Vértice de la parábola",
+        "Resumen y cierre"
+    ];
+    const totalPasos = pasosDescripcion.length;
+
+    // ===== Función matemática =====
+    function f(x) { return 2*x*x - 4*x - 6; }
+
+    // Rango de la gráfica
+    const xMin = -2.8, xMax = 4.8;
+    const yMin = -9.2, yMax = 5.5;
+
+    function mapX(x) { return ((x - xMin) / (xMax - xMin)) * w; }
+    function mapY(y) { return h - ((y - yMin) / (yMax - yMin)) * h; }
+
+    // ===== Dibujo de ejes =====
+    function dibujarEjes(contexto, cw, ch) {
+        contexto.save();
+        contexto.lineWidth = 1.5;
+        contexto.strokeStyle = "#5a6e7c";
+        contexto.fillStyle = "#2c3e44";
+
+        var yCero = ch - ((0 - yMin) / (yMax - yMin)) * ch;
+        var xCero = ((0 - xMin) / (xMax - xMin)) * cw;
+
+        // Eje X
+        contexto.beginPath();
+        contexto.moveTo(0, yCero);
+        contexto.lineTo(cw, yCero);
+        contexto.stroke();
+
+        // Eje Y
+        contexto.beginPath();
+        contexto.moveTo(xCero, 0);
+        contexto.lineTo(xCero, ch);
+        contexto.stroke();
+
+        // Flechas eje X
+        contexto.fillStyle = "#3a5a6e";
+        contexto.beginPath();
+        contexto.moveTo(cw-8, yCero-4);
+        contexto.lineTo(cw, yCero);
+        contexto.lineTo(cw-8, yCero+4);
+        contexto.fill();
+
+        // Flechas eje Y
+        contexto.beginPath();
+        contexto.moveTo(xCero-4, 8);
+        contexto.lineTo(xCero, 0);
+        contexto.lineTo(xCero+4, 8);
+        contexto.fill();
+
+        contexto.font = "bold 16px 'Segoe UI'";
+        contexto.fillStyle = "#2c5a6e";
+        contexto.textAlign = "left";
+        contexto.fillText("x", cw-14, yCero-8);
+        contexto.fillText("y", xCero+8, 18);
+
+        contexto.font = "12px monospace";
+        contexto.fillStyle = "#4f6f7f";
+        contexto.textAlign = "center";
+        for(var xi = -2; xi <= 4; xi++) {
+            if(xi === 0) continue;
+            var px = ((xi - xMin) / (xMax - xMin)) * cw;
+            contexto.fillText(xi, px, yCero + 16);
+            contexto.beginPath();
+            contexto.moveTo(px, yCero-3);
+            contexto.lineTo(px, yCero+3);
+            contexto.stroke();
+        }
+        contexto.textAlign = "right";
+        for(var yi = -8; yi <= 4; yi+=2) {
+            if(yi === 0) continue;
+            var py = ch - ((yi - yMin) / (yMax - yMin)) * ch;
+            contexto.fillText(yi, xCero-8, py+4);
+            contexto.beginPath();
+            contexto.moveTo(xCero-3, py);
+            contexto.lineTo(xCero+3, py);
+            contexto.stroke();
+        }
+        contexto.restore();
+    }
+
+    // ===== Dibujo de parábola =====
+    function dibujarParabola(contexto, cw, ch) {
+        contexto.save();
+        contexto.beginPath();
+        contexto.strokeStyle = "#e6b422";
+        contexto.lineWidth = 3;
+        var pasoX = (xMax - xMin) / 300;
+        var primero = true;
+        for(var x = xMin; x <= xMax; x += pasoX) {
+            var y = f(x);
+            if(y < yMin - 0.5 || y > yMax + 0.5) { primero = true; continue; }
+            var canvasX = ((x - xMin) / (xMax - xMin)) * cw;
+            var canvasY = ch - ((y - yMin) / (yMax - yMin)) * ch;
+            if(primero) { contexto.moveTo(canvasX, canvasY); primero = false; }
+            else { contexto.lineTo(canvasX, canvasY); }
+        }
+        contexto.stroke();
+        contexto.restore();
+    }
+
+    // ===== Dibujar gráfica completa según paso =====
+    function dibujarGrafica(paso, contexto, cw, ch) {
+        contexto.clearRect(0, 0, cw, ch);
+        contexto.fillStyle = "#fef9e8";
+        contexto.fillRect(0, 0, cw, ch);
+
+        dibujarEjes(contexto, cw, ch);
+        dibujarParabola(contexto, cw, ch);
+
+        // Etiqueta de la ecuación
+        contexto.font = "bold 16px 'Segoe UI'";
+        contexto.fillStyle = "#1f4b6e";
+        contexto.textAlign = "center";
+        contexto.fillText("f(x) = 2x\u00B2 \u2212 4x \u2212 6", cw/2, 25);
+
+        if(paso >= 11) {
+            // Raíces
+            var x1 = -1, x2 = 3;
+            var yRaiz = 0;
+            var p1x = ((x1 - xMin) / (xMax - xMin)) * cw;
+            var p1y = ch - ((yRaiz - yMin) / (yMax - yMin)) * ch;
+            var p2x = ((x2 - xMin) / (xMax - xMin)) * cw;
+            var p2y = p1y;
+
+            contexto.fillStyle = "#2e8b57";
+            contexto.beginPath();
+            contexto.arc(p1x, p1y, 8, 0, 2*Math.PI);
+            contexto.fill();
+            contexto.beginPath();
+            contexto.arc(p2x, p2y, 8, 0, 2*Math.PI);
+            contexto.fill();
+
+            contexto.font = "bold 16px monospace";
+            contexto.fillStyle = "#1f5c3a";
+            contexto.textAlign = "center";
+            contexto.fillText("x = \u22121", p1x, p1y - 14);
+            contexto.fillText("x = 3", p2x, p2y - 14);
+        }
+
+        if(paso >= 12) {
+            // Vértice
+            var vx = 1, vy = f(vx);
+            var vCanvasX = ((vx - xMin) / (xMax - xMin)) * cw;
+            var vCanvasY = ch - ((vy - yMin) / (yMax - yMin)) * ch;
+
+            contexto.fillStyle = "#cc5533";
+            contexto.beginPath();
+            contexto.arc(vCanvasX, vCanvasY, 9, 0, 2*Math.PI);
+            contexto.fill();
+
+            contexto.font = "bold 15px monospace";
+            contexto.fillStyle = "#aa4422";
+            contexto.textAlign = "left";
+            contexto.fillText("V\u00E9rtice (1, \u22128)", vCanvasX + 14, vCanvasY - 6);
+
+            // Línea punteada del vértice
+            contexto.setLineDash([5, 5]);
+            contexto.strokeStyle = "#cc553388";
+            contexto.lineWidth = 1;
+            contexto.beginPath();
+            contexto.moveTo(vCanvasX, vCanvasY);
+            contexto.lineTo(vCanvasX, ch - ((0 - yMin) / (yMax - yMin)) * ch);
+            contexto.stroke();
+            contexto.setLineDash([]);
+        }
+
+        if(paso >= 13) {
+            contexto.font = "16px 'Segoe UI'";
+            contexto.textAlign = "center";
+            contexto.fillStyle = "#135c7a";
+            contexto.fillText("Ecuaci\u00F3n: 2x\u00B2 \u2212 4x \u2212 6 = 0", cw/2, ch - 45);
+            contexto.fillStyle = "#2b6e3c";
+            contexto.fillText("Soluciones: x = \u22121  y  x = 3", cw/2, ch - 20);
+
+            contexto.font = "italic 15px 'Segoe UI'";
+            contexto.fillStyle = "#445d6e";
+            contexto.fillText("Representaci\u00F3n completa: ra\u00EDces y v\u00E9rtice", cw/2, ch - 70);
+        }
+    }
+
+    // ===== Navegación de pasos =====
+    function mostrarPaso(paso) {
+        pasoActual = paso;
+        actualizarUI();
+
+        if(paso <= 9) {
+            // Mostrar zona de ecuaciones HTML
+            zonaEcuaciones.style.display = 'flex';
+            zonaGrafica.classList.remove('activo');
+
+            // Activar solo el paso correspondiente
+            pasosDOM.forEach(function(el) {
+                el.classList.remove('activo');
+            });
+            var pasoEl = zonaEcuaciones.querySelector('[data-paso="' + paso + '"]');
+            if(pasoEl) {
+                pasoEl.classList.add('activo');
+                // Re-renderizar MathJax en este paso
+                renderMathForElement(pasoEl);
+            }
+        } else {
+            // Mostrar zona de gráfica
+            zonaEcuaciones.style.display = 'none';
+            zonaGrafica.classList.add('activo');
+            dibujarGrafica(paso, ctx, w, h);
+        }
+    }
+
+    // Renderizar MathJax en un elemento específico
+    function renderMathForElement(element) {
+        if(window.MathJax && MathJax.typesetPromise) {
+            MathJax.typesetClear([element]);
+            MathJax.typesetPromise([element]).catch(function(err) {
+                console.log('MathJax error:', err);
+            });
+        }
+    }
+
+    // ===== Animación automática =====
+    function avanzarPaso() {
+        if(!animacionActiva) return;
+        if(pasoActual < totalPasos - 1) {
+            pasoActual++;
+            mostrarPaso(pasoActual);
+            timeoutId = setTimeout(avanzarPaso, DURACION_PASO);
+        } else {
+            detenerAnimacion();
+            document.getElementById('infoPaso').innerHTML = "Animación completada";
+            if(grabando) {
+                // Dar tiempo al canvas para renderizar el último frame
+                setTimeout(function() {
+                    finalizarGrabacion();
+                }, 1000);
+            }
+        }
+    }
+
+    function iniciarAnimacion(desdeCero) {
+        if(timeoutId) clearTimeout(timeoutId);
+        animacionActiva = true;
+        if(desdeCero) pasoActual = -1;
+        avanzarPaso();
+    }
+
+    function detenerAnimacion() {
+        if(timeoutId) { clearTimeout(timeoutId); timeoutId = null; }
+        animacionActiva = false;
+    }
+
+    function reiniciarAnimacion() {
+        detenerAnimacion();
+        pasoActual = -1;
+        zonaEcuaciones.style.display = 'flex';
+        zonaGrafica.classList.remove('activo');
+        pasosDOM.forEach(function(el) { el.classList.remove('activo'); });
+        // Mostrar primer paso
+        var primerPaso = zonaEcuaciones.querySelector('[data-paso="0"]');
+        if(primerPaso) primerPaso.classList.add('activo');
+        pasoActual = 0;
+        actualizarUI();
+        animacionActiva = false;
+    }
+
+    function actualizarUI() {
+        var progreso = ((pasoActual + 1) / totalPasos) * 100;
+        document.getElementById('progresoAnim').style.width = progreso + '%';
+        if(pasoActual >= 0 && pasoActual < pasosDescripcion.length) {
+            document.getElementById('infoPaso').innerText = pasosDescripcion[pasoActual];
+        }
+    }
+
+    // ===== GRABACIÓN DE VÍDEO =====
+    function copiarACanvasGrabacion() {
+        if(!grabando) return;
+
+        if(pasoActual <= 9) {
+            // Renderizar zona de ecuaciones al canvas de grabación
+            var zonaRect = zonaEcuaciones.getBoundingClientRect();
+            ctxGrab.fillStyle = "#fef9e8";
+            ctxGrab.fillRect(0, 0, 1000, 650);
+
+            // Dibujar título
+            ctxGrab.font = "bold 28px 'Segoe UI'";
+            ctxGrab.fillStyle = "#1f4b6e";
+            ctxGrab.textAlign = "center";
+            ctxGrab.fillText("ECUACI\u00D3N DE SEGUNDO GRADO", 500, 50);
+
+            // Dibujar paso actual como texto legible
+            var textos = obtenerTextoPaso(pasoActual);
+            var posY = 110;
+            ctxGrab.font = "22px 'Segoe UI'";
+            ctxGrab.fillStyle = "#2c3e50";
+            textos.forEach(function(linea) {
+                ctxGrab.fillText(linea, 500, posY);
+                posY += 40;
+            });
+
+            // Número de paso
+            ctxGrab.font = "14px 'Segoe UI'";
+            ctxGrab.fillStyle = "#8899aa";
+            ctxGrab.fillText("Paso " + (pasoActual + 1) + " de " + totalPasos, 500, 630);
+        } else {
+            // Copiar gráfica
+            dibujarGrafica(pasoActual, ctxGrab, 1000, 650);
+        }
+
+        grabFrameId = requestAnimationFrame(copiarACanvasGrabacion);
+    }
+
+    // Obtener texto legible para cada paso (para canvas de grabación)
+    function obtenerTextoPaso(paso) {
+        var t = [];
+        switch(paso) {
+            case 0:
+                t.push("Forma general:");
+                t.push("ax\u00B2 + bx + c = 0");
+                break;
+            case 1:
+                t.push("Donde a, b y c son n\u00FAmeros reales, y a \u2260 0");
+                t.push("ax\u00B2 + bx + c = 0");
+                break;
+            case 2:
+                t.push("F\u00F3rmula General (Resolvente):");
+                t.push("x = (\u2212b \u00B1 \u221A(b\u00B2 \u2212 4ac)) / 2a");
+                break;
+            case 3:
+                t.push("El Discriminante:");
+                t.push("\u0394 = b\u00B2 \u2212 4ac");
+                break;
+            case 4:
+                t.push("Si \u0394 > 0: dos soluciones reales distintas");
+                t.push("Si \u0394 = 0: una soluci\u00F3n real doble");
+                t.push("Si \u0394 < 0: dos soluciones complejas");
+                break;
+            case 5:
+                t.push("Ejemplo:");
+                t.push("2x\u00B2 \u2212 4x \u2212 6 = 0");
+                break;
+            case 6:
+                t.push("Identificamos los coeficientes:");
+                t.push("a = 2 ,  b = \u22124 ,  c = \u22126");
+                break;
+            case 7:
+                t.push("C\u00E1lculo del Discriminante:");
+                t.push("\u0394 = (\u22124)\u00B2 \u2212 4(2)(\u22126) = 16 + 48 = 64");
+                break;
+            case 8:
+                t.push("Sustituci\u00F3n en la F\u00F3rmula:");
+                t.push("x = (4 \u00B1 \u221A64) / 4 = (4 \u00B1 8) / 4");
+                break;
+            case 9:
+                t.push("Soluciones Reales:");
+                t.push("x\u2081 = (4+8)/4 = 3");
+                t.push("x\u2082 = (4\u22128)/4 = \u22121");
+                break;
+        }
+        return t;
+    }
+
+    async function iniciarGrabacion() {
+        if(grabando) return;
+        detenerAnimacion();
+        reiniciarAnimacion();
+
+        // Preparar stream del canvas de grabación
+        if(stream) { stream.getTracks().forEach(function(t){ t.stop(); }); }
+        stream = canvasGrab.captureStream(30);
+        recordedChunks = [];
+
+        try {
+            mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+        } catch(e) {
+            try {
+                mediaRecorder = new MediaRecorder(stream);
+            } catch(e2) {
+                document.getElementById('statusRec').innerHTML = "Error: tu navegador no soporta grabación WebM";
+                document.getElementById('statusRec').style.color = "#ff7777";
+                return;
+            }
+        }
+
+        mediaRecorder.ondataavailable = function(event) {
+            if(event.data.size > 0) recordedChunks.push(event.data);
+        };
+
+        mediaRecorder.onstop = function() {
+            var blob = new Blob(recordedChunks, { type: 'video/webm' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'ecuacion_segundo_grado_' + new Date().toISOString().slice(0,19) + '.webm';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            document.getElementById('statusRec').innerHTML = "Vídeo guardado correctamente.";
+            document.getElementById('statusRec').style.color = "#aaffaa";
+            grabando = false;
+
+            if(stream) { stream.getTracks().forEach(function(t){ t.stop(); }); stream = null; }
+            if(grabFrameId) { cancelAnimationFrame(grabFrameId); grabFrameId = null; }
+
+            document.getElementById('playBtn').disabled = false;
+            document.getElementById('resetBtn').disabled = false;
+            document.getElementById('grabarBtn').disabled = false;
+
+            reiniciarAnimacion();
+            animacionActiva = false;
+        };
+
+        mediaRecorder.start(1000);
+        grabando = true;
+
+        document.getElementById('statusRec').innerHTML = "Grabando vídeo...";
+        document.getElementById('statusRec').style.color = "#ffaa77";
+        document.getElementById('playBtn').disabled = true;
+        document.getElementById('resetBtn').disabled = true;
+        document.getElementById('grabarBtn').disabled = true;
+
+        // Iniciar copia de frames al canvas de grabación
+        copiarACanvasGrabacion();
+
+        // Iniciar la animación
+        iniciarAnimacion(true);
+    }
+
+    function finalizarGrabacion() {
+        if(grabFrameId) { cancelAnimationFrame(grabFrameId); grabFrameId = null; }
+        if(mediaRecorder && mediaRecorder.state === 'recording') {
+            mediaRecorder.stop();
+        } else {
+            if(stream) stream.getTracks().forEach(function(t){ t.stop(); });
+            grabando = false;
+            document.getElementById('statusRec').innerHTML = "Grabación cancelada";
+            document.getElementById('playBtn').disabled = false;
+            document.getElementById('resetBtn').disabled = false;
+            document.getElementById('grabarBtn').disabled = false;
+        }
+    }
+
+    // ===== Eventos =====
+    document.getElementById('playBtn').addEventListener('click', function() {
+        if(grabando) return;
+        detenerAnimacion();
+        reiniciarAnimacion();
+        iniciarAnimacion(true);
+    });
+
+    document.getElementById('resetBtn').addEventListener('click', function() {
+        if(grabando) return;
+        detenerAnimacion();
+        reiniciarAnimacion();
+    });
+
+    document.getElementById('grabarBtn').addEventListener('click', function() {
+        if(grabando) return;
+        iniciarGrabacion();
+    });
+
+    // ===== Estado inicial =====
+    reiniciarAnimacion();
+    document.getElementById('infoPaso').innerHTML = "Presiona REPRODUCIR o GRABAR VÍDEO";
+})();
+</script>
+
+</body>
+</html>
