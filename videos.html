@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ecuación Maestra Probabilística</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #0f172a; color: #e2e8f0; }
+    header { background: #1e2937; padding: 20px; text-align: center; }
+    .container { display: flex; flex-wrap: wrap; }
+    .sidebar { width: 320px; padding: 20px; background: #1e2937; overflow-y: auto; height: 100vh; }
+    .main { flex: 1; padding: 20px; min-width: 400px; }
+    h1, h2 { color: #60a5fa; }
+    button { padding: 12px 18px; margin: 6px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; }
+    button:hover { background: #2563eb; }
+    button.red { background: #ef4444; }
+    button.voice { background: #8b5cf6; }
+    button.voice:hover { background: #7c3aed; }
+    canvas { background: #1e2937; border-radius: 8px; }
+    #status { margin-top: 10px; font-weight: bold; color: #fbbf24; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🧪 Ecuación Maestra Probabilística</h1>
+    <p>Explicación Interactiva + Narración + Grabación</p>
+  </header>
+
+  <div class="container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <h2>Índice</h2>
+      <button onclick="showSection(0)">Introducción</button><br>
+      <button onclick="showSection(1)">¿Qué es?</button><br>
+      <button onclick="showSection(2)">Derivación</button><br>
+      <button onclick="showSection(3)">Simulación</button><br>
+      <button onclick="showSection(4)">Ejemplo</button>
+      
+      <div style="margin-top: 20px;">
+        <button onclick="playFullNarration()" class="voice">▶️ Narración Completa</button>
+        <button onclick="stopNarration()" class="voice">⏹ Detener Voz</button>
+      </div>
+      
+      <div id="content" class="section"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main">
+      <h2 id="title">Simulación Interactiva</h2>
+      
+      <canvas id="canvas" width="700" height="300"></canvas>
+      
+      <h3>Evolución de Probabilidades</h3>
+      <canvas id="probChart" width="700" height="250"></canvas>
+
+      <div style="margin-top: 20px;">
+        <button onclick="resetSimulation()">Reiniciar</button>
+        <button onclick="togglePause()" id="pauseBtn">⏸ Pausar</button>
+        <button onclick="toggleRecording()" id="recordBtn" style="background:#10b981;">🎥 Grabar Vídeo</button>
+        <button onclick="speakCurrentSection()" class="voice">🔊 Narrar Esta Sección</button>
+        <span id="status"></span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ============== TEXTOS PARA NARRACIÓN ==============
+    const narrations = [
+      "Bienvenidos a esta explicación de la Ecuación Maestra Probabilística. Esta ecuación es una herramienta fundamental para describir sistemas que cambian de forma aleatoria.",
+      "La Ecuación Maestra, también conocida como Master Equation, describe cómo evoluciona la probabilidad de que un sistema esté en cada estado con el tiempo. Su forma general es: derivada de P n con respecto a t, igual a la suma de ganancias menos pérdidas.",
+      "Intuitivamente, el cambio en la probabilidad de un estado es igual a la probabilidad que llega desde otros estados, menos la que sale hacia otros estados. Esto se conoce como balance de probabilidad.",
+      "En esta simulación puedes ver en tiempo real cómo las probabilidades fluyen de un estado al siguiente. Observa cómo la distribución cambia dinámicamente.",
+      "Un ejemplo clásico es el proceso de decaimiento. Las partículas pasan de un estado a otro con cierta tasa. La ecuación maestra captura tanto el comportamiento promedio como las fluctuaciones estocásticas."
+    ];
+
+    // ============== VARIABLES ==============
+    let probabilities = [1, 0, 0, 0, 0];
+    let time = 0;
+    let paused = false;
+    let chart, mediaRecorder, recordedChunks = [];
+    let isRecording = false;
+    let currentSection = 3;
+
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    let utterance = null;
+
+    // ============== FUNCIONES DE VOZ ==============
+    function speak(text) {
+      stopNarration();
+      utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "es-ES";        // Español
+      utterance.rate = 0.95;
+      utterance.pitch = 1;
+      speechSynthesis.speak(utterance);
+    }
+
+    function speakCurrentSection() {
+      speak(narrations[currentSection]);
+    }
+
+    function stopNarration() {
+      speechSynthesis.cancel();
+    }
+
+    async function playFullNarration() {
+      stopNarration();
+      for (let i = 0; i < narrations.length; i++) {
+        showSection(i);
+        speak(narrations[i]);
+        await new Promise(resolve => {
+          utterance.onend = resolve;
+          setTimeout(resolve, 8000); // máximo 8 segundos por sección
+        });
+        await new Promise(r => setTimeout(r, 800)); // pausa entre secciones
+      }
+    }
+
+    // ============== CONTENIDO Y SIMULACIÓN (mismo que antes) ==============
+    const sections = [
+      `<h2>Introducción</h2><p>La <strong>Ecuación Maestra</strong> describe sistemas estocásticos.</p>`,
+      `<h2>¿Qué es?</h2><p><strong>Ecuación:</strong><br><pre style="background:#1e2937;padding:15px;">dPₙ(t)/dt = Σ [W_{m→n} P_m - W_{n→m} P_n]</pre></p>`,
+      `<h2>Derivación</h2><p>Ganancia − Pérdida = Cambio de probabilidad</p>`,
+      `<h2>Simulación Interactiva</h2><p>Observa la evolución en tiempo real.</p>`,
+      `<h2>Ejemplo: Decaimiento</h2><p>Flujo irreversible entre estados.</p>`
+    ];
+
+    function showSection(n) {
+      currentSection = n;
+      document.getElementById("content").innerHTML = sections[n];
+      document.getElementById("title").textContent = ["Introducción","¿Qué es?","Derivación","Simulación Interactiva","Ejemplo: Decaimiento"][n];
+    }
+
+    function initChart() {
+      chart = new Chart(document.getElementById("probChart"), {
+        type: 'line',
+        data: {
+          labels: [],
+          datasets: probabilities.map((_, i) => ({
+            label: `Estado ${i}`,
+            data: [],
+            borderColor: `hsl(${i*60}, 80%, 60%)`,
+            tension: 0.4
+          }))
+        },
+        options: { animation: false, scales: { y: { max: 1, min: 0 } } }
+      });
+    }
+
+    function drawSystem() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < probabilities.length; i++) {
+        const x = 100 + i * 120;
+        const y = 150;
+        const radius = 30 + probabilities[i] * 25;
+        
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
+        ctx.fillStyle = `hsl(${i*60}, 80%, 60%)`;
+        ctx.fill();
+        ctx.strokeStyle = "#fff";
+        ctx.lineWidth = 4;
+        ctx.stroke();
+        
+        ctx.fillStyle = "#fff";
+        ctx.font = "bold 18px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText(`Estado ${i}`, x, y + 6);
+        ctx.fillText((probabilities[i]*100).toFixed(0)+"%", x, y + 55);
+      }
+    }
+
+    function updateProbabilities() {
+      const lambda = 0.08;
+      let newP = [...probabilities];
+      for (let i = 0; i < probabilities.length - 1; i++) {
+        const flow = lambda * probabilities[i];
+        newP[i] -= flow;
+        newP[i+1] += flow;
+      }
+      const sum = newP.reduce((a,b)=>a+b,0);
+      probabilities = newP.map(p => p/sum);
+    }
+
+    function animate() {
+      if (!paused) {
+        updateProbabilities();
+        time += 0.1;
+
+        if (chart.data.labels.length > 120) {
+          chart.data.labels.shift();
+          chart.data.datasets.forEach(ds => ds.data.shift());
+        }
+        chart.data.labels.push(time.toFixed(1));
+        chart.data.datasets.forEach((ds, i) => ds.data.push(probabilities[i]));
+        chart.update('none');
+
+        drawSystem();
+      }
+      requestAnimationFrame(animate);
+    }
+
+    // ============== GRABACIÓN ==============
+    function toggleRecording() {
+      if (isRecording) {
+        mediaRecorder.stop();
+        isRecording = false;
+        document.getElementById("recordBtn").textContent = "🎥 Grabar Vídeo";
+        document.getElementById("recordBtn").classList.remove("red");
+      } else {
+        recordedChunks = [];
+        const stream = canvas.captureStream(30);
+        mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+        
+        mediaRecorder.ondataavailable = e => recordedChunks.push(e.data);
+        mediaRecorder.onstop = () => {
+          const blob = new Blob(recordedChunks, { type: 'video/webm' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'ecuacion-maestra-con-narracion.webm';
+          a.click();
+        };
+        
+        mediaRecorder.start();
+        isRecording = true;
+        document.getElementById("recordBtn").textContent = "⏹ Detener Grabación";
+        document.getElementById("recordBtn").classList.add("red");
+      }
+    }
+
+    function resetSimulation() {
+      probabilities = [1, 0, 0, 0, 0];
+      time = 0;
+      chart.data.labels = [];
+      chart.data.datasets.forEach(ds => ds.data = []);
+      drawSystem();
+    }
+
+    function togglePause() {
+      paused = !paused;
+      document.getElementById("pauseBtn").textContent = paused ? "▶ Reanudar" : "⏸ Pausar";
+    }
+
+    // Inicializar
+    window.onload = () => {
+      showSection(3);
+      initChart();
+      drawSystem();
+      animate();
+    };
+  </script>
+</body>
+</html>
