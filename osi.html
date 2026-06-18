@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Generador de Video: Clase Modelo OSI</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background-color: #eef2f5;
+            color: #333;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        #canvas-container {
+            position: relative;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+        }
+        canvas {
+            display: block;
+        }
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        #start-btn {
+            background-color: #27ae60;
+            color: white;
+        }
+        #start-btn:hover:not(:disabled) {
+            background-color: #219150;
+            transform: translateY(-2px);
+        }
+        #stop-btn {
+            background-color: #e74c3c;
+            color: white;
+        }
+        #stop-btn:hover:not(:disabled) {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+        }
+        button:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        #output {
+            margin-top: 20px;
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+        }
+        video {
+            width: 100%;
+            max-width: 800px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            background: black;
+        }
+        .download-link {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .download-link:hover {
+            background-color: #2980b9;
+        }
+        .status-text {
+            margin-top: 10px;
+            font-style: italic;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Clase Grabada: Modelo OSI</h1>
+
+    <div id="canvas-container">
+        <canvas id="osiCanvas" width="800" height="500"></canvas>
+    </div>
+
+    <div class="controls">
+        <button id="start-btn">🎥 Grabar Clase</button>
+        <button id="stop-btn" disabled>⏹ Detener</button>
+    </div>
+
+    <div id="output">
+        <p class="status-text">El video de la clase aparecerá aquí tras detener la grabación.</p>
+        <video id="class-video" controls style="display:none;"></video>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('osiCanvas');
+        const ctx = canvas.getContext('2d');
+        const startBtn = document.getElementById('start-btn');
+        const stopBtn = document.getElementById('stop-btn');
+        const videoOutput = document.getElementById('class-video');
+        const outputDiv = document.getElementById('output');
+
+        let mediaRecorder;
+        let chunks = [];
+        let animationId;
+        let startTime;
+        let lastLayerChangeTime = 0;
+        let currentLayerIndex = 0;
+        let isRecording = false;
+
+        // Datos de las capas del Modelo OSI
+        const osiLayers = [
+            { 
+                name: "7. Aplicación", 
+                desc: "Interfaz entre el software del usuario y la red. Protocolos: HTTP, FTP, SMTP.", 
+                color: "#e74c3c"
+            },
+            { 
+                name: "6. Presentación", 
+                desc: "Traducción, encriptación y compresión de datos. Asegura que los datos sean legibles.", 
+                color: "#e67e22"
+            },
+            { 
+                name: "5. Sesión", 
+                desc: "Controla el diálogo entre aplicaciones. Gestiona, establece y termina conexiones.", 
+                color: "#f1c40f"
+            },
+            { 
+                name: "4. Transporte", 
+                desc: "Transferencia confiable de datos. Control de flujo y corrección de errores. Protocolos: TCP, UDP.", 
+                color: "#2ecc71"
+            },
+            { 
+                name: "3. Red", 
+                desc: "Enrutamiento y direccionamiento lógico. Determina la mejor ruta para los datos. Protocolos: IP.", 
+                color: "#1abc9c"
+            },
+            { 
+                name: "2. Enlace de Datos", 
+                desc: "Transferencia fiable de datos entre nodos directamente conectados. Direccionamiento físico (MAC).", 
+                color: "#3498db"
+            },
+            { 
+                name: "1. Física", 
+                desc: "Transmisión y recepción de bits brutos a través de un medio físico (cables, ondas, wifi).", 
+                color: "#9b59b6"
+            }
+        ];
+
+        const LAYER_DURATION = 6000; // 6 segundos por capa
+        const LAYER_HEIGHT = 50;
+        const STACK_X = 50;
+        const STACK_Y = 50;
+
+        // Función principal de dibujo (La "Clase")
+        function drawFrame(timestamp) {
+            if (!startTime) startTime = timestamp;
+            const elapsedTime = timestamp - startTime;
+
+            // Limpiar el canvas (fondo de pizarra blanca limpia)
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Dibujar Título
+            ctx.fillStyle = "#2c3e50";
+            ctx.font = "bold 28px Arial";
+            ctx.textAlign = "left";
+            ctx.fillText("El Modelo OSI (Interconexión de Sistemas Abiertos)", 50, 40);
+
+            // Lógica para cambiar de capa automáticamente
+            if (timestamp - lastLayerChangeTime > LAYER_DURATION) {
+                currentLayerIndex = (currentLayerIndex + 1) % osiLayers.length;
+                lastLayerChangeTime = timestamp;
+            }
+
+            // Dibujar la pila de capas
+            osiLayers.forEach((layer, index) => {
+                const y = STACK_Y + (index * LAYER_HEIGHT);
+                const isActive = (index === currentLayerIndex);
+
+                // Rectángulo de la capa
+                ctx.fillStyle = isActive ? layer.color : "#ecf0f1";
+                ctx.strokeStyle = "#bdc3c7";
+                ctx.lineWidth = 1;
+                
+                // Sombra si está activa para destacar
+                if (isActive) {
+                    ctx.shadowColor = "rgba(0,0,0,0.3)";
+                    ctx.shadowBlur = 10;
+                    ctx.shadowOffsetX = 5;
+                    ctx.shadowOffsetY = 5;
+                    ctx.lineWidth = 2;
+                    ctx.strokeStyle = "#2c3e50";
+                } else {
+                    ctx.shadowColor = "transparent";
+                }
+
+                ctx.fillRect(STACK_X, y, 250, LAYER_HEIGHT - 5);
+                ctx.strokeRect(STACK_X, y, 250, LAYER_HEIGHT - 5);
+
+                // Resetear sombra para el texto
+                ctx.shadowColor = "transparent";
+                ctx.shadowBlur = 0;
+                ctx.shadowOffsetX = 0;
+                ctx.shadowOffsetY = 0;
+
+                // Texto del nombre de la capa
+                ctx.fillStyle = isActive ? "#fff" : "#2c3e50";
+                ctx.font = isActive ? "bold 18px Arial" : "18px Arial";
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.fillText(layer.name, STACK_X + 125, y + (LAYER_HEIGHT - 5) / 2);
+            });
+
+            // Dibujar flecha de conexión a la explicación
+            const activeY = STACK_Y + (currentLayerIndex * LAYER_HEIGHT) + (LAYER_HEIGHT - 5) / 2;
+            ctx.beginPath();
+            ctx.moveTo(STACK_X + 260, activeY);
+            ctx.lineTo(STACK_X + 290, activeY);
+            ctx.strokeStyle = "#34495e";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Dibujar cabeza de flecha
+            ctx.beginPath();
+            ctx.moveTo(STACK_X + 290, activeY);
+            ctx.lineTo(STACK_X + 285, activeY - 5);
+            ctx.lineTo(STACK_X + 285, activeY + 5);
+            ctx.fillStyle = "#34495e";
+            ctx.fill();
+
+            // Área de explicación (Derecha)
+            const explanationX = STACK_X + 310;
+            const explanationY = STACK_Y + 100;
+            
+            ctx.fillStyle = "#2c3e50";
+            ctx.textAlign = "left";
+            ctx.textBaseline = "top";
+            
+            // Título de la explicación
+            ctx.font = "bold 24px Arial";
+            ctx.fillText("Detalle:", explanationX, STACK_Y + 20);
+
+            // Descripción de la capa activa (con salto de línea simple)
+            ctx.font = "20px Arial";
+            const currentLayer = osiLayers[currentLayerIndex];
+            
+            // Función simple para ajustar texto
+            wrapText(ctx, currentLayer.desc, explanationX, STACK_Y + 60, 420, 28);
+
+            // Barra de progreso de la capa actual
+            const progress = (timestamp - lastLayerChangeTime) / LAYER_DURATION;
+            ctx.fillStyle = "#eee";
+            ctx.fillRect(explanationX, 450, 420, 10);
+            ctx.fillStyle = currentLayer.color;
+            ctx.fillRect(explanationX, 450, 420 * progress, 10);
+            
+            // Tiempo total de la clase
+            const seconds = Math.floor(elapsedTime / 1000);
+            ctx.fillStyle = "#7f8c8d";
+            ctx.font = "italic 16px Arial";
+            ctx.fillText(`Tiempo de clase: ${seconds} seg`, explanationX, 475);
+
+            animationId = requestAnimationFrame(drawFrame);
+        }
+
+        // Función auxiliar para envolver texto en el canvas
+        function wrapText(context, text, x, y, maxWidth, lineHeight) {
+            const words = text.split(' ');
+            let line = '';
+
+            for(let n = 0; n < words.length; n++) {
+                const testLine = line + words[n] + ' ';
+                const metrics = context.measureText(testLine);
+                const testWidth = metrics.width;
+                if (testWidth > maxWidth && n > 0) {
+                    context.fillText(line, x, y);
+                    line = words[n] + ' ';
+                    y += lineHeight;
+                } else {
+                    line = testLine;
+                }
+            }
+            context.fillText(line, x, y);
+        }
+
+        // --- Lógica de Grabación ---
+
+        function startRecording() {
+            const stream = canvas.captureStream(30); // 30 FPS
+            const options = { mimeType: 'video/webm; codecs=vp9' };
+            
+            try {
+                mediaRecorder = new MediaRecorder(stream, options);
+            } catch (e) {
+                console.error('Excepción al crear MediaRecorder:', e);
+                alert('Error: Tu navegador puede no soportar la grabación webm.');
+                return;
+            }
+
+            mediaRecorder.ondataavailable = (event) => {
+                if (event.data.size > 0) {
+                    chunks.push(event.data);
+                }
+            };
+
+            mediaRecorder.onstop = () => {
+                const blob = new Blob(chunks, { type: 'video/webm' });
+                const url = URL.createObjectURL(blob);
+                
+                videoOutput.src = url;
+                videoOutput.style.display = "block";
+                videoOutput.play(); // Reproducir automáticamente
+                
+                // Crear botón de descarga estilizado
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `clase-modelo-osi-${Date.now()}.webm`;
+                a.className = 'download-link';
+                a.innerHTML = '💾 Descargar Video de la Clase';
+                
+                // Limpiar output
+                outputDiv.innerHTML = '';
+                outputDiv.appendChild(videoOutput);
+                outputDiv.appendChild(a);
+
+                chunks = [];
+                startBtn.disabled = false;
+                stopBtn.disabled = true;
+            };
+
+            mediaRecorder.start();
+            
+            // Reiniciar variables de animación
+            startTime = null;
+            lastLayerChangeTime = 0;
+            currentLayerIndex = 0;
+            drawFrame(performance.now());
+
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
+        }
+
+        function stopRecording() {
+            mediaRecorder.stop();
+            cancelAnimationFrame(animationId);
+        }
+
+        // Inicialización visual (dibujo estático antes de grabar)
+        function initDraw() {
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#2c3e50";
+            ctx.font = "bold 28px Arial";
+            ctx.textAlign = "center";
+            ctx.fillText("Haz clic en 'Grabar Clase' para iniciar la presentación del Modelo OSI", canvas.width/2, canvas.height/2);
+        }
+
+        initDraw();
+
+        startBtn.addEventListener('click', startRecording);
+        stopBtn.addEventListener('click', stopRecording);
+
+    </script>
+</body>
+</html>
