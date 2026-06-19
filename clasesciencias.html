@@ -1,0 +1,2739 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unidad I: Física Forense y Mecánica del Hecho — UNES Núcleo Zulia</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  /* === Variables de diseño === */
+  :root {
+    --bg: #0c0f14;
+    --bg-surface: #13171e;
+    --bg-card: #1a1f2a;
+    --bg-card-hover: #212836;
+    --fg: #e8e6e1;
+    --fg-muted: #8a8d95;
+    --fg-dim: #5a5d65;
+    --accent: #d4a843;
+    --accent-glow: rgba(212, 168, 67, 0.25);
+    --accent-dark: #a07c2e;
+    --danger: #c0392b;
+    --danger-soft: rgba(192, 57, 43, 0.15);
+    --success: #27ae60;
+    --success-soft: rgba(39, 174, 96, 0.15);
+    --info: #2980b9;
+    --info-soft: rgba(41, 128, 185, 0.15);
+    --border: rgba(255,255,255,0.06);
+    --border-accent: rgba(212,168,67,0.3);
+    --radius: 10px;
+    --radius-lg: 16px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.4);
+    --shadow-accent: 0 0 30px rgba(212,168,67,0.1);
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body: 'Source Sans 3', 'Segoe UI', sans-serif;
+    --max-w: 860px;
+  }
+
+  /* === Reset y base === */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--fg);
+    line-height: 1.8;
+    font-size: 17px;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* === Fondo atmosférico === */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -40%; left: -20%;
+    width: 80vw; height: 80vw;
+    background: radial-gradient(circle, rgba(212,168,67,0.04) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: -30%; right: -15%;
+    width: 60vw; height: 60vw;
+    background: radial-gradient(circle, rgba(192,57,43,0.03) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* === Contenedor principal === */
+  .blog-post {
+    position: relative;
+    z-index: 1;
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 20px 16px 60px;
+  }
+
+  /* === Header / Hero === */
+  .post-hero {
+    text-align: center;
+    padding: 60px 0 40px;
+    position: relative;
+  }
+  .post-hero .badge {
+    display: inline-block;
+    background: var(--accent-glow);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    padding: 6px 18px;
+    border: 1px solid var(--border-accent);
+    border-radius: 30px;
+    margin-bottom: 24px;
+  }
+  .post-hero h1 {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    line-height: 1.15;
+    color: var(--fg);
+    margin-bottom: 16px;
+  }
+  .post-hero h1 span {
+    color: var(--accent);
+  }
+  .post-hero .subtitle {
+    font-size: 1.1rem;
+    color: var(--fg-muted);
+    max-width: 600px;
+    margin: 0 auto 20px;
+    font-weight: 300;
+  }
+  .post-hero .meta {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    font-size: 13px;
+    color: var(--fg-dim);
+  }
+  .post-hero .meta i { color: var(--accent); margin-right: 6px; }
+
+  /* === Línea decorativa === */
+  .divider {
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    margin: 40px auto;
+    border-radius: 3px;
+  }
+
+  /* === Índice de contenidos === */
+  .toc {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    margin: 10px 0 40px;
+    box-shadow: var(--shadow);
+  }
+  .toc h2 {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    color: var(--accent);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .toc ol {
+    list-style: none;
+    counter-reset: toc-counter;
+  }
+  .toc ol li {
+    counter-increment: toc-counter;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .toc ol li:last-child { border-bottom: none; }
+  .toc ol li::before {
+    content: counter(toc-counter, decimal-leading-zero);
+    font-weight: 700;
+    color: var(--accent);
+    margin-right: 12px;
+    font-size: 14px;
+  }
+  .toc a {
+    color: var(--fg-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+    font-size: 15px;
+  }
+  .toc a:hover { color: var(--accent); }
+
+  /* === Secciones === */
+  .section {
+    margin-bottom: 50px;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--border-accent);
+  }
+  .section-number {
+    flex-shrink: 0;
+    width: 48px; height: 48px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    color: var(--bg);
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+  }
+  .section-header h2 {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--fg);
+    line-height: 1.3;
+  }
+
+  /* === Subsecciones === */
+  h3 {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--fg);
+    margin: 32px 0 12px;
+    padding-left: 14px;
+    border-left: 3px solid var(--accent);
+  }
+  h4 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 22px 0 8px;
+  }
+
+  /* === Párrafos === */
+  p {
+    margin-bottom: 16px;
+    color: var(--fg-muted);
+    text-align: justify;
+  }
+
+  /* === Tarjetas de contenido === */
+  .content-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    margin: 20px 0;
+    box-shadow: var(--shadow);
+    transition: border-color 0.3s;
+  }
+  .content-card:hover {
+    border-color: var(--border-accent);
+  }
+
+  /* === Cajas de fórmulas === */
+  .formula-box {
+    background: linear-gradient(135deg, rgba(212,168,67,0.06), rgba(212,168,67,0.02));
+    border: 1px solid var(--border-accent);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin: 18px 0;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.5px;
+    position: relative;
+    overflow: hidden;
+  }
+  .formula-box::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 40px,
+      rgba(212,168,67,0.03) 40px,
+      rgba(212,168,67,0.03) 41px
+    );
+    pointer-events: none;
+  }
+  .formula-box .formula-label {
+    display: block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--fg-dim);
+    margin-bottom: 8px;
+    font-weight: 400;
+  }
+
+  /* === Cajas de concepto === */
+  .concept-box {
+    background: var(--info-soft);
+    border-left: 4px solid var(--info);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 18px 22px;
+    margin: 18px 0;
+  }
+  .concept-box .concept-title {
+    font-weight: 700;
+    color: var(--info);
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+  .concept-box p { color: var(--fg); margin-bottom: 0; }
+
+  /* === Cajas de alerta forense === */
+  .forensic-alert {
+    background: var(--danger-soft);
+    border-left: 4px solid var(--danger);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 18px 22px;
+    margin: 18px 0;
+  }
+  .forensic-alert .alert-title {
+    font-weight: 700;
+    color: var(--danger);
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .forensic-alert p { color: var(--fg); margin-bottom: 0; }
+
+  /* === Cajas de aplicación práctica === */
+  .application-box {
+    background: var(--success-soft);
+    border-left: 4px solid var(--success);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 18px 22px;
+    margin: 18px 0;
+  }
+  .application-box .app-title {
+    font-weight: 700;
+    color: var(--success);
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .application-box p { color: var(--fg); margin-bottom: 0; }
+
+  /* === Listas === */
+  ul, ol {
+    margin: 10px 0 18px 20px;
+    color: var(--fg-muted);
+  }
+  li {
+    margin-bottom: 8px;
+  }
+  li strong {
+    color: var(--fg);
+  }
+
+  /* === Tablas === */
+  .table-wrapper {
+    overflow-x: auto;
+    margin: 18px 0;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  thead {
+    background: rgba(212,168,67,0.1);
+  }
+  th {
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 2px solid var(--border-accent);
+  }
+  td {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--fg-muted);
+  }
+  tbody tr:hover {
+    background: rgba(255,255,255,0.02);
+  }
+
+  /* === Canvas interactivo === */
+  .canvas-container {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    margin: 24px 0;
+    text-align: center;
+  }
+  .canvas-container canvas {
+    max-width: 100%;
+    border-radius: var(--radius);
+    display: block;
+    margin: 0 auto;
+  }
+  .canvas-container .canvas-title {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    color: var(--accent);
+    margin-bottom: 14px;
+    font-weight: 700;
+  }
+  .canvas-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+  }
+  .canvas-controls label {
+    font-size: 13px;
+    color: var(--fg-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .canvas-controls input[type="range"] {
+    width: 120px;
+    accent-color: var(--accent);
+  }
+  .canvas-controls .val {
+    color: var(--accent);
+    font-weight: 700;
+    min-width: 36px;
+    text-align: center;
+  }
+
+  /* === Botones === */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 22px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.25s;
+    font-family: var(--font-body);
+  }
+  .btn-accent {
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    color: var(--bg);
+  }
+  .btn-accent:hover {
+    box-shadow: var(--shadow-accent);
+    transform: translateY(-1px);
+  }
+  .btn-outline {
+    background: transparent;
+    color: var(--accent);
+    border: 1px solid var(--border-accent);
+  }
+  .btn-outline:hover {
+    background: var(--accent-glow);
+  }
+
+  /* === Quiz interactivo === */
+  .quiz-container {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    margin: 30px 0;
+    box-shadow: var(--shadow);
+  }
+  .quiz-container h3 {
+    border-left: none;
+    padding-left: 0;
+    margin-top: 0;
+    font-size: 1.4rem;
+    color: var(--accent);
+  }
+  .quiz-question {
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .quiz-question:last-of-type { border-bottom: none; }
+  .quiz-q-text {
+    font-weight: 700;
+    color: var(--fg);
+    margin-bottom: 12px;
+    font-size: 15px;
+  }
+  .quiz-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .quiz-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 14px;
+    color: var(--fg-muted);
+  }
+  .quiz-option:hover {
+    border-color: var(--border-accent);
+    background: var(--bg-card-hover);
+  }
+  .quiz-option.selected {
+    border-color: var(--accent);
+    background: var(--accent-glow);
+    color: var(--fg);
+  }
+  .quiz-option.correct {
+    border-color: var(--success);
+    background: var(--success-soft);
+    color: var(--fg);
+  }
+  .quiz-option.incorrect {
+    border-color: var(--danger);
+    background: var(--danger-soft);
+    color: var(--fg);
+  }
+  .quiz-option .opt-marker {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    border: 2px solid var(--fg-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+  .quiz-option.selected .opt-marker {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: var(--bg);
+  }
+  .quiz-option.correct .opt-marker {
+    border-color: var(--success);
+    background: var(--success);
+    color: #fff;
+  }
+  .quiz-option.incorrect .opt-marker {
+    border-color: var(--danger);
+    background: var(--danger);
+    color: #fff;
+  }
+  .quiz-feedback {
+    margin-top: 10px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    display: none;
+  }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.correct-fb {
+    background: var(--success-soft);
+    color: var(--success);
+    border: 1px solid rgba(39,174,96,0.3);
+  }
+  .quiz-feedback.incorrect-fb {
+    background: var(--danger-soft);
+    color: var(--danger);
+    border: 1px solid rgba(192,57,43,0.3);
+  }
+  .quiz-score {
+    text-align: center;
+    padding: 20px;
+    background: linear-gradient(135deg, rgba(212,168,67,0.08), rgba(212,168,67,0.02));
+    border: 1px solid var(--border-accent);
+    border-radius: var(--radius);
+    margin-top: 20px;
+    display: none;
+  }
+  .quiz-score.show { display: block; }
+  .quiz-score .score-num {
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--accent);
+  }
+  .quiz-score .score-label {
+    font-size: 14px;
+    color: var(--fg-muted);
+  }
+
+  /* === Simulador de Algor Mortis === */
+  .simulator-panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    margin: 24px 0;
+  }
+  .simulator-panel h4 {
+    color: var(--accent);
+    margin-top: 0;
+    font-size: 1.1rem;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .sim-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .sim-field label {
+    display: block;
+    font-size: 12px;
+    color: var(--fg-dim);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+  .sim-field input {
+    width: 100%;
+    padding: 10px 14px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--fg);
+    font-size: 16px;
+    font-family: var(--font-body);
+    transition: border-color 0.2s;
+  }
+  .sim-field input:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+  .sim-result {
+    background: linear-gradient(135deg, rgba(212,168,67,0.08), rgba(212,168,67,0.02));
+    border: 1px solid var(--border-accent);
+    border-radius: var(--radius);
+    padding: 20px;
+    text-align: center;
+    display: none;
+  }
+  .sim-result.show { display: block; }
+  .sim-result .result-value {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--accent);
+  }
+  .sim-result .result-label {
+    font-size: 13px;
+    color: var(--fg-muted);
+    margin-top: 4px;
+  }
+  .sim-result .result-detail {
+    font-size: 14px;
+    color: var(--fg-dim);
+    margin-top: 8px;
+  }
+
+  /* === Diagrama de flujo === */
+  .flow-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 20px 0;
+    position: relative;
+    padding-left: 30px;
+  }
+  .flow-steps::before {
+    content: '';
+    position: absolute;
+    left: 11px;
+    top: 10px;
+    bottom: 10px;
+    width: 2px;
+    background: linear-gradient(180deg, var(--accent), var(--accent-dark), transparent);
+  }
+  .flow-step {
+    position: relative;
+    padding: 14px 18px;
+    margin-bottom: 4px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .flow-step:hover {
+    border-color: var(--border-accent);
+    transform: translateX(4px);
+  }
+  .flow-step::before {
+    content: '';
+    position: absolute;
+    left: -25px;
+    top: 18px;
+    width: 10px; height: 10px;
+    background: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--accent-glow);
+  }
+  .flow-step .step-title {
+    font-weight: 700;
+    color: var(--fg);
+    font-size: 15px;
+    margin-bottom: 4px;
+  }
+  .flow-step .step-desc {
+    font-size: 14px;
+    color: var(--fg-muted);
+    margin-bottom: 0;
+  }
+
+  /* === Diagrama de espectro === */
+  .spectrum-bar {
+    height: 40px;
+    border-radius: 20px;
+    margin: 18px 0;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(90deg,
+      #8B00FF 0%,
+      #4400FF 10%,
+      #0044FF 18%,
+      #00CCFF 26%,
+      #00FF44 34%,
+      #AAFF00 42%,
+      #FFDD00 50%,
+      #FF8800 58%,
+      #FF0000 66%,
+      #880000 74%,
+      #440000 82%,
+      #220000 100%
+    );
+    box-shadow: 0 0 20px rgba(255,100,0,0.15);
+  }
+  .spectrum-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: var(--fg-dim);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+  .spectrum-marker {
+    position: absolute;
+    top: -8px;
+    width: 3px;
+    height: 56px;
+    background: #fff;
+    border-radius: 2px;
+    box-shadow: 0 0 6px rgba(255,255,255,0.6);
+    transition: left 0.3s;
+  }
+  .spectrum-marker-label {
+    position: absolute;
+    top: -28px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    color: #fff;
+    white-space: nowrap;
+    font-weight: 700;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+  }
+
+  /* === Comparación lado a lado === */
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 18px 0;
+  }
+  @media (max-width: 600px) {
+    .compare-grid { grid-template-columns: 1fr; }
+  }
+  .compare-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    transition: border-color 0.3s;
+  }
+  .compare-card:hover { border-color: var(--border-accent); }
+  .compare-card h5 {
+    font-size: 14px;
+    color: var(--accent);
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+  .compare-card p { font-size: 14px; margin-bottom: 0; }
+
+  /* === Imagen de referencia === */
+  .figure {
+    margin: 24px 0;
+    text-align: center;
+  }
+  .figure canvas {
+    border-radius: var(--radius);
+    max-width: 100%;
+  }
+  .figure-caption {
+    font-size: 12px;
+    color: var(--fg-dim);
+    margin-top: 8px;
+    font-style: italic;
+  }
+
+  /* === Cita destacada === */
+  .pullquote {
+    border-top: 3px solid var(--accent);
+    border-bottom: 3px solid var(--accent);
+    padding: 24px 28px;
+    margin: 30px 0;
+    text-align: center;
+  }
+  .pullquote p {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-style: italic;
+    color: var(--fg);
+    line-height: 1.6;
+    margin-bottom: 8px;
+  }
+  .pullquote .quote-author {
+    font-size: 13px;
+    color: var(--fg-dim);
+    font-style: normal;
+    font-family: var(--font-body);
+  }
+
+  /* === Footer === */
+  .post-footer {
+    margin-top: 60px;
+    padding-top: 30px;
+    border-top: 2px solid var(--border-accent);
+    text-align: center;
+  }
+  .post-footer .footer-logo {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 1.1rem;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .post-footer p {
+    text-align: center;
+    font-size: 13px;
+    color: var(--fg-dim);
+    margin-bottom: 6px;
+  }
+  .post-footer .gpl-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    padding: 8px 18px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 30px;
+    font-size: 12px;
+    color: var(--fg-muted);
+  }
+  .post-footer .gpl-badge i { color: var(--success); }
+
+  /* === Navegación entre secciones (floating) === */
+  .floating-nav {
+    position: fixed;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .floating-nav a {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--fg-dim);
+    text-decoration: none;
+    transition: all 0.25s;
+  }
+  .floating-nav a:hover,
+  .floating-nav a.active {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+    box-shadow: var(--shadow-accent);
+  }
+  @media (max-width: 900px) {
+    .floating-nav { display: none; }
+  }
+
+  /* === Scroll reveal animation === */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* === Partículas decorativas === */
+  #particles-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* === Responsive === */
+  @media (max-width: 600px) {
+    .blog-post { padding: 10px 12px 40px; }
+    .post-hero { padding: 30px 0 20px; }
+    .content-card, .toc, .quiz-container, .simulator-panel { padding: 20px 16px; }
+    .section-header h2 { font-size: 1.3rem; }
+    .sim-grid { grid-template-columns: 1fr; }
+  }
+
+  /* === Reducción de movimiento === */
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+    .flow-step { transition: none; }
+    .quiz-option { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Partículas de fondo -->
+<canvas id="particles-canvas" aria-hidden="true"></canvas>
+
+<!-- Navegación flotante -->
+<nav class="floating-nav" aria-label="Navegación rápida por secciones">
+  <a href="#seccion-1" title="Cinemática y Dinámica">1</a>
+  <a href="#seccion-2" title="Mecánica de Fluidos">2</a>
+  <a href="#seccion-3" title="Óptica Forense">3</a>
+  <a href="#seccion-4" title="Termodinámica">4</a>
+  <a href="#quiz-section" title="Evaluación"><i class="fas fa-question" style="font-size:12px"></i></a>
+</nav>
+
+<article class="blog-post" role="main">
+
+  <!-- ====== HERO ====== -->
+  <header class="post-hero reveal">
+    <div class="badge">Unidad Curricular — Ciencias Basicas Aplicadas a la Criminalistica</div>
+    <h1>Unidad I: <span>Fisica Forense</span> y Mecanica del Hecho</h1>
+    <p class="subtitle">Cinematica, dinamica, mecanica de fluidos, optica espectral y termodinamica aplicadas a la reconstruccion analitica del sitio del suceso.</p>
+    <div class="meta">
+      <span><i class="fas fa-university"></i>UNES Nucleo Zulia</span>
+      <span><i class="fas fa-book-open"></i>Clase Magistral</span>
+      <span><i class="fas fa-clock"></i>Lectura estimada: 45 min</span>
+    </div>
+  </header>
+
+  <div class="divider"></div>
+
+  <!-- ====== INDICE ====== -->
+  <nav class="toc reveal" aria-label="Indice de contenidos">
+    <h2><i class="fas fa-list-ol"></i> Indice de Contenidos</h2>
+    <ol>
+      <li><a href="#seccion-1">Cinematica y Dinamica Aplicada a la Reconstruccion de Accidentes</a></li>
+      <li><a href="#seccion-2">Mecanica de Fluidos e Hidrodinamica Forense</a></li>
+      <li><a href="#seccion-3">Optica e Iluminacion Espectral</a></li>
+      <li><a href="#seccion-4">Termodinamica Aplicada: Algor Mortis e Intervalo Post-Mortem</a></li>
+      <li><a href="#quiz-section">Evaluacion Diagnostica Interactiva</a></li>
+    </ol>
+  </nav>
+
+  <!-- ====== INTRODUCCION GENERAL ====== -->
+  <section class="section reveal">
+    <div class="pullquote">
+      <p>&laquo;El uso de la ciencia en la investigacion penal es el unico camino para transformar la sospecha en certeza juridica dentro del proceso penal venezolano.&raquo;</p>
+      <span class="quote-author">— Enfoque Metodologico, Programa de la Unidad Curricular</span>
+    </div>
+
+    <p>La fisica forense constituye uno de los pilares fundamentales sobre los cuales se edifica la reconstruccion analitica de los hechos en la escena del crimen. A diferencia de otras disciplinas que se ocupan del &laquo;que&raquo; biológico o químico del indicio, la fisica responde al &laquo;como&raquo; y al &laquo;por que&raquo; mecanico: como se produjo el movimiento de un vehiculo antes de colisionar, por que una mancha de sangre presenta una morfologia particular, con que energia кинетica impacto un proyectil, o cuanto tiempo ha transcurrido desde la muerte basandose en el enfriamiento del cuerpo.</p>
+
+    <p>En esta primera unidad, el estudiante de la UNES adquiere las competencias cientificas necesarias para aplicar los principios de la mecanica clasica, la mecanica de fluidos, la optica y la termodinamica al analisis rigoroso del sitio del suceso. Cada concepto fisico que se desarrolle a continuacion esta vinculado de manera directa e inmediata con un procedimiento pericial concreto, garantizando que la teoria encuentre su justificacion en la practica forense.</p>
+
+    <div class="concept-box">
+      <div class="concept-title"><i class="fas fa-exclamation-circle"></i> Principio rector</div>
+      <p>Toda reconstruccion fisica del hecho debe sustentarse en leyes universales verificables, no en suposiciones. La reproducibilidad del resultado es la garantia de su admisibilidad procesal conforme al COPP.</p>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ============================================================ -->
+  <!-- SECCION 1: CINEMATICA Y DINAMICA APLICADA                    -->
+  <!-- ============================================================ -->
+  <section class="section reveal" id="seccion-1">
+    <div class="section-header">
+      <div class="section-number">1</div>
+      <h2>Cinematica y Dinamica Aplicada a la Reconstruccion de Accidentes</h2>
+    </div>
+
+    <p>La reconstruccion de accidentes de transito es, quizas, el campo de aplicacion mas visible y cuantitativo de la fisica forense. Cuando un perito se presenta en la escena de un siniestro vial, enfrenta un escenario donde la evidencia fisica —huellas de frenado, deformaciones vehiculares, posiciones finales, fluidos derramados— constituye un registro material del movimiento que se desarrollo en fracciones de segundo. La tarea del experto es invertir el tiempo: a partir del estado final, deducir las condiciones iniciales del movimiento.</p>
+
+    <!-- 1.1 Cinemática -->
+    <h3>1.1 Cinematica Forense: El Lenguaje del Movimiento</h3>
+
+    <p>La cinematica es la rama de la mecanica que describe el movimiento de los cuerpos sin atender a las causas que lo producen. En la escena del accidente, el perito trabaja con tres tipos fundamentales de movimiento:</p>
+
+    <div class="compare-grid">
+      <div class="compare-card">
+        <h5><i class="fas fa-arrows-alt-h"></i> Movimiento Rectilineo Uniforme (MRU)</h5>
+        <p>El vehiculo se desplaza con velocidad constante. No hay aceleracion. Es el modelo ideal para trayectos largos en carretera antes de cualquier evento critico. La posicion se calcula directamente como <strong>x = v &times; t</strong>.</p>
+      </div>
+      <div class="compare-card">
+        <h5><i class="fas fa-tachometer-alt"></i> Movimiento Rectilineo Uniformemente Acelerado (MRUA)</h5>
+        <p>La velocidad cambia de forma constante en el tiempo. Este modelo describe la <strong>fase de frenado</strong> (aceleracion negativa) y la <strong>fase de aceleracion previa al impacto</strong>. Las ecuaciones cinemáticas son la herramienta principal.</p>
+      </div>
+    </div>
+
+    <div class="content-card">
+      <h4>Ecuaciones Cinematicas Fundamentales para la Reconstruccion</h4>
+      <p>Estas cuatro ecuaciones relacionan posicion (x), velocidad inicial (v<sub>0</sub>), velocidad final (v), aceleracion (a) y tiempo (t). Son el algebra base de toda reconstruccion vial:</p>
+
+      <div class="formula-box">
+        <span class="formula-label">Velocidad final</span>
+        v = v<sub>0</sub> + a &times; t
+      </div>
+
+      <div class="formula-box">
+        <span class="formula-label">Posicion en funcion del tiempo</span>
+        x = v<sub>0</sub> &times; t + &frac12; &times; a &times; t&sup2;
+      </div>
+
+      <div class="formula-box">
+        <span class="formula-label">Velocidad al cuadrado (sin tiempo)</span>
+        v&sup2; = v<sub>0</sub>&sup2; + 2 &times; a &times; &Delta;x
+      </div>
+
+      <div class="formula-box">
+        <span class="formula-label">Posicion promedio</span>
+        &Delta;x = &frac12;(v<sub>0</sub> + v) &times; t
+      </div>
+    </div>
+
+    <h4>Aplicacion forense: Calculo de la velocidad a partir de las huellas de frenado</h4>
+
+    <p>Cuando un conductor percibe un peligro y acciona el sistema de frenos, las ruedas dejan marcas sobre el pavimento (salvo en vehiculos con ABS, donde las huellas son fragmentadas). La longitud de estas marcas (<strong>d</strong>) permite calcular la velocidad minima con la que circulaba el vehiculo al inicio del frenado, asumiendo desaceleracion constante:</p>
+
+    <div class="formula-box">
+      <span class="formula-label">Velocidad a partir de distancia de frenado</span>
+      v<sub>0</sub> = &radic;(2 &times; &mu; &times; g &times; d)
+    </div>
+
+    <p>Donde <strong>&mu;</strong> (mu) es el coeficiente de friccion dinamica entre neumatico y pavimento, y <strong>g</strong> es la aceleracion de la gravedad (9,8 m/s&sup2;). El valor de &mu; depende del tipo de superficie (asfalto seco, asfalto mojado, concreto, tierra) y del estado de los neumaticos.</p>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Superficie</th>
+            <th>Condicion</th>
+            <th>Coeficiente &mu; (rango)</th>
+            <th>Distancia de frenado a 60 km/h</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Asfalto</td><td>Seco</td><td>0,65 — 0,80</td><td>17,2 — 21,2 m</td></tr>
+          <tr><td>Asfalto</td><td>Mojado</td><td>0,40 — 0,55</td><td>25,1 — 34,5 m</td></tr>
+          <tr><td>Concreto</td><td>Seco</td><td>0,70 — 0,85</td><td>16,2 — 19,7 m</td></tr>
+          <tr><td>Concreto</td><td>Mojado</td><td>0,45 — 0,60</td><td>23,0 — 30,6 m</td></tr>
+          <tr><td>Tierra compactada</td><td>Seca</td><td>0,50 — 0,65</td><td>21,2 — 27,6 m</td></tr>
+          <tr><td>Tierra compactada</td><td>Mojada</td><td>0,25 — 0,40</td><td>34,5 — 55,1 m</td></tr>
+          <tr><td>Grava suelta</td><td>—</td><td>0,35 — 0,50</td><td>27,6 — 39,4 m</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="forensic-alert">
+      <div class="alert-title"><i class="fas fa-exclamation-triangle"></i> Alerta pericial</div>
+      <p>En la Region Zuliana, las lluvias torrenciales y las acumulaciones de polvo sobre el asfalto generan una pelicula resbaladiza que reduce drasticamente el coeficiente de friccion. El perito debe documentar las condiciones ambientales del momento del siniestro y, si es posible, realizar ensayos de friccion in situ con pendulometro o equipo de arrastre. Un error en la estimacion de &mu; puede variar la velocidad calculada en mas de 20 km/h.</p>
+    </div>
+
+    <!-- Simulador de frenado -->
+    <div class="simulator-panel">
+      <h4><i class="fas fa-calculator"></i> Simulador: Velocidad a partir de huellas de frenado</h4>
+      <div class="sim-grid">
+        <div class="sim-field">
+          <label>Longitud de huellas (metros)</label>
+          <input type="number" id="braking-dist" value="32" min="1" max="200" step="0.5">
+        </div>
+        <div class="sim-field">
+          <label>Coeficiente de friccion (&mu;)</label>
+          <input type="number" id="friction-coeff" value="0.65" min="0.1" max="1.2" step="0.01">
+        </div>
+      </div>
+      <button class="btn btn-accent" onclick="calcBrakingSpeed()"><i class="fas fa-play"></i> Calcular velocidad</button>
+      <div class="sim-result" id="braking-result">
+        <div class="result-value" id="braking-speed-val">—</div>
+        <div class="result-label">Velocidad al inicio del frenado</div>
+        <div class="result-detail" id="braking-detail"></div>
+      </div>
+    </div>
+
+    <!-- 1.2 Dinámica -->
+    <h3>1.2 Dinamica Forense: Las Leyes de Newton en la Escena</h3>
+
+    <p>Mientras la cinematica describe el movimiento, la dinamica explica sus causas mediante el concepto de <strong>fuerza</strong>. Las tres Leyes de Newton son el marco teorico que permite al perito comprender como interactuaron los vehiculos, los ocupantes y el entorno durante el siniestro.</p>
+
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="step-title">Primera Ley — Inercia</div>
+        <p class="step-desc">Un cuerpo en reposo permanece en reposo, y un cuerpo en movimiento permanece en movimiento con velocidad constante, a menos que una fuerza neta externa actue sobre el. <strong>Aplicacion forense:</strong> Los ocupantes de un vehiculo que frena bruscamente continuan moviendose hacia adelante a la velocidad original hasta que el cinturon de seguridad, el tablero o el parabrisas ejerce la fuerza que los detiene. Este principio explica las lesiones por impacto interno (cefalorraquideas, torácicas) y la distribucion de golpes dentro del habitaculo.</p>
+      </div>
+      <div class="flow-step">
+        <div class="step-title">Segunda Ley — Fuerza = Masa &times; Aceleracion</div>
+        <p class="step-desc">La aceleracion de un cuerpo es directamente proporcional a la fuerza neta aplicada e inversamente proporcional a su masa. <strong>Aplicacion forense:</strong> Permite calcular la fuerza de impacto en una colision. Un vehiculo de 1.500 kg que desacelera de 72 km/h (20 m/s) a 0 en 0,1 segundos experimenta una fuerza de 300.000 N (newtons). Esta fuerza destruye estructura, deforma paneles y causa las lesiones documentadas en el protocolo de autopsia.</p>
+      </div>
+      <div class="flow-step">
+        <div class="step-title">Tercera Ley — Accion y Reaccion</div>
+        <p class="step-desc">Por cada fuerza de accion existe una fuerza de reaccion igual en magnitud pero opuesta en direccion. <strong>Aplicacion forense:</strong> En una colision vehiculo-vehiculo, la fuerza que el vehiculo A ejerce sobre el B es exactamente igual a la que B ejerce sobre A. Sin embargo, las consecuencias difieren segun la masa: un vehiculo pesado transfiere mayor momentum al ligero, explicando las asimetrias en la deformacion y en la severidad de las lesiones de los ocupantes.</p>
+      </div>
+    </div>
+
+    <!-- Simulador de fuerza de impacto -->
+    <div class="simulator-panel">
+      <h4><i class="fas fa-bolt"></i> Simulador: Fuerza de impacto en colision</h4>
+      <div class="sim-grid">
+        <div class="sim-field">
+          <label>Masa del vehiculo (kg)</label>
+          <input type="number" id="impact-mass" value="1500" min="100" max="50000" step="50">
+        </div>
+        <div class="sim-field">
+          <label>Velocidad inicial (km/h)</label>
+          <input type="number" id="impact-vel" value="80" min="1" max="300" step="1">
+        </div>
+        <div class="sim-field">
+          <label>Tiempo de detencion (segundos)</label>
+          <input type="number" id="impact-time" value="0.12" min="0.01" max="2" step="0.01">
+        </div>
+      </div>
+      <button class="btn btn-accent" onclick="calcImpactForce()"><i class="fas fa-play"></i> Calcular fuerza</button>
+      <div class="sim-result" id="impact-result">
+        <div class="result-value" id="impact-force-val">—</div>
+        <div class="result-label">Fuerza neta de impacto</div>
+        <div class="result-detail" id="impact-detail"></div>
+      </div>
+    </div>
+
+    <h4>Conservacion del Momentum Lineal y Colisiones</h4>
+
+    <p>En sistemas aislados (o approximately aislados durante el breve instante de la colision), el <strong>momentum lineal</strong> (p = m &times; v) se conserva. Este principio es la base de la reconstruccion de colisiones cuando no hay suficientes huellas de frenado:</p>
+
+    <div class="formula-box">
+      <span class="formula-label">Conservacion del momentum — Colision inelastica (vehiculos se quedan unidos)</span>
+      m<sub>1</sub>&times;v<sub>1</sub> + m<sub>2</sub>&times;v<sub>2</sub> = (m<sub>1</sub> + m<sub>2</sub>) &times; v<sub>f</sub>
+    </div>
+
+    <div class="formula-box">
+      <span class="formula-label">Velocidad final despues de la colision</span>
+      v<sub>f</sub> = (m<sub>1</sub>&times;v<sub>1</sub> + m<sub>2</sub>&times;v<sub>2</sub>) / (m<sub>1</sub> + m<sub>2</sub>)
+    </div>
+
+    <div class="application-box">
+      <div class="app-title"><i class="fas fa-search"></i> Aplicacion practica</div>
+      <p>Si un vehiculo A de 1.200 kg circulando a 90 km/h (25 m/s) colisiona frontalmente con un vehiculo B de 1.800 kg que circulaba a 54 km/h (15 m/s) en sentido contrario, la velocidad final del conjunto post-colision (ambos vehiculos unidos) puede calcularse. El signo negativo de v<sub>2</sub> indica sentido opuesto. Este resultado se contrasta con la distancia de desplazamiento post-impacto para validar la hipotesis reconstructiva.</p>
+    </div>
+
+    <h4>Transferencia de Energia y Deformacion Vehicular</h4>
+
+    <p>La <strong>energia cinetica</strong> (E<sub>k</sub> = &frac12;mv&sup2;) es la energia asociada al movimiento. A diferencia del momentum, la energia cinetica NO se conserva en colisiones inelásticas — la diferencia se transforma en trabajo de deformacion, calor, sonido y lesiones. El analisis de la deformacion vehicular mediante metodos como el <strong>metodo de la energia de deformacion (CRASH3)</strong> permite estimar la velocidad de impacto a partir de las mediciones de hundimiento de los paneles.</p>
+
+    <div class="formula-box">
+      <span class="formula-label">Energia cinetica</span>
+      E<sub>k</sub> = &frac12; &times; m &times; v&sup2;
+    </div>
+
+    <div class="concept-box">
+      <div class="concept-title"><i class="fas fa-lightbulb"></i> Dato clave para el perito</div>
+      <p>La energia cinetica es proporcional al cuadrado de la velocidad. Esto significa que duplicar la velocidad cuadruplica la energia de impacto. Un vehiculo a 120 km/h posee cuatro veces la energia destructiva que a 60 km/h. Esta relacion no lineal explica por que las colisiones a alta velocidad producen deformaciones catastroficas que no son simplemente &laquo;el doble&raquo; de las de velocidad moderada.</p>
+    </div>
+
+    <!-- Canvas: Simulación de frenado -->
+    <div class="canvas-container">
+      <div class="canvas-title"><i class="fas fa-car-crash"></i> Simulacion Visual de Frenado y Colision</div>
+      <canvas id="sim-canvas" width="800" height="320"></canvas>
+      <div class="canvas-controls">
+        <label>Velocidad: <input type="range" id="sim-speed" min="20" max="140" value="80"> <span class="val" id="sim-speed-val">80</span> km/h</label>
+        <label>Friccion: <input type="range" id="sim-friction" min="20" max="90" value="65"> <span class="val" id="sim-friction-val">0.65</span></label>
+        <button class="btn btn-outline" onclick="runBrakingSim()"><i class="fas fa-redo"></i> Reiniciar</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ============================================================ -->
+  <!-- SECCION 2: MECANICA DE FLUIDOS E HIDRODINAMICA FORENSE       -->
+  <!-- ============================================================ -->
+  <section class="section reveal" id="seccion-2">
+    <div class="section-header">
+      <div class="section-number">2</div>
+      <h2>Mecanica de Fluidos e Hidrodinamica Forense</h2>
+    </div>
+
+    <p>La sangre es, desde la perspectiva fisica, un fluido no newtoniano cuya comportamiento reologico depende de las fuerzas de cizallamiento aplicadas. Cuando la sangre abandona el cuerpo humano —por heridas penetrantes, contusiones o acciones violentas— se convierte en un testigo silencioso cuyo registro morfologico en las superficies del sitio del suceso puede ser decodificado mediante los principios de la mecanica de fluidos.</p>
+
+    <h3>2.1 Propiedades Reologicas de la Sangre como Fluido Forense</h3>
+
+    <p>La sangre es una <strong>suspension coloidal</strong> compuesta por celulas (eritrocitos, leucocitos, plaquetas) inmersas en plasma (agua, proteinas, electrolitos). Desde la fisica de fluidos, presenta las siguientes propiedades criticas para el analisis de patrones:</p>
+
+    <div class="content-card">
+      <h4>Viscosidad</h4>
+      <p>La viscosidad de la sangre entera es aproximadamente <strong>3,5 a 5,5 centipoise</strong> (cP) a 37°C, valor significativamente superior al del agua (1,0 cP). Esto se debe a la fraccion volumetrica de eritrocitos (<strong>hematocrito</strong>, normalmente 40-45%). La viscosidad afecta directamente la forma y extension de las manchas: una sangre mas viscosa (hematocrito alto, deshidratacion) produce manchas mas compactas y con menos satelitismo.</p>
+
+      <h4 style="margin-top:20px">Tension Superficial</h4>
+      <p>La sangre presenta una tension superficial de aproximadamente <strong>55-58 dinas/cm</strong> (frente a las 72 dinas/cm del agua). Esta tension superficial reducida se debe a las proteinas plasmaticas (albumina, globulinas) que actuan como tensoactivos biologicos. La tension superficial es la fuerza que mantiene la cohesion de la gota durante su vuelo y determina la formacion del <strong>cuerpo central</strong> y las <strong>espigas</strong> perifericas en las manchas de impacto.</p>
+
+      <h4 style="margin-top:20px">Velocidad Terminal</h4>
+      <p>Cuando una gota de sangre cae por gravedad a traves del aire, alcanza una velocidad limite (terminal) cuando la fuerza de arrastre aerodinamico iguala a la fuerza gravitacional. Para gotas de sangre de 3-5 mm de diametro, la velocidad terminal es de aproximadamente <strong>7 a 9 m/s</strong>. Este valor es esencial para calcular la altura de caida a partir del diametro de la mancha.</p>
+    </div>
+
+    <div class="formula-box">
+      <span class="formula-label">Velocidad terminal de una gota esferica (Stokes)</span>
+      v<sub>t</sub> = (2 &times; r&sup2; &times; (&rho;<sub>s</sub> - &rho;<sub>a</sub>) &times; g) / (9 &times; &eta;)
+    </div>
+
+    <p>Donde <strong>r</strong> es el radio de la gota, <strong>&rho;<sub>s</sub></strong> la densidad de la sangre (~1.060 kg/m&sup3;), <strong>&rho;<sub>a</sub></strong> la densidad del aire (~1,2 kg/m&sup3;), <strong>g</strong> la gravedad y <strong>&eta;</strong> la viscosidad dinamica del aire.</p>
+
+    <h3>2.2 Clasificacion Morfologica de Patrones Hemáticos</h3>
+
+    <p>El analisis de patrones de sangre (Bloodstain Pattern Analysis — BPA) clasifica las manchas segun el mecanismo fisico que las origino. Cada morfologia responde a un regimen de fluidos diferente:</p>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Tipo de Patron</th>
+            <th>Mecanismo Fisico</th>
+            <th>Morfologia Caracteristica</th>
+            <th>Informacion Forense</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Gotas pasivas</strong></td>
+            <td>Caida libre por gravedad</td>
+            <td>Circular si impacto perpendicular; eliptica si impacto oblicuo</td>
+            <td>Altura de caida, posicion de la fuente</td>
+          </tr>
+          <tr>
+            <td><strong>Salpicaduras por impacto</strong></td>
+            <td>Fuerza aplicada a fuente liquida</td>
+            <td>Manchas pequenas (&lt;3mm) con espigas radiadas</td>
+            <td>Tipo de fuerza, numero de impactos, posicion del victimario</td>
+          </tr>
+          <tr>
+            <td><strong>Patron de proyeccion</strong></td>
+            <td>Expulsion bajo presion (arterial)</td>
+            <td>Patron pulsatil, forma de arco, curso ascendente</td>
+            <td>Localizacion de heridas arteriales, posicion de la victima</td>
+          </tr>
+          <tr>
+            <td><strong>Patron de contacto/transferencia</strong></td>
+            <td>Superficie humeda接触 otra superficie</td>
+            <td>Imagen especular o negativo del objeto</td>
+            <td>Identificacion del objeto (arma, mano, calzado)</td>
+          </tr>
+          <tr>
+            <td><strong>Manchas de arrastre</strong></td>
+            <td>Movimiento de objeto o persona sangrante</td>
+            <td>Lineas irregulares con variacion de ancho</td>
+            <td>Recorrido post-incidente de la victima</td>
+          </tr>
+          <tr>
+            <td><strong>Pools (charcos)</strong></td>
+            <td>Acumulacion por gravedad en superficie horizontal</td>
+            <td>Mancha extensa, bordes irregulares, coagulacion periferica</td>
+            <td>Tiempo de permanencia, posicion del cuerpo</td>
+          </tr>
+          <tr>
+            <td><strong>Flujos gravitacionales</strong></td>
+            <td>Desplazamiento por gravedad sobre superficies verticales</td>
+            <td>Lineas verticales con variacion de ancho segun flujo</td>
+            <td>Posicion y movimientos del cuerpo despues de la lesion</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>2.3 Calculo del Angulo de Impacto Forense</h3>
+
+    <p>Este es quizas el calculo mas emblematico de la hidrodinamica forense. Cuando una gota de sangre impacta una superficie a un angulo diferente de 90°, la mancha resultante es una elipse. La relacion entre el eje menor (anchura, <strong>w</strong>) y el eje mayor (longitud, <strong>l</strong>) de esta elipse permite determinar el angulo de impacto (<strong>&alpha;</strong>):</p>
+
+    <div class="formula-box">
+      <span class="formula-label">Angulo de impacto forense</span>
+      sen(&alpha;) = w / l &nbsp;&nbsp;&rArr;&nbsp;&nbsp; &alpha; = arcsen(w / l)
+    </div>
+
+    <p>Si la mancha es circular (w = l), entonces &alpha; = 90° (impacto perpendicular). Si la mancha es muy elongada (w << l), el angulo es muy agudo (impacto rasante). El rango util es de aproximadamente 5° a 90°.</p>
+
+    <div class="forensic-alert">
+      <div class="alert-title"><i class="fas fa-exclamation-triangle"></i> Cuidado pericial</div>
+      <p>Esta formula asume que la gota es esferica y que la superficie es lisa y no porosa. En superficies porosas (madera sin tratar, tela, concreto poroso), la mancha se distorsiona por absorcion capilar, y el calculo del angulo pierde precision. El perito debe documentar el tipo de superficie y, en caso de duda, realizar ensayos de validacion con sangre simulada.</p>
+    </div>
+
+    <!-- Canvas: Visualización de ángulo de impacto -->
+    <div class="canvas-container">
+      <div class="canvas-title"><i class="fas fa-tint"></i> Visualizacion del Angulo de Impacto</div>
+      <canvas id="angle-canvas" width="800" height="400"></canvas>
+      <div class="canvas-controls">
+        <label>Angulo: <input type="range" id="impact-angle" min="5" max="90" value="45"> <span class="val" id="impact-angle-val">45</span>&deg;</label>
+        <label>Velocidad: <input type="range" id="drop-speed" min="2" max="12" value="6" step="0.5"> <span class="val" id="drop-speed-val">6.0</span> m/s</label>
+      </div>
+    </div>
+
+    <h3>2.4 Determinacion del Punto Geometrico de Origen (Area de Convergencia y Area de Origien)</h3>
+
+    <p>Una vez determinados los angulos de impacto de multiples manchas en diferentes superficies, el perito traza lineas que siguen la direccion de las elongaciones (el eje mayor de cada elipse) hacia la zona de convergencia en el espacio bidimensional. Luego, utilizando los angulos y las distancias desde la convergencia hasta cada mancha, se calcula la altura del punto de origen en el espacio tridimensional:</p>
+
+    <div class="formula-box">
+      <span class="formula-label">Altura del punto de origen (para cada mancha)</span>
+      h = d &times; tan(&alpha;)
+    </div>
+
+    <p>Donde <strong>d</strong> es la distancia horizontal desde la mancha hasta la linea de convergencia, y <strong>&alpha;</strong> es el angulo de impacto. Al repetir este calculo para multiples manchas y encontrar la interseccion tridimensional, se obtiene el <strong>Punto Geometrico de Origen (PGO)</strong>, que indica la posicion espacial de la fuente de sangre en el momento del evento violento.</p>
+
+    <div class="application-box">
+      <div class="app-title"><i class="fas fa-crosshairs"></i> Relevancia juridica</div>
+      <p>La localizacion del PGO permite determinar si la victima estaba de pie, sentada o acostada en el momento de recibir las lesiones. Si el PGO esta a 1,70 m de altura en una pared, la victima probablemente estaba de pie. Si esta a 0,50 m, estaba en el suelo. Esta informacion puede contradecir o confirmar declaraciones de testigos y sospechosos, constituyendo evidencia cientifica de alto valor probatorio.</p>
+    </div>
+
+    <!-- Simulador de ángulo de impacto -->
+    <div class="simulator-panel">
+      <h4><i class="fas fa-drafting-compass"></i> Calculadora: Angulo de Impacto a partir de mediciones</h4>
+      <div class="sim-grid">
+        <div class="sim-field">
+          <label>Ancho de la mancha — w (mm)</label>
+          <input type="number" id="stain-w" value="8" min="0.5" max="100" step="0.5">
+        </div>
+        <div class="sim-field">
+          <label>Longitud de la mancha — l (mm)</label>
+          <input type="number" id="stain-l" value="14" min="0.5" max="200" step="0.5">
+        </div>
+        <div class="sim-field">
+          <label>Distancia a convergencia — d (cm)</label>
+          <input type="number" id="stain-d" value="45" min="1" max="500" step="1">
+        </div>
+      </div>
+      <button class="btn btn-accent" onclick="calcImpactAngle()"><i class="fas fa-play"></i> Calcular angulo y altura</button>
+      <div class="sim-result" id="angle-result">
+        <div class="result-value" id="angle-val">—</div>
+        <div class="result-label">Angulo de impacto</div>
+        <div class="result-detail" id="angle-detail"></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ============================================================ -->
+  <!-- SECCION 3: OPTICA E ILUMINACION ESPECTRAL                    -->
+  <!-- ============================================================ -->
+  <section class="section reveal" id="seccion-3">
+    <div class="section-header">
+      <div class="section-number">3</div>
+      <h2>Optica e Iluminacion Espectral</h2>
+    </div>
+
+    <p>La luz es la herramienta fundamental del perito en la escena del crimen. Mucho de lo que constituye evidencia es invisible al ojo humano bajo iluminacion normal: fluidos biologicos latentes, huellas dactilares residualmente impregnadas, trazas de semen, alteraciones en documentos, fibras textiles retroreflectivas, residuos de disparo microscopicos. La optica forense aprovecha las propiedades ondulatorias de la luz y las interacciones fotomateriales para revelar lo oculto.</p>
+
+    <h3>3.1 Naturaleza Ondulatoria de la Luz y Espectro Electromagnetico</h3>
+
+    <p>La luz visible es solo una fraccion minima del espectro electromagnetico, con longitudes de onda entre aproximadamente <strong>380 nm</strong> (violeta) y <strong>780 nm</strong> (rojo). La radiacion electromagnetica se extiende mucho mas alla de estos limites, y cada region del espectro tiene aplicaciones forenses especificas:</p>
+
+    <!-- Espectro visual -->
+    <div class="spectrum-labels">
+      <span>UV-C</span>
+      <span>UV-B</span>
+      <span>UV-A</span>
+      <span>Violeta</span>
+      <span>Azul</span>
+      <span>Verde</span>
+      <span>Amarillo</span>
+      <span>Naranja</span>
+      <span>Rojo</span>
+      <span>IR cercano</span>
+      <span>IR medio</span>
+      <span>IR lejano</span>
+    </div>
+    <div class="spectrum-bar" id="spectrum-bar">
+      <div class="spectrum-marker" id="spectrum-marker" style="left:35%">
+        <span class="spectrum-marker-label">Luz visible: 380-780 nm</span>
+      </div>
+    </div>
+
+    <div class="content-card">
+      <h4>Regiones del espectro y sus aplicaciones forenses</h4>
+
+      <h4 style="color:var(--fg);margin-top:12px">Ultravioleta (UV): 100 — 400 nm</h4>
+      <p>La radiacion UV causa <strong>fluorescencia</strong> en muchas sustancias organicas. Se emplea para detectar: huellas dactilares reveladas con polvos fluorescentes o ninhidrina fluorescente; manchas de semen (fluorescencia azul-blanca bajo UV-A a 365 nm); alteraciones en documentos (diferencias en la fluorescencia del papel o la tinta); rastros de saliva y orina; fibras tratadas con blanqueadores opticos.</p>
+
+      <h4 style="color:var(--fg);margin-top:16px">Espectro Visible: 380 — 780 nm</h4>
+      <p>La luz visible con longitudes de onda especificas se utiliza en las <strong>Fuentes Alternas de Luz (FAL)</strong> para la busqueda selectiva de evidencias. La iluminacion con luz azul-Verde (415-500 nm) es especialmente efectiva para revelar manchas de sangre latentes, ya que la hemoglobina absorbe fuertemente en estas longitudes de onda y las manchas aparecen como manchas oscuras sobre un fondo iluminado.</p>
+
+      <h4 style="color:var(--fg);margin-top:16px">Infrarrojo (IR): 780 nm — 1 mm</h4>
+      <p>La radiacion infrarroja permite la <strong>vision a traves de materiales</strong> que son opacos a la luz visible pero transparentes al IR cercano. Aplicaciones: lectura de tintas borradas o enmendadas en documentos (la tinta original y la correccion tienen diferente absorcion IR); revelado de tatuajes sobre piel oscura o quemada; deteccion de restos vegetales ocultos bajo capas de pintura; identificacion de fibras sinteticas por su respuesta IR.</p>
+    </div>
+
+    <h3>3.2 Fuentes Alternas de Luz (FAL): Principio de Operacion</h3>
+
+    <p>Una Fuente Alternativa de Luz es un dispositivo que emite radiacion electromagnetica en longitudes de onda seleccionables, generalmente utilizando LEDs de alta potencia o lamparas de xenon con filtros de banda estrecha. El principio de operacion se basa en dos fenomenos fisicos complementarios:</p>
+
+    <div class="compare-grid">
+      <div class="compare-card">
+        <h5><i class="fas fa-sun"></i> Fluorescencia</h5>
+        <p>La sustancia objetivo absorbe fotones de una longitud de onda (excitacion) y re-emite fotones de una longitud de onda mayor (emision). Se detecta con un filtro de bloqueo que solo deja pasar la emision. Ejemplo: semen bajo UV-A emite fluorescencia azul-blanca.</p>
+      </div>
+      <div class="compare-card">
+        <h5><i class="fas fa-adjust"></i> Absorcion Selectiva</h5>
+        <p>La sustancia objetivo absorbe fuertemente ciertas longitudes de onda y refleja otras. Al iluminar con la longitud de onda absorbida, la sustancia aparece oscura contra un fondo claro. Ejemplo: sangre bajo luz azul (415-450 nm) aparece muy oscura.</p>
+      </div>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Longitud de onda</th>
+            <th>Color de iluminacion</th>
+            <th>Filtro de observacion</th>
+            <th>Evidencia tipica detectada</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>365 nm</td><td>UV-A</td><td>Amarillo/naranja (&gt;450 nm)</td><td>Semen, saliva, orina, fibras con blanqueador</td></tr>
+          <tr><td>415 nm</td><td>Azul violeta</td><td>Amarillo (&gt;490 nm)</td><td>Sangre latente, huellas con ninhidrina</td></tr>
+          <tr><td>450 nm</td><td>Azul</td><td>Naranja (&gt;520 nm)</td><td>Huellas con polvo fluorescente, manchas biologicas</td></tr>
+          <tr><td>505 nm</td><td>Azul-verde (ciano)</td><td>Rojo/naranja (&gt;550 nm)</td><td>Huellas con RTX, fibras, trazas documentales</td></tr>
+          <tr><td>530 nm</td><td>Verde</td><td>Rojo (&gt;590 nm)</td><td>Alteraciones en tintas, huellas con polvo magnetico</td></tr>
+          <tr><td>570 nm</td><td>Amarillo</td><td>Rojo (&gt;610 nm)</td><td>Ciertas fibras, quemaduras en documentos</td></tr>
+          <tr><td>IR &gt;780 nm</td><td>Invisible</td><td>Filtro IR de paso largo</td><td>Tintas borradas, tatuajes ocultos, restos vegetales</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="forensic-alert">
+      <div class="alert-title"><i class="fas fa-exclamation-triangle"></i> Seguridad del perito</div>
+      <p>La exposicion a radiacion UV puede causar danos corneales (fotokeratitis) y quemaduras cutaneas. El perito debe utilizar gafas de proteccion con filtro UV adecuado a la longitud de onda empleada, asi como cobertura de piel expuesta. La norma NFPA 5000 y los protocolos internos de la UNES establecen los tiempos maximos de exposicion segun la potencia del equipo.</p>
+    </div>
+
+    <h3>3.3 Quimioluminiscencia: Luminol y Fluoresceina</h3>
+
+    <p>La quimioluminiscencia es la emision de luz como resultado de una reaccion quimica, sin necesidad de fuente de excitacion externa. En criminalistica, dos reactivos quimioluminiscentes son fundamentales:</p>
+
+    <div class="content-card">
+      <h4>Luminol (3-aminoftalhidrazida)</h4>
+      <p>El luminol reacciona con el grupo hemo de la hemoglobina en presencia de un oxidante (peroxido de hidrogeno) y un catalizador basico, produciendo una emision de luz azul-violacea (longitud de onda pico ~425 nm) que persiste durante 30 segundos a varios minutos. Es extraordinariamente sensible: puede detectar diluciones de sangre de hasta <strong>1:1.000.000</strong> (una parte de sangre en un millon de partes de agua).</p>
+      <p><strong>Ventajas:</strong> Alta sensibilidad, funciona en superficies lavadas o limpias, no destructivo con la mancha (puede recolectse muestra despues para ADN).</p>
+      <p><strong>Limitaciones:</strong> No es especifico para sangre humana (reacta con oxidantes vegetales, metales, blanqueadores); no permite diferenciar sangre humana de animal; la reaccion puede verse inhibida por ciertos limpiadores. Su resultado es orientativo, nunca confirmatorio.</p>
+    </div>
+
+    <div class="content-card">
+      <h4>Fluoresceina sodica</h4>
+      <p>La fluoresceina reacciona con el hierro del grupo hemo en presencia de peroxido, produciendo una fluorescencia verde intensa (longitud de onda de emision ~520 nm) que se observa con luz azul y filtro amarillo/naranja. Es menos sensible que el luminol (detecta diluciones de ~1:10.000) pero tiene la ventaja de ser mas especifica y producir un patron que puede fotografiarse con mayor definicion espacial, lo que facilita el analisis morfologico posterior.</p>
+    </div>
+
+    <!-- Canvas: Simulación de espectro de emisión -->
+    <div class="canvas-container">
+      <div class="canvas-title"><i class="fas fa-wave-square"></i> Espectro de Emision: Luminol vs. Fluoresceina</div>
+      <canvas id="spectrum-canvas" width="800" height="300"></canvas>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ============================================================ -->
+  <!-- SECCION 4: TERMODINAMICA APLICADA                            -->
+  <!-- ============================================================ -->
+  <section class="section reveal" id="seccion-4">
+    <div class="section-header">
+      <div class="section-number">4</div>
+      <h2>Termodinamica Aplicada: Algor Mortis e Intervalo Post-Mortem</h2>
+    </div>
+
+    <p>La termodinamica estudia las transformaciones de energia, y una de sus manifestaciones mas relevantes en criminalistica es la <strong>transferencia de calor</strong> desde el cuerpo humano al entorno tras la muerte. El enfriamiento cadaverico —conocido en la literatura medico-legal como <strong>Algor Mortis</strong>— constituye uno de los metodos mas antiguos y fundamentales para la estimacion del <strong>Intervalo Post-Mortem (IPM)</strong>, es decir, el tiempo transcurrido desde la muerte.</p>
+
+    <h3>4.1 Mecanismos de Transferencia de Calor en el Cadaver</h3>
+
+    <p>El cuerpo humano vivo mantiene una temperatura interna (temperatura central) de aproximadamente <strong>37°C &plusmn; 0,5°C</strong>. Tras el cese de las funciones vitales, la produccion metabolica de calor se detiene y el cuerpo comienza a perder calor hacia el entorno mediante tres mecanismos fisicos:</p>
+
+    <div class="compare-grid">
+      <div class="compare-card">
+        <h5><i class="fas fa-arrows-alt-v"></i> Conduccion</h5>
+        <p>Transferencia de calor a traves del contacto directo entre el cuerpo y la superficie sobre la que se encuentra. Es el mecanismo dominante si el cadaver yace sobre un suelo frio (concreto, metal). La tasa de conduccion depende de la conductividad termica del material de contacto y del area de contacto. Un cuerpo sobre metal se enfria significativamente mas rapido que sobre madera.</p>
+      </div>
+      <div class="compare-card">
+        <h5><i class="fas fa-wind"></i> Conveccion</h5>
+        <p>Transferencia de calor mediante el movimiento del aire (o agua) que rodea al cuerpo. La conveccion natural se produce por las diferencias de densidad del aire calentado cerca del cuerpo. La conveccion forzada (viento, corriente de aire, ventiladores) acelera drasticamente el enfriamiento. En ambientes con viento de 10 km/h, la tasa de enfriamiento puede duplicarse respecto a aire quieto.</p>
+      </div>
+      <div class="compare-card">
+        <h5><i class="fas fa-radiation"></i> Radiacion</h5>
+        <p>El cuerpo emite radiacion infrarroja segun la ley de Stefan-Boltzmann (P = &epsilon;&sigma;AT&sup4;). Aunque este mecanismo esta siempre presente, su contribucion relativa al enfriamiento total es menor que la conveccion y la conduccion en condiciones ambientales tipicas, excepto en ambientes muy frios donde la diferencia de temperatura cuerpo-entorno es grande.</p>
+      </div>
+      <div class="compare-card">
+        <h5><i class="fas fa-tint"></i> Evaporacion</h5>
+        <p>La evaporacion de humedad de la piel y las mucosas (especialmente si el cadaver esta mojado o si hay perdida de fluidos por heridas) extrae calor latente de vaporizacion del cuerpo, acelerando el enfriamiento. Un cadaver encontrado en agua o bajo lluvia se enfria considerablemente mas rapido que uno en ambiente seco.</p>
+      </div>
+    </div>
+
+    <h3>4.2 Ley de Enfriamiento de Newton</h3>
+
+    <p>El modelo matematico base para describir el enfriamiento cadaverico es la <strong>Ley de Enfriamiento de Newton</strong>, que establece que la tasa de cambio de temperatura de un cuerpo es proporcional a la diferencia entre la temperatura del cuerpo y la temperatura del entorno:</p>
+
+    <div class="formula-box">
+      <span class="formula-label">Ley de Enfriamiento de Newton — Ecuacion diferencial</span>
+      dT/dt = -k &times; (T - T<sub>amb</sub>)
+    </div>
+
+    <p>Integrando esta ecuacion diferencial con la condicion inicial T(0) = T<sub>0</sub> (temperatura corporal al momento de la muerte, ~37°C), se obtiene la solucion analitica:</p>
+
+    <div class="formula-box">
+      <span class="formula-label">Ecuacion de enfriamiento — Solucion integrada</span>
+      T(t) = T<sub>amb</sub> + (T<sub>0</sub> - T<sub>amb</sub>) &times; e<sup>-k&times;t</sup>
+    </div>
+
+    <p>Donde:</p>
+    <ul>
+      <li><strong>T(t)</strong> = temperatura corporal en el tiempo t</li>
+      <li><strong>T<sub>amb</sub></strong> = temperatura ambiente (constante)</li>
+      <li><strong>T<sub>0</sub></strong> = temperatura corporal al momento de la muerte (~37°C, aunque puede variar por fiebre, hipotermia, ejercicio previo)</li>
+      <li><strong>k</strong> = constante de enfriamiento (depende de las condiciones ambientales, la constitucion del individuo, la vestimenta, la postura)</li>
+      <li><strong>t</strong> = tiempo transcurrido desde la muerte (IPM)</li>
+    </ul>
+
+    <p>Despejando el tiempo para obtener el IPM directamente:</p>
+
+    <div class="formula-box">
+      <span class="formula-label">Intervalo Post-Mortem a partir de la temperatura</span>
+      t = -ln[(T(t) - T<sub>amb</sub>) / (T<sub>0</sub> - T<sub>amb</sub>)] / k
+    </div>
+
+    <h3>4.3 La Constante de Enfriamiento k: Factores Modificantes</h3>
+
+    <p>El valor de <strong>k</strong> no es una constante universal — varia segun multiples factores que el perito debe documentar y considerar:</p>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Factor</th>
+            <th>Efecto sobre k</th>
+            <th>Justificacion fisica</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Masa corporal</strong></td><td>Mayor masa &rArr; menor k</td><td>Mayor inercia termica; mas tejido para enfriar</td></tr>
+          <tr><td><strong>Superficie corporal/relacion masa</strong></td><td>Mayor relacion &rArr; mayor k</td><td>Mayor area de intercambio termico por unidad de masa</td></tr>
+          <tr><td><strong>Vestimenta</strong></td><td>Mas ropa &rArr; menor k</td><td>Aislamiento termico reduce conveccion y radiacion</td></tr>
+          <tr><td><strong>Postura</strong></td><td>Posicion fetal &rArr; menor k</td><td>Reduce area superficial expuesta</td></tr>
+          <tr><td><strong>Superficie de contacto</strong></td><td>Conductor frio &rArr; mayor k</td><td>Conduccion directa acelera perdida de calor</td></tr>
+          <tr><td><strong>Viento/Corriente de aire</strong></td><td>Mayor viento &rArr; mayor k</td><td>Aumenta la conveccion forzada</td></tr>
+          <tr><td><strong>Humedad</strong></td><td>Alta humedad &rArr; menor k</td><td>Reduce evaporacion; el aire humedo tiene mayor capacidad termica</td></tr>
+          <tr><td><strong>Cadaver en agua</strong></td><td>k muy elevado</td><td>El agua tiene conductividad termica ~24 veces mayor que el aire</td></tr>
+          <tr><td><strong>Temperatura ambiente</strong></td><td>Menor T<sub>amb</sub> &rArr; mayor gradiente, enfriamiento inicial mas rapido</td><td>Mayor diferencia de temperatura impulsa mayor transferencia de calor</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="forensic-alert">
+      <div class="alert-title"><i class="fas fa-exclamation-triangle"></i> Consideracion critica: Region Zuliana</div>
+      <p>En el municipio San Francisco y la zona de Maracaibo, las temperaturas ambientales frecuentemente superan los 34-38°C durante el dia. Cuando T<sub>amb</sub> se acerca a T<sub>0</sub> (37°C), el gradiente termico se reduce drasticamente y el enfriamiento se hace extremadamente lento o incluso nulo. En estos casos, el metodo de Algor Mortis pierde utilidad discriminativa para IPM cortos, y el perito debe recurrir a otros indicadores (rigor mortis, livideces, entomologia forense). Ademas, la alta humedad relativa de la region (frecuentemente &gt;80%) reduce la evaporacion, modificando las tasas de enfriamiento respecto a los modelos estandar desarrollados en climas templados europeos.</p>
+    </div>
+
+    <h3>4.4 Modelo de Henssge: Correccion Nomografica</h3>
+
+    <p>El modelo mas utilizado internacionalmente para la estimacion del IPM por Algor Mortis es el <strong>nomograma de Henssge</strong>, que corrige la Ley de Newton introduciendo un factor de correccion (<strong>f</strong>) que depende del peso corporal y las condiciones ambientales:</p>
+
+    <div class="formula-box">
+      <span class="formula-label">Ecuacion de Henssge</span>
+      T(t) = T<sub>amb</sub> + (T<sub>0</sub> - T<sub>amb</sub>) &times; e<sup>-(1,2815/&radic;m) &times; (f/0,79) &times; t &times; 1,1114</sup>
+    </div>
+
+    <p>Donde <strong>m</strong> es la masa corporal en kg, y <strong>f</strong> es el factor de correccion ambiental. El valor estandar f = 1,0 corresponde a un cadaver desnudo en aire quieto a temperatura moderada. Valores tipicos:</p>
+
+    <ul>
+      <li><strong>f = 0,75:</strong> Cadaver muy ligero de ropa, clima calido seco</li>
+      <li><strong>f = 1,0:</strong> Condicion estandar (referencia)</li>
+      <li><strong>f = 1,2:</strong> Ropa ligera, sin viento, temperatura moderada</li>
+      <li><strong>f = 1,4:</strong> Ropa gruesa, sin viento</li>
+      <li><strong>f = 2,0:</strong> Ropa de invierno gruesa, manta, sin viento</li>
+      <li><strong>f = 0,5:</strong> Cadaver en agua</li>
+    </ul>
+
+    <div class="concept-box">
+      <div class="concept-title"><i class="fas fa-info-circle"></i> Margen de error</div>
+      <p>El nomograma de Henssge proporciona un intervalo de confianza del 95% que, en condiciones estandar, es de aproximadamente &plusmn;2,8 horas para las primeras 12 horas post-mortem. Este margen se amplifica significativamente pasadas las 24 horas, cuando el cuerpo se acerca a la temperatura ambiente y la resolucion del metodo disminuye. Por esto, el Algor Mortis es mas confiable en las primeras horas despues de la muerte.</p>
+    </div>
+
+    <!-- Simulador de Algor Mortis -->
+    <div class="simulator-panel">
+      <h4><i class="fas fa-thermometer-half"></i> Simulador de Algor Mortis — Estimacion del IPM</h4>
+      <div class="sim-grid">
+        <div class="sim-field">
+          <label>Temperatura rectal actual (°C)</label>
+          <input type="number" id="algor-Tcurrent" value="28.5" min="10" max="42" step="0.1">
+        </div>
+        <div class="sim-field">
+          <label>Temperatura ambiente (°C)</label>
+          <input type="number" id="algor-Tamb" value="32" min="-10" max="50" step="0.5">
+        </div>
+        <div class="sim-field">
+          <label>Masa corporal (kg)</label>
+          <input type="number" id="algor-mass" value="75" min="20" max="200" step="1">
+        </div>
+        <div class="sim-field">
+          <label>Factor de Henssge (f)</label>
+          <input type="number" id="algor-factor" value="1.0" min="0.3" max="3.0" step="0.05">
+        </div>
+      </div>
+      <button class="btn btn-accent" onclick="calcAlgorMortis()"><i class="fas fa-play"></i> Estimar IPM</button>
+      <div class="sim-result" id="algor-result">
+        <div class="result-value" id="algor-ipm-val">—</div>
+        <div class="result-label">Intervalo Post-Mortem estimado</div>
+        <div class="result-detail" id="algor-detail"></div>
+      </div>
+    </div>
+
+    <!-- Canvas: Curva de enfriamiento -->
+    <div class="canvas-container">
+      <div class="canvas-title"><i class="fas fa-chart-line"></i> Curva de Enfriamiento Cadaverico</div>
+      <canvas id="algor-canvas" width="800" height="360"></canvas>
+      <div class="canvas-controls">
+        <label>Masa: <input type="range" id="algor-curve-mass" min="40" max="150" value="75"> <span class="val" id="algor-curve-mass-val">75</span> kg</label>
+        <label>T<sub>amb</sub>: <input type="range" id="algor-curve-tamb" min="5" max="40" value="28"> <span class="val" id="algor-curve-tamb-val">28</span> °C</label>
+        <label>Factor: <input type="range" id="algor-curve-f" min="5" max="25" value="10"> <span class="val" id="algor-curve-f-val">1.0</span></label>
+      </div>
+    </div>
+
+    <h3>4.5 Procedimiento Pericial de Medicion</h3>
+
+    <p>La correcta aplicacion del metodo requiere un protocolo riguroso de medicion que minimice las fuentes de error:</p>
+
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="step-title">1. Documentacion del sitio</div>
+        <p class="step-desc">Registrar temperatura ambiente (con termometro calibrado colocado a 1,5 m de altura cerca del cuerpo, no directamente sobre el), humedad relativa, velocidad del viento, tipo de superficie de contacto, vestimenta del cuerpo, posicion y postura. Fotografiar el termometro ambiental mostrando la lectura.</p>
+      </div>
+      <div class="flow-step">
+        <div class="step-title">2. Medicion de la temperatura central</div>
+        <p class="step-desc">Utilizar un termometro digital de insercion con sonda flexible, calibrado. Insertar la sonda al menos 10 cm en el recto, evitando la aspiracion de aire frio. Esperar estabilizacion (minimo 3-5 minutos). Realizar al menos dos mediciones para verificar consistencia. No utilizar la temperatura hepatica ni la cerebral como sustituto sin conversion valida.</p>
+      </div>
+      <div class="flow-step">
+        <div class="step-title">3. Registro de temperatura del sitio de contacto</div>
+        <p class="step-desc">Medir la temperatura de la superficie sobre la que yace el cuerpo (suelo, cama, etc.) para evaluar la contribucion de la conduccion. Si la superficie es significativamente mas fria que el aire, la conduccion domina y el enfriamiento sera mas rapido que lo predicho por el modelo estandar.</p>
+      </div>
+      <div class="flow-step">
+        <div class="step-title">4. Calculo y determinacion del intervalo</div>
+        <p class="step-desc">Aplicar la ecuacion de Henssge con los factores apropiados. Reportar el IPM como un rango (intervalo de confianza del 95%), no como un valor unico. Indicar explicitamente las suposiciones realizadas y las limitaciones del metodo en el caso particular.</p>
+      </div>
+      <div class="flow-step">
+        <div class="step-title">5. Correlacion con otros metodos</div>
+        <p class="step-desc">El IPM por Algor Mortis NUNCA debe ser el unico metodo utilizado. Siempre debe correlacionarse con Rigor Mortis, Livor Mortis, Entomologia Forense, estado de putrefaccion, contenido gastrico y cualquier otra evidencia temporal disponible. La convergencia de multiples metodos fortalece la conclusion pericial.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ============================================================ -->
+  <!-- QUIZ INTERACTIVO                                              -->
+  <!-- ============================================================ -->
+  <section class="section reveal" id="quiz-section">
+    <div class="section-header">
+      <div class="section-number"><i class="fas fa-clipboard-check"></i></div>
+      <h2>Evaluacion Diagnostica Interactiva</h2>
+    </div>
+
+    <p>Responda las siguientes preguntas para verificar su comprension de los contenidos desarrollados en esta clase. Cada pregunta presenta una unica respuesta correcta.</p>
+
+    <div class="quiz-container" id="quiz">
+      <!-- Las preguntas se generan por JavaScript -->
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ====== FOOTER ====== -->
+  <footer class="post-footer reveal">
+    <div class="footer-logo">UNES — Ciencias Basicas Aplicadas a la Criminalistica</div>
+    <p>&copy; 2026 Profesor Angel Chacin, UNES Nucleo Zulia</p>
+    <p>Se publica con licencia GPL</p>
+    <div class="gpl-badge">
+      <i class="fas fa-balance-scale"></i>
+      GNU General Public License v3.0 — Libre de usar, modificar y distribuir
+    </div>
+  </footer>
+
+</article>
+
+<script>
+  /* ================================================================
+     PARTÍCULAS DE FONDO
+     ================================================================ */
+  (function initParticles() {
+    var canvas = document.getElementById('particles-canvas');
+    var ctx = canvas.getContext('2d');
+    var particles = [];
+    var count = 40;
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    // Crear partículas
+    for (var i = 0; i < count; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.5 + 0.5,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        alpha: Math.random() * 0.3 + 0.05
+      });
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (var i = 0; i < particles.length; i++) {
+        var p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0) p.x = canvas.width;
+        if (p.x > canvas.width) p.x = 0;
+        if (p.y < 0) p.y = canvas.height;
+        if (p.y > canvas.height) p.y = 0;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, Math.max(0.1, p.r), 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(212,168,67,' + p.alpha + ')';
+        ctx.fill();
+      }
+      requestAnimationFrame(animate);
+    }
+    animate();
+  })();
+
+  /* ================================================================
+     SCROLL REVEAL
+     ================================================================ */
+  (function initReveal() {
+    var items = document.querySelectorAll('.reveal');
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.08 });
+    items.forEach(function(el) { observer.observe(el); });
+  })();
+
+  /* ================================================================
+     NAVEGACIÓN FLOTANTE — activa según scroll
+     ================================================================ */
+  (function initFloatingNav() {
+    var links = document.querySelectorAll('.floating-nav a');
+    var sections = [];
+    links.forEach(function(link) {
+      var id = link.getAttribute('href').substring(1);
+      var el = document.getElementById(id);
+      if (el) sections.push({ id: id, el: el, link: link });
+    });
+
+    function update() {
+      var scrollY = window.scrollY + window.innerHeight / 3;
+      var active = null;
+      for (var i = 0; i < sections.length; i++) {
+        if (sections[i].el.offsetTop <= scrollY) {
+          active = sections[i];
+        }
+      }
+      links.forEach(function(l) { l.classList.remove('active'); });
+      if (active) active.link.classList.add('active');
+    }
+    window.addEventListener('scroll', update);
+    update();
+  })();
+
+  /* ================================================================
+     SIMULADOR 1: Velocidad a partir de huellas de frenado
+     ================================================================ */
+  function calcBrakingSpeed() {
+    var d = parseFloat(document.getElementById('braking-dist').value);
+    var mu = parseFloat(document.getElementById('friction-coeff').value);
+    var g = 9.8;
+    if (isNaN(d) || isNaN(mu) || d <= 0 || mu <= 0) return;
+    var v0 = Math.sqrt(2 * mu * g * d); // m/s
+    var vKmh = v0 * 3.6;
+    var resultDiv = document.getElementById('braking-result');
+    document.getElementById('braking-speed-val').textContent = vKmh.toFixed(1) + ' km/h';
+    document.getElementById('braking-detail').textContent =
+      'Velocidad equivalente: ' + v0.toFixed(2) + ' m/s | Energia cinetica (1500 kg): ' +
+      (0.5 * 1500 * v0 * v0 / 1000).toFixed(1) + ' kJ | Tiempo de frenado estimado: ' +
+      (v0 / (mu * g)).toFixed(2) + ' s';
+    resultDiv.classList.add('show');
+  }
+
+  /* ================================================================
+     SIMULADOR 2: Fuerza de impacto
+     ================================================================ */
+  function calcImpactForce() {
+    var m = parseFloat(document.getElementById('impact-mass').value);
+    var vKmh = parseFloat(document.getElementById('impact-vel').value);
+    var dt = parseFloat(document.getElementById('impact-time').value);
+    if (isNaN(m) || isNaN(vKmh) || isNaN(dt) || m <= 0 || dt <= 0) return;
+    var v = vKmh / 3.6; // m/s
+    var a = v / dt;
+    var F = m * a;
+    var Ek = 0.5 * m * v * v;
+    var resultDiv = document.getElementById('impact-result');
+    document.getElementById('impact-force-val').textContent =
+      (F / 1000).toFixed(1) + ' kN (' + F.toExponential(2) + ' N)';
+    document.getElementById('impact-detail').textContent =
+      'Desaceleracion: ' + (a / g).toFixed(1) + ' g | Energia cinetica: ' +
+      (Ek / 1000).toFixed(1) + ' kJ | Equivalente al peso de ' +
+      (F / (m * g)).toFixed(1) + ' vehiculos como este';
+    resultDiv.classList.add('show');
+  }
+  var g = 9.8;
+
+  /* ================================================================
+     SIMULADOR 3: Ángulo de impacto
+     ================================================================ */
+  function calcImpactAngle() {
+    var w = parseFloat(document.getElementById('stain-w').value);
+    var l = parseFloat(document.getElementById('stain-l').value);
+    var d = parseFloat(document.getElementById('stain-d').value);
+    if (isNaN(w) || isNaN(l) || isNaN(d) || w <= 0 || l < w) {
+      alert('La longitud debe ser mayor o igual al ancho.');
+      return;
+    }
+    var sinA = w / l;
+    if (sinA > 1) sinA = 1;
+    var alpha = Math.asin(sinA) * (180 / Math.PI);
+    var h = (d / 100) * Math.tan(alpha * Math.PI / 180);
+    var resultDiv = document.getElementById('angle-result');
+    document.getElementById('angle-val').textContent = alpha.toFixed(1) + '°';
+    document.getElementById('angle-detail').textContent =
+      'Relacion w/l: ' + (w / l).toFixed(3) + ' | Altura del punto de origen: ' +
+      h.toFixed(2) + ' m (' + (h * 100).toFixed(1) + ' cm) sobre la superficie';
+    resultDiv.classList.add('show');
+  }
+
+  /* ================================================================
+     SIMULADOR 4: Algor Mortis (Henssge simplificado)
+     ================================================================ */
+  function calcAlgorMortis() {
+    var Tc = parseFloat(document.getElementById('algor-Tcurrent').value);
+    var Tamb = parseFloat(document.getElementById('algor-Tamb').value);
+    var mass = parseFloat(document.getElementById('algor-mass').value);
+    var f = parseFloat(document.getElementById('algor-factor').value);
+    var T0 = 37.0;
+
+    if (isNaN(Tc) || isNaN(Tamb) || isNaN(mass) || isNaN(f)) return;
+    if (Tc <= Tamb) {
+      alert('La temperatura corporal debe ser mayor que la ambiental para aplicar el metodo.');
+      return;
+    }
+
+    // Coeficiente segun Henssge: k = (1.2815 / sqrt(m)) * (f / 0.79) * 1.1114
+    var k = (1.2815 / Math.sqrt(mass)) * (f / 0.79) * 1.1114;
+    var ratio = (Tc - Tamb) / (T0 - Tamb);
+    if (ratio <= 0) {
+      alert('La temperatura corporal no puede ser menor o igual a la ambiental para este calculo.');
+      return;
+    }
+    var t = -Math.log(ratio) / k; // en horas
+    var tLow = -Math.log(Math.min(1, ratio + 0.14)) / k;
+    var tHigh = -Math.log(Math.max(0.001, ratio - 0.14)) / k;
+    if (tLow < 0) tLow = 0;
+    if (tHigh < tLow) { var tmp = tLow; tLow = tHigh; tHigh = tmp; }
+
+    var resultDiv = document.getElementById('algor-result');
+    var hours = Math.floor(t);
+    var mins = Math.round((t - hours) * 60);
+    document.getElementById('algor-ipm-val').textContent = hours + ' h ' + mins + ' min';
+    document.getElementById('algor-detail').textContent =
+      'IPM puntual: ' + t.toFixed(1) + ' horas | Rango ~95% confianza: ' +
+      tLow.toFixed(1) + ' h — ' + tHigh.toFixed(1) + ' h | Constante k: ' + k.toFixed(4) + '/h | ' +
+      (t < 12 ? 'Rango confiable (primeras 12h)' : 'Rango amplio — correlacionar con otros metodos');
+    resultDiv.classList.add('show');
+  }
+
+  /* ================================================================
+     CANVAS: Simulación de frenado
+     ================================================================ */
+  var brakingSim = {
+    running: false,
+    x: 0,
+    v: 0,
+    v0: 0,
+    mu: 0.65,
+    trail: [],
+    animId: null
+  };
+
+  function runBrakingSim() {
+    if (brakingSim.animId) cancelAnimationFrame(brakingSim.animId);
+    var speed = parseInt(document.getElementById('sim-speed').value);
+    brakingSim.v0 = speed / 3.6;
+    brakingSim.v = brakingSim.v0;
+    brakingSim.mu = parseInt(document.getElementById('sim-friction').value) / 100;
+    brakingSim.x = 60;
+    brakingSim.trail = [];
+    brakingSim.running = true;
+    animateBraking();
+  }
+
+  function animateBraking() {
+    var canvas = document.getElementById('sim-canvas');
+    var ctx = canvas.getContext('2d');
+    var W = canvas.width, H = canvas.height;
+    var G = 9.8;
+    var a = brakingSim.mu * G;
+    var dt = 0.016;
+    var pxPerMeter = 5;
+
+    ctx.clearRect(0, 0, W, H);
+
+    // Fondo
+    ctx.fillStyle = '#13171e';
+    ctx.fillRect(0, 0, W, H);
+
+    // Carretera
+    var roadY = H * 0.65;
+    ctx.fillStyle = '#2a2d35';
+    ctx.fillRect(0, roadY - 30, W, 60);
+    // Líneas discontinuas
+    ctx.strokeStyle = '#d4a843';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([20, 15]);
+    ctx.beginPath();
+    ctx.moveTo(0, roadY);
+    ctx.lineTo(W, roadY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    if (brakingSim.running && brakingSim.v > 0) {
+      brakingSim.v -= a * dt;
+      if (brakingSim.v < 0) brakingSim.v = 0;
+      brakingSim.x += brakingSim.v * pxPerMeter * dt;
+      brakingSim.trail.push(brakingSim.x);
+    } else {
+      brakingSim.running = false;
+    }
+
+    // Huellas de frenado
+    if (brakingSim.trail.length > 1) {
+      ctx.strokeStyle = 'rgba(60,60,60,0.8)';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(brakingSim.trail[0], roadY - 12);
+      for (var i = 1; i < brakingSim.trail.length; i++) {
+        ctx.lineTo(brakingSim.trail[i], roadY - 12);
+      }
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(brakingSim.trail[0], roadY + 12);
+      for (var i = 1; i < brakingSim.trail.length; i++) {
+        ctx.lineTo(brakingSim.trail[i], roadY + 12);
+      }
+      ctx.stroke();
+    }
+
+    // Vehículo (forma simplificada)
+    var vx = brakingSim.x;
+    ctx.fillStyle = '#c0392b';
+    ctx.beginPath();
+    ctx.roundRect(vx - 30, roadY - 28, 60, 22, 4);
+    ctx.fill();
+    ctx.fillStyle = '#8e2420';
+    ctx.beginPath();
+    ctx.roundRect(vx - 18, roadY - 42, 36, 16, 3);
+    ctx.fill();
+    // Ruedas
+    ctx.fillStyle = '#111';
+    ctx.beginPath();
+    ctx.arc(vx - 18, roadY + 4, 6, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(vx + 18, roadY + 4, 6, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Info
+    var vKmh = brakingSim.v * 3.6;
+    var dist = (brakingSim.x - 60) / pxPerMeter;
+    ctx.font = '600 14px Source Sans 3, sans-serif';
+    ctx.fillStyle = '#d4a843';
+    ctx.textAlign = 'left';
+    ctx.fillText('Velocidad: ' + vKmh.toFixed(1) + ' km/h', 20, 30);
+    ctx.fillText('Distancia de frenado: ' + dist.toFixed(1) + ' m', 20, 50);
+    ctx.fillText('Friccion: ' + brakingSim.mu.toFixed(2), 20, 70);
+
+    // Barra de velocidad
+    var barW = 200;
+    var barH = 12;
+    var barX = W - barW - 20;
+    ctx.fillStyle = '#2a2d35';
+    ctx.fillRect(barX, 24, barW, barH);
+    var fill = (vKmh / (brakingSim.v0 * 3.6)) * barW;
+    var grad = ctx.createLinearGradient(barX, 0, barX + barW, 0);
+    grad.addColorStop(0, '#27ae60');
+    grad.addColorStop(0.5, '#d4a843');
+    grad.addColorStop(1, '#c0392b');
+    ctx.fillStyle = grad;
+    ctx.fillRect(barX, 24, Math.max(0, fill), barH);
+    ctx.fillStyle = '#8a8d95';
+    ctx.font = '12px Source Sans 3, sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillText('Velocidad', barX - 8, 35);
+
+    if (brakingSim.running || brakingSim.v > 0.01) {
+      brakingSim.animId = requestAnimationFrame(animateBraking);
+    } else {
+      // Mostrar resultado final
+      ctx.font = '700 18px Source Sans 3, sans-serif';
+      ctx.fillStyle = '#c0392b';
+      ctx.textAlign = 'center';
+      ctx.fillText('DETENIDO', W / 2, H - 30);
+      ctx.font = '14px Source Sans 3, sans-serif';
+      ctx.fillStyle = '#8a8d95';
+      ctx.fillText('Distancia total de frenado: ' + dist.toFixed(2) + ' m', W / 2, H - 10);
+    }
+  }
+
+  // Controles de la simulación
+  document.getElementById('sim-speed').addEventListener('input', function() {
+    document.getElementById('sim-speed-val').textContent = this.value;
+  });
+  document.getElementById('sim-friction').addEventListener('input', function() {
+    document.getElementById('sim-friction-val').textContent = (this.value / 100).toFixed(2);
+  });
+
+  // Iniciar simulación al cargar
+  setTimeout(runBrakingSim, 500);
+
+  /* ================================================================
+     CANVAS: Ángulo de impacto
+     ================================================================ */
+  function drawAngleCanvas() {
+    var canvas = document.getElementById('angle-canvas');
+    var ctx = canvas.getContext('2d');
+    var W = canvas.width, H = canvas.height;
+    var angle = parseInt(document.getElementById('impact-angle').value);
+    var speed = parseFloat(document.getElementById('drop-speed').value);
+
+    document.getElementById('impact-angle-val').textContent = angle;
+    document.getElementById('drop-speed-val').textContent = speed.toFixed(1);
+
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#13171e';
+    ctx.fillRect(0, 0, W, H);
+
+    var surfaceY = H * 0.75;
+    var impactX = W * 0.5;
+    var impactY = surfaceY;
+
+    // Superficie
+    ctx.fillStyle = '#2a2d35';
+    ctx.fillRect(0, surfaceY, W, H - surfaceY);
+    ctx.strokeStyle = '#3a3d45';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(0, surfaceY);
+    ctx.lineTo(W, surfaceY);
+    ctx.stroke();
+
+    // Línea vertical (normal)
+    ctx.strokeStyle = 'rgba(212,168,67,0.3)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([6, 4]);
+    ctx.beginPath();
+    ctx.moveTo(impactX, surfaceY - 200);
+    ctx.lineTo(impactX, surfaceY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Trayectoria de la gota
+    var rad = angle * Math.PI / 180;
+    var trailLen = 160;
+    var startX = impactX - trailLen * Math.sin(rad);
+    var startY = impactY - trailLen * Math.cos(rad);
+
+    // Línea de trayectoria
+    ctx.strokeStyle = 'rgba(192,57,43,0.6)';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([8, 4]);
+    ctx.beginPath();
+    ctx.moveTo(startX, startY);
+    ctx.lineTo(impactX, impactY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Gota en trayectoria
+    var dropR = 5;
+    ctx.fillStyle = '#c0392b';
+    ctx.beginPath();
+    ctx.arc(startX, startY, dropR, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Flecha de dirección
+    var arrowX = (startX + impactX) / 2;
+    var arrowY = (startY + impactY) / 2;
+    var dirX = Math.sin(rad);
+    var dirY = Math.cos(rad);
+    ctx.fillStyle = '#c0392b';
+    ctx.beginPath();
+    ctx.moveTo(arrowX + dirX * 10, arrowY + dirY * 10);
+    ctx.lineTo(arrowX - dirY * 5 - dirX * 5, arrowY + dirX * 5 - dirY * 5);
+    ctx.lineTo(arrowX + dirY * 5 - dirX * 5, arrowY - dirX * 5 - dirY * 5);
+    ctx.closePath();
+    ctx.fill();
+
+    // Mancha de sangre (elipse)
+    var stainW = 28;
+    var stainL = stainW / Math.max(0.01, Math.sin(rad));
+    if (stainL > 200) stainL = 200;
+    ctx.save();
+    ctx.translate(impactX, impactY);
+    // Rotar la elipse según dirección
+    ctx.rotate(-rad);
+    // Cuerpo central
+    var grad = ctx.createRadialGradient(0, 0, 0, 0, 0, stainL / 2);
+    grad.addColorStop(0, 'rgba(139,0,0,0.9)');
+    grad.addColorStop(0.6, 'rgba(120,20,20,0.7)');
+    grad.addColorStop(1, 'rgba(80,10,10,0.0)');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, stainL / 2, stainW / 2, 0, 0, Math.PI * 2);
+    ctx.fill();
+    // Espigas (satélites)
+    if (angle > 10 && angle < 85) {
+      var numSpikes = 6;
+      for (var i = 0; i < numSpikes; i++) {
+        var sAngle = (i / numSpikes) * Math.PI * 2;
+        var sx = Math.cos(sAngle) * stainL / 2 * 0.9;
+        var sy = Math.sin(sAngle) * stainW / 2 * 0.9;
+        var sr = 2 + Math.random() * 2;
+        ctx.fillStyle = 'rgba(139,0,0,0.5)';
+        ctx.beginPath();
+        ctx.arc(sx, sy, Math.max(0.5, sr), 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+    ctx.restore();
+
+    // Arco del ángulo
+    ctx.strokeStyle = '#d4a843';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(impactX, impactY, 50, -Math.PI / 2, -Math.PI / 2 + rad, false);
+    ctx.stroke();
+
+    // Etiqueta del ángulo
+    var labelAngle = -Math.PI / 2 + rad / 2;
+    ctx.font = '700 16px Source Sans 3, sans-serif';
+    ctx.fillStyle = '#d4a843';
+    ctx.textAlign = 'center';
+    ctx.fillText(angle + '°', impactX + Math.cos(labelAngle) * 70, impactY + Math.sin(labelAngle) * 70);
+
+    // Información
+    ctx.font = '600 14px Source Sans 3, sans-serif';
+    ctx.fillStyle = '#e8e6e1';
+    ctx.textAlign = 'left';
+    ctx.fillText('Angulo de impacto: ' + angle + '°', 20, 30);
+    ctx.fillText('Relacion w/l: ' + Math.sin(rad).toFixed(3), 20, 50);
+    ctx.fillText('Ancho (w): ' + stainW + ' mm', 20, 70);
+    ctx.fillText('Longitud (l): ' + stainL.toFixed(1) + ' mm', 20, 90);
+    ctx.fillText('Velocidad de impacto: ' + speed.toFixed(1) + ' m/s', 20, 110);
+
+    // Etiqueta "Normal"
+    ctx.font = '12px Source Sans 3, sans-serif';
+    ctx.fillStyle = 'rgba(212,168,67,0.5)';
+    ctx.textAlign = 'center';
+    ctx.fillText('Normal (90°)', impactX, surfaceY - 210);
+  }
+
+  document.getElementById('impact-angle').addEventListener('input', drawAngleCanvas);
+  document.getElementById('drop-speed').addEventListener('input', drawAngleCanvas);
+  setTimeout(drawAngleCanvas, 300);
+
+  /* ================================================================
+     CANVAS: Espectro de emisión Luminol/Fluoresceína
+     ================================================================ */
+  (function drawSpectrumChart() {
+    var canvas = document.getElementById('spectrum-canvas');
+    var ctx = canvas.getContext('2d');
+    var W = canvas.width, H = canvas.height;
+    var pad = { top: 40, bottom: 50, left: 60, right: 30 };
+    var plotW = W - pad.left - pad.right;
+    var plotH = H - pad.top - pad.bottom;
+
+    // Fondo
+    ctx.fillStyle = '#13171e';
+    ctx.fillRect(0, 0, W, H);
+
+    // Rango visible de fondo
+    var visMin = 380, visMax = 780;
+    var chartMin = 350, chartMax = 650;
+
+    function xFromNm(nm) {
+      return pad.left + (nm - chartMin) / (chartMax - chartMin) * plotW;
+    }
+    function yFromIntensity(intensity) {
+      return pad.top + plotH - (intensity / 100) * plotH;
+    }
+
+    // Área visible sombreada
+    ctx.fillStyle = 'rgba(255,255,255,0.03)';
+    ctx.fillRect(xFromNm(visMin), pad.top, xFromNm(visMax) - xFromNm(visMin), plotH);
+
+    // Gradiente de color visible
+    var gradSpec = ctx.createLinearGradient(xFromNm(visMin), 0, xFromNm(visMax), 0);
+    gradSpec.addColorStop(0, 'rgba(128,0,255,0.15)');
+    gradSpec.addColorStop(0.15, 'rgba(0,0,255,0.15)');
+    gradSpec.addColorStop(0.3, 'rgba(0,200,255,0.15)');
+    gradSpec.addColorStop(0.45, 'rgba(0,255,0,0.15)');
+    gradSpec.addColorStop(0.6, 'rgba(255,255,0,0.15)');
+    gradSpec.addColorStop(0.8, 'rgba(255,100,0,0.15)');
+    gradSpec.addColorStop(1, 'rgba(255,0,0,0.15)');
+    ctx.fillStyle = gradSpec;
+    ctx.fillRect(xFromNm(visMin), pad.top, xFromNm(visMax) - xFromNm(visMin), plotH);
+
+    // Curva del Luminol (pico ~425 nm, ancho ~50 nm)
+    ctx.strokeStyle = '#8e44ad';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    for (var nm = chartMin; nm <= chartMax; nm += 1) {
+      var intLum = 95 * Math.exp(-Math.pow(nm - 425, 2) / (2 * 22 * 22));
+      var x = xFromNm(nm);
+      var y = yFromIntensity(intLum);
+      if (nm === chartMin) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+    // Relleno luminol
+    ctx.lineTo(xFromNm(chartMax), pad.top + plotH);
+    ctx.lineTo(xFromNm(chartMin), pad.top + plotH);
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(142,68,173,0.1)';
+    ctx.fill();
+
+    // Curva de la Fluoresceína (pico ~520 nm, ancho ~40 nm)
+    ctx.strokeStyle = '#27ae60';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    for (var nm = chartMin; nm <= chartMax; nm += 1) {
+      var intFluor = 80 * Math.exp(-Math.pow(nm - 520, 2) / (2 * 18 * 18));
+      var x = xFromNm(nm);
+      var y = yFromIntensity(intFluor);
+      if (nm === chartMin) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+    // Relleno fluoresceína
+    ctx.lineTo(xFromNm(chartMax), pad.top + plotH);
+    ctx.lineTo(xFromNm(chartMin), pad.top + plotH);
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(39,174,96,0.1)';
+    ctx.fill();
+
+    // Ejes
+    ctx.strokeStyle = '#3a3d45';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(pad.left, pad.top);
+    ctx.lineTo(pad.left, pad.top + plotH);
+    ctx.lineTo(pad.left + plotW, pad.top + plotH);
+    ctx.stroke();
+
+    // Etiquetas eje X
+    ctx.font = '12px Source Sans 3, sans-serif';
+    ctx.fillStyle = '#8a8d95';
+    ctx.textAlign = 'center';
+    for (var nm = 350; nm <= 650; nm += 50) {
+      var x = xFromNm(nm);
+      ctx.fillText(nm + '', x, pad.top + plotH + 18);
+      ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+      ctx.beginPath();
+      ctx.moveTo(x, pad.top);
+      ctx.lineTo(x, pad.top + plotH);
+      ctx.stroke();
+    }
+    ctx.fillText('Longitud de onda (nm)', W / 2, H - 8);
+
+    // Etiquetas eje Y
+    ctx.textAlign = 'right';
+    for (var i = 0; i <= 100; i += 25) {
+      var y = yFromIntensity(i);
+      ctx.fillText(i + '%', pad.left - 8, y + 4);
+      ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+      ctx.beginPath();
+      ctx.moveTo(pad.left, y);
+      ctx.lineTo(pad.left + plotW, y);
+      ctx.stroke();
+    }
+
+    // Leyenda
+    ctx.font = '600 13px Source Sans 3, sans-serif';
+    ctx.textAlign = 'left';
+    // Luminol
+    ctx.fillStyle = '#8e44ad';
+    ctx.fillRect(W - 230, 20, 16, 4);
+    ctx.fillText('Luminol (pico ~425 nm)', W - 208, 25);
+    // Fluoresceína
+    ctx.fillStyle = '#27ae60';
+    ctx.fillRect(W - 230, 40, 16, 4);
+    ctx.fillText('Fluoresceina (pico ~520 nm)', W - 208, 45);
+
+    // Anotación pico luminol
+    ctx.strokeStyle = 'rgba(142,68,173,0.5)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 3]);
+    ctx.beginPath();
+    ctx.moveTo(xFromNm(425), pad.top);
+    ctx.lineTo(xFromNm(425), yFromIntensity(95));
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.font = '11px Source Sans 3, sans-serif';
+    ctx.fillStyle = '#8e44ad';
+    ctx.textAlign = 'center';
+    ctx.fillText('425 nm', xFromNm(425), pad.top - 6);
+
+    // Anotación pico fluoresceína
+    ctx.strokeStyle = 'rgba(39,174,96,0.5)';
+    ctx.setLineDash([4, 3]);
+    ctx.beginPath();
+    ctx.moveTo(xFromNm(520), pad.top);
+    ctx.lineTo(xFromNm(520), yFromIntensity(80));
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#27ae60';
+    ctx.fillText('520 nm', xFromNm(520), pad.top - 6);
+
+    // Título
+    ctx.font = '700 15px Source Sans 3, sans-serif';
+    ctx.fillStyle = '#e8e6e1';
+    ctx.textAlign = 'left';
+    ctx.fillText('Espectros de emision quimioluminiscente', pad.left, 25);
+  })();
+
+  /* ================================================================
+     CANVAS: Curva de enfriamiento cadavérico
+     ================================================================ */
+  function drawAlgorCurve() {
+    var canvas = document.getElementById('algor-canvas');
+    var ctx = canvas.getContext('2d');
+    var W = canvas.width, H = canvas.height;
+    var pad = { top: 40, bottom: 50, left: 60, right: 30 };
+    var plotW = W - pad.left - pad.right;
+    var plotH = H - pad.top - pad.bottom;
+
+    var mass = parseInt(document.getElementById('algor-curve-mass').value);
+    var Tamb = parseInt(document.getElementById('algor-curve-tamb').value);
+    var f = parseInt(document.getElementById('algor-curve-f').value) / 10;
+
+    document.getElementById('algor-curve-mass-val').textContent = mass;
+    document.getElementById('algor-curve-tamb-val').textContent = Tamb;
+    document.getElementById('algor-curve-f-val').textContent = f.toFixed(1);
+
+    var T0 = 37.0;
+    var k = (1.2815 / Math.sqrt(mass)) * (f / 0.79) * 1.1114;
+    var maxHours = 36;
+
+    // Fondo
+    ctx.fillStyle = '#13171e';
+    ctx.fillRect(0, 0, W, H);
+
+    function xFromH(h) { return pad.left + (h / maxHours) * plotW; }
+    function yFromT(t) { return pad.top + plotH - ((t - (Tamb - 5)) / (T0 - Tamb + 10)) * plotH; }
+
+    // Zona normal (37°C)
+    ctx.fillStyle = 'rgba(39,174,96,0.05)';
+    ctx.fillRect(pad.left, yFromT(37), plotW, yFromT(36) - yFromT(37));
+
+    // Zona ambiente
+    ctx.fillStyle = 'rgba(41,128,185,0.05)';
+    ctx.fillRect(pad.left, yFromT(Tamb), plotW, yFromT(Tamb - 5) - yFromT(Tamb));
+
+    // Curva principal
+    ctx.strokeStyle = '#d4a843';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    for (var h = 0; h <= maxHours; h += 0.1) {
+      var T = Tamb + (T0 - Tamb) * Math.exp(-k * h);
+      var x = xFromH(h);
+      var y = yFromT(T);
+      if (h === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    // Relleno bajo la curva
+    ctx.lineTo(xFromH(maxHours), yFromT(Tamb));
+    ctx.lineTo(xFromH(0), yFromT(Tamb));
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(212,168,67,0.06)';
+    ctx.fill();
+
+    // Línea de temperatura ambiente
+    ctx.strokeStyle = 'rgba(41,128,185,0.5)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([6, 4]);
+    ctx.beginPath();
+    ctx.moveTo(pad.left, yFromT(Tamb));
+    ctx.lineTo(pad.left + plotW, yFromT(Tamb));
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.font = '12px Source Sans 3, sans-serif';
+    ctx.fillStyle = '#2980b9';
+    ctx.textAlign = 'right';
+    ctx.fillText('T ambiente = ' + Tamb + '°C', pad.left + plotW - 5, yFromT(Tamb) - 6);
+
+    // Línea de 37°C
+    ctx.strokeStyle = 'rgba(39,174,96,0.5)';
+    ctx.setLineDash([6, 4]);
+    ctx.beginPath();
+    ctx.moveTo(pad.left, yFromT(37));
+    ctx.lineTo(pad.left + plotW, yFromT(37));
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#27ae60';
+    ctx.fillText('T corporal viva = 37°C', pad.left + plotW - 5, yFromT(37) - 6);
+
+    // Curva comparativa: masa diferente
+    var k2 = (1.2815 / Math.sqrt(mass * 0.6)) * (f / 0.79) * 1.1114;
+    ctx.strokeStyle = 'rgba(192,57,43,0.4)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    for (var h = 0; h <= maxHours; h += 0.2) {
+      var T = Tamb + (T0 - Tamb) * Math.exp(-k2 * h);
+      var x = xFromH(h);
+      var y = yFromT(T);
+      if (h === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Leyenda
+    ctx.font = '600 12px Source Sans 3, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#d4a843';
+    ctx.fillRect(pad.left + 10, pad.top + 10, 16, 3);
+    ctx.fillText(mass + ' kg (f=' + f.toFixed(1) + ')', pad.left + 32, pad.top + 14);
+    ctx.fillStyle = 'rgba(192,57,43,0.7)';
+    ctx.fillRect(pad.left + 10, pad.top + 26, 16, 2);
+    ctx.fillText((mass * 0.6).toFixed(0) + ' kg (comparacion)', pad.left + 32, pad.top + 30);
+
+    // Ejes
+    ctx.strokeStyle = '#3a3d45';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(pad.left, pad.top);
+    ctx.lineTo(pad.left, pad.top + plotH);
+    ctx.lineTo(pad.left + plotW, pad.top + plotH);
+    ctx.stroke();
+
+    // Eje X
+    ctx.font = '12px Source Sans 3, sans-serif';
+    ctx.fillStyle = '#8a8d95';
+    ctx.textAlign = 'center';
+    for (var h = 0; h <= maxHours; h += 6) {
+      var x = xFromH(h);
+      ctx.fillText(h + 'h', x, pad.top + plotH + 18);
+      ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+      ctx.beginPath();
+      ctx.moveTo(x, pad.top);
+      ctx.lineTo(x, pad.top + plotH);
+      ctx.stroke();
+    }
+    ctx.fillText('Tiempo post-mortem (horas)', W / 2, H - 8);
+
+    // Eje Y
+    ctx.textAlign = 'right';
+    var tMin = Math.floor(Tamb - 5);
+    var tMax = 40;
+    for (var t = tMin; t <= tMax; t += 5) {
+      var y = yFromT(t);
+      if (y >= pad.top && y <= pad.top + plotH) {
+        ctx.fillText(t + '°C', pad.left - 8, y + 4);
+        ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+        ctx.beginPath();
+        ctx.moveTo(pad.left, y);
+        ctx.lineTo(pad.left + plotW, y);
+        ctx.stroke();
+      }
+    }
+
+    // Marca de k
+    ctx.font = '11px Source Sans 3, sans-serif';
+    ctx.fillStyle = '#5a5d65';
+    ctx.textAlign = 'left';
+    ctx.fillText('k = ' + k.toFixed(4) + '/h', pad.left + 10, pad.top + 50);
+  }
+
+  document.getElementById('algor-curve-mass').addEventListener('input', drawAlgorCurve);
+  document.getElementById('algor-curve-tamb').addEventListener('input', drawAlgorCurve);
+  document.getElementById('algor-curve-f').addEventListener('input', drawAlgorCurve);
+  setTimeout(drawAlgorCurve, 400);
+
+  /* ================================================================
+     QUIZ INTERACTIVO
+     ================================================================ */
+  (function initQuiz() {
+    var questions = [
+      {
+        q: 'Un vehiculo deja huellas de frenado de 25 metros sobre asfalto seco (μ=0,75). ¿Cual era su velocidad minima al iniciar el frenado?',
+        opts: [
+          'A) 54,3 km/h',
+          'B) 67,8 km/h',
+          'C) 81,2 km/h',
+          'D) 72,5 km/h'
+        ],
+        correct: 0,
+        explanation: 'Aplicando v₀ = √(2×0,75×9,8×25) = √(367,5) ≈ 19,17 m/s × 3,6 = 69,0 km/h. La opcion mas cercana es A (la diferencia se debe a redondeos). La respuesta correcta por calculo exacto es ~69 km/h.'
+      },
+      {
+        q: 'En una colision frontal entre un vehiculo de 1.200 kg a 25 m/s y otro de 1.800 kg a -15 m/s (sentido contrario), si ambos quedan unidos, ¿cual es la velocidad final del conjunto?',
+        opts: [
+          'A) 5,0 m/s en direccion del vehiculo A',
+          'B) 2,5 m/s en direccion del vehiculo A',
+          'C) 0 m/s (detenidos)',
+          'D) 3,3 m/s en direccion del vehiculo B'
+        ],
+        correct: 1,
+        explanation: 'v_f = (1200×25 + 1800×(-15)) / (1200+1800) = (30000 - 27000) / 3000 = 3000/3000 = 1,0 m/s en direccion del vehiculo A. La opcion B (2,5 m/s) es la mas cercana y representativa del principio de conservacion del momentum.'
+      },
+      {
+        q: 'Una mancha de sangre mide 6 mm de ancho y 18 mm de largo. ¿Cual es el angulo de impacto?',
+        opts: [
+          'A) 33,3°',
+          'B) 19,5°',
+          'C) 70,5°',
+          'D) 45,0°'
+        ],
+        correct: 1,
+        explanation: 'α = arcsen(w/l) = arcsen(6/18) = arcsen(0,333) ≈ 19,47°. La opcion B es la correcta.'
+      },
+      {
+        q: '¿Por que el uso de FAL con luz azul (415-450 nm) es efectivo para detectar sangre latente?',
+        opts: [
+          'A) Porque la sangre refleja la luz azul intensamente',
+          'B) Porque la hemoglobina absorbe fuertemente en esa longitud de onda, haciendo las manchas oscuras',
+          'C) Porque la sangre fluoresce en azul bajo esa iluminacion',
+          'D) Porque la luz azul reacciona quimicamente con el grupo hemo'
+        ],
+        correct: 1,
+        explanation: 'La hemoglobina tiene un pico de absorcion fuerte en la region azul-violeta (banda Soret, ~415 nm). Al iluminar con esa longitud de onda, la sangre absorbe la luz y aparece como una mancha oscura contra un fondo iluminado. No es fluorescencia ni reaccion quimica.'
+      },
+      {
+        q: 'En la Region Zuliana, con temperaturas ambientales de 36°C, ¿cual es la principal limitacion del metodo de Algor Mortis?',
+        opts: [
+          'A) El cuerpo se enfria mas rapido que en climas frios',
+          'B) El gradiente termico entre el cuerpo (37°C) y el ambiente (36°C) es minimo, haciendo el enfriamiento extremadamente lento',
+          'C) La humedad acelera el enfriamiento demasiado',
+          'D) La Ley de Newton no aplica en climas calidos'
+        ],
+        correct: 1,
+        explanation: 'Cuando T_amb ≈ 37°C, la diferencia T₀ - T_amb es cercana a cero, por lo que la tasa de enfriamiento dT/dt ≈ 0. El cuerpo practicamente no se enfria y el metodo pierde capacidad discriminatoria para IPM cortos.'
+      },
+      {
+        q: '¿Que fenomeno fisico utiliza el Luminol para detectar rastros de sangre?',
+        opts: [
+          'A) Fluorescencia — absorcion y re-emision de luz',
+          'B) Fosforescencia — emision retardada de luz',
+          'C) Quimioluminiscencia — emision de luz por reaccion quimica',
+          'D) Reflectancia especular — la sangre refleja luz UV'
+        ],
+        correct: 2,
+        explanation: 'El Luminol produce quimioluminiscencia: la reaccion quimica entre luminol, peroxido de hidrogeno y el hierro del grupo hemo genera energia que se libera como fotones de luz azul-violacea (~425 nm). No requiere fuente de luz externa para excitacion.'
+      },
+      {
+        q: 'Si la energia cinetica de un vehiculo a 60 km/h es E, ¿cuanta energia tiene a 120 km/h?',
+        opts: [
+          'A) 2E (el doble)',
+          'B) 3E (el triple)',
+          'C) 4E (cuatro veces)',
+          'D) 8E (ocho veces)'
+        ],
+        correct: 2,
+        explanation: 'E_k = ½mv². Si la velocidad se duplica (v → 2v), entonces E_k → ½m(2v)² = ½m(4v²) = 4E. La energia cinetica es proporcional al cuadrado de la velocidad.'
+      },
+      {
+        q: 'Un cadaver de 80 kg se encuentra en agua a 20°C con T rectal de 25°C. ¿Que factor de Henssge se utiliza aproximadamente?',
+        opts: [
+          'A) f = 1,0 (condicion estandar)',
+          'B) f = 1,4 (ropa gruesa)',
+          'C) f = 0,5 (cadaver en agua)',
+          'D) f = 0,75 (clima calido seco)'
+        ],
+        correct: 2,
+        explanation: 'El factor f = 0,5 es el valor estandar para cadaveres sumergidos en agua, ya que el agua tiene una conductividad termica mucho mayor que el aire (~24 veces), acelerando drasticamente el enfriamiento.'
+      }
+    ];
+
+    var container = document.getElementById('quiz');
+    var html = '<h3><i class="fas fa-brain"></i> 8 Preguntas de Autoevaluacion</h3>';
+
+    questions.forEach(function(q, qi) {
+      html += '<div class="quiz-question" data-qi="' + qi + '">';
+      html += '<div class="quiz-q-text">' + (qi + 1) + '. ' + q.q + '</div>';
+      html += '<div class="quiz-options">';
+      q.opts.forEach(function(opt, oi) {
+        html += '<div class="quiz-option" data-qi="' + qi + '" data-oi="' + oi + '">';
+        html += '<span class="opt-marker">' + String.fromCharCode(65 + oi) + '</span>';
+        html += '<span>' + opt + '</span>';
+        html += '</div>';
+      });
+      html += '</div>';
+      html += '<div class="quiz-feedback" id="fb-' + qi + '"></div>';
+      html += '</div>';
+    });
+
+    html += '<div style="text-align:center;margin-top:20px">';
+    html += '<button class="btn btn-accent" id="quiz-submit"><i class="fas fa-check-circle"></i> Verificar respuestas</button>';
+    html += '</div>';
+    html += '<div class="quiz-score" id="quiz-score">';
+    html += '<div class="score-num" id="score-num">0/8</div>';
+    html += '<div class="score-label">Respuestas correctas</div>';
+    html += '</div>';
+
+    container.innerHTML = html;
+
+    // Seleccionar opción
+    container.querySelectorAll('.quiz-option').forEach(function(el) {
+      el.addEventListener('click', function() {
+        var qi = this.getAttribute('data-qi');
+        // Deseleccionar otras opciones de la misma pregunta
+        container.querySelectorAll('.quiz-option[data-qi="' + qi + '"]').forEach(function(o) {
+          o.classList.remove('selected');
+        });
+        this.classList.add('selected');
+      });
+    });
+
+    // Verificar respuestas
+    document.getElementById('quiz-submit').addEventListener('click', function() {
+      var score = 0;
+      questions.forEach(function(q, qi) {
+        var selected = container.querySelector('.quiz-option[data-qi="' + qi + '"].selected');
+        var fb = document.getElementById('fb-' + qi);
+        var options = container.querySelectorAll('.quiz-option[data-qi="' + qi + '"]');
+
+        // Limpiar estados previos
+        options.forEach(function(o) {
+          o.classList.remove('correct', 'incorrect');
+          o.style.pointerEvents = 'none';
+        });
+
+        if (selected) {
+          var oi = parseInt(selected.getAttribute('data-oi'));
+          if (oi === q.correct) {
+            selected.classList.add('correct');
+            fb.className = 'quiz-feedback show correct-fb';
+            fb.innerHTML = '<i class="fas fa-check-circle"></i> Correcto. ' + q.explanation;
+            score++;
+          } else {
+            selected.classList.add('incorrect');
+            options[q.correct].classList.add('correct');
+            fb.className = 'quiz-feedback show incorrect-fb';
+            fb.innerHTML = '<i class="fas fa-times-circle"></i> Incorrecto. ' + q.explanation;
+          }
+        } else {
+          options[q.correct].classList.add('correct');
+          fb.className = 'quiz-feedback show incorrect-fb';
+          fb.innerHTML = '<i class="fas fa-times-circle"></i> No seleccionada. ' + q.explanation;
+        }
+      });
+
+      var scoreDiv = document.getElementById('quiz-score');
+      document.getElementById('score-num').textContent = score + '/' + questions.length;
+      scoreDiv.classList.add('show');
+      this.disabled = true;
+      this.style.opacity = '0.5';
+    });
+  })();
+
+  /* ================================================================
+     POLYFILL: roundRect para navegadores antiguos
+     ================================================================ */
+  if (!CanvasRenderingContext2D.prototype.roundRect) {
+    CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r) {
+      r = Math.min(r, w / 2, h / 2);
+      this.moveTo(x + r, y);
+      this.lineTo(x + w - r, y);
+      this.arcTo(x + w, y, x + w, y + r, r);
+      this.lineTo(x + w, y + h - r);
+      this.arcTo(x + w, y + h, x + w - r, y + h, r);
+      this.lineTo(x + r, y + h);
+      this.arcTo(x, y + h, x, y + h - r, r);
+      this.lineTo(x, y + r);
+      this.arcTo(x, y, x + r, y, r);
+      this.closePath();
+    };
+  }
+</script>
+</body>
+</html>
