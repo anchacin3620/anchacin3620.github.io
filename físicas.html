@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    :root {
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --navy-primary: #0f172a;
+      --accent-blue: #2563eb;
+      --accent-teal: #0d9488;
+      --accent-purple: #7c3aed;
+      --accent-orange: #ea580c;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      margin: 0;
+      padding: 30px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .infographic-container {
+      width: 1000px;
+      background: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+      padding: 40px;
+      box-sizing: border-box;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .header h1 {
+      font-size: 2.8rem;
+      font-weight: 900;
+      color: var(--navy-primary);
+      letter-spacing: 2px;
+      margin: 0 0 10px 0;
+      text-transform: uppercase;
+    }
+
+    .header p {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      margin: 0;
+      font-weight: 500;
+    }
+
+    .main-layout {
+      display: grid;
+      grid-template-columns: 1fr 280px 1fr;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .column {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 14px 18px;
+      position: relative;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+      transition: transform 0.2s ease;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .badge {
+      background-color: var(--navy-primary);
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 0.85rem;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .card-title {
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--navy-primary);
+      margin: 0;
+    }
+
+    .card-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin: 0;
+      line-height: 1.35;
+    }
+
+    /* Centro */
+    .center-hub {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .core-circle {
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, #1e1b4b 0%, #0f172a 100%);
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      box-shadow: 0 0 30px rgba(30, 27, 75, 0.3);
+      border: 4px solid #312e81;
+    }
+
+    .core-circle h2 {
+      font-size: 2.2rem;
+      margin: 0;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    /* Pie de imagen */
+    .footer {
+      margin-top: 40px;
+      background: #f1f5f9;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      border: 1px dashed #cbd5e1;
+    }
+
+    .footer h3 {
+      margin: 0 0 6px 0;
+      font-size: 1.1rem;
+      color: var(--navy-primary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .footer p {
+      margin: 0;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+<div class="infographic-container">
+  
+  <div class="header">
+    <h1>RAMAS DE LA FÍSICA</h1>
+    <p>Principales campos que describen la materia, la energía, el movimiento y el universo.</p>
+  </div>
+
+  <div class="main-layout">
+    
+    <!-- Columna Izquierda -->
+    <div class="column">
+      <div class="card">
+        <div class="card-header"><span class="badge">1</span><h3 class="card-title">Mecánica Clásica</h3></div>
+        <p class="card-desc">Estudio del movimiento y de las fuerzas que lo causan.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="badge">4</span><h3 class="card-title">Mecánica Estadística</h3></div>
+        <p class="card-desc">Utiliza la probabilidad para explicar el comportamiento de sistemas grandes de partículas.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="badge">5</span><h3 class="card-title">Mecánica Cuántica</h3></div>
+        <p class="card-desc">Describe el comportamiento de la materia y la energía a nivel atómico y subatómico.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="badge">6</span><h3 class="card-title">Relatividad</h3></div>
+        <p class="card-desc">Explora el espacio, el tiempo, la gravedad y los límites de la velocidad.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="badge">7</span><h3 class="card-title">Óptica</h3></div>
+        <p class="card-desc">Estudio de la luz, su comportamiento y sus interacciones con la materia.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="badge">8</span><h3 class="card-title">Acústica</h3></div>
+        <p class="card-desc">Estudio del sonido, las vibraciones y las ondas en gases, líquidos y sólidos.</p>
+      </div>
+    </div>
+
+    <!-- Núcleo Central -->
+    <div class="center-hub">
+      <div class="core-circle">
+        <h2>Física</h2>
+      </div>
+    </div>
+
+    <!-- Columna Derecha -->
+    <div class="column">
+      <div class="card">
+        <div class="card-header"><span class="badge">2</span><h3 class="card-title">Electromagnetismo</h3></div>
+        <p class="card-desc">Estudio de los campos eléctricos y magnéticos y sus interacciones.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="badge">3</span><h3 class="card-title">Termodinámica</h3></div>
+        <p class="card-desc">Estudio del calor, el trabajo, la energía y sus transformaciones.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="badge">9</span><h3 class="card-title">Física de la Materia Condensada</h3></div>
+        <p class="card-desc">Estudia las propiedades físicas de los sólidos y las fases condensadas de la materia.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="badge">10</span><h3 class="card-title">Física Atómica y Molecular</h3></div>
+        <p class="card-desc">Explora la estructura e interacciones de átomos y moléculas.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="badge">11</span><h3 class="card-title">Física Nuclear</h3></div>
+        <p class="card-desc">Estudio de los núcleos atómicos, las fuerzas nucleares y los procesos radiactivos.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="badge">12</span><h3 class="card-title">Física de Partículas</h3></div>
+        <p class="card-desc">Investiga las partículas fundamentales y las fuerzas que conforman el universo.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="badge">13</span><h3 class="card-title">Física del Plasma</h3></div>
+        <p class="card-desc">Estudia los gases ionizados (plasmas) y su comportamiento colectivo.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="badge">14</span><h3 class="card-title">Astrofísica</h3></div>
+        <p class="card-desc">Aplica la física para comprender las estrellas, galaxias y otros objetos cósmicos.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="badge">15</span><h3 class="card-title">Cosmología</h3></div>
+        <p class="card-desc">Estudia el origen, la evolución, la estructura y el destino final del universo.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <h3>POR QUÉ ES IMPORTANTE</h3>
+    <p>La física conecta las leyes de la naturaleza a través de las escalas: desde las partículas subatómicas hasta el cosmos.</p>
+  </div>
+
+</div>
+
+</body>
+</html>
